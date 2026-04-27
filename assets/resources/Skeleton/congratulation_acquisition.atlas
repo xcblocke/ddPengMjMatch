@@ -1,0 +1,76 @@
+
+congratulation_acquisition.png
+size: 968,514
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Fx_GuangYun_20
+  rotate: false
+  xy: 780, 22
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+b01
+  rotate: true
+  xy: 2, 33
+  size: 237, 345
+  orig: 237, 345
+  offset: 0, 0
+  index: -1
+b0222
+  rotate: true
+  xy: 780, 152
+  size: 181, 165
+  orig: 181, 165
+  offset: 0, 0
+  index: -1
+b0333
+  rotate: true
+  xy: 349, 28
+  size: 242, 171
+  orig: 242, 171
+  offset: 0, 0
+  index: -1
+bg2
+  rotate: false
+  xy: 2, 272
+  size: 504, 240
+  orig: 504, 240
+  offset: 0, 0
+  index: -1
+eff1_dian_02
+  rotate: false
+  xy: 862, 342
+  size: 104, 170
+  orig: 104, 170
+  offset: 0, 0
+  index: -1
+glow1
+  rotate: false
+  xy: 508, 335
+  size: 352, 177
+  orig: 352, 177
+  offset: 0, 0
+  index: -1
+glowqq
+  rotate: false
+  xy: 522, 77
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+lizi_01
+  rotate: false
+  xy: 910, 117
+  size: 34, 33
+  orig: 34, 33
+  offset: 0, 0
+  index: -1
+xian02
+  rotate: false
+  xy: 2, 2
+  size: 720, 24
+  orig: 720, 24
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,90 @@
+
+jiliyu.png
+size: 429,282
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+01
+  rotate: true
+  xy: 387, 74
+  size: 38, 40
+  orig: 42, 44
+  offset: 2, 2
+  index: -1
+de
+  rotate: false
+  xy: 2, 148
+  size: 338, 132
+  orig: 340, 134
+  offset: 1, 1
+  index: -1
+star4
+  rotate: false
+  xy: 342, 203
+  size: 77, 77
+  orig: 81, 81
+  offset: 2, 2
+  index: -1
+wz01
+  rotate: false
+  xy: 141, 8
+  size: 134, 67
+  orig: 134, 67
+  offset: 0, 0
+  index: -1
+wz02
+  rotate: false
+  xy: 2, 6
+  size: 137, 69
+  orig: 137, 69
+  offset: 0, 0
+  index: -1
+wz03
+  rotate: false
+  xy: 2, 77
+  size: 282, 69
+  orig: 282, 69
+  offset: 0, 0
+  index: -1
+xx01
+  rotate: true
+  xy: 341, 73
+  size: 39, 44
+  orig: 45, 52
+  offset: 3, 4
+  index: -1
+y0
+  rotate: false
+  xy: 277, 2
+  size: 45, 32
+  orig: 45, 32
+  offset: 0, 0
+  index: -1
+y2
+  rotate: false
+  xy: 277, 36
+  size: 104, 32
+  orig: 104, 32
+  offset: 0, 0
+  index: -1
+y3
+  rotate: true
+  xy: 383, 13
+  size: 58, 37
+  orig: 58, 37
+  offset: 0, 0
+  index: -1
+y4
+  rotate: false
+  xy: 342, 114
+  size: 76, 87
+  orig: 76, 87
+  offset: 0, 0
+  index: -1
+y5
+  rotate: true
+  xy: 286, 70
+  size: 76, 53
+  orig: 76, 53
+  offset: 0, 0
+  index: -1

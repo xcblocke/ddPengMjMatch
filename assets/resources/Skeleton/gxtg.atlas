@@ -1,0 +1,389 @@
+
+gxtg.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+caidai
+  rotate: false
+  xy: 2, 1791
+  size: 561, 105
+  orig: 563, 105
+  offset: 1, 0
+  index: -1
+caidai2/caidai2_00001
+  rotate: false
+  xy: 213, 1934
+  size: 65, 46
+  orig: 1248, 600
+  offset: 191, 174
+  index: -1
+caidai2/caidai2_00002
+  rotate: false
+  xy: 464, 1898
+  size: 100, 82
+  orig: 1248, 600
+  offset: 211, 180
+  index: -1
+caidai2/caidai2_00003
+  rotate: false
+  xy: 1613, 1863
+  size: 140, 117
+  orig: 1248, 600
+  offset: 228, 185
+  index: -1
+caidai2/caidai2_00004
+  rotate: false
+  xy: 1012, 1732
+  size: 174, 149
+  orig: 1248, 600
+  offset: 244, 189
+  index: -1
+caidai2/caidai2_00005
+  rotate: false
+  xy: 1396, 1699
+  size: 208, 182
+  orig: 1248, 600
+  offset: 259, 192
+  index: -1
+caidai2/caidai2_00006
+  rotate: false
+  xy: 2, 1583
+  size: 246, 206
+  orig: 1248, 600
+  offset: 265, 193
+  index: -1
+caidai2/caidai2_00007
+  rotate: false
+  xy: 250, 1549
+  size: 276, 240
+  orig: 1248, 600
+  offset: 275, 193
+  index: -1
+caidai2/caidai2_00008
+  rotate: false
+  xy: 796, 1465
+  size: 302, 265
+  orig: 1248, 600
+  offset: 285, 193
+  index: -1
+caidai2/caidai2_00009
+  rotate: false
+  xy: 1100, 1406
+  size: 315, 291
+  orig: 1248, 600
+  offset: 304, 189
+  index: -1
+caidai2/caidai2_00010
+  rotate: false
+  xy: 1417, 1356
+  size: 346, 313
+  orig: 1248, 600
+  offset: 302, 186
+  index: -1
+caidai2/caidai2_00011
+  rotate: false
+  xy: 2, 1212
+  size: 356, 335
+  orig: 1248, 600
+  offset: 320, 182
+  index: -1
+caidai2/caidai2_00012
+  rotate: false
+  xy: 360, 1122
+  size: 372, 355
+  orig: 1248, 600
+  offset: 327, 177
+  index: -1
+caidai2/caidai2_00013
+  rotate: false
+  xy: 734, 1030
+  size: 378, 374
+  orig: 1248, 600
+  offset: 342, 172
+  index: -1
+caidai2/caidai2_00014
+  rotate: false
+  xy: 1114, 964
+  size: 404, 390
+  orig: 1248, 600
+  offset: 338, 166
+  index: -1
+caidai2/caidai2_00015
+  rotate: false
+  xy: 1520, 948
+  size: 430, 406
+  orig: 1248, 600
+  offset: 334, 160
+  index: -1
+caidai2/caidai2_00016
+  rotate: false
+  xy: 2, 699
+  size: 432, 421
+  orig: 1248, 600
+  offset: 352, 154
+  index: -1
+caidai2/caidai2_00017
+  rotate: false
+  xy: 436, 593
+  size: 444, 435
+  orig: 1248, 600
+  offset: 358, 148
+  index: -1
+caidai2/caidai2_00018
+  rotate: false
+  xy: 882, 515
+  size: 451, 447
+  orig: 1248, 600
+  offset: 365, 141
+  index: -1
+caidai2/caidai2_00019
+  rotate: false
+  xy: 1335, 491
+  size: 463, 455
+  orig: 1248, 600
+  offset: 371, 134
+  index: -1
+caidai2/caidai2_00020
+  rotate: false
+  xy: 2, 129
+  size: 474, 462
+  orig: 1248, 600
+  offset: 376, 127
+  index: -1
+caidai2/caidai2_00021
+  rotate: false
+  xy: 478, 44
+  size: 483, 469
+  orig: 1248, 600
+  offset: 381, 120
+  index: -1
+caidai2/caidai2_00022
+  rotate: false
+  xy: 963, 13
+  size: 491, 476
+  orig: 1248, 600
+  offset: 385, 111
+  index: -1
+caidai2/caidai2_00023
+  rotate: false
+  xy: 1456, 2
+  size: 499, 487
+  orig: 1248, 600
+  offset: 389, 102
+  index: -1
+g1
+  rotate: true
+  xy: 768, 1888
+  size: 92, 101
+  orig: 92, 101
+  offset: 0, 0
+  index: -1
+g4
+  rotate: true
+  xy: 566, 1895
+  size: 85, 101
+  orig: 85, 101
+  offset: 0, 0
+  index: -1
+guang
+  rotate: false
+  xy: 1606, 1671
+  size: 440, 169
+  orig: 476, 205
+  offset: 18, 18
+  index: -1
+guang332
+  rotate: false
+  xy: 528, 1479
+  size: 266, 262
+  orig: 481, 473
+  offset: 107, 100
+  index: -1
+hb
+  rotate: false
+  xy: 1899, 1842
+  size: 145, 138
+  orig: 145, 139
+  offset: 0, 1
+  index: -1
+hendu
+  rotate: false
+  xy: 974, 1883
+  size: 637, 97
+  orig: 637, 104
+  offset: 0, 1
+  index: -1
+hua
+  rotate: true
+  xy: 107, 1938
+  size: 42, 47
+  orig: 42, 47
+  offset: 0, 0
+  index: -1
+jinbi
+  rotate: false
+  xy: 565, 1743
+  size: 445, 138
+  orig: 454, 142
+  offset: 0, 3
+  index: -1
+ren
+  rotate: true
+  xy: 1188, 1710
+  size: 171, 206
+  orig: 171, 206
+  offset: 0, 0
+  index: -1
+t3
+  rotate: true
+  xy: 669, 1890
+  size: 90, 97
+  orig: 90, 97
+  offset: 0, 0
+  index: -1
+wx
+  rotate: false
+  xy: 1755, 1847
+  size: 142, 133
+  orig: 143, 134
+  offset: 1, 1
+  index: -1
+x2
+  rotate: true
+  xy: 871, 1887
+  size: 93, 101
+  orig: 93, 101
+  offset: 0, 0
+  index: -1
+yana
+  rotate: false
+  xy: 32, 1946
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+yana2
+  rotate: false
+  xy: 68, 1943
+  size: 37, 37
+  orig: 37, 37
+  offset: 0, 0
+  index: -1
+yanbai
+  rotate: false
+  xy: 342, 1919
+  size: 120, 61
+  orig: 121, 62
+  offset: 0, 1
+  index: -1
+youshou
+  rotate: false
+  xy: 156, 1936
+  size: 55, 44
+  orig: 55, 44
+  offset: 0, 0
+  index: -1
+zui
+  rotate: true
+  xy: 2, 1956
+  size: 24, 28
+  orig: 24, 29
+  offset: 0, 0
+  index: -1
+zuoshou
+  rotate: true
+  xy: 280, 1923
+  size: 57, 60
+  orig: 57, 80
+  offset: 0, 13
+  index: -1
+
+gxtg2.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+caidai2/caidai2_00024
+  rotate: false
+  xy: 588, 1073
+  size: 508, 497
+  orig: 1248, 600
+  offset: 392, 92
+  index: -1
+caidai2/caidai2_00025
+  rotate: false
+  xy: 1098, 1064
+  size: 517, 506
+  orig: 1248, 600
+  offset: 395, 81
+  index: -1
+caidai2/caidai2_00026
+  rotate: false
+  xy: 2, 564
+  size: 527, 512
+  orig: 1248, 600
+  offset: 397, 72
+  index: -1
+caidai2/caidai2_00027
+  rotate: false
+  xy: 531, 554
+  size: 536, 517
+  orig: 1248, 600
+  offset: 400, 63
+  index: -1
+caidai2/caidai2_00028
+  rotate: false
+  xy: 1069, 539
+  size: 545, 523
+  orig: 1248, 600
+  offset: 402, 53
+  index: -1
+caidai2/caidai2_00029
+  rotate: false
+  xy: 2, 25
+  size: 552, 527
+  orig: 1248, 600
+  offset: 404, 44
+  index: -1
+caidai2/caidai2_00030
+  rotate: false
+  xy: 556, 8
+  size: 561, 529
+  orig: 1248, 600
+  offset: 405, 32
+  index: -1
+caidai2/caidai2_00031
+  rotate: false
+  xy: 1119, 2
+  size: 568, 535
+  orig: 1248, 600
+  offset: 406, 20
+  index: -1
+caidai2/caidai2_00034
+  rotate: false
+  xy: 2, 1078
+  size: 584, 492
+  orig: 1248, 600
+  offset: 409, 43
+  index: -1
+
+gxtg3.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+caidai2/caidai2_00032
+  rotate: false
+  xy: 582, 4
+  size: 572, 540
+  orig: 1248, 600
+  offset: 408, 9
+  index: -1
+caidai2/caidai2_00033
+  rotate: false
+  xy: 2, 2
+  size: 578, 542
+  orig: 1248, 600
+  offset: 409, 0
+  index: -1

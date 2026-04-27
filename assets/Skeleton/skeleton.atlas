@@ -1,0 +1,20 @@
+
+skeleton.png
+size: 36, 31
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+jiantou1
+  rotate: false
+  xy: 2, 2
+  size: 15, 27
+  orig: 16, 27
+  offset: 1, 0
+  index: -1
+jiantou2
+  rotate: false
+  xy: 19, 2
+  size: 15, 27
+  orig: 15, 27
+  offset: 0, 0
+  index: -1

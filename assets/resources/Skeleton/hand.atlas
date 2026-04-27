@@ -1,0 +1,27 @@
+
+hand.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/CG2_3
+  rotate: true
+  xy: 2, 2
+  size: 287, 351
+  orig: 287, 351
+  offset: 0, 0
+  index: -1
+images/N_gq
+  rotate: false
+  xy: 2, 327
+  size: 148, 148
+  orig: 148, 148
+  offset: 0, 0
+  index: -1
+images/W_gq
+  rotate: false
+  xy: 152, 291
+  size: 184, 184
+  orig: 184, 184
+  offset: 0, 0
+  index: -1

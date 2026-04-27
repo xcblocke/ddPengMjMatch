@@ -1,0 +1,1 @@
+{"__type__":"cc.Material","_name":"sprite-glow-inner-v1","_objFlags":0,"_native":"","_effectAsset":{"__uuid__":"74ec98a7-8cf5-4eb5-b0b6-2be9c289d857"},"_techniqueIndex":0,"_techniqueData":{"0":{"defines":{"USE_TEXTURE":true,"SHOW_INNER_GLOW":true}}}}

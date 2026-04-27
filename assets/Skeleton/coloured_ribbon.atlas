@@ -1,0 +1,83 @@
+
+coloured_ribbon.png
+size: 302,141
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+10caidai_
+  rotate: true
+  xy: 276, 111
+  size: 28, 24
+  orig: 28, 24
+  offset: 0, 0
+  index: -1
+16caidai_
+  rotate: false
+  xy: 118, 19
+  size: 25, 14
+  orig: 25, 14
+  offset: 0, 0
+  index: -1
+2caidai_
+  rotate: false
+  xy: 2, 2
+  size: 36, 31
+  orig: 36, 31
+  offset: 0, 0
+  index: -1
+3caidai_
+  rotate: false
+  xy: 95, 15
+  size: 21, 18
+  orig: 21, 18
+  offset: 0, 0
+  index: -1
+C_1
+  rotate: false
+  xy: 40, 4
+  size: 26, 29
+  orig: 26, 29
+  offset: 0, 0
+  index: -1
+C_3
+  rotate: true
+  xy: 276, 54
+  size: 28, 20
+  orig: 28, 20
+  offset: 0, 0
+  index: -1
+C_7
+  rotate: true
+  xy: 276, 84
+  size: 25, 24
+  orig: 25, 24
+  offset: 0, 0
+  index: -1
+caidai02
+  rotate: false
+  xy: 68, 5
+  size: 25, 28
+  orig: 25, 28
+  offset: 0, 0
+  index: -1
+dai01
+  rotate: true
+  xy: 174, 3
+  size: 34, 126
+  orig: 34, 126
+  offset: 0, 0
+  index: -1
+eff1_dian_02
+  rotate: true
+  xy: 2, 35
+  size: 104, 170
+  orig: 104, 170
+  offset: 0, 0
+  index: -1
+gq2_0
+  rotate: false
+  xy: 174, 39
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1

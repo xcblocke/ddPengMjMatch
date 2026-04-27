@@ -1,0 +1,55 @@
+
+huapai.png
+size: 544,334
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+glow_nb_00000_00000
+  rotate: false
+  xy: 2, 2
+  size: 338, 330
+  orig: 338, 330
+  offset: 0, 0
+  index: -1
+huaban
+  rotate: true
+  xy: 401, 44
+  size: 40, 62
+  orig: 40, 62
+  offset: 0, 0
+  index: -1
+lizi_00000
+  rotate: false
+  xy: 387, 17
+  size: 20, 20
+  orig: 24, 20
+  offset: 2, 0
+  index: -1
+qq
+  rotate: true
+  xy: 342, 125
+  size: 207, 200
+  orig: 223, 218
+  offset: 0, 18
+  index: -1
+shuye
+  rotate: true
+  xy: 401, 86
+  size: 37, 91
+  orig: 37, 93
+  offset: 0, 1
+  index: -1
+star2_00000
+  rotate: true
+  xy: 342, 3
+  size: 34, 43
+  orig: 37, 49
+  offset: 2, 3
+  index: -1
+yanwu
+  rotate: true
+  xy: 342, 39
+  size: 84, 57
+  orig: 84, 57
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "db4f4dd2-fa13-4afa-ac4e-c312c2719cbb",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": false,
+  "width": 256,
+  "height": 64,
+  "platformSettings": {},
+  "subMetas": {
+    "caihuadatietu": {
+      "ver": "1.0.6",
+      "uuid": "09c22e38-ffef-4892-a149-4373679e40fd",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "db4f4dd2-fa13-4afa-ac4e-c312c2719cbb",
+      "trimType": "none",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 256,
+      "height": 64,
+      "rawWidth": 256,
+      "rawHeight": 64,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

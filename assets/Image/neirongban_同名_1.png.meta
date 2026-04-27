@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "6d2fb576-c8cb-4660-a20c-a3e28c34ecf0",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": false,
+  "width": 696,
+  "height": 217,
+  "platformSettings": {},
+  "subMetas": {
+    "neirongban_同名_1": {
+      "ver": "1.0.6",
+      "uuid": "8eec0370-10f2-43ec-8cf5-c94b17b1c005",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "6d2fb576-c8cb-4660-a20c-a3e28c34ecf0",
+      "trimType": "none",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 696,
+      "height": 217,
+      "rawWidth": 696,
+      "rawHeight": 217,
+      "borderTop": 57,
+      "borderBottom": 48,
+      "borderLeft": 95,
+      "borderRight": 51,
+      "subMetas": {}
+    }
+  }
+}

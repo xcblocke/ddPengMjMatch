@@ -1,0 +1,13 @@
+
+huaguang.png
+size: 512, 64
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+guang
+  rotate: false
+  xy: 2, 2
+  size: 412, 58
+  orig: 433, 64
+  offset: 11, 3
+  index: -1

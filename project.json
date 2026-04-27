@@ -1,0 +1,8 @@
+{
+  "engine": "cocos2d-html5",
+  "packages": "packages",
+  "version": "2.4.11",
+  "name": "test_game",
+  "id": "4ecb35fe-f598-4e6f-9422-365b9586ee94",
+  "isNew": false
+}

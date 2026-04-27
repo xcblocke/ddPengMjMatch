@@ -1,0 +1,229 @@
+
+txbs.png
+size: 1966, 1962
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+bei
+  rotate: true
+  xy: 67, 1890
+  size: 70, 72
+  orig: 88, 89
+  offset: 9, 9
+  index: -1
+caidai/caidai_00000
+  rotate: false
+  xy: 1487, 1781
+  size: 246, 179
+  orig: 764, 738
+  offset: 251, 290
+  index: -1
+caidai/caidai_00001
+  rotate: false
+  xy: 2, 1647
+  size: 260, 239
+  orig: 764, 738
+  offset: 230, 277
+  index: -1
+caidai/caidai_00002
+  rotate: false
+  xy: 1114, 1546
+  size: 302, 299
+  orig: 764, 738
+  offset: 207, 258
+  index: -1
+caidai/caidai_00003
+  rotate: false
+  xy: 1418, 1412
+  size: 360, 350
+  orig: 764, 738
+  offset: 185, 241
+  index: -1
+caidai/caidai_00004
+  rotate: false
+  xy: 378, 1169
+  size: 414, 395
+  orig: 764, 738
+  offset: 165, 219
+  index: -1
+caidai/caidai_00005
+  rotate: false
+  xy: 794, 1085
+  size: 486, 459
+  orig: 764, 738
+  offset: 143, 184
+  index: -1
+caidai/caidai_00006
+  rotate: false
+  xy: 1282, 933
+  size: 517, 477
+  orig: 764, 738
+  offset: 129, 175
+  index: -1
+caidai/caidai_00007
+  rotate: false
+  xy: 2, 665
+  size: 542, 502
+  orig: 764, 738
+  offset: 119, 162
+  index: -1
+caidai/caidai_00008
+  rotate: false
+  xy: 546, 557
+  size: 566, 526
+  orig: 764, 738
+  offset: 110, 148
+  index: -1
+caidai/caidai_00009
+  rotate: false
+  xy: 1114, 388
+  size: 587, 543
+  orig: 764, 738
+  offset: 103, 136
+  index: -1
+caidai/caidai_00012
+  rotate: false
+  xy: 2, 2
+  size: 632, 553
+  orig: 764, 738
+  offset: 86, 99
+  index: -1
+guang
+  rotate: true
+  xy: 2, 1241
+  size: 373, 374
+  orig: 390, 393
+  offset: 8, 11
+  index: -1
+hf
+  rotate: false
+  xy: 808, 1847
+  size: 677, 113
+  orig: 681, 126
+  offset: 0, 0
+  index: -1
+jiantou
+  rotate: false
+  xy: 380, 1875
+  size: 116, 85
+  orig: 116, 85
+  offset: 0, 0
+  index: -1
+jiu_beishu
+  rotate: true
+  xy: 1735, 1764
+  size: 196, 229
+  orig: 196, 233
+  offset: 0, 4
+  index: -1
+pop_ts_title
+  rotate: false
+  xy: 535, 1566
+  size: 577, 279
+  orig: 592, 297
+  offset: 2, 18
+  index: -1
+sheng
+  rotate: true
+  xy: 498, 1868
+  size: 92, 106
+  orig: 102, 109
+  offset: 5, 0
+  index: -1
+shou
+  rotate: false
+  xy: 2, 1939
+  size: 36, 21
+  orig: 36, 21
+  offset: 0, 0
+  index: -1
+shu
+  rotate: true
+  xy: 141, 1890
+  size: 70, 78
+  orig: 90, 90
+  offset: 5, 8
+  index: -1
+ti
+  rotate: false
+  xy: 300, 1885
+  size: 78, 75
+  orig: 98, 103
+  offset: 12, 14
+  index: -1
+ti-1
+  rotate: false
+  xy: 606, 1864
+  size: 96, 96
+  orig: 106, 109
+  offset: 5, 5
+  index: -1
+xian
+  rotate: false
+  xy: 221, 1888
+  size: 77, 72
+  orig: 96, 89
+  offset: 10, 12
+  index: -1
+xin_beishu
+  rotate: true
+  xy: 264, 1616
+  size: 250, 269
+  orig: 258, 272
+  offset: 4, 3
+  index: -1
+xing1
+  rotate: false
+  xy: 704, 1859
+  size: 102, 101
+  orig: 129, 128
+  offset: 14, 12
+  index: -1
+yuan2
+  rotate: false
+  xy: 40, 1935
+  size: 25, 25
+  orig: 31, 31
+  offset: 3, 3
+  index: -1
+
+txbs_2.png
+size: 1853, 1206
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+caidai/caidai_00010
+  rotate: true
+  xy: 1287, 6
+  size: 609, 564
+  orig: 764, 738
+  offset: 97, 116
+  index: -1
+caidai/caidai_00011
+  rotate: false
+  xy: 664, 45
+  size: 621, 570
+  orig: 764, 738
+  offset: 91, 108
+  index: -1
+caidai/caidai_00013
+  rotate: false
+  xy: 664, 617
+  size: 641, 587
+  orig: 764, 738
+  offset: 83, 92
+  index: -1
+caidai/caidai_00014
+  rotate: false
+  xy: 2, 2
+  size: 649, 595
+  orig: 764, 738
+  offset: 80, 84
+  index: -1
+caidai/caidai_00015
+  rotate: false
+  xy: 2, 599
+  size: 660, 605
+  orig: 764, 738
+  offset: 76, 70
+  index: -1

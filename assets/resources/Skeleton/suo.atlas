@@ -1,0 +1,27 @@
+
+suo.png
+size: 109,85
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+suodi
+  rotate: true
+  xy: 2, 18
+  size: 65, 62
+  orig: 65, 63
+  offset: 0, 0
+  index: -1
+suoto
+  rotate: false
+  xy: 66, 2
+  size: 41, 38
+  orig: 41, 38
+  offset: 0, 0
+  index: -1
+xx
+  rotate: false
+  xy: 66, 42
+  size: 41, 41
+  orig: 41, 41
+  offset: 0, 0
+  index: -1

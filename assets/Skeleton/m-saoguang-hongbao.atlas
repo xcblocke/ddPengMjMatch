@@ -1,0 +1,13 @@
+
+m-saoguang-hongbao.png
+size: 87,82
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+light4
+  rotate: false
+  xy: 2, 2
+  size: 83, 78
+  orig: 85, 78
+  offset: 1, 0
+  index: -1

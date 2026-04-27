@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "2e321b80-89b5-4c65-aab8-3a493c147aa3",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": false,
+  "width": 616,
+  "height": 83,
+  "platformSettings": {},
+  "subMetas": {
+    "jindu1_同名_1": {
+      "ver": "1.0.6",
+      "uuid": "cd3efe91-514d-4e21-97fc-c2c333662890",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "2e321b80-89b5-4c65-aab8-3a493c147aa3",
+      "trimType": "none",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 616,
+      "height": 83,
+      "rawWidth": 616,
+      "rawHeight": 83,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

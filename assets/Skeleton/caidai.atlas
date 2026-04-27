@@ -1,0 +1,319 @@
+
+caidai.png
+size: 1934,2046
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+caidai2_00001
+  rotate: false
+  xy: 2, 1998
+  size: 65, 46
+  orig: 1248, 600
+  offset: 191, 174
+  index: -1
+caidai2_00002
+  rotate: false
+  xy: 69, 1962
+  size: 104, 82
+  orig: 1248, 600
+  offset: 211, 180
+  index: -1
+caidai2_00003
+  rotate: false
+  xy: 175, 1926
+  size: 141, 118
+  orig: 1248, 600
+  offset: 227, 185
+  index: -1
+caidai2_00004
+  rotate: false
+  xy: 318, 1894
+  size: 179, 150
+  orig: 1248, 600
+  offset: 240, 189
+  index: -1
+caidai2_00005
+  rotate: false
+  xy: 499, 1862
+  size: 215, 182
+  orig: 1248, 600
+  offset: 253, 192
+  index: -1
+caidai2_00006
+  rotate: false
+  xy: 716, 1832
+  size: 247, 212
+  orig: 1248, 600
+  offset: 264, 193
+  index: -1
+caidai2_00007
+  rotate: false
+  xy: 965, 1804
+  size: 276, 240
+  orig: 1248, 600
+  offset: 275, 193
+  index: -1
+caidai2_00008
+  rotate: false
+  xy: 1243, 1777
+  size: 304, 267
+  orig: 1248, 600
+  offset: 284, 192
+  index: -1
+caidai2_00009
+  rotate: false
+  xy: 1549, 1753
+  size: 315, 291
+  orig: 1248, 600
+  offset: 304, 189
+  index: -1
+caidai2_00010
+  rotate: false
+  xy: 434, 1516
+  size: 347, 314
+  orig: 1248, 600
+  offset: 302, 186
+  index: -1
+caidai2_00011
+  rotate: false
+  xy: 783, 1466
+  size: 366, 336
+  orig: 1248, 600
+  offset: 310, 181
+  index: -1
+caidai2_00012
+  rotate: false
+  xy: 1151, 1420
+  size: 382, 355
+  orig: 1248, 600
+  offset: 317, 177
+  index: -1
+caidai2_00013
+  rotate: false
+  xy: 1535, 1377
+  size: 397, 374
+  orig: 1248, 600
+  offset: 323, 172
+  index: -1
+caidai2_00014
+  rotate: false
+  xy: 2, 1196
+  size: 414, 390
+  orig: 1248, 600
+  offset: 329, 166
+  index: -1
+caidai2_00015
+  rotate: false
+  xy: 418, 1058
+  size: 430, 406
+  orig: 1248, 600
+  offset: 334, 160
+  index: -1
+caidai2_00016
+  rotate: false
+  xy: 850, 996
+  size: 446, 422
+  orig: 1248, 600
+  offset: 339, 154
+  index: -1
+caidai2_00017
+  rotate: false
+  xy: 2, 620
+  size: 460, 436
+  orig: 1248, 600
+  offset: 343, 147
+  index: -1
+caidai2_00018
+  rotate: false
+  xy: 464, 547
+  size: 452, 447
+  orig: 1248, 600
+  offset: 364, 141
+  index: -1
+caidai2_00019
+  rotate: false
+  xy: 918, 489
+  size: 463, 455
+  orig: 1248, 600
+  offset: 371, 134
+  index: -1
+caidai2_00020
+  rotate: false
+  xy: 1383, 482
+  size: 474, 462
+  orig: 1248, 600
+  offset: 376, 127
+  index: -1
+caidai2_00021
+  rotate: false
+  xy: 594, 16
+  size: 483, 471
+  orig: 1248, 600
+  offset: 381, 119
+  index: -1
+caidai2_00035
+  rotate: false
+  xy: 2, 78
+  size: 590, 467
+  orig: 1248, 600
+  offset: 410, 30
+  index: -1
+caidai2_00041
+  rotate: false
+  xy: 1079, 2
+  size: 571, 478
+  orig: 1248, 600
+  offset: 407, 0
+  index: -1
+caidai2_00042
+  rotate: false
+  xy: 1298, 946
+  size: 574, 429
+  orig: 1248, 600
+  offset: 407, 1
+  index: -1
+caidai2_00043
+  rotate: false
+  xy: 2, 1588
+  size: 430, 304
+  orig: 1248, 600
+  offset: 554, 116
+  index: -1
+
+caidai2.png
+size: 1704,1668
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+caidai2_00027
+  rotate: false
+  xy: 1064, 2
+  size: 537, 517
+  orig: 1248, 600
+  offset: 399, 63
+  index: -1
+caidai2_00028
+  rotate: true
+  xy: 539, 53
+  size: 546, 523
+  orig: 1248, 600
+  offset: 401, 53
+  index: -1
+caidai2_00029
+  rotate: false
+  xy: 1149, 1139
+  size: 553, 527
+  orig: 1248, 600
+  offset: 403, 44
+  index: -1
+caidai2_00030
+  rotate: true
+  xy: 1143, 521
+  size: 562, 529
+  orig: 1248, 600
+  offset: 404, 32
+  index: -1
+caidai2_00031
+  rotate: true
+  xy: 2, 36
+  size: 568, 535
+  orig: 1248, 600
+  offset: 406, 20
+  index: -1
+caidai2_00032
+  rotate: true
+  xy: 2, 606
+  size: 573, 541
+  orig: 1248, 600
+  offset: 407, 8
+  index: -1
+caidai2_00033
+  rotate: true
+  xy: 605, 1085
+  size: 581, 542
+  orig: 1248, 600
+  offset: 406, 0
+  index: -1
+caidai2_00036
+  rotate: false
+  xy: 545, 601
+  size: 596, 482
+  orig: 1248, 600
+  offset: 410, 37
+  index: -1
+caidai2_00037
+  rotate: false
+  xy: 2, 1181
+  size: 601, 485
+  orig: 1248, 600
+  offset: 410, 26
+  index: -1
+
+caidai3.png
+size: 1637,1503
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+caidai2_00022
+  rotate: false
+  xy: 2, 1022
+  size: 491, 479
+  orig: 1248, 600
+  offset: 385, 111
+  index: -1
+caidai2_00023
+  rotate: false
+  xy: 572, 524
+  size: 499, 490
+  orig: 1248, 600
+  offset: 389, 101
+  index: -1
+caidai2_00024
+  rotate: false
+  xy: 1073, 516
+  size: 508, 498
+  orig: 1248, 600
+  offset: 392, 92
+  index: -1
+caidai2_00025
+  rotate: false
+  xy: 589, 7
+  size: 517, 507
+  orig: 1248, 600
+  offset: 395, 81
+  index: -1
+caidai2_00026
+  rotate: false
+  xy: 1108, 2
+  size: 527, 512
+  orig: 1248, 600
+  offset: 397, 72
+  index: -1
+caidai2_00034
+  rotate: false
+  xy: 2, 24
+  size: 585, 498
+  orig: 1248, 600
+  offset: 409, 38
+  index: -1
+caidai2_00038
+  rotate: false
+  xy: 495, 1019
+  size: 559, 482
+  orig: 1248, 600
+  offset: 410, 21
+  index: -1
+caidai2_00039
+  rotate: false
+  xy: 1056, 1016
+  size: 563, 485
+  orig: 1248, 600
+  offset: 409, 10
+  index: -1
+caidai2_00040
+  rotate: false
+  xy: 2, 530
+  size: 568, 487
+  orig: 1248, 600
+  offset: 408, 0
+  index: -1

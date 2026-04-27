@@ -1,0 +1,1 @@
+{"__type__":"cc.Material","_name":"sahuasuipian","_objFlags":0,"_native":"","_effectAsset":{"__uuid__":"829a282c-b049-4019-bd38-5ace8d8a6417"},"_techniqueIndex":1,"_techniqueData":{"0":{"defines":{},"props":{"mainTiling_Offset":{"__type__":"cc.Vec4","x":"1","y":"1","z":"0","w":"0"},"mainTexture":{"__uuid__":"57231668-5c73-44d1-b3e6-e71128c8f6c8"}}}}}

@@ -1,0 +1,111 @@
+
+naozho.png
+size: 897,388
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+b01
+  rotate: false
+  xy: 595, 2
+  size: 52, 40
+  orig: 52, 40
+  offset: 0, 0
+  index: -1
+b02
+  rotate: false
+  xy: 714, 14
+  size: 40, 28
+  orig: 40, 28
+  offset: 0, 0
+  index: -1
+b03
+  rotate: true
+  xy: 763, 246
+  size: 29, 18
+  orig: 29, 18
+  offset: 0, 0
+  index: -1
+bg
+  rotate: false
+  xy: 2, 10
+  size: 591, 376
+  orig: 591, 376
+  offset: 0, 0
+  index: -1
+lizi
+  rotate: false
+  xy: 807, 102
+  size: 87, 69
+  orig: 87, 69
+  offset: 0, 0
+  index: -1
+m2
+  rotate: false
+  xy: 807, 173
+  size: 88, 102
+  orig: 88, 102
+  offset: 0, 0
+  index: -1
+m3
+  rotate: true
+  xy: 763, 277
+  size: 109, 92
+  orig: 109, 92
+  offset: 0, 0
+  index: -1
+m4
+  rotate: true
+  xy: 707, 100
+  size: 96, 98
+  orig: 96, 98
+  offset: 0, 0
+  index: -1
+m5
+  rotate: false
+  xy: 772, 5
+  size: 102, 93
+  orig: 102, 93
+  offset: 0, 0
+  index: -1
+m6
+  rotate: true
+  xy: 595, 99
+  size: 97, 110
+  orig: 97, 110
+  offset: 0, 0
+  index: -1
+naozho
+  rotate: false
+  xy: 595, 198
+  size: 166, 188
+  orig: 166, 188
+  offset: 0, 0
+  index: -1
+shandian
+  rotate: false
+  xy: 649, 6
+  size: 63, 36
+  orig: 63, 36
+  offset: 0, 0
+  index: -1
+yy
+  rotate: false
+  xy: 595, 44
+  size: 175, 53
+  orig: 175, 53
+  offset: 0, 0
+  index: -1
+zhizhen1
+  rotate: false
+  xy: 714, 3
+  size: 24, 9
+  orig: 24, 9
+  offset: 0, 0
+  index: -1
+zhizhen2
+  rotate: false
+  xy: 756, 7
+  size: 12, 35
+  orig: 12, 35
+  offset: 0, 0
+  index: -1

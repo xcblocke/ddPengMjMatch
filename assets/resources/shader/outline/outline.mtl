@@ -1,0 +1,1 @@
+{"__type__":"cc.Material","_name":"outline","_objFlags":0,"_native":"","_effectAsset":{"__uuid__":"ff266c89-c8e0-4668-b08f-f0e07ed8fa8f"},"_techniqueIndex":0,"_techniqueData":{"0":{"defines":{"USE_TEXTURE":true,"USE_ALPHA_TEST":false,"SHOW_OUT_LINE":true},"props":{"outlineWidth":0.004,"outlineColor":{"__type__":"cc.Color","r":"0","g":"0","b":"0","a":"255"}}}}}

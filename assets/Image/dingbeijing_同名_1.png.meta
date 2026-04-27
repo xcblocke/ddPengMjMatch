@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "ebb3de9c-1bd1-42ed-8759-4f67839995b4",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": false,
+  "width": 720,
+  "height": 721,
+  "platformSettings": {},
+  "subMetas": {
+    "dingbeijing_同名_1": {
+      "ver": "1.0.6",
+      "uuid": "314e43b5-a2cd-4db3-8e02-ddb2d1cfb3d8",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "ebb3de9c-1bd1-42ed-8759-4f67839995b4",
+      "trimType": "none",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 720,
+      "height": 721,
+      "rawWidth": 720,
+      "rawHeight": 721,
+      "borderTop": 663,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

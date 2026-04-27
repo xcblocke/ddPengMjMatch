@@ -1,0 +1,1 @@
+{"__type__":"cc.Material","_name":"changeScene","_objFlags":0,"_native":"","_effectAsset":{"__uuid__":"4bff8fa1-515d-4df4-9671-d890e1d4fe5e"},"_techniqueIndex":0,"_techniqueData":{"0":{"defines":{"USE_TEXTURE":true},"props":{"size":{"x":750,"y":1560,"z":0}}}}}

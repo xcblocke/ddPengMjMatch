@@ -1,0 +1,125 @@
+
+Game_over.png
+size: 703,293
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+A1
+  rotate: false
+  xy: 472, 113
+  size: 12, 10
+  orig: 12, 10
+  offset: 0, 0
+  index: -1
+A2
+  rotate: false
+  xy: 453, 3
+  size: 13, 7
+  orig: 13, 7
+  offset: 0, 0
+  index: -1
+A3
+  rotate: false
+  xy: 457, 110
+  size: 13, 13
+  orig: 13, 13
+  offset: 0, 0
+  index: -1
+A4
+  rotate: false
+  xy: 430, 2
+  size: 21, 8
+  orig: 21, 8
+  offset: 0, 0
+  index: -1
+L_sho
+  rotate: false
+  xy: 457, 125
+  size: 31, 61
+  orig: 31, 61
+  offset: 0, 0
+  index: -1
+R_sho
+  rotate: true
+  xy: 632, 97
+  size: 31, 61
+  orig: 31, 61
+  offset: 0, 0
+  index: -1
+bu
+  rotate: false
+  xy: 285, 4
+  size: 143, 100
+  orig: 143, 100
+  offset: 0, 0
+  index: -1
+dd_g
+  rotate: false
+  xy: 632, 130
+  size: 55, 92
+  orig: 55, 92
+  offset: 0, 0
+  index: -1
+f01
+  rotate: false
+  xy: 2, 2
+  size: 175, 21
+  orig: 175, 21
+  offset: 0, 0
+  index: -1
+ganzi
+  rotate: false
+  xy: 511, 79
+  size: 36, 212
+  orig: 36, 212
+  offset: 0, 0
+  index: -1
+jianto
+  rotate: false
+  xy: 430, 12
+  size: 76, 92
+  orig: 76, 92
+  offset: 0, 0
+  index: -1
+shenti
+  rotate: true
+  xy: 2, 25
+  size: 266, 281
+  orig: 266, 281
+  offset: 0, 0
+  index: -1
+tiaofu01xx
+  rotate: true
+  xy: 549, 95
+  size: 196, 81
+  orig: 196, 81
+  offset: 0, 0
+  index: -1
+tiaofu02
+  rotate: false
+  xy: 285, 188
+  size: 224, 103
+  orig: 224, 103
+  offset: 0, 0
+  index: -1
+wz_hyh
+  rotate: false
+  xy: 508, 8
+  size: 193, 69
+  orig: 193, 69
+  offset: 0, 0
+  index: -1
+yezi
+  rotate: false
+  xy: 632, 224
+  size: 62, 67
+  orig: 62, 67
+  offset: 0, 0
+  index: -1
+yyx
+  rotate: false
+  xy: 285, 106
+  size: 170, 80
+  orig: 170, 80
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,165 @@
+import AudioManager from './framework/controller/AudioManager';
+import EventMgr from './framework/Event/EventMgr';
+import GameEventType from './framework/Event/GameEventType';
+import EngineUtil from './framework/EngineUtil';
+import PlayerDataSys from './framework/controller/PlayerDataSys';
+import { gameConfig } from './data/GameConfig';
+import { gameData } from './data/GameData';
+import GameSystem from './system/GameSystem';
+import BasePage from './view/BasePage';
+const {
+  ccclass,
+  property
+} = cc._decorator;
+@ccclass
+export default class wdSuccFakePage extends BasePage {
+  @property(cc.RichText)
+  top_desc: cc.RichText = null;
+  @property(cc.Label)
+  cash_num: cc.Label = null;
+  @property(cc.Label)
+  sksj_label: cc.Label = null;
+  @property(cc.RichText)
+  dzsj_label: cc.RichText = null;
+  @property(cc.RichText)
+  skts_label: cc.RichText = null;
+  gameSucc = false;
+  cb = null;
+  data = null;
+  cash_balance = 0;
+  limit_days_begin_time = 0;
+  limit_days_end_time = 0;
+  sign = 0;
+  sign_limit = 0;
+  sign_pass = 0;
+  sign_pass_limit = 0;
+  user_grade = 0;
+  user_grade_limit = 0;
+  video_count = 0;
+  video_count_limit = 0;
+  withdraw_percent_3 = 0;
+  collection_count = 0;
+  collection_count_limit = 0;
+  status_timeout = null;
+  _init(e) {
+    this.data = e;
+    var t = e.amount,
+      o = e.extract_amount,
+      n = e.gameSucc,
+      a = e.cash_balance,
+      i = e.extract_status,
+      r = e.wd_index,
+      c = e.cb,
+      s = (e.limit_days_begin_time, e.limit_days_end_time),
+      l = e.extract_info;
+    this.gameSucc = n || false;
+    this.cash_balance = a;
+    this.cb = c;
+    var h = l.cash_limit,
+      g = l.withdraw_percent_3,
+      _ = l.sign,
+      y = l.sign_limit,
+      m = l.sign_pass,
+      v = l.sign_pass_limit,
+      b = l.user_grade,
+      w = l.user_grade_limit,
+      S = l.video_count,
+      E = l.video_count_limit,
+      P = l.collection_count,
+      C = l.collection_count_limit;
+    this.sign = _;
+    this.sign_limit = y;
+    this.sign_pass = m;
+    this.sign_pass_limit = v;
+    this.user_grade = b;
+    this.user_grade_limit = w;
+    this.video_count = S;
+    this.video_count_limit = E;
+    this.withdraw_percent_3 = g;
+    this.collection_count = P;
+    this.collection_count_limit = C;
+    if (1 == i) this.cash_num.string = PlayerDataSys.getCashBalance();else {
+      var D = cc.sys.localStorage.getItem("make_up_reward") || "0",
+        O = o || t;
+      this.cash_num.string = PlayerDataSys.getCNCashNum(O - Number(D));
+    }
+    var T = EngineUtil.getLocalData("wd_time"),
+      A = JSON.parse(T || "[]"),
+      k = A[r];
+    k || (k = Date.now());
+    this.sksj_label.string = EngineUtil.formatDateTime(k);
+    this.limit_days_begin_time = A[r];
+    this.limit_days_end_time = s;
+    gameConfig.cashExtractLevel[r + 1], gameData.successCount;
+    this.updateStatus(i, g, h);
+    var R = JSON.parse(EngineUtil.getLocalData("wd_click_status") || "[]");
+    R.splice(r, 1, 1);
+    EngineUtil.setLocalData("wd_click_status", JSON.stringify(R));
+    this.unschedule(this.status_timeout);
+  }
+  updateStatus(e, t, o) {
+    var n = this;
+    if (1 == e) {
+      this.dzsj_label.string = "再赚<color#FFBB5B>" + PlayerDataSys.getCashBalanceWithUnit(o - PlayerDataSys.cashBalance) + "</c>立即发起自动收款";
+      this.top_desc.string = "<color=#33D18F>收款失败，" + 100 * t + "%收款单笔最低" + PlayerDataSys.getCashBalance(o) + "元，\n再赚" + PlayerDataSys.getCashBalanceWithUnit(o - PlayerDataSys.cashBalance) + "立即发起自动收款</c>";
+      this.skts_label.string = "资金已打款至平台，再赚<color = #3BB37A>" + PlayerDataSys.getCashBalanceWithUnit(o - PlayerDataSys.cashBalance) + "</c>后自动发起微信收款，建议继续游戏";
+    } else if (2 == e) {
+      this.dzsj_label.string = "" + EngineUtil.formatDateTime(this.limit_days_end_time);
+      var a = EngineUtil.getRemainTime(this.limit_days_end_time);
+      this.skts_label.string = "资金到账中，建议继续游戏，提现更多";
+      this.top_desc.string = "已过期" == a ? "请重新刷新页面" : "<color=#33D18F>提现成功，预计" + a + "后可到账微信</c>";
+      this.status_timeout = function () {
+        n.schedule(function () {
+          var e = EngineUtil.getRemainTime(n.limit_days_end_time);
+          n.top_desc.string = "已过期" == e ? "请重新刷新页面" : "<color=#33D18F>提现成功，预计" + e + "后可到账微信</c>";
+        }, 1);
+      };
+    } else if (3 == e) {
+      this.skts_label.string = "防刷验证中，打卡<color = #3BB37A>" + this.sign + "/" + this.sign_limit + "天</c>自动到账，建议继续游戏";
+      this.dzsj_label.string = "打卡<color#FFBB5B>" + this.sign + "/" + this.sign_limit + "</c>天，每天通关" + this.sign_pass + "/" + this.sign_pass_limit + "次立即到账";
+      this.top_desc.string = "<color=#898989>*由于平台近日遭受恶意刷单，\n大额需要进行验证后到账</c>";
+    } else if (4 == e) {
+      this.skts_label.string = "防刷验证中，解锁<color = #3BB37A>" + this.collection_count + "/" + this.collection_count_limit + "个</c>图鉴自动到账，建议继续游戏";
+      this.dzsj_label.string = "解锁图鉴<color#FFBB5B>" + this.collection_count + "/" + this.collection_count_limit + "</c>个立即到账";
+      this.top_desc.string = "<color=#898989>*由于平台近日遭受恶意刷单，\n大额需要进行验证后到账</c>";
+    } else if (5 == e) {
+      this.skts_label.string = "防刷验证中，用户等级<color = #3BB37A>" + this.user_grade + "/" + this.user_grade_limit + "</c>自动到账，建议继续游戏";
+      this.dzsj_label.string = "用户等级达到<color#FFBB5B>" + this.user_grade + "/" + this.user_grade_limit + "</c>级，立即到账";
+      this.top_desc.string = "<color=#898989>*由于平台近日遭受恶意刷单，\n大额需要进行验证后到账</c>";
+    }
+  }
+  start() {}
+  closePage() {
+    AudioManager.getInstance().playMusic("btntouch");
+    AudioManager.getInstance().stopMusic("wd_succ", false);
+    if (this.cash_balance > 0) {
+      var e = Object.assign(Object.assign({}, this.data), {
+        withdraw_percent_3: this.withdraw_percent_3
+      });
+      EventMgr.trigger(GameEventType.PAGE_SHOW, {
+        name: "wdReturnPage",
+        data: e
+      });
+    } else this.gotoWdPage();
+    this._hide();
+  }
+  gotoWdPage() {
+    var e = this;
+    GameSystem.getExtractInfo().then(function (t) {
+      EngineUtil.reconnectSuc();
+      if (t && 1 == t.code) {
+        var o = Object.assign(Object.assign({}, t.data), {
+          gameSucc: e.gameSucc,
+          auto_wd: false,
+          cash_threshold: false
+        });
+        EventMgr.trigger(GameEventType.UPDATE_WD_INFO, o);
+      }
+    }).catch(function (t) {
+      EngineUtil.reconnectFai();
+      EngineUtil.httpErr(t, function () {
+        e.gotoWdPage();
+      });
+    });
+  }
+}
