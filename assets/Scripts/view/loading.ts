@@ -191,9 +191,9 @@ export default class loading extends cc.Component {
   }
   getSystemConfig(e) {
     var t = this;
-    BaseSystem.getSystemConfig().then(function (o) {
-      e && EngineUtil.reconnectSuc();
-      var n = o.data;
+    // 本地调试开关：true 时跳过服务端 system config 请求
+    var useLocalSystemConfig = true;
+    var applyConfig = function (n) {
       if ("mcda" != t.fad) {
         n.is_reviewer = 1;
         SdkHelper.reportData("reviewerPost");
@@ -223,6 +223,26 @@ export default class loading extends cc.Component {
         if (cc.sys.os == cc.sys.OS_IOS) return;
       }
       t.autoLogin();
+    };
+    if (useLocalSystemConfig) {
+      var localConfigData = {
+        activate: 1,
+        config_data: {
+          new_user: 1
+        },
+        element_conf: {},
+        is_encrypt: false,
+        is_reviewer: 0,
+        map_conf: {},
+        tongdun_info: '{"action":"activate"}'
+      };
+      e && EngineUtil.reconnectSuc();
+      applyConfig(localConfigData);
+      return;
+    }
+    BaseSystem.getSystemConfig().then(function (o) {
+      e && EngineUtil.reconnectSuc();
+      applyConfig(o.data);
     }).catch(function (o) {
       e && EngineUtil.reconnectFai();
       EngineUtil.httpErr(o, function (e) {

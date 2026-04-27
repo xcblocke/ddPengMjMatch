@@ -11,9 +11,22 @@ const {
 @ccclass
 export default class HttpUtil {
     static Post(e, t, o = false) {
+        // 本地调试开关：关闭所有真实 HTTP 请求，统一走本地模拟
+        const DISABLE_HTTP_REQUEST = true;
+        if (DISABLE_HTTP_REQUEST) {
+            return OfflineService.handlePost(e, t).catch(function () {
+                return {
+                    code: 1,
+                    data: {},
+                    ecp: 0,
+                    message: "local mock fallback"
+                };
+            });
+        }
         if (!o && OfflineService.shouldHandlePost(e)) {
             return OfflineService.handlePost(e, t);
         }
+        console.log("http ............  post .....................",e, t, o)
         var n = 9999,
             s = Date.now();
         return new Promise(function (i, c) {
@@ -107,6 +120,15 @@ export default class HttpUtil {
     }
 
     static Get(e, t, o) {
+        // 本地调试开关：关闭所有真实 HTTP GET 请求
+        const DISABLE_HTTP_REQUEST = true;
+        if (DISABLE_HTTP_REQUEST) {
+            o && o({
+                code: 1,
+                data: {}
+            });
+            return;
+        }
         var n = new XMLHttpRequest();
         n.timeout = 30000;
         n.ontimeout = function () {
