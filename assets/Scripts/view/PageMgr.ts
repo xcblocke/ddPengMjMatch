@@ -1,6 +1,22 @@
 import EventMgr from '../framework/Event/EventMgr';
 import GameEventType from '../framework/Event/GameEventType';
 import { gameData } from '../data/GameData';
+
+const IN_GAME_PAGE_WHITELIST = new Set([
+  // Keep pages explicitly requested
+  "settleMentPage",
+  "SetUpPage",
+  "loadingPage",
+  // Keep startup/login flow pages
+  "agreementPage",
+  "wxTipPage",
+  "webPage",
+  "wxLoginPage",
+  "reconnectPage",
+  // Keep beginner onboarding pages
+  "levelClearPayoutsPage",
+  "unlockPropPage"
+]);
 class _PageMgr {
   map_pages = new Map();
   arr_pageQueue = [];
@@ -93,6 +109,10 @@ class _PageMgr {
       y = this;
     console.log("pageMgr.showPage", e);
     t = e.name, o = e.data;
+    if (!IN_GAME_PAGE_WHITELIST.has(t)) {
+      console.log("[PageMgr] blocked page:", t, "state:", gameData.gameState);
+      return null;
+    }
     i = e.option;
     if (!t) {
       console.error("class:pageMgr.fun:showPage页面名称为空");
