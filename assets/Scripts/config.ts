@@ -31,3 +31,5 @@ export enum EAppThemeType {
   Theme4 = 3,
 }
 export var appTheme = EAppThemeType.Theme2;
+
+export let levelRewardCoin = 300;
