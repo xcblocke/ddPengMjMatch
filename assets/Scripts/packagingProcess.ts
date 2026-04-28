@@ -33,26 +33,24 @@ export default class packagingProcess extends cc.Component {
       if (gameData.isOpenDemo) {
         return;
       }
-      if (!(1 != gameData.lun_level || this.testGuideHas(GuideEnum.welcomeGuideTip))) {
-        await PageMgr.showPageByEnum(PageEnum.levelClearPayoutsPage);
-        EngineUtil.setGuideLocal(GuideEnum.welcomeGuideTip);
-        SdkHelper.reportData("first_guide_page");
-      }
-      if (gameData.canCashExtract) {
-        gameData.canCashExtract = false;
-        // Do not auto-open withdraw related popups (stepWdPage / wdPage).
-      }
-      if (!(3 != gameData.lun_level || this.testGuideHas(GuideEnum.yearRewardGuide))) {
-        await PageMgr.showPageByEnum(PageEnum.yearReardPage);
-        EngineUtil.setGuideLocal(GuideEnum.yearRewardGuide);
-      }
-      if (!(4 != gameData.lun_level || this.testGuideHas(GuideEnum.lotteryGuide))) {
-        await this.showLotteryGuide();
-      }
-      if (!(5 != gameData.lun_level || this.testGuideHas(GuideEnum.signGuide))) {
-        PlayerDataSys.sign_in_info && PlayerDataSys.sign_in_info.length > 0 && (PlayerDataSys.sign_in_info[0].status = 1);
-        await this.showSignGuide();
-      }
+      // Disabled: do not auto-open levelClearPayoutsPage popup.
+      // if (!(1 != gameData.lun_level || this.testGuideHas(GuideEnum.welcomeGuideTip))) {
+      //   EngineUtil.setGuideLocal(GuideEnum.welcomeGuideTip);
+      //   SdkHelper.reportData("first_guide_page");
+      // }
+      // if (gameData.canCashExtract) {
+      //   gameData.canCashExtract = false;
+      //   // Do not auto-open withdraw related popups (stepWdPage / wdPage).
+      // }
+      // // Disabled: do not auto-open yearReardPage popup.
+      // if (!(3 != gameData.lun_level || this.testGuideHas(GuideEnum.yearRewardGuide))) {
+      //   EngineUtil.setGuideLocal(GuideEnum.yearRewardGuide);
+      // }
+      // // Disabled: do not show lottery guide tips/hand.
+      // if (!(5 != gameData.lun_level || this.testGuideHas(GuideEnum.signGuide))) {
+      //   PlayerDataSys.sign_in_info && PlayerDataSys.sign_in_info.length > 0 && (PlayerDataSys.sign_in_info[0].status = 1);
+      //   await this.showSignGuide();
+      // }
     } catch (__error_1_0) {
       n = __error_1_0;
       console.error(n);
@@ -80,16 +78,14 @@ export default class packagingProcess extends cc.Component {
       gameData.canCashExtract = false;
       // Do not auto-open withdraw related popups (stepWdPage / wdPage).
     }
-    if (gameConfig.redBagLevel.includes(gameData.gameLevel)) {
-      await this.showStepRedRewardPage();
-    }
-    if (!(3 != gameData.lun_level || this.testGuideHas(GuideEnum.lotteryGuide))) {
-      await this.showLotteryGuide();
-    }
-    if (!(4 != gameData.lun_level || this.testGuideHas(GuideEnum.signGuide))) {
-      PlayerDataSys.sign_in_info && PlayerDataSys.sign_in_info.length > 0 && (PlayerDataSys.sign_in_info[0].status = 1);
-      await this.showSignGuide();
-    }
+    // if (gameConfig.redBagLevel.includes(gameData.gameLevel)) {
+    //   await this.showStepRedRewardPage();
+    // }
+    // Disabled: do not show lottery guide tips/hand.
+    // if (!(4 != gameData.lun_level || this.testGuideHas(GuideEnum.signGuide))) {
+    //   PlayerDataSys.sign_in_info && PlayerDataSys.sign_in_info.length > 0 && (PlayerDataSys.sign_in_info[0].status = 1);
+    //   // await this.showSignGuide();
+    // }
     if (cc.sys.localStorage.getItem("make_up_reward")) {
       await PageMgr.showPageByEnum(PageEnum.makeUpRewardPage, {});
     }
