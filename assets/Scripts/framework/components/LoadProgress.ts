@@ -41,9 +41,12 @@ export default class LoadProgress extends cc.Component {
     return this._curPercent;
   }
   set curPercent(e) {
+    // clamp to [0, 1]
+    e = Math.max(0, Math.min(1, e));
     this._curPercent = e;
     this.progress.fillRange = e;
     this.progressLabel.string = Math.floor(100 * e) + "%";
+    this.updateHandlePos();
   }
   get loadType() {
     return this._loadType;
@@ -56,6 +59,27 @@ export default class LoadProgress extends cc.Component {
     this.progressHandle && (this.progressHandle.active = this.isHasHandle);
     this._animObj = null;
     this.curPercent = 0;
+  }
+
+  updateHandlePos() {
+    if (!this.progressHandle || !this.progress || !this.progress.node) return;
+    var barNode = this.progress.node;
+    var parent = this.progressHandle.parent || barNode.parent;
+    if (!parent) return;
+
+    // Get bar left/right points in bar local space (respect anchor)
+    var w = barNode.width;
+    var leftLocal = cc.v3(-barNode.anchorX * w, 0, 0);
+    var rightLocal = cc.v3((1 - barNode.anchorX) * w, 0, 0);
+
+    var leftWorld = barNode.convertToWorldSpaceAR(leftLocal);
+    var rightWorld = barNode.convertToWorldSpaceAR(rightLocal);
+
+    var left = parent.convertToNodeSpaceAR(leftWorld);
+    var right = parent.convertToNodeSpaceAR(rightWorld);
+
+    var x = left.x + (right.x - left.x) * this._curPercent;
+    this.progressHandle.x = x;
   }
   async startLoadProgress() {
     this.loadType = LoadProgressType.FakeAnim;
