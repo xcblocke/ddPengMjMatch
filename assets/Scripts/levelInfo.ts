@@ -28,14 +28,14 @@ export default class levelInfo extends cc.Component {
     this.node.active = true;
     this.levelLb.node.active = true;
     this.bg.active = true;
-    this.content_node.active = true;
+    this.content_node.active = false;
   }
   updateLevel() {
     this.node.active = true;
     this.levelLb.node.active = true;
     this.bg.active = true;
-    this.content_node.active = true;
-    this.levelLb.string = `{"gkey_064":{"v1":"${gameData.lun_level}"}}`;
+    this.content_node.active = false;
+    this.levelLb.string = `{"gkey_064":{"v1":"${gameData.gameLevel}"}}`;
     for (var e = this.getShowLevelArr(gameData.gameLevel), t = 0; t < e.length; t++) if (this.content_node.childrenCount >= 5) this.content_node.children[t].getComponent(levelItem).init({
       num: e[t],
       is_last: t == e.length - 1
@@ -48,6 +48,7 @@ export default class levelInfo extends cc.Component {
       o.parent = this.content_node;
     }
   }
+  
   getArrayByLevel(e) {
     var t = 0;
     t = Math.ceil(e / 5) - 1;
