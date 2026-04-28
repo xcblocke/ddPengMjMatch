@@ -596,7 +596,7 @@ export default class GameMain extends cc.Component {
               a.getComponent(cc.Sprite).spriteFrame = e.propNumIcons[0];
             }
           } else if ("freeze" == t.name) {
-            t.active = gameData.gameLevel >= 4;
+            t.active = false;
             o.getComponent(cc.Label).string = 0 == PlayerDataSys.freezeCardCount ? "+" : "" + PlayerDataSys.freezeCardCount;
             n.active = 0 == PlayerDataSys.freezeCardCount;
             o.active = 0 != PlayerDataSys.freezeCardCount;
@@ -704,7 +704,7 @@ export default class GameMain extends cc.Component {
     });
   }
   async gameInitGuide(e = false) {
-    var e, t, o, n, a, i, r, l, d;
+    var e, t, o, n, a, i, r, l;
     if (!(1 != gameData.gameLevel)) {
       await EngineUtil.sleep(1000);
       this.showNextTeachingStep();
@@ -735,6 +735,12 @@ export default class GameMain extends cc.Component {
       }
       EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
       await EngineUtil.sleep(500);
+      if (e.type == PropType.freezeCard) {
+        // Freeze prop: do not show unlock UI; also mark as unlocked so it won't retry.
+        t.push(gameData.gameLevel.toString());
+        cc.sys.localStorage.setItem("unLockPropGuide", JSON.stringify(t));
+        return;
+      }
       await PageMgr.showPageByEnum(PageEnum.unlockPropPage, {
         info: e
       });
@@ -775,25 +781,7 @@ export default class GameMain extends cc.Component {
             });
           }
         }
-        if (gameData.completeAtlas && Object.keys(gameData.completeAtlas).length > 0) {
-          await PageMgr.showPageByEnum(PageEnum.tujianWdPage, {
-            amount: gameData.completeAtlas.amount,
-            type: gameData.completeAtlas.type
-          });
-          l = EngineUtil.getPromiseResolve("tujianAutoWdPage");
-          await PageMgr.showPageByEnum(PageEnum.tujianAutoWdPage, {
-            cb: function () {
-              EngineUtil.triggerPromise("tujianAutoWdPage");
-            }
-          });
-          await l;
-        }
-        if ((d = PlayerDataSys.checkSignReward()) && gameData.lun_level > 4) {
-          console.log("打开签到", d);
-          await PageMgr.showPageByEnum(PageEnum.signPage, {
-            info: PlayerDataSys.sign_in_info
-          });
-        }
+        // Do not auto-open atlas withdraw related popups (tujianWdPage / tujianAutoWdPage).
         if (Object.keys(gameData.free_prop).length > 0) {
           await PageMgr.showPageByEnum(PageEnum.freePropPage);
         }
@@ -837,25 +825,7 @@ export default class GameMain extends cc.Component {
             });
           }
         }
-        if (gameData.completeAtlas && Object.keys(gameData.completeAtlas).length > 0) {
-          await PageMgr.showPageByEnum(PageEnum.tujianWdPage, {
-            amount: gameData.completeAtlas.amount,
-            type: gameData.completeAtlas.type
-          });
-          l = EngineUtil.getPromiseResolve("tujianAutoWdPage");
-          await PageMgr.showPageByEnum(PageEnum.tujianAutoWdPage, {
-            cb: function () {
-              EngineUtil.triggerPromise("tujianAutoWdPage");
-            }
-          });
-          await l;
-        }
-        if ((d = PlayerDataSys.checkSignReward()) && gameData.lun_level > 4) {
-          console.log("打开签到", d);
-          await PageMgr.showPageByEnum(PageEnum.signPage, {
-            info: PlayerDataSys.sign_in_info
-          });
-        }
+        // Do not auto-open atlas withdraw related popups (tujianWdPage / tujianAutoWdPage).
         if (Object.keys(gameData.free_prop).length > 0) {
           await PageMgr.showPageByEnum(PageEnum.freePropPage);
         }
@@ -901,25 +871,7 @@ export default class GameMain extends cc.Component {
         });
       }
     }
-    if (gameData.completeAtlas && Object.keys(gameData.completeAtlas).length > 0) {
-      await PageMgr.showPageByEnum(PageEnum.tujianWdPage, {
-        amount: gameData.completeAtlas.amount,
-        type: gameData.completeAtlas.type
-      });
-      l = EngineUtil.getPromiseResolve("tujianAutoWdPage");
-      await PageMgr.showPageByEnum(PageEnum.tujianAutoWdPage, {
-        cb: function () {
-          EngineUtil.triggerPromise("tujianAutoWdPage");
-        }
-      });
-      await l;
-    }
-    if ((d = PlayerDataSys.checkSignReward()) && gameData.lun_level > 4) {
-      console.log("打开签到", d);
-      await PageMgr.showPageByEnum(PageEnum.signPage, {
-        info: PlayerDataSys.sign_in_info
-      });
-    }
+    // Do not auto-open atlas withdraw related popups (tujianWdPage / tujianAutoWdPage).
     if (Object.keys(gameData.free_prop).length > 0) {
       await PageMgr.showPageByEnum(PageEnum.freePropPage);
     }

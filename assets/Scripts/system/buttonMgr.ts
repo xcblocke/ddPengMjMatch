@@ -72,54 +72,54 @@ export default class buttonMgr extends cc.Component {
     });
   }
   wx_wdBtn_click(e = false) {
-    var t = this;
-    if (gameData.globalCanClick) {
-      EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
-      AudioManager.getInstance().playMusic("btntouch");
-      if (!CommonUtil.onAwait("wx_wdBtn_click", 100)) {
-        e = true === e;
-        GameSystem.getExtractInfo().then(function (e) {
-          EngineUtil.reconnectSuc();
-          if (e && 1 == e.code) {
-            var t = Object.assign(Object.assign({}, e.data), {
-              auto_wd: false,
-              gameSucc: false
-            });
-            EventMgr.trigger(GameEventType.PAGE_SHOW, {
-              name: "wdPage",
-              data: t
-            });
-          }
-        }).catch(function (e) {
-          EngineUtil.reconnectFai();
-          EngineUtil.httpErr(e, function () {
-            t.wx_wdBtn_click();
-          });
-        });
-      }
-    }
+    // var t = this;
+    // if (gameData.globalCanClick) {
+    //   EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
+    //   AudioManager.getInstance().playMusic("btntouch");
+    //   if (!CommonUtil.onAwait("wx_wdBtn_click", 100)) {
+    //     e = true === e;
+    //     GameSystem.getExtractInfo().then(function (e) {
+    //       EngineUtil.reconnectSuc();
+    //       if (e && 1 == e.code) {
+    //         var t = Object.assign(Object.assign({}, e.data), {
+    //           auto_wd: false,
+    //           gameSucc: false
+    //         });
+    //         EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //           name: "wdPage",
+    //           data: t
+    //         });
+    //       }
+    //     }).catch(function (e) {
+    //       EngineUtil.reconnectFai();
+    //       EngineUtil.httpErr(e, function () {
+    //         t.wx_wdBtn_click();
+    //       });
+    //     });
+    //   }
+    // }
   }
   red_wdBtn_click() {
-    var e = this;
-    EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
-    AudioManager.getInstance().playMusic("btntouch");
-    if (gameData.isOpenDemo) {
-      this.demoWdTBtnClick();
-    } else {
-      GameSystem.getGoldExtractInfo().then(function (e) {
-        EngineUtil.reconnectSuc();
-        console.log("gold extract info-------", e);
-        e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-          name: "redWdPage",
-          data: e.data
-        });
-      }).catch(function (t) {
-        EngineUtil.reconnectFai();
-        EngineUtil.httpErr(t, function () {
-          e.red_wdBtn_click();
-        });
-      });
-    }
+    // var e = this;
+    // EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
+    // AudioManager.getInstance().playMusic("btntouch");
+    // if (gameData.isOpenDemo) {
+    //   this.demoWdTBtnClick();
+    // } else {
+    //   GameSystem.getGoldExtractInfo().then(function (e) {
+    //     EngineUtil.reconnectSuc();
+    //     console.log("gold extract info-------", e);
+    //     e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //       name: "redWdPage",
+    //       data: e.data
+    //     });
+    //   }).catch(function (t) {
+    //     EngineUtil.reconnectFai();
+    //     EngineUtil.httpErr(t, function () {
+    //       e.red_wdBtn_click();
+    //     });
+    //   });
+    // }
   }
   againGameBtnClick() {}
   tipCardBtnClick() {
@@ -165,24 +165,24 @@ export default class buttonMgr extends cc.Component {
     }
   }
   freezeCardBtnClick() {
-    var e = this;
-    SdkHelper.reportData("click_prop", {
-      prop_type: PropType.freezeCard,
-      game_level: gameData.gameLevel,
-      lun_level: gameData.lun_level,
-      turn_id: gameData.turnId,
-      round_id: gameData.roundId,
-      set_id: gameData.setId
-    });
-    AudioManager.getInstance().playMusic("btntouch");
-    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.freezeCardCount <= 0) this.addPropCount(PropType.freezeCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_FREEZE);else {
-      this.propBtnIsFlag = true;
-      setTimeout(function () {
-        e.propBtnIsFlag = false;
-      }, 3000);
-      EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
-      EventMgr.trigger(GameEventType.USER_FREEZE);
-    }
+    // var e = this;
+    // SdkHelper.reportData("click_prop", {
+    //   prop_type: PropType.freezeCard,
+    //   game_level: gameData.gameLevel,
+    //   lun_level: gameData.lun_level,
+    //   turn_id: gameData.turnId,
+    //   round_id: gameData.roundId,
+    //   set_id: gameData.setId
+    // });
+    // AudioManager.getInstance().playMusic("btntouch");
+    // if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.freezeCardCount <= 0) this.addPropCount(PropType.freezeCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_FREEZE);else {
+    //   this.propBtnIsFlag = true;
+    //   setTimeout(function () {
+    //     e.propBtnIsFlag = false;
+    //   }, 3000);
+    //   EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
+    //   EventMgr.trigger(GameEventType.USER_FREEZE);
+    // }
   }
   addPropCount(e) {
     console.log("addPropCount", e);
@@ -220,45 +220,45 @@ export default class buttonMgr extends cc.Component {
     });
   }
   openSignInPage() {
-    GameSystem.signInfo().then(function (e) {
-      e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-        name: "signPage",
-        data: e.data
-      });
-    });
+    // GameSystem.signInfo().then(function (e) {
+    //   e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //     name: "signPage",
+    //     data: e.data
+    //   });
+    // });
   }
   openTaskPage() {
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "taskPage"
-    });
+    // EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //   name: "taskPage"
+    // });
   }
   openBoxPage() {
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "boxPage",
-      data: {
-        cb: function () {}
-      }
-    });
+    // EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //   name: "boxPage",
+    //   data: {
+    //     cb: function () {}
+    //   }
+    // });
   }
   openLuckyFlopPage() {
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "luckyFlopPage"
-    });
+    // EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //   name: "luckyFlopPage"
+    // });
   }
   openLuckyDrawPage() {
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "turntablePage",
-      option: {
-        inQueue: true
-      }
-    });
+    // EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //   name: "turntablePage",
+    //   option: {
+    //     inQueue: true
+    //   }
+    // });
   }
   openTujianPage() {
-    GameSystem.getTujianInfo().then(function (e) {
-      e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-        name: "tujianPage",
-        data: e.data
-      });
-    });
+    // GameSystem.getTujianInfo().then(function (e) {
+    //   e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //     name: "tujianPage",
+    //     data: e.data
+    //   });
+    // });
   }
 }
