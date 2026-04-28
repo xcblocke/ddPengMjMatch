@@ -133,7 +133,7 @@ export default class buttonMgr extends cc.Component {
       round_id: gameData.roundId,
       set_id: gameData.setId
     });
-    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3("手速过快，稍后再试");else if (PlayerDataSys.tipCardCount <= 0) this.addPropCount(PropType.tipCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_OPERATE_TIP);else {
+    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.tipCardCount <= 0) this.addPropCount(PropType.tipCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_OPERATE_TIP);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
@@ -153,7 +153,7 @@ export default class buttonMgr extends cc.Component {
       set_id: gameData.setId
     });
     AudioManager.getInstance().playMusic("btntouch");
-    if (gameData.globalCanClick) if (PlayerDataSys.reshuffleCardCount <= 0) this.addPropCount(PropType.reshuffleCard);else if (this.propBtnIsFlag) EngineUtil.showCocosToast3("手速过快，稍后再试");else {
+    if (gameData.globalCanClick) if (PlayerDataSys.reshuffleCardCount <= 0) this.addPropCount(PropType.reshuffleCard);else if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
@@ -175,7 +175,7 @@ export default class buttonMgr extends cc.Component {
       set_id: gameData.setId
     });
     AudioManager.getInstance().playMusic("btntouch");
-    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3("手速过快，稍后再试");else if (PlayerDataSys.freezeCardCount <= 0) this.addPropCount(PropType.freezeCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_FREEZE);else {
+    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.freezeCardCount <= 0) this.addPropCount(PropType.freezeCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_FREEZE);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
@@ -203,7 +203,7 @@ export default class buttonMgr extends cc.Component {
   }
   demoWdTBtnClick() {
     var e = PlayerDataSys.goldBalance;
-    if (e < 0.01) EngineUtil.showCocosToast3("小于0.01元无法提现");else {
+    if (e < 0.01) EngineUtil.showCocosToast3(`{"gkey_528":{"v1":"${0.01}"}}`);else {
       PlayerDataSys.withDrawal(e);
       EventMgr.trigger(GameEventType.PAGE_SHOW, {
         name: "wdSuccPage",

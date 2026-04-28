@@ -25,7 +25,7 @@ export default class gradePopPage extends BasePage {
     this.progress_bar.fillRange = t;
     this.label_progress.string = e.success_count + "/" + e.next_level_need_count;
     var o = e.next_level_need_count - e.success_count;
-    this.label_grade_next.string = "距离下一称号，还差" + o + "关";
+    this.label_grade_next.string = `{"gkey_322":{"v1":"${o}"}}`;
     e.show_progress || (this.progress_bar.node.parent.parent.active = false);
     AudioManager.getInstance().playMusic("grade_pop");
   }

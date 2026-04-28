@@ -19,39 +19,33 @@ export default class levelInfo extends cc.Component {
   levelLb: cc.Label = null;
   onEnable() {
     EventMgr.listen(GameEventType.UPDATE_LEVEL_INFO, this.updateLevel, this);
+    this.updateLevel();
   }
   onDestroy() {
     EventMgr.ignore(GameEventType.UPDATE_LEVEL_INFO, this.updateLevel, this);
   }
   onLoad() {
-    this.levelLb.node.active = false;
+    this.node.active = true;
+    this.levelLb.node.active = true;
     this.bg.active = true;
     this.content_node.active = true;
-    gameData.isOpenDemo && (this.node.active = false);
   }
   updateLevel() {
-    if (!gameData.isOpenDemo) {
-      if (gameData.gameLevel > 85) {
-        this.levelLb.node.active = true;
-        this.levelLb.string = "第" + gameData.lun_level + "关";
-        this.bg.active = false;
-        this.content_node.active = false;
-      } else {
-        this.levelLb.node.active = false;
-        this.bg.active = true;
-        this.content_node.active = true;
-      }
-      for (var e = this.getShowLevelArr(gameData.gameLevel), t = 0; t < e.length; t++) if (this.content_node.childrenCount >= 5) this.content_node.children[t].getComponent(levelItem).init({
+    this.node.active = true;
+    this.levelLb.node.active = true;
+    this.bg.active = true;
+    this.content_node.active = true;
+    this.levelLb.string = `{"gkey_064":{"v1":"${gameData.lun_level}"}}`;
+    for (var e = this.getShowLevelArr(gameData.gameLevel), t = 0; t < e.length; t++) if (this.content_node.childrenCount >= 5) this.content_node.children[t].getComponent(levelItem).init({
+      num: e[t],
+      is_last: t == e.length - 1
+    });else {
+      var o = cc.instantiate(this.level_item);
+      o.getComponent(levelItem).init({
         num: e[t],
         is_last: t == e.length - 1
-      });else {
-        var o = cc.instantiate(this.level_item);
-        o.getComponent(levelItem).init({
-          num: e[t],
-          is_last: t == e.length - 1
-        });
-        o.parent = this.content_node;
-      }
+      });
+      o.parent = this.content_node;
     }
   }
   getArrayByLevel(e) {

@@ -59,7 +59,7 @@ class _GameSystem {
         r = n.data.gold_bubble_flag;
         EventMgr.trigger(GameEventType.FRESH_RED_BUBBLE, r);
         "";
-        c = 2 == e.video_type || 3 == e.video_type ? "恭喜获得" : "已转入账户";
+        c = 2 == e.video_type || 3 == e.video_type ? `gkey_484` : `gkey_529`;
         if (o_local > 0 || a > 0) {
           await PageMgr.showPageByEnum(PageEnum.rewardToastPage, {
             cash: o_local,
@@ -96,7 +96,7 @@ class _GameSystem {
           await PageMgr.showPageByEnum(PageEnum.rewardToastPage, {
             cash: t_local,
             red: a,
-            des: "已转入账户"
+            des: `gkey_529`
           });
         }
         o(n);

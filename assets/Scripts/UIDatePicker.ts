@@ -49,7 +49,7 @@ export default class UIDatePicker extends cc.Component {
   }
   updateDate() {
     var e = this;
-    this.lbYearMonth.string = cc.js.formatStr("%s年%s月", this.year, this.month + 1);
+    this.lbYearMonth.string = cc.js.formatStr(`gkey_549`, this.year, this.month + 1);
     for (var t = new Date(this.year, this.month + 1, 0).getDate(), o = new Date(this.year, this.month, 1).getDay(), n = 0; n < this.pfgListDay.length; ++n) {
       var a = this.pfgListDay[n];
       if (n < t) {

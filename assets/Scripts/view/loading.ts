@@ -19,6 +19,7 @@ import LocalData from '../cyll/LocalData';
 import GameConfig from '../data/GameConfig';
 import LoadProgress, { LoadProgressType } from '../framework/components/LoadProgress';
 import GameSystem from '../system/GameSystem';
+import i18 from '../framework/LanguageMgr';
 const {
   ccclass,
   property
@@ -27,6 +28,10 @@ const {
 export default class loading extends cc.Component {
   @property(cc.Sprite)
   progress: cc.Sprite = null;
+
+  @property(cc.JsonAsset)
+  languageJsonData: cc.JsonAsset = null;
+
   @property(cc.Node)
   line: cc.Node = null;
   hasAgree = false;
@@ -53,6 +58,11 @@ export default class loading extends cc.Component {
   @property([cc.Node])
   fcmNodeList: Array<cc.Node> = [];
   onLoad() {
+    
+
+    i18.init(this.languageJsonData.json,cc.sys.languageCode)
+
+
     if ("oppo" == SdkHelper.getChannelName() || "xiaomi" == SdkHelper.getChannelName() || "vivo" == SdkHelper.getChannelName() || "huawei" == SdkHelper.getChannelName() || "honor" == SdkHelper.getChannelName()) {
       this.logo.active = false;
       this.line.active = false;
@@ -191,9 +201,9 @@ export default class loading extends cc.Component {
   }
   getSystemConfig(e) {
     var t = this;
-    BaseSystem.getSystemConfig().then(function (o) {
-      e && EngineUtil.reconnectSuc();
-      var n = o.data;
+    // 本地调试开关：true 时跳过服务端 system config 请求
+    var useLocalSystemConfig = true;
+    var applyConfig = function (n) {
       if ("mcda" != t.fad) {
         n.is_reviewer = 1;
         SdkHelper.reportData("reviewerPost");
@@ -223,6 +233,26 @@ export default class loading extends cc.Component {
         if (cc.sys.os == cc.sys.OS_IOS) return;
       }
       t.autoLogin();
+    };
+    if (useLocalSystemConfig) {
+      var localConfigData = {
+        activate: 1,
+        config_data: {
+          new_user: 1
+        },
+        element_conf: {},
+        is_encrypt: false,
+        is_reviewer: 0,
+        map_conf: {},
+        tongdun_info: '{"action":"activate"}'
+      };
+      e && EngineUtil.reconnectSuc();
+      applyConfig(localConfigData);
+      return;
+    }
+    BaseSystem.getSystemConfig().then(function (o) {
+      e && EngineUtil.reconnectSuc();
+      applyConfig(o.data);
     }).catch(function (o) {
       e && EngineUtil.reconnectFai();
       EngineUtil.httpErr(o, function (e) {

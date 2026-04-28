@@ -69,7 +69,7 @@ export default class wdPage extends BasePage {
       S = e.cb;
     e.cb && (this.cb = S);
     console.log("wdPage", e);
-    if (gameData.gameLevel <= 2) this.dqtj_label.string = "通过本关可自动发起收款";else {
+    if (gameData.gameLevel <= 2) this.dqtj_label.string = `gkey_554`;else {
       for (var E = 0, P = 0, C = 0, D = 0, O = 2; O < n.length; O++) if (n[O].extract_status <= 1) {
         E = n[O].level_target_limit;
         P = n[O].cash_limit;
@@ -78,12 +78,12 @@ export default class wdPage extends BasePage {
         break;
       }
       if (0 == C) {
-        if (E == gameData.gameLevel) this.dqtj_label.string = "通过本关，微信收款<color=#FFEA2E>" + PlayerDataSys.getCashBalance(PlayerDataSys.cashBalance * D) + "元</c>";else {
+        if (E == gameData.gameLevel) this.dqtj_label.string = `{"gkey_555":{"v1":"${PlayerDataSys.getCashBalance(PlayerDataSys.cashBalance * D)}"}}`;else {
           var T;
-          T = 0 == E ? "继续游戏即将打款" : "再过<color=#FFEA2E>" + (E - gameData.successCount) + "关</c>，微信收款<color=#FFEA2E>" + PlayerDataSys.getCashBalance(PlayerDataSys.cashBalance * D) + "元</c>";
+          T = 0 == E ? `gkey_556` : `{"gkey_557":{"v1":"${(E - gameData.successCount)}","v2":"${PlayerDataSys.getCashBalance(PlayerDataSys.cashBalance * D)}"}}`;
           this.dqtj_label.string = T;
         }
-      } else this.dqtj_label.string = "单笔收款最低<color=#FFEA2E>" + PlayerDataSys.getCashBalance(P) + "元</c>，再赚<color=#FFEA2E>" + PlayerDataSys.getCashBalance(P - PlayerDataSys.cashBalance) + "元</c>";
+      } else this.dqtj_label.string = `{"gkey_558":{"v1":"${PlayerDataSys.getCashBalance(P)}","v2":"${PlayerDataSys.getCashBalance(P - PlayerDataSys.cashBalance)}"}}`;
     }
     "" != w && (this.dqtj_label.string = w);
     t || (this.gameSucc = g || false);
@@ -94,7 +94,7 @@ export default class wdPage extends BasePage {
       console.log(e);
     });
     this.createItem(n);
-    var A = PlayerDataSys.nickname || "游客";
+    var A = PlayerDataSys.nickname || `gkey_507`;
     this.user_name.string = EngineUtil.nameFormat(A);
     if (i) {
       this.scheduleOnce(function () {

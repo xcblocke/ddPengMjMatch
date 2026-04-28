@@ -135,7 +135,7 @@ export default class steAutoWdPage extends BasePage {
           EngineUtil.setLocalData("wd_time", JSON.stringify(b));
         }
       }).catch(function () {
-        SdkHelper.showToast("网络异常，请重试");
+        SdkHelper.showToast(`gkey_525`);
       });
     }
     AudioManager.getInstance().stopCash("step_wd_page");

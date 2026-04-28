@@ -21,7 +21,7 @@ export default class removeUserPage extends BasePage {
   arr_desc: cc.Label = [];
   sures = 0;
   okSures = 3;
-  reviewing_desc = ["您APP里的权益积分将会永久删除", "您的设备信息将会永久删除", "我已阅读并同意上面两个选项"];
+  reviewing_desc = [`gkey_510`, `gkey_511`, `gkey_512`];
   _init() {
     this.sures = 0;
     this.sureArr.forEach(function (e) {
@@ -50,12 +50,12 @@ export default class removeUserPage extends BasePage {
             EngineUtil.setLocalData("yid", "");
             cc.sys.localStorage.removeItem("useSkinIdx");
             AudioManager.getInstance().stopMusic("bg", true);
-            SdkHelper.showToast("用户已注销~");
+            SdkHelper.showToast(`gkey_513`);
             cc.game.restart();
-          } else SdkHelper.showToast(e.message || "网络异常，检查网络后重试");
+          } else SdkHelper.showToast(e.message || `gkey_514`);
         });
       } else {
-        SdkHelper.showToast("您需同意所有条款，才能进行账户注销");
+        SdkHelper.showToast(`gkey_515`);
       }
     } else {
       EventMgr.trigger(GameEventType.PAGE_SHOW, {

@@ -55,9 +55,9 @@ export default class gradeCashPage extends BasePage {
       t.btnNode.active = true;
       t.btnNode2.active = true;
     }, 2);
-    this.oldRate.string = "" + gameData.gradeDis.old_tx_ratio.replace("倍", "");
-    this.newRate.string = "" + gameData.gradeDis.new_tx_ratio.replace("倍", "");
-    this.racteLabel.string = gameData.gradeDis.new_tx_ratio.replace("倍", "") + "元人民币";
+    this.oldRate.string = `{"gkey_315":{"v1":"${gameData.gradeDis.old_tx_ratio.replace(\"倍\", \"\")}"}}`;
+    this.newRate.string = `{"gkey_315":{"v1":"${gameData.gradeDis.new_tx_ratio.replace(\"倍\", \"\")}"}}`;
+    this.racteLabel.string = `{"gkey_316":{"v1":"${gameData.gradeDis.new_tx_ratio.replace(\"倍\", \"\")}"}}`;
     gameData.gradeDis = {};
     AudioManager.getInstance().playMusic("levelUp");
   }

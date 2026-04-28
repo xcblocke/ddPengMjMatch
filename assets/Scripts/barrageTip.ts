@@ -113,7 +113,7 @@ export default class _barrageTip extends cc.Component {
         name = text.name,
         head = text.head,
         money = text.money;
-      _desc.string = "<color=#ffffff>恭喜用户</c><color=#F40000>" + (name || "游客..") + "</c>,<color=#ffffff>自动提现</c><color=#F40000>" + money + eval("'元'") + "</color>";
+      _desc.string = "";
       head && EngineUtil.loadRemoteImg(head).then(function (e) {
         e && (_head.spriteFrame = new cc.SpriteFrame(e));
       });

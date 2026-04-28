@@ -51,7 +51,7 @@ export default class LevelStart extends cc.Component {
       SdkHelper.reportData("level_2_show");
       this.csah_hf.active = true;
       this.csah_tgbg.active = true;
-      this.csah_tgbg.getComponent(cc.RichText).string = "<outline color=#065600 width=3>通过本关 <color=#FCFF00>继续收款</c></outline>";
+      this.csah_tgbg.getComponent(cc.RichText).string = `gkey_326`;
       this.csah_hf.stopAllActions();
       this.csah_hf.x = -500;
       this.csah_hf.opacity = 0;
@@ -151,7 +151,7 @@ export default class LevelStart extends cc.Component {
       this.csah_hf.opacity = 0;
       this.csah_hf.x = -500;
       this.csah_hf.stopAllActions();
-      this.cash_text2_hf.string = "<outline color=#065600 width=3>再过<color=#FFF000>" + (a - gameData.successCount) + "</c>关,自动发起<color=#FFF000>" + 100 * i + "%</c>收款</outline>";
+      this.cash_text2_hf.string = `{"gkey_327":{"v1":"${(a - gameData.successCount)}","v2":"${100 * i}"}}`;
       if (gameData.gameLevel <= 5) {
         if (4 == gameData.gameLevel) {
           AudioManager.getInstance().playCash("step_reward10");
@@ -193,12 +193,12 @@ export default class LevelStart extends cc.Component {
     this.cash_text3.active = true;
     this.csah_hf.opacity = 0;
     this.csah_hf.x = -500;
-    this.cash_text3_hf.string = "<outline color=#065600 width=3>自动发起<color=#FFF000>" + 100 * a + "%</c>收款</outline>";
-    4 == gameData.gameLevel && (this.cash_text3_hf.string = "<outline color=#065600 width=3>再过<color=#FFF000>2</c>关,自动发起<color=#FFF000>100%</c>收款</outline>");
+    this.cash_text3_hf.string = `{"gkey_328":{"v1":"${100 * a}"}}`;
+    4 == gameData.gameLevel && (this.cash_text3_hf.string = `{"gkey_329":{"v1":"${2}","v2":"${100}"}}`);
     if (1 == gameData.gameLevel) {
       this.cash_text3.active = false;
       this.csah_tgbg.active = true;
-      this.csah_tgbg.getComponent(cc.RichText).string = "<outline color=#065600 width=3>通过本关 <color=#FCFF00>进行打款</c></outline>";
+      this.csah_tgbg.getComponent(cc.RichText).string = `gkey_330`;
       AudioManager.getInstance().playCash("level_1_show");
     } else if (gameData.gameLevel <= 5) AudioManager.getInstance().playCash("step_reward4");else if (gameData.gameLevel > 6 && gameData.gameLevel <= 10) AudioManager.getInstance().playCash("step_reward7");else if (100 * a <= 500) {
       var i = "step_" + 100 * a + "_";
@@ -269,12 +269,12 @@ export default class LevelStart extends cc.Component {
       c = gameConfig.gold_extract_title[a];
     this.red2_ratio1.string = "" + i;
     this.red2_ratio2.string = "" + c;
-    this.red2_tgbg.string = "通过本关，可使用" + c + "全部提现";
+    this.red2_tgbg.string = `{"gkey_331":{"v1":"${c}"}}`;
     if ("s1" == PlayerDataSys.gold_extract_0303_ab) {
-      var u = Number(c.replace("倍", ""));
+      var u = Number(c.replace(`gkey_037`, ""));
       u <= 300 && AudioManager.getInstance().playCash("step_" + 10 * u);
     }
-    var f = Number(c.replace("倍", ""));
+    var f = Number(c.replace(`gkey_037`, ""));
     f <= 300 && AudioManager.getInstance().playCash("step_" + 10 * f);
     cc.tween(this.red_hf).delay(0.5).to(0.2, {
       x: 0,

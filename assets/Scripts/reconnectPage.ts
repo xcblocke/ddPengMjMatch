@@ -23,8 +23,8 @@ export default class reconnectPage extends BasePage {
   _init(e) {
     var t = e.err;
     console.log("reconnectPage err", JSON.stringify(t));
-    this.descLabel.string = "网络连接不稳定,请检查网络后重试";
-    -777 == t.code && (this.descLabel.string = "用户异常，禁止登录");
+    this.descLabel.string = `gkey_488`;
+    -777 == t.code && (this.descLabel.string = `gkey_489`);
     var o = e.callback;
     this.reconnectFun = o;
   }

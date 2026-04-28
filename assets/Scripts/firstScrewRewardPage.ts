@@ -78,7 +78,7 @@ export default class firstScrewRewardPage extends BasePage {
     var t = this;
     EngineUtil.showAdByRule(function () {
       var o = 1 == e;
-      SdkHelper.showForceToast("看完广告 领取大额奖励");
+      SdkHelper.showForceToast(`gkey_272`);
       AudioManager.getInstance().playNativeMusic("video_big_reward");
       var n = function (e, t) {
           var o = this;

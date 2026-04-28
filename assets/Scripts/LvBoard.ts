@@ -24,8 +24,8 @@ export default class LvBoard extends cc.Component {
   @property(cc.Label)
   tipLb: cc.Label = null;
   freshInfo() {
-    this.tipLb.string = "再消除" + (gameData.totalClearNum - gameData.curClearNum) / 3 + "次，可领取";
-    this.lvLabel.string = "第" + gameData.gameLevel + "关";
+    this.tipLb.string = `{"gkey_334":{"v1":"${(gameData.totalClearNum - gameData.curClearNum) / 3}"}}`;
+    this.lvLabel.string = `{"gkey_064":{"v1":"${gameData.gameLevel}"}}`;
     var e = gameData.curClearNum / gameData.totalClearNum;
     this.pro_in.fillRange = e;
     this.progressLb.string = Math.floor(100 * e) + "%";
@@ -43,6 +43,6 @@ export default class LvBoard extends cc.Component {
     var e = gameData.rewardInfo,
       t = e.reward,
       o = e.need_hc_count;
-    EngineUtil.showCocosToast3("再消除" + (o - gameData.curClearNum) + "次，可领取" + PlayerDataSys.getCashBalanceWithUnit(t));
+    EngineUtil.showCocosToast3(`{"gkey_334":{"v1":"${(o - gameData.curClearNum)}"}}` + PlayerDataSys.getCashBalanceWithUnit(t));
   }
 }

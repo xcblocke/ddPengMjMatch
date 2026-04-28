@@ -1455,7 +1455,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 109.74,
+      "width": 117.59,
       "height": 38.76
     },
     "_anchorPoint": {
@@ -1507,8 +1507,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "加载中...",
-    "_N$string": "加载中...",
+    "_string": "gkey_213",
+    "_N$string": "gkey_213",
     "_fontSize": 26,
     "_lineHeight": 26,
     "_enableWrapText": true,
@@ -2382,8 +2382,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": " 登录即同意点点发财",
-    "_N$string": " 登录即同意点点发财",
+    "_string": "gkey_214",
+    "_N$string": "gkey_214",
     "_fontSize": 26,
     "_lineHeight": 40,
     "_enableWrapText": true,
@@ -2482,8 +2482,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "《用户协议》",
-    "_N$string": "《用户协议》",
+    "_string": "gkey_188",
+    "_N$string": "gkey_188",
     "_fontSize": 26,
     "_lineHeight": 26,
     "_enableWrapText": true,
@@ -2661,8 +2661,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "和",
-    "_N$string": "和",
+    "_string": "gkey_215",
+    "_N$string": "gkey_215",
     "_fontSize": 26,
     "_lineHeight": 40,
     "_enableWrapText": true,
@@ -2761,8 +2761,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "《隐私协议》",
-    "_N$string": "《隐私协议》",
+    "_string": "gkey_216",
+    "_N$string": "gkey_216",
     "_fontSize": 26,
     "_lineHeight": 26,
     "_enableWrapText": true,
@@ -3249,6 +3249,9 @@
     "_enabled": true,
     "progress": {
       "__id__": 22
+    },
+    "languageJsonData": {
+      "__uuid__": "28ac173e-66ab-4e88-bae5-d781e2c294e4"
     },
     "line": {
       "__id__": 23

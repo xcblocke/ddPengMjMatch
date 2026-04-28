@@ -21,8 +21,8 @@ export default class makeUpRewardPage extends BasePage {
     if (t) {
       cc.sys.localStorage.removeItem("make_up_reward");
       this.cash_num.string = PlayerDataSys.getCashBalance(Number(t));
-      var o = (PlayerDataSys.cash_limit || PlayerDataSys.getCashBalance(gameConfig.cashLimit[2] || 500000)) + "元";
-      this.target_num.string = "预计<color=#FFFC00>30分钟</c>内即可满<color=#FFFC00>" + o + "</c>，快收下吧！";
+      var o = `{"gkey_039":{"v1":"${(PlayerDataSys.cash_limit || PlayerDataSys.getCashBalance(gameConfig.cashLimit[2] || 500000))}"}}`;
+      this.target_num.string = `{"gkey_335":{"v1":"${o}"}}`;
     } else this._hide();
   }
   close() {

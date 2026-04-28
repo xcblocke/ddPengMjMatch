@@ -39,7 +39,7 @@ export default class _barrage_up extends cc.Component {
         money = msg.money,
         msgItem_1 = cc.instantiate(this.msgItem),
         desc = msgItem_1.getComponent(cc.RichText);
-      desc.string = "<color=#EBAB7C>" + name + " 玩游戏成功提现</c><color=#FFE13E>" + money + eval("'元'") + "</color>";
+      desc.string = `{"gkey_261":{"v1":"${name}","v2":"${money}","v3":"${eval(\"'元'\")}"}}`;
       msgItem_1.parent = this.maskContent;
       msgItem_1.active = true;
       msgItem_1.y = 100;

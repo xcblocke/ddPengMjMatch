@@ -28,7 +28,7 @@ export default class FormData {
   }
   ch2Unicdoe(e) {
     if (!e) return "";
-    for (var t = "", o = new RegExp("[一-龥]+"), n = 0; n < e.length; n++) {
+    for (var t = "", o = new RegExp(`gkey_292`), n = 0; n < e.length; n++) {
       var a = e.charAt(n);
       if (o.test(a)) {
         t += '\%u' + a.charCodeAt(0).toString(16);

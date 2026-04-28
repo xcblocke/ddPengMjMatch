@@ -51,8 +51,8 @@ export default class yearReardPage extends BasePage {
     }).catch(function (e) {
       console.log(e);
     });
-    this.sp2_name.string = EngineUtil.nameFormat("优质用户");
-    this.sp1_name.string = EngineUtil.nameFormat("优质用户");
+    this.sp2_name.string = EngineUtil.nameFormat(`gkey_191`);
+    this.sp1_name.string = EngineUtil.nameFormat(`gkey_191`);
     this.currentStep = 1;
     this.year_sp1.node.active = false;
     this.year_sp2.node.active = false;
@@ -137,7 +137,7 @@ export default class yearReardPage extends BasePage {
       }
     }).catch(function (e) {
       console.error(e);
-      EngineUtil.showCocosToast3("网络异常");
+      EngineUtil.showCocosToast3(`gkey_583`);
     });
     cc.tween(this.year_reward_node).to(0.3, {
       x: 0,

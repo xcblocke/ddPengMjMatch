@@ -48,12 +48,12 @@ export default class wdSuccRealPage extends BasePage {
     this.sksj_label.string = EngineUtil.formatDateTime(Date.now());
     this.dzsj_label.string = EngineUtil.formatDateTime(Date.now() + 60000);
     if ("tujian" == r) {
-      this.xgtj_label.string = "继续收集，可再次发起自动提现";
+      this.xgtj_label.string = `gkey_573`;
     } else {
       if (0 == i) {
-        this.xgtj_label.string = "再过<color = #3BB37A>1关</c>，可再次发起自动收款";
+        this.xgtj_label.string = `{"gkey_574":{"v1":"${1}"}}`;
       } else {
-        1 == i && (this.xgtj_label.string = "再过<color = #3BB37A>3关</c>，可再次发起自动收款");
+        1 == i && (this.xgtj_label.string = `{"gkey_575":{"v1":"${3}"}}`);
       }
     }
   }

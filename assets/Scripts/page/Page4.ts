@@ -51,7 +51,7 @@ export default class Page4 extends PageBase {
     this.node.getChildByName("nodeStory4").active = false;
   }
   onBtnFeedbackSuccess() {
-    console.log("反馈成功");
+    console.log(`gkey_467`);
     EngineUtil.showCocosToast3("反馈成功");
   }
 }

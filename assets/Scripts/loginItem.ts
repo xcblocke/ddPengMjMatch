@@ -50,7 +50,7 @@ export default class loginItem extends cc.Component {
     this.many_day = 0;
     this.show_money = s;
     this.true_money = t;
-    this.many_desc.string = this.overdue_desc.string = this.over_desc.string = this.can_desc.string = "第" + c + "天";
+    this.many_desc.string = this.overdue_desc.string = this.over_desc.string = this.can_desc.string = `{"gkey_333":{"v1":"${c}"}}`;
     this.over_cash.string = this.cash.string = PlayerDataSys.getCashBalance(s);
     this.can.active = false;
     this.next.active = false;

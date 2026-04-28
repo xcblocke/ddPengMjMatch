@@ -11,9 +11,9 @@ const {
   property
 } = cc._decorator;
 var a;
-(a = {})[PropType.tipCard] = "提示一组可清除的牌";
-a[PropType.reshuffleCard] = "随机打乱所有的牌";
-a[PropType.freezeCard] = "冻结时间30秒";
+(a = {})[PropType.tipCard] = `gkey_550`;
+a[PropType.reshuffleCard] = `gkey_152`;
+a[PropType.freezeCard] = `{"gkey_487":{"v1":"${30}"}}`;
 var m = a;
 @ccclass
 export default class unlockPropPage extends BasePage {

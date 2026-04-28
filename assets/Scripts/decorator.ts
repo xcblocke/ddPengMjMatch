@@ -29,7 +29,7 @@ export default class decorator {
         var r = c();
         if (!r.onAwait(n + t, e)) return i.apply(this, o);
         var l = s();
-        l.showCocosToast3("点击过快，请稍后再试");
+        l.showCocosToast3(`gkey_271`);
       };
       return a;
     };

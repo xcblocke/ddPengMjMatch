@@ -37,7 +37,7 @@ export default class combineCashPage extends BasePage {
       o.getChildByPath("layout/pt_mn").getComponent(cc.Label).string = PlayerDataSys.getCashBalanceWithUnit(t.amount, "");
       o.parent = e.listNode;
     });
-    this.balanceLabel.string = PlayerDataSys.getCashBalanceWithUnit(t.amount, "元");
+    this.balanceLabel.string = PlayerDataSys.getCashBalanceWithUnit(t.amount, `gkey_002`);
   }
   close() {
     this._hide();

@@ -10,10 +10,10 @@ export enum LoadProgressType {
   LoadScene = 3,
 }
 export var LoadProgressTip = {
-  FakeAnim: "加载中...",
-  CheckHotUpdate: "热更新中...",
-  PreLoadRes: "预加载资源...",
-  LoadScene: "加载场景..."
+  FakeAnim: `gkey_213`,
+  CheckHotUpdate: `gkey_273`,
+  PreLoadRes: `gkey_274`,
+  LoadScene: `gkey_275`
 };
 @ccclass
 @menu("自定义组件/LoadProgress")

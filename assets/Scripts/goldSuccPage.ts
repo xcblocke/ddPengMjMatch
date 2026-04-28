@@ -42,7 +42,7 @@ export default class goldSuccPage extends BasePage {
     super._init.call(this, t);
     this.page1.active = true;
     this.page2.active = false;
-    this.cashLb2.string = PlayerDataSys.getGoldBalanceWithUnit(t.gold_reward, "元");
+    this.cashLb2.string = PlayerDataSys.getGoldBalanceWithUnit(t.gold_reward, `gkey_002`);
     this.cashLb.string = PlayerDataSys.getGoldBalanceWithUnit(t.gold_reward, "");
     PlayerDataSys.addUserGoldBalance(t.gold_reward, false);
     this.font1.opacity = 255;

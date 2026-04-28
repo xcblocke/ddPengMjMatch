@@ -51,7 +51,7 @@ export default class stepRewardPage extends BasePage {
     this._showType = e.type;
     this._cb = e.cb;
     this._is_force = e.is_force;
-    this.onlyLabel.string = "只要" + PlayerDataSys.getCNCashNum(gameData.levelupCash) + "元";
+    this.onlyLabel.string = `{"gkey_084":{"v1":"${PlayerDataSys.getCNCashNum(gameData.levelupCash)}"}}`;
     var a = Number(gameConfig.paramConfig.show_red_bag.para_value);
     this.goldBubbleLb.string = "" + a;
     SdkHelper.reportData("xc_reward_page");
@@ -94,11 +94,11 @@ export default class stepRewardPage extends BasePage {
   openVideo(e) {
     var t = this,
       o = function o() {
-        SdkHelper.showForceToast("看完广告 领取大额奖励");
+        SdkHelper.showForceToast(`gkey_272`);
         AudioManager.getInstance().playNativeMusic("video_big_reward");
         var o = function (e, t) {
           var o = this;
-          SdkHelper.showForceToast("未看完广告<br><font color='#F74708'>只领取了少量奖励</font>");
+          SdkHelper.showForceToast(`gkey_521`);
           GameSystem.videoReward({
             video_type: e,
             force_type: t,

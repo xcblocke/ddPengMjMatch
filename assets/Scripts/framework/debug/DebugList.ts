@@ -15,12 +15,12 @@ export default class DebugList extends cc.Component {
   itemRootNode: cc.Node = null;
   openClose() {
     this.itemRootNode.active = !this.itemRootNode.active;
-    this.switchLabel.string = this.itemRootNode.active ? "关闭" : "展开";
+    this.switchLabel.string = this.itemRootNode.active ? `gkey_026` : `gkey_288`;
   }
   init(e) {
     var t = this;
     this.itemRootNode.active = false;
-    this.switchLabel.string = "展开";
+    this.switchLabel.string = `gkey_288`;
     this.titleLabel.string = e.title;
     this.itemRootNode.destroyAllChildren();
     e.children.forEach(function (e) {

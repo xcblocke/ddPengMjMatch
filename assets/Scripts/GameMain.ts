@@ -186,7 +186,7 @@ export default class GameMain extends cc.Component {
     return this.mahjongContainer;
   }
   showYSDKToast() {
-    PlayerDataSys.isYSDKLoginSuccess && EngineUtil.showCocosToast3("已在防沉迷系统实名认证，可直接进入游戏");
+    PlayerDataSys.isYSDKLoginSuccess && EngineUtil.showCocosToast3(`gkey_308`);
   }
   addEvent() {
     EventMgr.listen(GameEventType.REBORN, this.rebornGame, this);
@@ -947,7 +947,7 @@ export default class GameMain extends cc.Component {
         this.teachingStepCardList = o.map(function (e) {
           return e.cardData.id;
         });
-        r = "试试点击<color=#F8F500>相邻</c>的麻将";
+        r = `gkey_309`;
         break;
       case 2:
         n = {
@@ -974,7 +974,7 @@ export default class GameMain extends cc.Component {
           startCard: a
         };
         this.teachingStepCardList = [a.cardData.id, i.cardData.id];
-        r = "试试<color=#F8F500>水平</c>挪动麻将";
+        r = `gkey_310`;
         break;
       case 4:
         a = this.getCardByPos(4, 3);
@@ -992,7 +992,7 @@ export default class GameMain extends cc.Component {
           startCard: a
         };
         this.teachingStepCardList = [a.cardData.id, i.cardData.id, c.cardData.id];
-        r = "试试<color=#F8F500>竖直</c>挪动麻将";
+        r = `gkey_311`;
         break;
       case 5:
         n = {
@@ -1007,7 +1007,7 @@ export default class GameMain extends cc.Component {
           startCard: a
         };
         this.teachingStepCardList = [a.cardData.id, i.cardData.id];
-        r = "消除<color=#F8F500>花牌</c>\n可随机带走一对麻将";
+        r = `gkey_312`;
     }
     if (n) {
       this.teachGuideNode.active = true;

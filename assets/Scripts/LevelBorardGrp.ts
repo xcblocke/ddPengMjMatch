@@ -141,7 +141,7 @@ export class LevelBorardGrp extends cc.Component {
     return gameData.turnMax > 1;
   }
   getRoundDes() {
-    var e = (1 == gameData.turnId ? "" : gameData.turnId + "/" + gameData.turnMax + "局") + " " + (1 == gameData.roundId ? "" : gameData.roundId + "/" + gameData.roundMax + "轮");
+    var e =`{"gkey_324":{"v1":"${1 == gameData.turnId ? "" : gameData.turnId}","v2":"${gameData.turnMax}","v3":"局"}}` + (1 == gameData.roundId ? "" : `{"gkey_325":{"v1":"${gameData.roundId}","v2":"${gameData.roundMax}"}}`);
     return e.replace(/\s+$/, "");
   }
   setBubbleDes() {}

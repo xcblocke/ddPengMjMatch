@@ -57,21 +57,21 @@ export default class signItem extends cc.Component {
     }
     if (1 === c) {
       this.lock.active = true;
-      this.condtion = "奖励已领取";
+      this.condtion = `gkey_481`;
     } else {
       this.lock.active = false;
       if (a >= r) {
-        if (l > s) this.condtion = "用户等级" + l + "级可领取，继续闯关吧！";else {
+        if (l > s) this.condtion = `{"gkey_482":{"v1":"${l}"}}`;else {
           this.can_get.active = true;
           this.canTouch = true;
         }
-      } else this.condtion = "时间还没到哦～继续加油！";
+      } else this.condtion = `gkey_483`;
     }
   }
   setGet() {
     this.can_get.active = false;
     this.lock.active = true;
-    this.condtion = "奖励已领取";
+    this.condtion = `gkey_481`;
   }
   click() {
     var e = this;
@@ -105,7 +105,7 @@ export default class signItem extends cc.Component {
               name: "rewardToastPage",
               data: {
                 red: o,
-                des: "恭喜获得"
+                des: `gkey_484`
               }
             });
             o > 0 && EventMgr.trigger(GameEventType.SHOWEFFECT, {
@@ -129,6 +129,6 @@ export default class signItem extends cc.Component {
     }
   }
   clickLock() {
-    EngineUtil.showCocosToast3("奖励已领取，后边还有更多大奖！");
+    EngineUtil.showCocosToast3(`gkey_485`);
   }
 }

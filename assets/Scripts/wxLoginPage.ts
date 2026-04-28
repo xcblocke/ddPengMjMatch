@@ -124,14 +124,14 @@ export default class wxLoginPage extends BasePage {
         code: t
       });
       if (2 == t) this.loginAgain();else {
-        SdkHelper.showToast("登录成功");
+        SdkHelper.showToast(`gkey_551`);
         SdkHelper.reportData("b_leave_page", {
           act_page: "bind_wx",
           duration: new Date().getTime() - this.comeinTime
         });
         this._hide();
       }
-    } else SdkHelper.showToast(e.message || "微信登录失败~");
+    } else SdkHelper.showToast(e.message || `gkey_582`);
   }
   loginAgain() {
     PageMgr.clear();
@@ -144,7 +144,7 @@ export default class wxLoginPage extends BasePage {
       name: "webPage",
       data: {
         is_first: true,
-        title: "用户协议",
+        title: `gkey_099`,
         url: e,
         index: 0
       },
@@ -159,7 +159,7 @@ export default class wxLoginPage extends BasePage {
       name: "webPage",
       data: {
         is_first: true,
-        title: "隐私条款",
+        title: `gkey_100`,
         url: e,
         index: 1
       },

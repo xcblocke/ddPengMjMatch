@@ -52,7 +52,7 @@ export default class stepWdPage extends BasePage {
       this.level_layout.active = false;
       this.cash_layout.active = true;
       var n = PlayerDataSys.cash_limit || PlayerDataSys.getCashBalance(gameConfig.cashLimit[2] || 500000);
-      this.cash_title.string = "提现" + n + "元";
+      this.cash_title.string = `{"gkey_526":{"v1":"${n}"}}`;
     } else {
       this.level_layout.active = true;
       this.cash_layout.active = false;

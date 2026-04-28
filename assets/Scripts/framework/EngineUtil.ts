@@ -271,11 +271,11 @@ class _EngineUtil {
     var o = new Date(e);
     return "" + o.getFullYear() + t + (o.getMonth() + 1) + t + o.getDate();
   }
-  formatDateStr(e, t = "年", o = "月", n = "日") {
+  formatDateStr(e, t = `gkey_289`, o = `gkey_290`, n = `gkey_200`) {
     var a = new Date(e);
     return "" + a.getFullYear() + t + (a.getMonth() + 1) + o + a.getDate() + n;
   }
-  showManageViewToast(e = "", t = "看视频幸苦了") {
+  showManageViewToast(e = "", t = `gkey_198`) {
     var o = this;
     if (e && !(this.manageShows > 0)) if (this.manageToast) {
       var n = cc.instantiate(this.manageToast);
@@ -340,8 +340,8 @@ class _EngineUtil {
     });
   }
   nameFormat(e, t = 12) {
-    if (!e) return "用户不存在";
-    for (var o = e.split(""), n = o.length, a = 0, i = "", r = "", c = new RegExp("[一-龥]+"), s = 0; s < n; s++) {
+    if (!e) return `gkey_291`;
+    for (var o = e.split(""), n = o.length, a = 0, i = "", r = "", c = new RegExp(`gkey_292`), s = 0; s < n; s++) {
       var l = o[s];
       if (c.test(l)) {
         a += 2;
@@ -400,7 +400,7 @@ class _EngineUtil {
     });
   }
   subUserName(e, t = 8) {
-    return e ? "" != e && e.length > t ? e.substring(0, t) : e : "用户不存在";
+    return e ? "" != e && e.length > t ? e.substring(0, t) : e : `gkey_291`;
   }
   hexToColor(e) {
     e = e.replace(/^#/, "");
@@ -513,8 +513,14 @@ class _EngineUtil {
     });
   }
   formatDateToChineseDateTime(e) {
-    return e.getFullYear() + "年" + String(e.getMonth() + 1).padStart(2, "0") + "月" + String(e.getDate()).padStart(2, "0") + "日" + String(e.getHours()).padStart(2, "0") + ":" + String(e.getMinutes()).padStart(2, "0") + ":" + String(e.getSeconds()).padStart(2, "0");
+    var m = String(e.getMonth() + 1).padStart(2, "0");
+    return `{"gkey_293":{"v1":"${e.getFullYear()}","v2":"${m[0]}","v3":"${m[1]}","v4":"${String(e.getDate()).padStart(2, "0")}","v5":"${String(e.getHours()).padStart(2, "0")}","v6":"${String(e.getMinutes()).padStart(2, "0")}"}}` + String(e.getSeconds()).padStart(2, "0");
   }
+
+  // formatDateToChineseDateTime(e) {
+  //   return e.getFullYear() + "年" + String(e.getMonth() + 1).padStart(2, "0") + "月" + String(e.getDate()).padStart(2, "0") + "日" + String(e.getHours()).padStart(2, "0") + ":" + String(e.getMinutes()).padStart(2, "0") + ":" + String(e.getSeconds()).padStart(2, "0");
+  // }
+
   async showAdByRule(e) {
     if (PlayerDataSys.isOppoReviewer()) {
       return await PageMgr.showPageByEnum(PageEnum.oppoAdPage, {
@@ -595,7 +601,7 @@ class _EngineUtil {
   }
   getRemainTime(e) {
     var t = e - Date.now();
-    if (t <= 0) return "已过期";
+    if (t <= 0) return `gkey_294`;
     var o = Math.floor(t / 1000),
       n = Math.floor(o / 31536000);
     o %= 31536000;
@@ -608,9 +614,9 @@ class _EngineUtil {
     var c = Math.floor(o / 60),
       s = o % 60,
       l = [];
-    n > 0 && l.push(n + "年");
-    a > 0 && l.push(a + "月");
-    i > 0 && l.push(i + "天 ");
+    n > 0 && l.push(`{"gkey_295":{"v1":"${n}"}}`);
+    a > 0 && l.push(`{"gkey_296":{"v1":"${a}"}}`);
+    i > 0 && l.push(`{"gkey_297":{"v1":"${i}"}}`);
     l.push(String(r).padStart(2, "0") + ":" + String(c).padStart(2, "0") + ":" + String(s).padStart(2, "0"));
     return l.join("");
   }

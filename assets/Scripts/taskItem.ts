@@ -32,7 +32,7 @@ export default class taskItem extends cc.Component {
       a = e.task_id;
     this.task_id = a;
     this.reward_cash = o;
-    this.condition_desc.string = "通过第" + t + "关可领取";
+    this.condition_desc.string = `{"gkey_530":{"v1":"${t}"}}`;
     this.reward_count.string = "" + PlayerDataSys.getCashBalance(o);
     for (var i = 0; i < this.btns.length; i++) this.btns[i].active = i == n;
     if (PlayerDataSys.is_reviewer) {

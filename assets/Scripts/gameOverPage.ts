@@ -52,8 +52,8 @@ export default class gameOverPage extends BasePage {
       this.timeOutNodeList.forEach(function (e) {
         e.active = true;
       });
-      this.btnLb.string = "立即复活";
-      this.btn2Lb.string = "立即复活";
+      this.btnLb.string = `gkey_033`;
+      this.btn2Lb.string = `gkey_033`;
     } else {
       this.normalNodeList.forEach(function (e) {
         e.active = true;
@@ -61,14 +61,14 @@ export default class gameOverPage extends BasePage {
       this.timeOutNodeList.forEach(function (e) {
         e.active = false;
       });
-      this.btnLb.string = "立即复活";
-      this.btn2Lb.string = "立即复活";
+      this.btnLb.string = `gkey_033`;
+      this.btn2Lb.string = `gkey_033`;
       t = gameData.getMjListLength();
       o = GlobalApp.GameMain.cardGrid;
       n = 0;
       for (a = 0; a < o.length; a++) for (i = 0; i < o[a].length; i++) o[a][i] && n++;
       console.log("count", n, t);
-      this.pro.string = "当前进度" + Math.floor((t - n) / t * 100) + "%";
+      this.pro.string = `{"gkey_313":{"v1":"${Math.floor((t - n) / t * 100)}"}}`;
     }
     this.showNextPage();
     return;
@@ -111,7 +111,7 @@ export default class gameOverPage extends BasePage {
           t.close();
         });
       }, function () {
-        SdkHelper.showForceToast("未看完广告<br><font color='#F74708'>奖励领取失败</font>");
+        SdkHelper.showForceToast(`gkey_314`);
         t._fadeIn();
         GameSystem.videoReward({
           video_type: VideoType.Revive,

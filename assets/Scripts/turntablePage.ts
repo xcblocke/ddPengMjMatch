@@ -124,9 +124,9 @@ export default class turntablePage extends BasePage {
       e.getChildByName("mask").active = false;
     });
     if (gameData.lucky_count > 0) {
-      this.tipsLabel.string = "<outline color=#7F4800 width=2>当前可抽奖<color=#FFFC00>" + gameData.lucky_count + "</color>次<outline>";
+      this.tipsLabel.string = `{"gkey_542":{"v1":"${gameData.lucky_count}"}}`;
     } else {
-      this.tipsLabel.string = "<outline color=#7F4800 width=2>再过<color=#FFFC00>" + this.needLevel + "</color>关可抽奖<outline>";
+      this.tipsLabel.string = `{"gkey_543":{"v1":"${this.needLevel}"}}`;
     }
     this.all_status >= 8 && (this.topNode.active = false);
     this.mapNode.children.forEach(function (t, o) {
@@ -154,8 +154,8 @@ export default class turntablePage extends BasePage {
     return;
   }
   click_prize() {
-    if (this.all_status >= 8) EngineUtil.showCocosToast3("全都抽到了！");else {
-      if (gameData.lucky_count <= 0) return EngineUtil.showCocosToast3("再过" + this.needLevel + "关可抽奖");
+    if (this.all_status >= 8) EngineUtil.showCocosToast3(`gkey_544`);else {
+      if (gameData.lucky_count <= 0) return EngineUtil.showCocosToast3(`{"gkey_545":{"v1":"${this.needLevel}"}}`);
       if (!this.isRunning) {
         var e = this.checkCanDraw();
         if (null != e && !this.hadReq) {
@@ -199,7 +199,7 @@ export default class turntablePage extends BasePage {
       }
       return e;
     }
-    EngineUtil.showCocosToast3("再过" + (a - i) + "关即可抽奖");
+    EngineUtil.showCocosToast3(`{"gkey_546":{"v1":"${(a - i)}"}}`);
     return null;
   }
   getUnfinishedRewardIndices() {
@@ -278,7 +278,7 @@ export default class turntablePage extends BasePage {
         }
       });
     } else {
-      EngineUtil.showCocosToast3("还没抽中呢！");
+      EngineUtil.showCocosToast3(`gkey_547`);
     }
   }
   setSelectIndex(e) {
@@ -312,7 +312,7 @@ export default class turntablePage extends BasePage {
       }).then(function (o) {
         e.isRunning = false;
         if (!o || 1 != o.code || !o.data) {
-          EngineUtil.showCocosToast3(o && o.message ? o.message : "抽奖失败");
+          EngineUtil.showCocosToast3(o && o.message ? o.message : `gkey_548`);
           n();
           return;
         }
@@ -388,7 +388,7 @@ export default class turntablePage extends BasePage {
       }).catch(function (t) {
         e.isRunning = false;
         console.error("luckyDraw error", t);
-        EngineUtil.showCocosToast3(t && t.message ? t.message : "抽奖失败");
+        EngineUtil.showCocosToast3(t && t.message ? t.message : `gkey_548`);
         n();
       });
     }

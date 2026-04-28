@@ -13,9 +13,11 @@ export default class TimeUtils {
     return e.getFullYear() + "/" + (e.getMonth() + 1).toString().padStart(2, "0") + "/" + e.getDate().toString().padStart(2, "0");
   }
   static getDate2() {
-    var e = new Date();
-    return e.getFullYear() + "年" + (e.getMonth() + 1).toString().padStart(2, "0") + "月" + e.getDate().toString().padStart(2, "0") + "日";
+    var e = new Date(),
+      m = String(e.getMonth() + 1).padStart(2, "0");
+    return `{"gkey_304":{"v1":"${e.getFullYear()}","v2":"${m[0]}","v3":"${m[1]}","v4":"${e.getDate().toString().padStart(2, "0")}"}}`;
   }
+
   static getTargetTimestamp(e = 0, t = 0, o = 0) {
     var n = new Date(new Date().toLocaleDateString()).getTime();
     return new Date(n + 1000 * (3600 * e + 60 * t + o)).getTime();
@@ -59,10 +61,10 @@ export default class TimeUtils {
       }
     }
     var i = "";
-    t > 0 && (i = Math.floor(t) + "秒");
-    o > 0 && (i = Math.floor(o) + "分" + i);
-    n > 0 && (i = Math.floor(n) + "小时" + i);
-    a > 0 && (i = Math.floor(a) + "天" + i);
+    t > 0 && (i = `{"gkey_305":{"v1":"${Math.floor(t)}"}}`);
+    o > 0 && (i = `{"gkey_306":{"v1":"${Math.floor(o)}"}}` + i);
+    n > 0 && (i = `{"gkey_307":{"v1":"${Math.floor(n)}"}}` + i);
+    a > 0 && (i = `{"gkey_297":{"v1":"${Math.floor(a)}"}}` + i);
     return i;
   }
   static getDateString() {

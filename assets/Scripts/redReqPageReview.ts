@@ -102,14 +102,14 @@ export default class redReqPageReview extends BasePage {
       o = this._data.cash_extract_limit_info;
     switch (t) {
       case 2:
-        this.pro_wait4.getComponent(cc.RichText).string = "待审核人数:" + o.waiting_audit.num + " ,通过率 " + o.waiting_audit.rate;
+        this.pro_wait4.getComponent(cc.RichText).string = `{"gkey_490":{"v1":"${o.waiting_audit.num}"}}` + o.waiting_audit.rate;
         break;
       case 3:
-        this.pro_wait5.getComponent(cc.RichText).string = "排队人数:" + o.line_up.num + " ,每日限制 " + o.line_up.limit_day + " 人";
+        this.pro_wait5.getComponent(cc.RichText).string = `{"gkey_491":{"v1":"${o.line_up.num}","v2":"${o.line_up.limit_day}"}}`;
     }
     if ("redWd" == e) {
-      this.pro_desc1.getComponent(cc.Label).string = "比例提升申请发起";
-      this.pro_desc2.getComponent(cc.Label).string = "平台已接收,处理中";
+      this.pro_desc1.getComponent(cc.Label).string = `gkey_492`;
+      this.pro_desc2.getComponent(cc.Label).string = `gkey_493`;
     }
   }
   playAni(e, t = null, o = false) {
@@ -150,7 +150,7 @@ export default class redReqPageReview extends BasePage {
         n.pro_desc4.active = true;
         n.pro_wait4.opacity = 0;
         n.pro_desc4.opacity = 255;
-        n.pro_desc4.getComponent(cc.Label).string = 3 == a ? "审核通过" : "人工审核中";
+        n.pro_desc4.getComponent(cc.Label).string = 3 == a ? `gkey_494` : `gkey_495`;
         if (2 == a) {
           n.pro_wait4.active = true;
           n.pro_wait4.opacity = 255;
@@ -180,7 +180,7 @@ export default class redReqPageReview extends BasePage {
         n.pro_desc5.active = true;
         n.pro_wait5.opacity = 0;
         n.pro_desc5.opacity = 255;
-        n.pro_desc5.getComponent(cc.Label).string = a > 2 ? "排队中" : "排队通过";
+        n.pro_desc5.getComponent(cc.Label).string = a > 2 ? `gkey_496` : `gkey_497`;
         console.log(n.pro_desc5.getComponent(cc.Label).string);
         n.pro_wait5.active = a > 2;
         setTimeout(function () {
@@ -217,26 +217,26 @@ export default class redReqPageReview extends BasePage {
     t.need_god_animal_count, t.obtain_god_animal_count;
     switch (o) {
       case 1:
-        this.title.string = "过 <color=#FF0000>" + t.no_audit_level + "关</c> 可免审核 ";
-        this.tips.string = "温馨提示:通关越多,反作弊审核,通过率越高";
+        this.title.string = `{"gkey_498":{"v1":"${t.no_audit_level}"}}`;
+        this.tips.string = `gkey_499`;
         break;
       case 2:
         if ("redWd" == this.pageType) {
-          this.title.string = "完成 <color=#FF0000>打卡任务</c> 可免审核 ";
+          this.title.string = `gkey_500`;
         } else {
-          this.title.string = "完成 <color=#FF0000>打卡任务</c> 可免排队 ";
+          this.title.string = `gkey_501`;
         }
-        this.title_sub1.string = "打卡 " + t.need_sign_days + " 天 : 已打卡<color=#FF0000> " + t.sign_days + " </c>天";
-        this.title_sub2.string = "闯" + t.need_sign_level_count + " 关完成今日打卡:<color=#FF0000> " + t.sign_level_count + "/" + t.need_sign_level_count + "</c>";
+        this.title_sub1.string = `{"gkey_502":{"v1":"${t.need_sign_days}","v2":"${t.sign_days}"}}`;
+        this.title_sub2.string = `{"gkey_503":{"v1":"${t.need_sign_level_count}","v2":"${t.sign_level_count}","v3":"${t.need_sign_level_count}"}}`;
         this.title_sub1.node.active = true;
         this.title_sub2.node.active = true;
-        this.tips.string = "温馨提示:通关越多,反作弊审核,通过率越高";
+        this.tips.string = `gkey_499`;
         break;
       case 3:
-        this.title.string = "消除等级达到 <color=#FF0000>" + t.need_xc_level + "</c> 级可打款 ";
-        this.title_sub1.string = "等级进度  <color=#FF0000> " + t.xc_level + "/" + t.need_xc_level + " </c>级";
+        this.title.string = `{"gkey_504":{"v1":"${t.need_xc_level}"}}`;
+        this.title_sub1.string = `{"gkey_505":{"v1":"${t.xc_level}","v2":"${t.need_xc_level}"}}`;
         this.title_sub1.node.active = true;
-        this.tips.string = "温馨提示:每日大额提现人数有限,通关越高,排队越快";
+        this.tips.string = `gkey_506`;
         break;
       default:
         console.log("wdReqPageReview error extract_status  == ", o);

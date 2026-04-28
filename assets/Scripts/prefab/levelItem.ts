@@ -74,26 +74,26 @@ export default class levelItem extends cc.Component {
           if (gameData.setMax > 1) {
             if (1 == gameData.setId) {
               this.round_node.active = true;
-              this.round_label.string = gameData.turnId + "/" + gameData.turnMax + "局 " + gameData.roundId + "/" + gameData.roundMax + "轮";
+              this.round_label.string = `{"gkey_468":{"v1":"${gameData.turnId}","v2":"${gameData.turnMax}","v3":"${gameData.roundId}","v4":"${gameData.roundMax}"}}`;
             } else {
               this.round_node.active = true;
-              this.round_label.string = gameData.turnId + "/" + gameData.turnMax + "局 " + gameData.roundId + "/" + gameData.roundMax + "轮 " + gameData.setId + "/" + gameData.setMax + "场";
+              this.round_label.string = `{"gkey_469":{"v1":"${gameData.turnId}","v2":"${gameData.turnMax}","v3":"${gameData.roundId}","v4":"${gameData.roundMax}","v5":"${gameData.setId}","v6":"${gameData.setMax}"}}`;
             }
           } else if (1 == gameData.roundId) {
             this.round_node.active = true;
-            this.round_label.string = gameData.turnId + "/" + gameData.turnMax + "局";
+            this.round_label.string = `{"gkey_470":{"v1":"${gameData.turnId}","v2":"${gameData.turnMax}"}}`;
           } else {
             this.round_node.active = true;
-            this.round_label.string = gameData.turnId + "/" + gameData.turnMax + "局 " + gameData.roundId + "/" + gameData.roundMax + "轮";
+            this.round_label.string = `{"gkey_468":{"v1":"${gameData.turnId}","v2":"${gameData.turnMax}","v3":"${gameData.roundId}","v4":"${gameData.roundMax}"}}`;
           }
         } else if (1 == gameData.turnId) this.round_node.active = false;else {
           this.round_node.active = true;
-          this.round_label.string = gameData.turnId + "/" + gameData.turnMax + "局";
+          this.round_label.string = `{"gkey_470":{"v1":"${gameData.turnId}","v2":"${gameData.turnMax}"}}`;
         }
       } else if (gameData.roundMax > 1) {
         if (1 == gameData.roundId) this.round_node.active = false;else {
           this.round_node.active = true;
-          this.round_label.string = gameData.roundId + "/" + gameData.roundMax + "轮";
+          this.round_label.string = `{"gkey_325":{"v1":"${gameData.roundId}","v2":"${gameData.roundMax}"}}`;
         }
       } else this.round_node.active = false;
     } else this.round_node.active = false;
@@ -112,9 +112,9 @@ export default class levelItem extends cc.Component {
       this.unlock_node.active = false;
       this.green_arrow.active = false;
       this.gray_arrow.active = false;
-      this.cash_bubble_node.children[0].getComponent(cc.Label).string = "全部收款";
+      this.cash_bubble_node.children[0].getComponent(cc.Label).string = `gkey_471`;
     } else {
-      this.cash_bubble_node.children[0].getComponent(cc.Label).string = "自动收款";
+      this.cash_bubble_node.children[0].getComponent(cc.Label).string = `gkey_003`;
       this.last_node.active = false;
       this.jindu.active = false;
       console.log("gameData.gameLevel", gameData.gameLevel);

@@ -49,7 +49,7 @@ export default class wheelWdrPage extends BasePage {
     }).catch(function (e) {
       console.log(e);
     });
-    var n = PlayerDataSys.nickname || "游客";
+    var n = PlayerDataSys.nickname || `gkey_507`;
     this.user_name.string = EngineUtil.nameFormat(n);
     this.continue_btn.active = false;
     this.animationConfigs[0].anim = this.idle_node[0];

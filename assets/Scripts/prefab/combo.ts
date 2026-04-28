@@ -36,7 +36,7 @@ export default class combo extends cc.Component {
     cc.Tween.stopAllByTarget(this.proBar);
     this.spine.node.active = true;
     this.spine.setAnimation(0, "start", false);
-    this.tipLabel.string = "连击X" + gameData.comboCount;
+    this.tipLabel.string = `{"gkey_220":{"v1":"${gameData.comboCount}"}}`;
     this.tipLabel.node.scale = 0.8;
     this.proBar.fillRange = 1;
     cc.tween(this.tipLabel.node).to(0.1, {

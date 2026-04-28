@@ -59,22 +59,22 @@ export default class wheelWdfPage extends BasePage {
       if (i > Date.now()) {
         this.limit_desc.active = false;
         var p = EngineUtil.getRemainTime(i);
-        this.limit_info.string = "已过期" == p ? "请刷新页面" : "大额提现预计" + EngineUtil.getRemainTime(i) + "后到账";
+        this.limit_info.string = `gkey_294` == p ? `gkey_578` : `{"gkey_579":{"v1":"${EngineUtil.getRemainTime(i)}"}}`;
         this.schedule(function () {
           var e = EngineUtil.getRemainTime(i);
-          t.limit_info.string = "已过期" == e ? "请刷新页面" : "大额提现预计" + EngineUtil.getRemainTime(i) + "后到账";
+          t.limit_info.string = `gkey_294` == e ? `gkey_578` : `{"gkey_579":{"v1":"${EngineUtil.getRemainTime(i)}"}}`;
         }, 1);
       } else if (s < c) {
         this.limit_desc.active = true;
-        this.limit_info.string = "真人验证：通过\n<color = #FF5039>" + s + "/" + c + "</c>关后到账";
-      } else a < n && (this.limit_info.string = "真人验证：用户等级达到\n<color = #FF5039>" + a + "/" + n + "</c>级到账");
+        this.limit_info.string = `{"gkey_580":{"v1":"${s}","v2":"${c}"}}`;
+      } else a < n && (this.limit_info.string = `{"gkey_581":{"v1":"${a}","v2":"${n}"}}`);
     }
     PlayerDataSys.headimgurl && EngineUtil.loadRemoteImg(PlayerDataSys.headimgurl).then(function (e) {
       e && (t.uesr_head.getComponent(cc.Sprite).spriteFrame = new cc.SpriteFrame(e));
     }).catch(function (e) {
       console.log(e);
     });
-    var d = PlayerDataSys.nickname || "游客";
+    var d = PlayerDataSys.nickname || `gkey_507`;
     this.user_name.string = EngineUtil.nameFormat(d);
     if (this.hasUsed(this.lucky_draw_id)) {
       for (var f = 0; f < this.idle_node.length; f++) this.idle_node[f].node.active = true;

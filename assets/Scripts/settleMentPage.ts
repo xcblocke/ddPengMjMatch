@@ -113,10 +113,10 @@ export default class settleMentPage extends BasePage {
     AudioManager.getInstance().playMusic("yanhua");
     if (gameData.gameLevel <= 2) {
       this.cashNumLabel.string = "" + PlayerDataSys.getCNCashNum(gameData.tg_reward);
-      this.onlyCashLabel.string = "只要" + PlayerDataSys.getCNCashNum(gameData.tg_reward) + "元";
+      this.onlyCashLabel.string = `{"gkey_084":{"v1":"${PlayerDataSys.getCNCashNum(gameData.tg_reward)}"}}`;
     } else {
       this.cashNumLabel.string = "" + PlayerDataSys.getCNCashNum(gameData.levelupCash);
-      this.onlyCashLabel.string = "只要" + PlayerDataSys.getCNCashNum(gameData.levelupCash) + "元";
+      this.onlyCashLabel.string = `{"gkey_084":{"v1":"${PlayerDataSys.getCNCashNum(gameData.levelupCash)}"}}`;
     }
     var o = Number(gameConfig.paramConfig.show_red_bag.para_value);
     this.goldBubbleLb.string = "" + o;
@@ -136,22 +136,22 @@ export default class settleMentPage extends BasePage {
       t = gameData.lun_level;
     if (gameConfig.goldExtractLevel.includes(t)) {
       var o = EngineUtil.findIndex(gameConfig.goldExtractLevel, t);
-      e = "通过本关，<color=#FFF000>红包" + gameConfig.gold_extract_title[o] + "提现</c>";
+      e = `{"gkey_516":{"v1":"${gameConfig.gold_extract_title[o]}"}}`;
     } else if (gameConfig.cashExtractLevel.includes(gameData.gameLevel)) {
       var n = EngineUtil.findIndex(gameConfig.cashExtractLevel, gameData.gameLevel),
         a = gameConfig.withdrawPercent3[n];
-      e = "通过本关，<color=#FFF000>微信收款" + PlayerDataSys.getCashBalance(a * PlayerDataSys.cashBalance) + "元</c>";
-      e = "通过本关，<color=#FFF000>按照" + PlayerDataSys.getCNCashNum(10000 * a) + "%打款</c>";
+      e = `{"gkey_517":{"v1":"${PlayerDataSys.getCashBalance(a * PlayerDataSys.cashBalance)}"}}`;
+      e = `{"gkey_518":{"v1":"${PlayerDataSys.getCNCashNum(10000 * a)}"}}`;
     } else {
       n = Math.floor(gameData.gameLevel / 5) + 2;
       var i = gameConfig.cashExtractLevel[n];
       a = gameConfig.withdrawPercent3[n];
-      e = "再过" + (i - gameData.gameLevel) + "关，<color=#FFF000>微信收款" + PlayerDataSys.getCashBalance(a * PlayerDataSys.cashBalance) + "元</c>";
+      e = `{"gkey_519":{"v1":"${(i - gameData.gameLevel)}","v2":"${PlayerDataSys.getCashBalance(a * PlayerDataSys.cashBalance)}"}}`;
     }
     if (gameData.gameLevel <= 85) {
       this.tgxx_desc.string = "<outline color=#7F4800 width=2>" + e + "</outline>";
     } else {
-      this.tgxx_desc.string = "<outline color=#7F4800 width=2>恭喜过关，领取过关奖励</outline>";
+      this.tgxx_desc.string = `gkey_520`;
     }
   }
   playAnim() {
@@ -236,7 +236,7 @@ export default class settleMentPage extends BasePage {
     if (this.canClick) {
       this.stopLotteryAnimation(this.draw_node);
       var o = function o() {
-        SdkHelper.showForceToast("看完广告 领取大额奖励");
+        SdkHelper.showForceToast(`gkey_272`);
         AudioManager.getInstance().playNativeMusic("video_big_reward");
         EventMgr.trigger(GameEventType.STOP_GAME_TIME);
         var o = function (t, o) {
@@ -258,7 +258,7 @@ export default class settleMentPage extends BasePage {
           }.bind(t, t._showType, t._isforce, t._isAddDiamond),
           n = function (e, t) {
             var o = this;
-            SdkHelper.showForceToast("未看完广告<br><font color='#F74708'>只领取了少量奖励</font>");
+            SdkHelper.showForceToast(`gkey_521`);
             GameSystem.videoReward({
               video_type: e,
               force_type: t,

@@ -52,10 +52,10 @@ export default class wdReturnPage extends BasePage {
         }
       });
       if (0 == a || 1 == a) {
-        this.wd_ratio.string = 100 * r + "%收款全返";
+        this.wd_ratio.string = `{"gkey_160":{"v1":"${100 * r}"}}`;
         u = 0.03;
       } else {
-        this.wd_ratio.string = 100 * l + "%收款全返";
+        this.wd_ratio.string = `{"gkey_160":{"v1":"${100 * l}"}}`;
         u = gameConfig.withdrawPercent3[a + 1];
       }
       var h = gameConfig.cashExtractLevel[a + 1],
@@ -63,7 +63,7 @@ export default class wdReturnPage extends BasePage {
       g <= 0 && (h = gameConfig.cashExtractLevel[a + 2]) && (g = h - gameData.successCount);
       g <= 0 && (h = gameConfig.cashExtractLevel[a + 3]) && (g = h - gameData.successCount);
       g <= 0 && (g = 10);
-      this.next_desc.string = "再过" + g + "关，自动发起" + 100 * u + "%收款";
+      this.next_desc.string = `{"gkey_161":{"v1":"${g}","v2":"${100 * u}"}}`;
     }
   }
   closePage() {
@@ -76,7 +76,7 @@ export default class wdReturnPage extends BasePage {
       t = "",
       o = 0;
     if (1 == this.wd_index && this.gameSucc) {
-      t = "再过3关可自动收款" + PlayerDataSys.getCashBalance(0.03 * PlayerDataSys.cashBalance) + "元";
+      t = `{"gkey_559":{"v1":"${PlayerDataSys.getCashBalance(0.03 * PlayerDataSys.cashBalance)}"}}`;
       o = 1;
     }
     GameSystem.getExtractInfo({

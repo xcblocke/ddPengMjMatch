@@ -105,7 +105,7 @@ export default class tujianPage extends BasePage {
       a = this.data.info[0].list.find(function (e) {
         return 1 == e.lock;
       });
-    n.getComponent(cc.RichText).string = a ? "<outline color=#FFFFFF width=1>再过<color=#FF0000>" + (a.level_count_limit - a.current_level_count) + "关</c>，即可解锁一个麻将</outline>" : "<outline color=#FFFFFF width=1>已解锁所有麻将</outline>";
+    n.getComponent(cc.RichText).string = a ? `{"gkey_531":{"v1":"${(a.level_count_limit - a.current_level_count)}"}}` : `gkey_532`;
     this.page1Content.children.forEach(function (t, o) {
       var n = t.getChildByName("lock"),
         a = t.getChildByName("select");
@@ -115,7 +115,7 @@ export default class tujianPage extends BasePage {
       } else {
         a.active = gameData.gameSkinData.cardSkin == Number(e.data.info[0].list[o].id);
       }
-      t.getChildByPath("lock/ly/level").getComponent(cc.Label).string = "通关" + e.data.info[0].list[o].level_count_limit + "次解锁";
+      t.getChildByPath("lock/ly/level").getComponent(cc.Label).string = `{"gkey_533":{"v1":"${e.data.info[0].list[o].level_count_limit}"}}`;
     });
   }
   initPage2() {
@@ -128,14 +128,14 @@ export default class tujianPage extends BasePage {
       a = this.data.info[1].list.find(function (e) {
         return 1 == e.lock;
       });
-    n.getComponent(cc.RichText).string = a ? "<outline color=#FFFFFF width=1>再过<color=#FF0000>" + (a.level_count_limit - a.current_level_count) + "关</c>，即可解锁一个棋盘</outline>" : "<outline color=#FFFFFF width=1>已解锁所有棋盘</outline>";
+    n.getComponent(cc.RichText).string = a ? `{"gkey_534":{"v1":"${(a.level_count_limit - a.current_level_count)}"}}` : `gkey_535`;
     console.log("gameData.gameSkinData.bgSkin", gameData.gameSkinData.bgSkin);
     this.page2Content.children.forEach(function (t, o) {
       var n = t.getChildByName("lock"),
         a = t.getChildByName("select");
       n.active = 1 == e.data.info[1].list[o].lock;
       a.active = gameData.gameSkinData.bgSkin == Number(e.data.info[1].list[o].id) - 3;
-      t.getChildByPath("lock/ly/level").getComponent(cc.Label).string = "通关" + e.data.info[1].list[o].level_count_limit + "次解锁";
+      t.getChildByPath("lock/ly/level").getComponent(cc.Label).string = `{"gkey_533":{"v1":"${e.data.info[1].list[o].level_count_limit}"}}`;
     });
   }
   initPage3() {
@@ -148,7 +148,7 @@ export default class tujianPage extends BasePage {
       a = this.data.info[2].list.find(function (e) {
         return 1 == e.lock;
       });
-    n.getComponent(cc.RichText).string = a ? "<outline color=#FFFFFF width=1>再过<color=#FF0000>" + (a.level_count_limit - a.current_level_count) + "关</c>，即可解锁一个花牌</outline>" : "<outline color=#FFFFFF width=1>已解锁所有花牌</outline>";
+    n.getComponent(cc.RichText).string = a ? `{"gkey_536":{"v1":"${(a.level_count_limit - a.current_level_count)}"}}` : `gkey_537`;
     for (var i = 0; i < this.data.info[2].list.length; i++) {
       var r = this.page3Content.children[i];
       r || (r = cc.instantiate(this.huaItem));
@@ -170,7 +170,7 @@ export default class tujianPage extends BasePage {
         a = t.getChildByName("select");
       n.active = 1 == e.data.info[2].list[o].lock;
       a.active = gameData.gameSkinData.specialCardSkin == Number(e.data.info[2].list[o].id) - 7;
-      t.getChildByPath("lock/ly/level").getComponent(cc.Label).string = "通关" + e.data.info[2].list[o].level_count_limit + "次解锁";
+      t.getChildByPath("lock/ly/level").getComponent(cc.Label).string = `{"gkey_533":{"v1":"${e.data.info[2].list[o].level_count_limit}"}}`;
     });
   }
   getBgCollectCount() {
@@ -238,8 +238,8 @@ export default class tujianPage extends BasePage {
           e.favorite = o == t ? 1 : 0;
         });
         this.initPage1();
-      } else EngineUtil.showCocosToast2("已选中");
-    } else EngineUtil.showCocosToast2("再通关" + (o.level_count_limit - o.current_level_count) + "次解锁");
+      } else EngineUtil.showCocosToast2(`gkey_538`);
+    } else EngineUtil.showCocosToast2(`{"gkey_539":{"v1":"${(o.level_count_limit - o.current_level_count)}"}}`);
   }
   onPage2ItemClick(e) {
     AudioManager.getInstance().playMusic("click");
@@ -253,8 +253,8 @@ export default class tujianPage extends BasePage {
           e.favorite = o == t ? 1 : 0;
         });
         this.initPage2();
-      } else EngineUtil.showCocosToast2("已选中");
-    } else EngineUtil.showCocosToast2("再通关" + (o.level_count_limit - o.current_level_count) + "次解锁");
+      } else EngineUtil.showCocosToast2(`gkey_538`);
+    } else EngineUtil.showCocosToast2(`{"gkey_539":{"v1":"${(o.level_count_limit - o.current_level_count)}"}}`);
   }
   onPage3ItemClick(e) {
     AudioManager.getInstance().playMusic("click");
@@ -268,8 +268,8 @@ export default class tujianPage extends BasePage {
           e.favorite = o == t ? 1 : 0;
         });
         this.initPage3();
-      } else EngineUtil.showCocosToast2("已选中");
-    } else EngineUtil.showCocosToast2("再通关" + (o.level_count_limit - o.current_level_count) + "次解锁");
+      } else EngineUtil.showCocosToast2(`gkey_538`);
+    } else EngineUtil.showCocosToast2(`{"gkey_539":{"v1":"${(o.level_count_limit - o.current_level_count)}"}}`);
   }
   close() {
     GameSystem.syncTujianData({
@@ -286,7 +286,7 @@ export default class tujianPage extends BasePage {
     var e,
       t = this.data.extract_info;
     this.data.extract_info = t;
-    e = t.collection_count == t.collection_count_limit ? "用户等级达到" + t.user_grade_limit + "级即可领取" : "再解锁" + (t.collection_count_limit - t.collection_count) + "个即可领取";
+    e = t.collection_count == t.collection_count_limit ? `{"gkey_540":{"v1":"${t.user_grade_limit}"}}` : `{"gkey_541":{"v1":"${(t.collection_count_limit - t.collection_count)}"}}`;
     EngineUtil.showCocosToast2(e);
   }
 }

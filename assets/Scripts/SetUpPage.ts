@@ -71,9 +71,9 @@ export default class SetUpPage extends BasePage {
   }
   onEnable() {
     super.onEnable.call(this);
-    this.helpLb.string = PlayerDataSys.isTencent() ? "客服通道" : "帮助中心";
+    this.helpLb.string = PlayerDataSys.isTencent() ? `gkey_522` : `gkey_101`;
     var t = "xiaomi" == SdkHelper.getChannelName().toLowerCase();
-    this.adLb.string = t ? "个性化广告" : "个性化推荐";
+    this.adLb.string = t ? `gkey_523` : `gkey_096`;
     this.comeinTime = new Date().getTime();
     SdkHelper.reportData("b_entry_page", {
       act_page: "setting_page"
@@ -87,7 +87,7 @@ export default class SetUpPage extends BasePage {
   }
   setInfo() {
     var e = this,
-      t = PlayerDataSys.nickname || "游客";
+      t = PlayerDataSys.nickname || `gkey_507`;
     this.nameLabel.string = this.nameFormat(t);
     this.IDLabel.string = "ID:" + PlayerDataSys.userid;
     PlayerDataSys.headimgurl && EngineUtil.loadRemoteImg(PlayerDataSys.headimgurl).then(function (t) {
@@ -105,7 +105,7 @@ export default class SetUpPage extends BasePage {
     this.barrageImg.spriteFrame = "open" == n ? this.turnImgs[1] : this.turnImgs[0];
   }
   nameFormat(e) {
-    for (var t = e.split(""), o = t.length, n = 0, a = "", i = "", r = new RegExp("[一-龥]+"), c = 0; c < o; c++) {
+    for (var t = e.split(""), o = t.length, n = 0, a = "", i = "", r = new RegExp(`gkey_292`), c = 0; c < o; c++) {
       var s = t[c];
       if (r.test(s)) {
         n += 2;
@@ -247,7 +247,7 @@ export default class SetUpPage extends BasePage {
     EventMgr.trigger(GameEventType.PAGE_SHOW, {
       name: "webPage",
       data: {
-        title: "用户协议",
+        title: `gkey_099`,
         url: e,
         index: 0
       },
@@ -263,7 +263,7 @@ export default class SetUpPage extends BasePage {
     EventMgr.trigger(GameEventType.PAGE_SHOW, {
       name: "webPage",
       data: {
-        title: "隐私政策",
+        title: `gkey_257`,
         url: e,
         index: 1
       },

@@ -57,11 +57,11 @@ export default class gradeItem extends cc.Component {
     this.pro_count.string = this._isLast ? "" : n + "/" + o;
     this.pro_spr.fillRange = n / o;
     this.btns[Number(t)].active = true;
-    this.desc.string = this._isLast ? "请继续通关获得称号" : "累计通过" + o + "关";
-    this._toast = this._isLast ? "请继续通关获得称号" : "累计通过" + o + "关可领取";
+    this.desc.string = this._isLast ? `gkey_317` : `{"gkey_318":{"v1":"${o}"}}`;
+    this._toast = this._isLast ? `gkey_317` : `{"gkey_319":{"v1":"${o}"}}`;
     if (this._isMask) {
       this.label_unlock.node.parent.active = true;
-      this.label_unlock.string = "累计通关" + e.pre_level + "关，解锁新称号";
+      this.label_unlock.string = `{"gkey_320":{"v1":"${e.pre_level}"}}`;
     } else this.label_unlock.node.parent.active = false;
     if (this._isLast) {
       this.btns[1].active = false;
@@ -97,6 +97,6 @@ export default class gradeItem extends cc.Component {
     EngineUtil.showCocosToast3(this._toast);
   }
   clickHasGet() {
-    EngineUtil.showCocosToast3("已领取");
+    EngineUtil.showCocosToast3(`gkey_321`);
   }
 }

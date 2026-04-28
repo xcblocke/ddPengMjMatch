@@ -100,32 +100,32 @@ export default class wdSuccFakePage extends BasePage {
   updateStatus(e, t, o) {
     var n = this;
     if (1 == e) {
-      this.dzsj_label.string = "再赚<color#FFBB5B>" + PlayerDataSys.getCashBalanceWithUnit(o - PlayerDataSys.cashBalance) + "</c>立即发起自动收款";
-      this.top_desc.string = "<color=#33D18F>收款失败，" + 100 * t + "%收款单笔最低" + PlayerDataSys.getCashBalance(o) + "元，\n再赚" + PlayerDataSys.getCashBalanceWithUnit(o - PlayerDataSys.cashBalance) + "立即发起自动收款</c>";
-      this.skts_label.string = "资金已打款至平台，再赚<color = #3BB37A>" + PlayerDataSys.getCashBalanceWithUnit(o - PlayerDataSys.cashBalance) + "</c>后自动发起微信收款，建议继续游戏";
+      this.dzsj_label.string = `{"gkey_560":{"v1":"${PlayerDataSys.getCashBalanceWithUnit(o - PlayerDataSys.cashBalance)}"}}`;
+      this.top_desc.string = `{"gkey_561":{"v1":"${100 * t}","v2":"${PlayerDataSys.getCashBalance(o)}","v3":"${PlayerDataSys.getCashBalanceWithUnit(o - PlayerDataSys.cashBalance)}"}}`;
+      this.skts_label.string = `{"gkey_562":{"v1":"${PlayerDataSys.getCashBalanceWithUnit(o - PlayerDataSys.cashBalance)}"}}`;
     } else if (2 == e) {
       this.dzsj_label.string = "" + EngineUtil.formatDateTime(this.limit_days_end_time);
       var a = EngineUtil.getRemainTime(this.limit_days_end_time);
-      this.skts_label.string = "资金到账中，建议继续游戏，提现更多";
-      this.top_desc.string = "已过期" == a ? "请重新刷新页面" : "<color=#33D18F>提现成功，预计" + a + "后可到账微信</c>";
+      this.skts_label.string = `gkey_563`;
+      this.top_desc.string = `gkey_294` == a ? `gkey_564` : `{"gkey_565":{"v1":"${a}"}}`;
       this.status_timeout = function () {
         n.schedule(function () {
           var e = EngineUtil.getRemainTime(n.limit_days_end_time);
-          n.top_desc.string = "已过期" == e ? "请重新刷新页面" : "<color=#33D18F>提现成功，预计" + e + "后可到账微信</c>";
+          n.top_desc.string = `gkey_294` == e ? `gkey_564` : `{"gkey_565":{"v1":"${e}"}}`;
         }, 1);
       };
     } else if (3 == e) {
-      this.skts_label.string = "防刷验证中，打卡<color = #3BB37A>" + this.sign + "/" + this.sign_limit + "天</c>自动到账，建议继续游戏";
-      this.dzsj_label.string = "打卡<color#FFBB5B>" + this.sign + "/" + this.sign_limit + "</c>天，每天通关" + this.sign_pass + "/" + this.sign_pass_limit + "次立即到账";
-      this.top_desc.string = "<color=#898989>*由于平台近日遭受恶意刷单，\n大额需要进行验证后到账</c>";
+      this.skts_label.string = `{"gkey_566":{"v1":"${this.sign}","v2":"${this.sign_limit}"}}`;
+      this.dzsj_label.string = `{"gkey_567":{"v1":"${this.sign}","v2":"${this.sign_limit}","v3":"${this.sign_pass}","v4":"${this.sign_pass_limit}"}}`;
+      this.top_desc.string = `gkey_568`;
     } else if (4 == e) {
-      this.skts_label.string = "防刷验证中，解锁<color = #3BB37A>" + this.collection_count + "/" + this.collection_count_limit + "个</c>图鉴自动到账，建议继续游戏";
-      this.dzsj_label.string = "解锁图鉴<color#FFBB5B>" + this.collection_count + "/" + this.collection_count_limit + "</c>个立即到账";
-      this.top_desc.string = "<color=#898989>*由于平台近日遭受恶意刷单，\n大额需要进行验证后到账</c>";
+      this.skts_label.string = `{"gkey_569":{"v1":"${this.collection_count}","v2":"${this.collection_count_limit}"}}`;
+      this.dzsj_label.string = `{"gkey_570":{"v1":"${this.collection_count}","v2":"${this.collection_count_limit}"}}`;
+      this.top_desc.string = `gkey_568`;
     } else if (5 == e) {
-      this.skts_label.string = "防刷验证中，用户等级<color = #3BB37A>" + this.user_grade + "/" + this.user_grade_limit + "</c>自动到账，建议继续游戏";
-      this.dzsj_label.string = "用户等级达到<color#FFBB5B>" + this.user_grade + "/" + this.user_grade_limit + "</c>级，立即到账";
-      this.top_desc.string = "<color=#898989>*由于平台近日遭受恶意刷单，\n大额需要进行验证后到账</c>";
+      this.skts_label.string = `{"gkey_571":{"v1":"${this.user_grade}","v2":"${this.user_grade_limit}"}}`;
+      this.dzsj_label.string = `{"gkey_572":{"v1":"${this.user_grade}","v2":"${this.user_grade_limit}"}}`;
+      this.top_desc.string = `gkey_568`;
     }
   }
   start() {}

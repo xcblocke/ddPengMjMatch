@@ -48,7 +48,7 @@ export default class helpCenterPage extends BasePage {
     this.web.url = t;
   }
   webCall() {
-    SdkHelper.showToast("网络异常，请检查网络~");
+    SdkHelper.showToast(`gkey_323`);
   }
   close() {
     this.web.node.off("error", this.webCall, this);

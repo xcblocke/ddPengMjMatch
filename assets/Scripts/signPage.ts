@@ -33,7 +33,7 @@ export default class signPage extends BasePage {
     this.cb = (null == e ? void 0 : e.cb) || null;
     this.gameSucc = this.gameSucc || (null == e ? void 0 : e.gameSucc) || false;
     e = (null == e ? void 0 : e.info) || PlayerDataSys.sign_in_info || null;
-    this.title.string = "已登录<color=#7FFFA2><size=41> " + e[0].login_days + " </size></c>天";
+    this.title.string = `{"gkey_524":{"v1":"${e[0].login_days}"}}`;
     for (var t = 0; t < e.length; t++) {
       var o = e[t],
         n = this.items[t];

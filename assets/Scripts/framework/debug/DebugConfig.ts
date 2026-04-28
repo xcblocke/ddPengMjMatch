@@ -25,10 +25,10 @@ export var DebugProperty = {
   luckyCount: 0
 };
 export var DebugConfig = [{
-  title: "删除用户",
+  title: `gkey_277`,
   isOpen: false,
   children: [{
-    title: "确认删除",
+    title: `gkey_278`,
     type: DebugType.Button,
     func: async function () {
       var e;
@@ -44,27 +44,27 @@ export var DebugConfig = [{
     }
   }]
 }, {
-  title: "基础测试",
+  title: `gkey_279`,
   isOpen: false,
   children: [{
-    title: "跳关",
+    title: `gkey_028`,
     type: DebugType.Button,
     func: function () {
       GlobalApp.GameMain.passClick();
     }
   }, {
-    title: "广告开关",
+    title: `gkey_280`,
     type: DebugType.Button,
     func: function (e) {
       AdManager.getInstance().noAdTest = !AdManager.getInstance().noAdTest;
       var t = AdManager.getInstance().noAdTest;
-      e.btnLabel.string = t ? "广告已关" : "广告已开";
+      e.btnLabel.string = t ? `gkey_281` : `gkey_282`;
     },
     params: {
-      btnLabel: "广告已开"
+      btnLabel: `gkey_282`
     }
   }, {
-    title: "对局时间",
+    title: `gkey_283`,
     type: DebugType.Watch,
     params: {
       watchValue: function () {
@@ -72,17 +72,17 @@ export var DebugConfig = [{
       }
     }
   }, {
-    title: "重开游戏",
+    title: `gkey_284`,
     type: DebugType.Button,
     func: function () {}
   }, {
-    title: "跳指定关文本",
+    title: `gkey_285`,
     type: DebugType.EditBox,
     func: function (e, t) {
       DebugProperty.levelNum = +t;
     }
   }, {
-    title: "跳指定关",
+    title: `gkey_286`,
     type: DebugType.Button,
     func: async function () {
       await Service.commonApiPost(RequestType.setLevel, {
@@ -92,7 +92,7 @@ export var DebugConfig = [{
     }
   }]
 }, {
-  title: "页面展示",
+  title: `gkey_287`,
   isOpen: false,
   children: []
 }];

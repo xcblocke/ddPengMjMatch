@@ -73,7 +73,7 @@ class _PlayerDataSys extends PlayerDataMgr {
       this.createtime = l;
       this.gender = c;
       this.headimgurl = d;
-      this.nickname = u || "游客1248152";
+      this.nickname = u || `{"gkey_276":{"v1":"${1248152}"}}`;
       this.cashBalance = n;
       this.goldBalance = g;
       gameData.extract_desc = v;
@@ -172,7 +172,7 @@ class _PlayerDataSys extends PlayerDataMgr {
       n = e.headimgurl,
       a = e.nickname;
     this.bindphone = t || 0;
-    this.gender = o || "保密";
+    this.gender = o || `gkey_269`;
     this.headimgurl = n || "";
     this.nickname = a || "";
     this.bindwx = 1;
@@ -191,7 +191,7 @@ class _PlayerDataSys extends PlayerDataMgr {
     }
     return this.getCNCashNum(e);
   }
-  getCashBalanceWithUnit(e = this.cashBalance, t = "元") {
+  getCashBalanceWithUnit(e = this.cashBalance, t = `gkey_002`) {
     if (!e) {
       e = this.cashBalance;
       var o = cc.sys.localStorage.getItem("make_up_reward");
@@ -214,7 +214,7 @@ class _PlayerDataSys extends PlayerDataMgr {
   getGoldBalance(e = this.goldBalance) {
     return this.getCNGoldBalanceNum(e);
   }
-  getGoldBalanceWithUnit(e = this.goldBalance, t = "元") {
+  getGoldBalanceWithUnit(e = this.goldBalance, t = `gkey_002`) {
     return this.getCNGoldBalanceNum(e) + t;
   }
   setUserGoldBalance(e, t = true) {

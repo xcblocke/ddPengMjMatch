@@ -48,7 +48,7 @@ export default class tujianAutoWdPage extends BasePage {
         });
       }
     }).catch(function () {
-      SdkHelper.showToast("网络异常，请重试");
+      SdkHelper.showToast(`gkey_525`);
     });
     AudioManager.getInstance().stopCash("step_wd_page");
     this._hide();

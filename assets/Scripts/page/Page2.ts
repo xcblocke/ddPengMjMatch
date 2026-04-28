@@ -43,9 +43,9 @@ export default class Page2 extends PageBase {
       t.active = true;
       var o = this.bookData[e];
       t.getChildByName("ly").getChildByName("labName").getComponent(cc.Label).string = o.name;
-      t.getChildByName("ly").getChildByName("auth").getComponent(cc.Label).string = "【作者】：" + o.author;
+      t.getChildByName("ly").getChildByName("auth").getComponent(cc.Label).string = `{"gkey_465":{"v1":"${o.author}"}}`;
       var n = Math.floor(30 * Math.random() + 70);
-      t.getChildByName("labDesc").getComponent(cc.Label).string = "推荐值: " + n + "%";
+      t.getChildByName("labDesc").getComponent(cc.Label).string = `{"gkey_466":{"v1":"${n}"}}`;
       o.randomNum = n;
       cc.find("image_side/name", t).getComponent(cc.Label).string = o.name;
       cc.find("a_quanshu/lb", t).getComponent(cc.Label).string = "" + (e + 1);
@@ -74,9 +74,9 @@ export default class Page2 extends PageBase {
       return t.id === e;
     });
     this.detailItem.getChildByName("ly").getChildByName("labName").getComponent(cc.Label).string = t.name;
-    this.detailItem.getChildByName("ly").getChildByName("auth").getComponent(cc.Label).string = "【作者】：" + t.author;
+    this.detailItem.getChildByName("ly").getChildByName("auth").getComponent(cc.Label).string = `{"gkey_465":{"v1":"${t.author}"}}`;
     this.popLayer.getChildByName("sc").getComponent(cc.Toggle).isChecked = this.isCollected(e);
-    this.detailItem.getChildByName("labDesc").getComponent(cc.Label).string = "推荐值: " + t.randomNum + "%";
+    this.detailItem.getChildByName("labDesc").getComponent(cc.Label).string = `{"gkey_466":{"v1":"${t.randomNum}"}}`;
     cc.find("image_side/name", this.detailItem).getComponent(cc.Label).string = t.name;
     this.detailDesLb.string = t.desc;
   }

@@ -76,12 +76,12 @@ export default class wdItem extends cc.Component {
       } else {
         this.wd_ratio.string = Math.floor(100 * d) + "%";
       }
-      this.wd_level_num.string = "第" + r + "关";
+      this.wd_level_num.string = `{"gkey_064":{"v1":"${r}"}}`;
       if (1 == Number(i) || 2 == Number(i)) {
         if (1 == h) {
-          this.setItemStatus(0, "已到账", 40, "#B5B5B5", "#B5B5B5", "#B5B5B5", 1);
-          this.kdz_label.string = "已到账";
-          this.kdz_num_label.string = PlayerDataSys.getCashBalance(a) + "元";
+          this.setItemStatus(0, `gkey_066`, 40, "#B5B5B5", "#B5B5B5", "#B5B5B5", 1);
+          this.kdz_label.string = `gkey_066`;
+          this.kdz_num_label.string = `{"gkey_039":{"v1":"${PlayerDataSys.getCashBalance(a)}"}}`;
           if (2 == Number(i)) {
             this.finish_return.active = true;
             this.common_return.active = false;
@@ -90,9 +90,9 @@ export default class wdItem extends cc.Component {
             this.common_return.active = false;
           }
         } else {
-          this.setItemStatus(2, "待收款", 40, "#FF0202", "#729980", "#00B26E", 0);
-          this.kdz_label.string = "可到账";
-          this.kdz_num_label.string = t + "元";
+          this.setItemStatus(2, `gkey_156`, 40, "#FF0202", "#729980", "#00B26E", 0);
+          this.kdz_label.string = `gkey_065`;
+          this.kdz_num_label.string = `{"gkey_039":{"v1":"${t}"}}`;
           if (2 == Number(i)) {
             this.finish_return.active = false;
             this.common_return.active = true;
@@ -105,23 +105,23 @@ export default class wdItem extends cc.Component {
         var g = cc.sys.localStorage.getItem("make_up_reward") || "0";
         this.finish_return.active = false;
         this.common_return.active = true;
-        this.kdz_label.string = "可到账";
-        if (1 == h) this.kdz_num_label.string = PlayerDataSys.getCashBalance(a - Number(g)) + "元";else {
-          this.kdz_num_label.string = t + "元";
+        this.kdz_label.string = `gkey_065`;
+        if (1 == h) this.kdz_num_label.string = `{"gkey_039":{"v1":"${PlayerDataSys.getCashBalance(a - Number(g))}"}}`;else {
+          this.kdz_num_label.string = `{"gkey_039":{"v1":"${t}"}}`;
           var _ = this.withdraw_percent_3 * Number(g);
-          _ < 100 * t && (this.kdz_num_label.string = PlayerDataSys.getCashBalance(100 * t - _) + "元");
+          _ < 100 * t && (this.kdz_num_label.string = `{"gkey_039":{"v1":"${PlayerDataSys.getCashBalance(100 * t - _)}"}}`);
         }
         if (0 == n) {
-          this.setItemStatus(2, "待收款", 40, "#FF0202", "#729980", "#00B26E", 0);
+          this.setItemStatus(2, `gkey_156`, 40, "#FF0202", "#729980", "#00B26E", 0);
         } else {
           if (1 == n) {
             if (JSON.parse(EngineUtil.getLocalData("wd_click_status") || "[]")[this.wd_item_id - 1]) {
-              this.setItemStatus(1, "自动收款中", 36, "#FF0202", "#729980", "#00B26E", 0);
+              this.setItemStatus(1, `gkey_552`, 36, "#FF0202", "#729980", "#00B26E", 0);
             } else {
-              this.setItemStatus(2, "待收款", 40, "#FF0202", "#729980", "#00B26E", 0);
+              this.setItemStatus(2, `gkey_156`, 40, "#FF0202", "#729980", "#00B26E", 0);
             }
           } else {
-            n >= 2 && this.setItemStatus(1, "自动收款中", 36, "#FF0202", "#729980", "#00B26E", 0);
+            n >= 2 && this.setItemStatus(1, `gkey_552`, 36, "#FF0202", "#729980", "#00B26E", 0);
           }
         }
       }
@@ -141,9 +141,9 @@ export default class wdItem extends cc.Component {
       extract_info: this.extract_info
     };
     if (0 == this.extract_status) {
-      EngineUtil.showCocosToast3("等待自动收款中~");
+      EngineUtil.showCocosToast3(`gkey_553`);
     } else {
-      this.extract_status >= 1 && (1 == Number(this.wd_item_id) || 2 == Number(this.wd_item_id) ? EngineUtil.showCocosToast3("已到账") : EventMgr.trigger(GameEventType.PAGE_SHOW, {
+      this.extract_status >= 1 && (1 == Number(this.wd_item_id) || 2 == Number(this.wd_item_id) ? EngineUtil.showCocosToast3(`gkey_066`) : EventMgr.trigger(GameEventType.PAGE_SHOW, {
         name: "wdSuccFakePage",
         data: e
       }));

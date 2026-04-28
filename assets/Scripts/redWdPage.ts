@@ -61,7 +61,7 @@ export default class redWdPage extends BasePage {
     }).catch(function (e) {
       console.log(e);
     });
-    var o = PlayerDataSys.nickname || "游客";
+    var o = PlayerDataSys.nickname || `gkey_507`;
     this.user_name.string = EngineUtil.nameFormat(o);
     this.zhedang_node.y = 33 - cc.winSize.height;
   }
@@ -106,7 +106,7 @@ export default class redWdPage extends BasePage {
     t || AudioManager.getInstance().playCash("red_page");
   }
   setTop(e, t, o, n) {
-    this.extract_count.string = "<color=#FFEA2E>" + t + "</c>提现，到账微信<color=#FFEA2E>" + n + "元</c>";
+    this.extract_count.string = `{"gkey_508":{"v1":"${t}","v2":"${n}"}}`;
   }
   setItems(e) {
     for (var t = 0; t < e.length; t++) {
@@ -167,10 +167,10 @@ export default class redWdPage extends BasePage {
           data: e.data
         });
       } else {
-        SdkHelper.showToast(e.message || "网络异常~");
+        SdkHelper.showToast(e.message || `gkey_509`);
       }
     }).catch(function () {
-      SdkHelper.showToast("网络异常~");
+      SdkHelper.showToast(`gkey_509`);
     });
   }
   clickWdDesc() {

@@ -38,7 +38,7 @@ export default class redWdItem extends cc.Component {
   sign_limit = 0;
   sign_pass = 0;
   sign_pass_limit = 0;
-  title = "1倍";
+  title = `{"gkey_472":{"v1":"${1}"}}`;
   step_xc_count = 0;
   xc_level_need_xc_count = 0;
   max_id = 0;
@@ -74,9 +74,9 @@ export default class redWdItem extends cc.Component {
     this.sign = m;
     this.amount = g;
     (0.01 * g).toFixed(2);
-    this.item_level.string = "闯关" + r + "次";
+    this.item_level.string = `{"gkey_473":{"v1":"${r}"}}`;
     this.title_lab.string = f;
-    this.amountText.string = g + "元";
+    this.amountText.string = `{"gkey_039":{"v1":"${g}"}}`;
     this.cancel();
     if (this.max_id == Number(this.tx_id)) {
       this.is_now.active = true;
@@ -131,11 +131,11 @@ export default class redWdItem extends cc.Component {
     e && EngineUtil.showCocosToast3(e);
   }
   cantClick() {
-    EngineUtil.showCocosToast3("已升级，并为你选择了当前最高比例");
+    EngineUtil.showCocosToast3(`gkey_474`);
   }
   withdrawClick() {
     var e = this;
-    if (this.amount < 0.1) EngineUtil.showCocosToast3("可提现金额不足0.1元 继续闯关赚钱吧");else {
+    if (this.amount < 0.1) EngineUtil.showCocosToast3(`{"gkey_475":{"v1":"${0.1}"}}`);else {
       var t = this.getCondition();
       if (t) {
         EngineUtil.showCocosToast3(t);
@@ -166,6 +166,6 @@ export default class redWdItem extends cc.Component {
     }
   }
   getCondition() {
-    return this.right_count_limit - this.right_count > 0 ? "再闯关" + (this.right_count_limit - this.right_count) + "次 可使用" + this.title + "提现" : this.sign_limit > 0 && this.sign_limit > this.sign ? this.sign_pass_limit > this.sign_pass ? "再通关" + (this.sign_pass_limit - this.sign_pass) + "次,完成今日打卡" : "再打卡" + (this.sign_limit - this.sign) + "天,可使用" + this.title + "提现" : this.level_limit > 0 ? this.level >= 29 ? "继续游戏即将升级,30级可使用" + this.title + "提现" : "再看" + (this.xc_level_need_xc_count - this.step_xc_count) + "个视频可升级,30级可使用" + this.title + "提现" : "";
+    return this.right_count_limit - this.right_count > 0 ? `{"gkey_476":{"v1":"${(this.right_count_limit - this.right_count)}","v2":"${this.title}"}}` : this.sign_limit > 0 && this.sign_limit > this.sign ? this.sign_pass_limit > this.sign_pass ? `{"gkey_477":{"v1":"${(this.sign_pass_limit - this.sign_pass)}"}}` : `{"gkey_478":{"v1":"${(this.sign_limit - this.sign)}","v2":"${this.title}"}}` : this.level_limit > 0 ? this.level >= 29 ? `{"gkey_479":{"v1":"${this.title}"}}` : `{"gkey_480":{"v1":"${(this.xc_level_need_xc_count - this.step_xc_count)}","v2":"${this.title}"}}` : "";
   }
 }

@@ -24,7 +24,7 @@ export default class wxTipPage extends BasePage {
       name: "webPage",
       data: {
         is_first: true,
-        title: "隐私政策",
+        title: `gkey_257`,
         url: e,
         index: 1
       },
@@ -40,7 +40,7 @@ export default class wxTipPage extends BasePage {
       name: "webPage",
       data: {
         is_first: true,
-        title: "用户协议",
+        title: `gkey_099`,
         url: e,
         index: 0
       },
