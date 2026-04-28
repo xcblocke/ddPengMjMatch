@@ -77,13 +77,9 @@ export default class loading extends cc.Component {
     GlobalDataSys.init();
     this.preLoadPrefab();
     this.loadProgress.init();
-    if (EngineUtil.getLocalData("user_agreement")) {
-      SdkHelper.initOtherSDK(true);
-    } else {
-      EventMgr.trigger(GameEventType.PAGE_SHOW, {
-        name: "agreementPage"
-      });
-    }
+    // Skip agreement/user notice popup on startup, go straight to loading flow.
+    EngineUtil.setLocalData("user_agreement", "1");
+    SdkHelper.initOtherSDK(true);
   }
   preLoadPrefab() {}
   getMiddleCfg() {
