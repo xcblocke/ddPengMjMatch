@@ -173,7 +173,7 @@ export default class i18 {
         }
 
         let data = getContryData(lan);
-        i18.myLanguge = data.language;
+        i18.myLanguge = CC_DEBUG ? "zh" : data.language;
         i18.updataString();
     }
 
@@ -245,6 +245,23 @@ export default class i18 {
         if (!i18.i18nArray) {
             return;
         }
+        if (string.indexOf("{") != -1) {
+            try {
+                let data = JSON.parse(string);
+                for (let key in data) {
+                    let str = i18.changeStr(key);
+                    let pdata = data[key];
+                    for (let i in pdata) {
+                        let rstr = i18.getKeyStr(pdata[i]) || pdata[i];
+                        let code = i.substring(1, i.length);
+                        str = str.replace(`xxx_${code}`, rstr);
+                    }
+                    return str;
+                }
+            } catch (e) {
+    
+            }
+        }
         let str = i18.changeStr(string);
         if (str) {
             let pindex = str.indexOf("??&");
@@ -261,6 +278,7 @@ export default class i18 {
             }
             return str;
         }
+    
         return null;
     }
 }
