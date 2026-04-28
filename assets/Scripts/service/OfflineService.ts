@@ -823,7 +823,7 @@ export default class OfflineService {
         break;
       case "behaviors/big_scroll_msg":
         response = success({
-          dm_info: clone(DEFAULT_BIG_MSG)
+          dm_info: []
         });
         break;
       case "game/start_game":
