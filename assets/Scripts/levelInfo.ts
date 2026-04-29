@@ -35,7 +35,7 @@ export default class levelInfo extends cc.Component {
     this.levelLb.node.active = true;
     this.bg.active = true;
     this.content_node.active = false;
-    this.levelLb.string = `{"gkey_064":{"v1":"${gameData.gameLevel}"}}`;
+    this.levelLb.string = gameData.gameLevel.toString();
     for (var e = this.getShowLevelArr(gameData.gameLevel), t = 0; t < e.length; t++) if (this.content_node.childrenCount >= 5) this.content_node.children[t].getComponent(levelItem).init({
       num: e[t],
       is_last: t == e.length - 1

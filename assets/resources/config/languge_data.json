@@ -192,7 +192,7 @@
 	"zh": "xxx_1倍提现，到账xxx_2元"
 }, {
 	"key": "gkey_064",
-	"zh": "第xxx_1关"
+	"zh": "Level"
 }, {
 	"key": "gkey_065",
 	"zh": "可到账"
@@ -660,7 +660,7 @@
 	"zh": "再过<color=#E52724>xxx_1</color>关,自动发起<color=#E52724>xxx_2%</color>收款"
 }, {
 	"key": "gkey_220",
-	"zh": "连击Xxxx_1"
+	"zh": "连击"
 }, {
 	"key": "gkey_221",
 	"zh": "恭喜"

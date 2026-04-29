@@ -214,7 +214,7 @@ export default class loading extends cc.Component {
           if (3 == t && PlayerDataSys.isOppoReviewer()) {
             e.active = false;
           } else {
-            e.active = true;
+            e.active = false;
           }
         });
       }
