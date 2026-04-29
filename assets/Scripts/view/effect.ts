@@ -12,6 +12,7 @@ export enum EffectType {
   Cash = 0,
   Red = 1,
   Diamond = 2,
+  Dollar = 3,
 }
 @ccclass
 export default class effect extends cc.Component {
@@ -22,6 +23,8 @@ export default class effect extends cc.Component {
   balanceUi: cc.Node = null;
   @property(cc.Node)
   redUi: cc.Node = null;
+  @property(cc.Node)
+  dollarUi: cc.Node = null;
   @property(cc.Prefab)
   balanceEffect: cc.Prefab = null;
   @property(cc.Node)
@@ -58,6 +61,8 @@ export default class effect extends cc.Component {
     s || (s = 0);
     if (s == EffectType.Cash) {
       this.endNode = this.balanceUi;
+    } else if (s == EffectType.Dollar) {
+      this.endNode = this.dollarUi;
     } else {
       s == EffectType.Red && (this.endNode = this.redUi);
     }

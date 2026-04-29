@@ -9,6 +9,7 @@ import { VideoType, PropType } from '../framework/enum/AllEnum';
 import { gameData } from '../data/GameData';
 import CommonUtil from '../common/CommonUtil';
 import SdkHelper from '../framework/SdkHelper';
+import { levelRewardCoin } from '../config';
 const {
   ccclass,
   property
@@ -39,6 +40,15 @@ export default class buttonMgr extends cc.Component {
       gameData.tg_reward = e.tg_reward;
       gameData.canCashExtract = e.is_extract;
       gameData.extractStatus = e.extract_status;
+      // On level pass: update localStorage + GameData immediately, but do not refresh top UI yet.
+      if (gameData.dollarRewardAppliedLevel !== gameData.gameLevel) {
+        var add = Number(levelRewardCoin) || 0;
+        gameData.dollarBalance = Number(gameData.dollarBalance || 0) + add;
+        gameData.dollarLastAdd = add;
+        gameData.dollarRewardAppliedLevel = gameData.gameLevel;
+        EngineUtil.setLocalData("user_dollar_balance", String(gameData.dollarBalance));
+        EngineUtil.setLocalData("user_dollar_reward_applied_level", String(gameData.dollarRewardAppliedLevel));
+      }
       var o = {
         type: VideoType.Pass,
         is_force: t,

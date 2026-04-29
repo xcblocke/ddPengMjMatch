@@ -24,6 +24,7 @@ import { gameConfig } from './data/GameConfig';
 import LevelStart from './LevelStart';
 import mainBtnGroupCtrl from './mainBtnGroupCtrl';
 import { GuideEnum } from './framework/enum/GuideConfig';
+import { levelRewardCoin } from './config';
 const {
   ccclass,
   property
@@ -34,6 +35,10 @@ export default class GameMain extends cc.Component {
   wxNode: cc.Node = null;
   @property(cc.Node)
   goldNode: cc.Node = null;
+
+  @property(cc.Node)
+  dollarNode: cc.Node = null;
+
   @property(cc.Node)
   map_root: cc.Node = null;
   @property(cc.Node)
@@ -103,6 +108,9 @@ export default class GameMain extends cc.Component {
   mainBtnGroupCtrl: mainBtnGroupCtrl = null;
   @property(cc.Node)
   teachGuideNode: cc.Node = null;
+  // Main scene coin UI (top-left in screenshot 1).
+  _coinTextNode: cc.Node = null;
+  _coinTextLabel: cc.Label = null;
   _gridRows = 0;
   _gridCols = 0;
   _cardGrid = [];
@@ -173,6 +181,7 @@ export default class GameMain extends cc.Component {
     GlobalApp.TouchCtrl = this._touchCtrl;
     this.updateGameSkin();
     this.clearGameUI();
+    this.initCoinBalance();
     this.addEvent();
     this.startGame(false, true);
   }
@@ -206,6 +215,7 @@ export default class GameMain extends cc.Component {
     EventMgr.listen(GameEventType.RESTART_GAME, this.reStartGame, this);
     EventMgr.listen(GameEventType.PASS_LEVEL_EFFECT, this.playPassLevelEffect, this);
     EventMgr.listen(GameEventType.UPDATE_COMBO_COUNT, this.updateComboCount, this);
+    EventMgr.listen(GameEventType.UPDATE_DOLLARBALANCE, this.updateCoinTextUI, this);
     EventMgr.listen(GameEventType.FULL_SCREEN_CLICK, this.closePropTip, this);
     EventMgr.listen(GameEventType.FULL_SCREEN_MOVE, this.closePropTip, this);
   }
@@ -225,6 +235,7 @@ export default class GameMain extends cc.Component {
     EventMgr.ignore(GameEventType.RESTART_GAME, this.reStartGame, this);
     EventMgr.ignore(GameEventType.PASS_LEVEL_EFFECT, this.playPassLevelEffect, this);
     EventMgr.ignore(GameEventType.UPDATE_BACK_STEP_STATE, this.updateBackStepBtnState, this);
+    EventMgr.ignore(GameEventType.UPDATE_DOLLARBALANCE, this.updateCoinTextUI, this);
     EventMgr.ignore(GameEventType.FULL_SCREEN_CLICK, this.closePropTip, this);
     EventMgr.ignore(GameEventType.FULL_SCREEN_MOVE, this.closePropTip, this);
   }
@@ -271,6 +282,66 @@ export default class GameMain extends cc.Component {
       return;
     }).catch(function () {});
     return;
+  }
+
+  _findNodeByName(root: any, name: string) {
+    if (!root) return null;
+    if (root.name === name) return root;
+    if (!root.children) return null;
+    for (let i = 0; i < root.children.length; i++) {
+      const child = root.children[i];
+      const res = this._findNodeByName(child, name);
+      if (res) return res;
+    }
+    return null;
+  }
+
+  initCoinBalance() {
+    // Local-only coin system.
+    const COIN_KEY = "user_dollar_balance";
+    const COIN_REWARD_LEVEL_KEY = "user_dollar_reward_applied_level";
+    const raw = EngineUtil.getLocalData(COIN_KEY);
+    let coin = Number(raw);
+    if (raw === "" || Number.isNaN(coin)) {
+      coin = 100;
+      EngineUtil.setLocalData(COIN_KEY, String(coin));
+    }
+    gameData.dollarBalance = coin < 0 ? 0 : Math.floor(coin);
+    gameData.dollarLastAdd = 0;
+    const appliedRaw = EngineUtil.getLocalData(COIN_REWARD_LEVEL_KEY);
+    const appliedLevel = Number(appliedRaw);
+    gameData.dollarRewardAppliedLevel = Number.isNaN(appliedLevel) ? 0 : Math.floor(appliedLevel);
+    // Cache coin label node (may not exist in editor tests).
+    this.updateCoinTextUI(gameData.dollarBalance);
+  }
+
+  updateCoinTextUI(v: any = null) {
+    if (null != v && v !== "") {
+      if (typeof v === "object" && v.end !== undefined) {
+        gameData.dollarBalance = Math.floor(Number(v.end) || 0);
+      } else {
+        gameData.dollarBalance = Math.floor(Number(v) || 0);
+      }
+    }
+    if (!this._coinTextNode) {
+      this._coinTextNode = this._findNodeByName(this.node, "coinText");
+      if (!this._coinTextNode) this._coinTextNode = this._findNodeByName(cc.director.getScene(), "coinText");
+      this._coinTextLabel = this._coinTextNode ? this._coinTextNode.getComponent(cc.Label) : null;
+    }
+    if (this._coinTextLabel) {
+      this._coinTextLabel.string = String(gameData.dollarBalance || 0);
+    }
+  }
+
+  addCoinRewardForLevelPass() {
+    const curLevel = gameData.gameLevel;
+    if (gameData.dollarRewardAppliedLevel === curLevel) return;
+    const add = Number(levelRewardCoin) || 0;
+    gameData.dollarBalance = Number(gameData.dollarBalance || 0) + add;
+    gameData.dollarLastAdd = add;
+    gameData.dollarRewardAppliedLevel = curLevel;
+    EngineUtil.setLocalData("user_dollar_balance", String(gameData.dollarBalance));
+    EngineUtil.setLocalData("user_dollar_reward_applied_level", String(gameData.dollarRewardAppliedLevel));
   }
   reStartGame() {
     AudioManager.getInstance().playMusic("btntouch");
@@ -686,6 +757,9 @@ export default class GameMain extends cc.Component {
       gameData.tg_reward = t.tg_reward;
       gameData.canCashExtract = t.is_extract;
       gameData.extractStatus = t.extract_status;
+      // Local-only coin reward is applied after settlement "claim".
+      // Store pending add amount now, so settleMentPage can animate + update coin UI.
+      gameData.dollarLastAdd = Number(levelRewardCoin) || 0;
       var n = {
         type: VideoType.Pass,
         is_force: o,

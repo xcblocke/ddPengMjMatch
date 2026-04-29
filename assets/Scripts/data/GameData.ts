@@ -39,6 +39,12 @@ export default class GameData {
   guideStep = 0;
   _grade_pop_data = null;
   tg_reward = 0;
+  // Local-only "gold coin" system (separate from cash/gold balance extracted from server).
+  dollarBalance = 0;
+  // Coin reward added for the last level pass; used for flying animation on settlement claim.
+  dollarLastAdd = 0;
+  // Guard to avoid adding coin reward multiple times for the same level.
+  coinRewardAppliedLevel = 0;
   comboCount = 0;
   lun_level = 0;
   red_bag_value = [];

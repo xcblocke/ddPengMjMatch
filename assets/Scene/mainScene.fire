@@ -219,7 +219,7 @@
       "array": [
         0,
         0,
-        520.4812676744476,
+        0,
         0,
         0,
         0,
@@ -3119,7 +3119,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -242.713,
+        -301.931,
         731.322,
         0,
         0,
@@ -3181,7 +3181,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        0,
+        61.972,
         0,
         0,
         0,
@@ -3275,7 +3275,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -64.817,
+        -2.845,
         2.478,
         0,
         0,
@@ -3369,7 +3369,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        35.839,
+        97.811,
         2.287,
         0,
         0,
@@ -13419,6 +13419,9 @@
     "redUi": {
       "__id__": 106
     },
+    "dollarUi": {
+      "__id__": 68
+    },
     "balanceEffect": {
       "__uuid__": "dc5d06b1-00b6-4427-9a8d-c0568dbcb42c"
     },
@@ -13431,6 +13434,12 @@
       },
       {
         "__uuid__": "ccd4b555-8876-47f0-b45c-19523dc2560c"
+      },
+      {
+        "__uuid__": "d1969f3b-1677-49e5-89e5-8fcb67b06042"
+      },
+      {
+        "__uuid__": "d1969f3b-1677-49e5-89e5-8fcb67b06042"
       }
     ],
     "_id": "ca34kIeJFM6qHFW4xAiUmu"
@@ -17454,6 +17463,9 @@
     },
     "goldNode": {
       "__id__": 103
+    },
+    "dollarNode": {
+      "__id__": 65
     },
     "map_root": {
       "__id__": 9

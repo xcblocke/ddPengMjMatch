@@ -10421,7 +10421,7 @@
     },
     "component": "",
     "_componentId": "b0555jLDZBE/Zi2mfFunB/s",
-    "handler": "allBtnClick",
+    "handler": "onClickClaimn",
     "customEventData": ""
   },
   {
@@ -10603,6 +10603,9 @@
     "tgxx_desc": {
       "__id__": 68
     },
+    "dollarText": {
+      "__id__": 285
+    },
     "beishuNode": {
       "__id__": 198
     },
@@ -10617,6 +10620,9 @@
     },
     "freeNode": {
       "__id__": 163
+    },
+    "dollarNode": {
+      "__id__": 272
     },
     "_id": ""
   },
