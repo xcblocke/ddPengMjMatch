@@ -480,12 +480,15 @@ export default class GameMain extends cc.Component {
           l.x = g;
         }
         c.position = l;
-        var y = c.getComponent(sp.Skeleton),
-          m = Math.floor(3 * Math.random()) + 1;
-        y.setSkin("0" + m);
-        y.setCompleteListener(function () {
+        // var y = c.getComponent(sp.Skeleton),
+        //   m = Math.floor(3 * Math.random()) + 1;
+        // y.setSkin("0" + m);
+        // y.setCompleteListener(function () {
+        //   c.destroy();
+        // });
+        this.scheduleOnce(() => {
           c.destroy();
-        });
+        }, 1);
       }
       if (n) {
         gameData.gameState = GameState.gameResult;
