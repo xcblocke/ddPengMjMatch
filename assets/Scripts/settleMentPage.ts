@@ -98,7 +98,7 @@ export default class settleMentPage extends BasePage {
       goldNum: PlayerDataSys.goldBalance
     });
     GlobalApp.GameMain.clearGameUI();
-    this.freeNode.active = gameData.gameLevel < 3;
+    this.freeNode.active = false;//gameData.gameLevel < 3;
     this._inOperation = false;
     console.log("settlement page data------------", e);
     gameData.isPassLevel = true;
@@ -106,8 +106,8 @@ export default class settleMentPage extends BasePage {
     this._isforce = e.is_force;
     this._cb = e.cb;
     console.log("_isforce", this._isforce);
-    this.demoNode.active = gameData.isOpenDemo;
-    this.normalNode.active = !gameData.isOpenDemo;
+    this.demoNode.active = false;//gameData.isOpenDemo;
+    this.normalNode.active = false;//!gameData.isOpenDemo;
     this.allBtnNode.getChildByName("free").active = gameData.gameLevel < 3;
     AudioManager.getInstance().playMusic("level_pass");
     AudioManager.getInstance().playMusic("yanhua");
@@ -158,7 +158,7 @@ export default class settleMentPage extends BasePage {
     var e = this;
     this.cashNode.active = false;
     this.goldNode.active = false;
-    this.skeleton.node.active = true;
+    this.skeleton.node.active = false;
     if (this.skeleton) {
       console.log("animName", "cx");
       this.skeleton.setAnimation(0, "cx", false);
@@ -167,13 +167,13 @@ export default class settleMentPage extends BasePage {
         const __async_this = e;
         if (!("cx" != t.animation.name)) {
           __async_this.skeleton.setAnimation(0, "dj", true);
-          __async_this.cashNode.active = true;
-          __async_this.goldNode.active = true;
+          __async_this.cashNode.active = false;//true;
+          __async_this.goldNode.active = false;//true;
           gameData.gameLevel > 2 && (__async_this.fanbei_node.opacity = 255);
           await EngineUtil.sleep(200);
-          __async_this.allBtnNode.active = true;
+          __async_this.allBtnNode.active = false;//true;
           await EngineUtil.sleep(800);
-          __async_this.onlyBtnNode.active = true;
+          __async_this.onlyBtnNode.active = false;//true;
         }
         return;
       });
@@ -395,7 +395,7 @@ export default class settleMentPage extends BasePage {
     this.double_num.string = "" + E[e];
     this.cashNumLabel.string = PlayerDataSys.getCashBalance(gameData.levelupCash * E[e]);
     this.beishuNode.children.forEach(function (t, o) {
-      t.getChildByName("select").active = e == o;
+      t.getChildByName("select").active = false;//e == o;
     });
   }
   playQuickLotteryAnimation(e, t, o = 6, n?) {

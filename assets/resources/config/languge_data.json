@@ -690,7 +690,7 @@
 	"zh": "用户须知"
 }, {
 	"key": "gkey_230",
-	"zh": "<outline color=#065600 width=3>通过本关 <color=#FCFF00>继续收款</c></outline>"
+	"zh": "Level xxx_1"
 }, {
 	"key": "gkey_231",
 	"zh": "<outline color=#065600 width=xxx_1>再过<color=#FFF000>3</c>关,自动发起<color=#FFF000>xxx_2%</c>收款</outline>"
@@ -1747,4 +1747,8 @@
 }, {
 	"key": "gkey_583",
 	"zh": "网络异常"
-}]
+}, {
+	"key": "gkey_584",
+	"zh": "领取"
+}
+]
