@@ -44,7 +44,7 @@ export default class GameData {
   // Coin reward added for the last level pass; used for flying animation on settlement claim.
   dollarLastAdd = 0;
   // Guard to avoid adding coin reward multiple times for the same level.
-  coinRewardAppliedLevel = 0;
+  dollarRewardAppliedLevel = 0;
   comboCount = 0;
   lun_level = 0;
   red_bag_value = [];
