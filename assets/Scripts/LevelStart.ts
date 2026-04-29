@@ -44,94 +44,34 @@ export default class LevelStart extends cc.Component {
   game_level = 0;
   init(e) {
     var t = this,
-      o = e.cb || null,
-      n = gameData.gameLevel;
-    this.game_level = n;
-    if (2 == n) {
-      SdkHelper.reportData("level_2_show");
-      this.csah_hf.active = true;
-      this.csah_tgbg.active = true;
-      this.csah_tgbg.getComponent(cc.RichText).string = `gkey_326`;
-      this.csah_hf.stopAllActions();
-      this.csah_hf.x = -500;
-      this.csah_hf.opacity = 0;
-      AudioManager.getInstance().playCash("step_reward6");
-      cc.tween(this.csah_hf).delay(0.5).to(0.2, {
-        x: 0,
-        opacity: 255
-      }).delay(1).to(0.2, {
-        x: 500,
-        opacity: 0
-      }).call(function () {
-        AudioManager.getInstance().stopMusic("step_reward6", false);
-        t.csah_hf.active = false;
-        t.csah_tgbg.active = false;
-        t.node.active = false;
-        o && o();
-      }).start();
-    } else {
-      var a = [];
-      gameConfig.lucky_level_count_limit.includes(n) && a.push(1);
-      gameConfig.cashExtractLevel.includes(n) && a.push(2);
-      var i = gameData.lun_level;
-      gameConfig.goldExtractLevel.includes(i) && a.push(3);
-      if (4 == gameData.gameLevel) {
-        a = [4];
-      } else {
-        gameConfig.redBagLevel.includes(n) && a.push(4);
-      }
-      console.log("show_arr", a);
-      if (0 == a.length) {
-        this.showCashOne(o);
-      } else {
-        if (1 == a.length) {
-          if (1 == a[0]) {
-            this.showCashOne(o, "showGoldOne");
-          } else {
-            if (2 == a[0]) {
-              this.showCashTwo(o);
-            } else {
-              if (3 == a[0]) {
-                this.showCashOne(o, "showGoldTwo");
-              } else {
-                4 == a[0] && this.showCashOne(o, "showGoldThree");
-              }
-            }
-          }
-        } else {
-          if (2 == a.length) {
-            if (1 == a[0] && 2 == a[1]) {
-              this.showCashTwo(o, "showGoldOne");
-            } else {
-              if (1 == a[0] && 3 == a[1]) {
-                this.showGoldOne(o, "showGoldTwo");
-              } else {
-                if (1 == a[0] && 4 == a[1]) {
-                  this.showGoldOne(o, "showGoldThree");
-                } else {
-                  if (2 == a[0] && 3 == a[1]) {
-                    this.showCashTwo(o, "showGoldTwo");
-                  } else {
-                    if (2 == a[0] && 4 == a[1]) {
-                      this.showCashTwo(o, "showGoldThree");
-                    } else {
-                      if (3 == a[0] && 4 == a[1]) {
-                        this.showGoldTwo(o, "showGoldThree");
-                      } else {
-                        4 == a[0] && 3 == a[1] && this.showGoldTwo(o, "showGoldThree");
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          } else {
-            3 == a.length && this.showGoldOne(o, "showGoldTwo");
-          }
-        }
-      }
-    }
-    3 == gameData.gameLevel && SdkHelper.reportData("level_3_show");
+      o = e.cb || null;
+    this.game_level = gameData.gameLevel;
+    // 只保留一次开场横幅动画
+    this.csah_hf.active = true;
+    this.csah_tgbg.active = true;
+    this.cash_text2.active = false;
+    this.cash_text3.active = false;
+    this.year_hf.active = false;
+    this.red_hf.active = false;
+    this.red_node1.active = false;
+    this.red_node2.active = false;
+    this.red_node3.active = false;
+    this.csah_tgbg.getComponent(cc.Label).string = `{"gkey_230":{"v1":"${this.game_level}"}}`;
+    this.csah_hf.stopAllActions();
+    this.csah_hf.x = -500;
+    this.csah_hf.opacity = 0;
+    cc.tween(this.csah_hf).delay(0.4).to(0.2, {
+      x: 0,
+      opacity: 255
+    }).delay(1.2).to(0.2, {
+      x: 500,
+      opacity: 0
+    }).call(function () {
+      t.csah_hf.active = false;
+      t.csah_tgbg.active = false;
+      t.node.active = false;
+      o && o();
+    }).start();
   }
   onDestroy() {
     this.unscheduleAllCallbacks();
