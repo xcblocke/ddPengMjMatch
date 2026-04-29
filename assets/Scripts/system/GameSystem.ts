@@ -60,13 +60,7 @@ class _GameSystem {
         EventMgr.trigger(GameEventType.FRESH_RED_BUBBLE, r);
         "";
         c = 2 == e.video_type || 3 == e.video_type ? `gkey_484` : `gkey_529`;
-        if (o_local > 0 || a > 0) {
-          await PageMgr.showPageByEnum(PageEnum.rewardToastPage, {
-            cash: o_local,
-            red: a,
-            des: c
-          });
-        }
+        // Disabled: do not auto-open reward toast popup during settlement flow.
         t(n);
         return;
       }).catch(function (e) {
@@ -92,13 +86,7 @@ class _GameSystem {
         t_local = n.data.reward;
         a = n.data.gold_reward;
         gameData.gameLevel <= 2 && (t_local = gameData.tg_reward);
-        if (t_local > 0 && e.type != VideoType.NewPlayerReward) {
-          await PageMgr.showPageByEnum(PageEnum.rewardToastPage, {
-            cash: t_local,
-            red: a,
-            des: `gkey_529`
-          });
-        }
+        // Disabled: do not auto-open reward toast popup during settlement flow.
         o(n);
         return;
       }).catch(function (e) {
