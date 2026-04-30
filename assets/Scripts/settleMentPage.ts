@@ -214,6 +214,7 @@ export default class settleMentPage extends BasePage {
   }
 
   onClickClaimn() {
+    AudioManager.getInstance().playMusic("btntouch");
     var e = this;
     if(this._coinFlyOnClaim) return;
     this._coinFlyOnClaim = true;

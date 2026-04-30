@@ -58,7 +58,6 @@ export default class SetUpPage extends BasePage {
     EventMgr.ignore(GameEventType.CLOSE_PERSONPAGE, this._hide, this);
   }
   setInfo() {
-  
     this.versionLabel.string = ClientData.version_name;
     this.musicNormalNode.active = AudioManager.getInstance().getMusicState();
     this.musicUnNode.active = !AudioManager.getInstance().getMusicState();
@@ -66,24 +65,6 @@ export default class SetUpPage extends BasePage {
     this.effectUnNode.active = !AudioManager.getInstance().getAudioState();
     this.shakeNormalNode.active = AudioManager.getInstance().getVibratorState();
     this.shakeUnNode.active = !AudioManager.getInstance().getVibratorState();
-
-   
-  }
-  nameFormat(e) {
-    for (var t = e.split(""), o = t.length, n = 0, a = "", i = "", r = new RegExp(`gkey_292`), c = 0; c < o; c++) {
-      var s = t[c];
-      if (r.test(s)) {
-        n += 2;
-      } else {
-        n++;
-      }
-      if (n > 12) {
-        i = "...";
-        break;
-      }
-      a += s;
-    }
-    return a + i;
   }
   onBtn(e, t) {
     AudioManager.getInstance().playMusic("btntouch");
@@ -169,20 +150,7 @@ export default class SetUpPage extends BasePage {
       }
     });
   }
-  remove() {
-    if (PlayerDataSys.bindwx) {
-      EventMgr.trigger(GameEventType.PAGE_SHOW, {
-        name: "removeUserPage"
-      });
-    } else {
-      EventMgr.trigger(GameEventType.PAGE_SHOW, {
-        name: "wxLoginPage",
-        data: {
-          type: "bind"
-        }
-      });
-    }
-  }
+
   logout() {
     if (PlayerDataSys.bindwx) {
       PageMgr.clear();
