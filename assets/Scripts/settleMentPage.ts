@@ -305,7 +305,7 @@ export default class settleMentPage extends BasePage {
       this.stopLotteryAnimation(this.draw_node);
       var o = function o() {
         SdkHelper.showForceToast(`gkey_272`);
-        AudioManager.getInstance().playNativeMusic("video_big_reward");
+        // AudioManager.getInstance().playNativeMusic("video_big_reward");
         EventMgr.trigger(GameEventType.STOP_GAME_TIME);
         var o = function (t, o) {
             var n = this;

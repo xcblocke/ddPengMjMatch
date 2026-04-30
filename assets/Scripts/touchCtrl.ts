@@ -247,11 +247,11 @@ export default class touchCtrl extends cc.Component {
       v = this;
     console.log("_eliminatePairInternal", e.cardData.type, t.cardData.type, o);
     AudioManager.getInstance().playMusic("Mahjong_Broken");
-    if (Constants.isSpecialCard(e.cardData.type)) {
-      AudioManager.getInstance().playMusic("card/huaCard");
-    } else {
-      AudioManager.getInstance().playMusic("card/" + e.cardData.type);
-    }
+    // if (Constants.isSpecialCard(e.cardData.type)) {
+    //   AudioManager.getInstance().playMusic("card/huaCard");
+    // } else {
+    //   AudioManager.getInstance().playMusic("card/" + e.cardData.type);
+    // }
     var b = cc.v3(0.5 * (e.node.position.x + t.node.position.x), 0.5 * (e.node.position.y + t.node.position.y), 0.5 * (e.node.position.z + t.node.position.z));
     b = e.node.parent.convertToWorldSpaceAR(b);
     EventMgr.trigger(GameEventType.UPDATE_COMBO_COUNT, b);
