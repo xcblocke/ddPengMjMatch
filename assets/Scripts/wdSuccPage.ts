@@ -31,7 +31,6 @@ export default class wdSuccPage extends BasePage {
     this.amount.string = o < 1 ? "" + o : PlayerDataSys.getCNGoldBalanceNum(o);
     this.userName.string = EngineUtil.nameFormat(PlayerDataSys.nickname);
     PlayerDataSys.headimgurl && EngineUtil.loaderHead(PlayerDataSys.headimgurl, this.head);
-    AudioManager.getInstance().playMusic("wd_succ");
     AudioManager.getInstance().playMusic("yanhua");
     if (this.succTip) {
       this.succTip.setPosition(cc.v3(0, 980));

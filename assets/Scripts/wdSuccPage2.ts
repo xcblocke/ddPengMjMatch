@@ -32,7 +32,6 @@ export default class wdSuccPage2 extends BasePage {
     this.amount.string = o < 1 ? "" + o : PlayerDataSys.getCNCashNum(o);
     this.userName.string = EngineUtil.nameFormat(PlayerDataSys.nickname);
     PlayerDataSys.headimgurl && EngineUtil.loaderHead(PlayerDataSys.headimgurl, this.head);
-    AudioManager.getInstance().playMusic("wd_succ");
     AudioManager.getInstance().playMusic("yanhua");
     super._init.call(this, t);
   }

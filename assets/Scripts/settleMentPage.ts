@@ -245,7 +245,6 @@ export default class settleMentPage extends BasePage {
     console.log("on enable----------");
   }
   close(e = null) {
-    AudioManager.getInstance().stopEffect("guide_5");
     this._hide();
     this._cb && this._cb();
   }
@@ -447,7 +446,6 @@ export default class settleMentPage extends BasePage {
   }
   _onHide() {
     super._onHide.call(this);
-    AudioManager.getInstance().stopEffect("guide_5");
     AudioManager.getInstance().stopEffect("level_pass");
     AudioManager.getInstance().stopEffect("yanhua");
   }

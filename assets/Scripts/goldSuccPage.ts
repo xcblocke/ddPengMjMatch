@@ -62,7 +62,6 @@ export default class goldSuccPage extends BasePage {
     this.skeleton.setAnimation(0, "dj2", false);
     this.handNode1.opacity = 0;
     this.skeleton.setCompleteListener(function () {
-      AudioManager.instance.playMusic("gold_succ");
       cc.tween(e.page2).to(0.2, {
         opacity: 255
       }).call(function () {

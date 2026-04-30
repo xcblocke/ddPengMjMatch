@@ -75,7 +75,6 @@ export default class wdSuccRealPage extends BasePage {
         this.gotoWdPage();
       }
     }
-    AudioManager.getInstance().stopCash("wd_succ");
     this._hide();
   }
   gotoWdPage() {

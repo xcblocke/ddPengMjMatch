@@ -131,7 +131,6 @@ export default class wdSuccFakePage extends BasePage {
   start() {}
   closePage() {
     AudioManager.getInstance().playMusic("btntouch");
-    AudioManager.getInstance().stopMusic("wd_succ", false);
     if (this.cash_balance > 0) {
       var e = Object.assign(Object.assign({}, this.data), {
         withdraw_percent_3: this.withdraw_percent_3

@@ -63,7 +63,6 @@ export default class yearReardPage extends BasePage {
   playSkeleton1() {
     var e = this;
     this.passBtn.active = false;
-    AudioManager.getInstance().playCash("year_reward1");
     this.delayShowPassBtn(1.3, this.year_sp1.node);
     this.year_sp1.node.active = true;
     this.year_sp1.node.y = 225;
@@ -79,14 +78,7 @@ export default class yearReardPage extends BasePage {
   playSkeleton2() {
     var e = this;
     this.unscheduleAllCallbacks();
-    AudioManager.getInstance().stopCash("year_reward1");
-    AudioManager.getInstance().playCash("year_reward2_1");
-    this.scheduleOnce(function () {
-      AudioManager.getInstance().playCash("year_reward2_2");
-    }, 4);
-    this.scheduleOnce(function () {
-      AudioManager.getInstance().playCash("year_reward2_3");
-    }, 6);
+
     this.currentStep = 2;
     this.passBtn.active = false;
     this.delayShowPassBtn(1.3, this.year_sp2.node);
@@ -103,9 +95,7 @@ export default class yearReardPage extends BasePage {
   playSkeleton3() {
     var e = this;
     this.unscheduleAllCallbacks();
-    AudioManager.getInstance().stopCash("year_reward2_1");
-    AudioManager.getInstance().stopCash("year_reward2_2");
-    AudioManager.getInstance().stopCash("year_reward2_3");
+
     this.passBtn.active = false;
     this.year_sp2.node.active = false;
     this.year_reward_node.x = -500;

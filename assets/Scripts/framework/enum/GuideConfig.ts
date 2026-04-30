@@ -49,7 +49,7 @@ GuideConfig[GuideEnum.yearRewardGuide] = {
 };
 GuideConfig[GuideEnum.lotteryGuide] = {
   des: `gkey_298`,
-  audioName: "makeMnSound/wheelGuide",
+  audioName: "",
   needShowHand: true,
   isRepeat: false
 };
@@ -61,7 +61,7 @@ GuideConfig[GuideEnum.welcomeGuideTip] = {
 };
 GuideConfig[GuideEnum.wdPageGuide] = {
   des: `gkey_299`,
-  audioName: "withdraw",
+  audioName: "",
   needShowHand: true,
   isBlackClose: true,
   isRepeat: true
@@ -74,14 +74,14 @@ GuideConfig[GuideEnum.gameFail] = {
 GuideConfig[GuideEnum.redShow1] = {
   des: `gkey_300`,
   isBlackClose: true,
-  audioName: "red_wd_guide_1",
-  reportName: "red_wd_guide_1"
+  audioName: "",
+  reportName: ""
 };
 GuideConfig[GuideEnum.redShow2] = {
   des: `gkey_212`,
   isBlackClose: true,
-  audioName: "red_wd_guide_2_s1",
-  reportName: "red_wd_guide_2"
+  audioName: "",
+  reportName: ""
 };
 GuideConfig[GuideEnum.redShow3] = {
   isBlackClose: true,
@@ -91,6 +91,6 @@ GuideConfig[GuideEnum.redShow4] = {
   des: `{"gkey_301":{"v1":"${i(\"0.1元\")}","v2":"${i(\"2关\")}"}}`,
   isBlackClose: true,
   scale: 1,
-  audioName: "red_guide_4"
+  audioName: ""
 };
 export var GuideConfig = GuideConfig;
