@@ -1,16 +1,13 @@
 import AudioManager from './framework/controller/AudioManager';
-import BaseSystem from './framework/controller/BaseSystem';
 import PlayerDataSys from './framework/controller/PlayerDataSys';
 import EventMgr from './framework/Event/EventMgr';
 import GameEventType from './framework/Event/GameEventType';
 import SdkHelper from './framework/SdkHelper';
 import { CUSTOMER_SERVICE } from './framework/SystemConfig';
-import EngineUtil from './framework/EngineUtil';
-import Service from './service/Service';
-import { gameData } from './data/GameData';
-import GameSystem from './system/GameSystem';
+import EngineUtil from './framework/EngineUtil'; 
 import BasePage from './view/BasePage';
 import PageMgr from './view/PageMgr';
+import ClientData from './framework/Event/ClientData';
 const {
   ccclass,
   property
@@ -19,61 +16,36 @@ const {
 export default class SetUpPage extends BasePage {
   cb = null;
   @property(cc.Label)
-  nameLabel: cc.Label = null;
-  @property(cc.Label)
-  lvLabel: cc.Label = null;
-  @property(cc.Label)
-  IDLabel: cc.Label = null;
-  @property(cc.Sprite)
-  head: cc.Sprite = null;
-  @property(cc.Sprite)
-  musicImg: cc.Sprite = null;
-  @property(cc.Sprite)
-  soundImg: cc.Sprite = null;
-  @property(cc.Sprite)
-  gxhImg: cc.Sprite = null;
-  @property(cc.Sprite)
-  zdImg: cc.Sprite = null;
+  versionLabel: cc.Label = null;
+ 
   @property(cc.Node)
-  musicLabel0: cc.Node = null;
+  musicNormalNode: cc.Node = null;
   @property(cc.Node)
-  musicLabel1: cc.Node = null;
+  musicUnNode: cc.Node = null;
   @property(cc.Node)
-  soundLabel0: cc.Node = null;
+
   @property(cc.Node)
-  soundLabel1: cc.Node = null;
+  effectNormalNode: cc.Node = null;
   @property(cc.Node)
-  gxhLabel0: cc.Node = null;
+  effectUnNode: cc.Node = null;
+ 
+
   @property(cc.Node)
-  gxhLabel1: cc.Node = null;
+  shakeNormalNode: cc.Node = null;
   @property(cc.Node)
-  zdLabel0: cc.Node = null;
-  @property(cc.Node)
-  zdLabel1: cc.Node = null;
-  @property(cc.Label)
-  helpLb: cc.Label = null;
-  @property(cc.Label)
-  adLb: cc.Label = null;
-  @property(cc.SpriteFrame)
-  turnImgs: cc.SpriteFrame = [];
-  @property(cc.Node)
-  demoNode: cc.Node = null;
-  @property(cc.EditBox)
-  levelEditBox: cc.EditBox = null;
-  @property(cc.Sprite)
-  barrageImg: cc.Sprite = null;
+  shakeUnNode: cc.Node = null;
+
+
   comeinTime = 0;
   start() {
-    this.demoNode.active = gameData.isOpenDemo;
+   
   }
   _init() {
     this.setInfo();
   }
   onEnable() {
     super.onEnable.call(this);
-    this.helpLb.string = PlayerDataSys.isTencent() ? `gkey_522` : `gkey_101`;
-    var t = "xiaomi" == SdkHelper.getChannelName().toLowerCase();
-    this.adLb.string = t ? `gkey_523` : `gkey_096`;
+  
     this.comeinTime = new Date().getTime();
     SdkHelper.reportData("b_entry_page", {
       act_page: "setting_page"
@@ -86,23 +58,16 @@ export default class SetUpPage extends BasePage {
     EventMgr.ignore(GameEventType.CLOSE_PERSONPAGE, this._hide, this);
   }
   setInfo() {
-    var e = this,
-      t = PlayerDataSys.nickname || `gkey_507`;
-    this.nameLabel.string = this.nameFormat(t);
-    this.IDLabel.string = "ID:" + PlayerDataSys.userid;
-    PlayerDataSys.headimgurl && EngineUtil.loadRemoteImg(PlayerDataSys.headimgurl).then(function (t) {
-      e.head.spriteFrame = new cc.SpriteFrame(t);
-    }).catch(function (e) {
-      console.log(e);
-    });
-    this.musicImg.spriteFrame = this.turnImgs[Number(AudioManager.getInstance().getMusicState())];
-    this.soundImg.spriteFrame = this.turnImgs[Number(AudioManager.getInstance().getAudioState())];
-    this.gxhImg.spriteFrame = this.turnImgs[PlayerDataSys.reco_switch];
-    this.zdImg.spriteFrame = this.turnImgs[Number(AudioManager.getInstance().getVibratorState())];
-    var o = PlayerDataSys.user_level;
-    this.lvLabel.string = "" + o;
-    var n = EngineUtil.localStorageGetItem("barrageIsOpen", "close");
-    this.barrageImg.spriteFrame = "open" == n ? this.turnImgs[1] : this.turnImgs[0];
+  
+    this.versionLabel.string = ClientData.version_name;
+    this.musicNormalNode.active = AudioManager.getInstance().getMusicState();
+    this.musicUnNode.active = !AudioManager.getInstance().getMusicState();
+    this.effectNormalNode.active = AudioManager.getInstance().getAudioState();
+    this.effectUnNode.active = !AudioManager.getInstance().getAudioState();
+    this.shakeNormalNode.active = AudioManager.getInstance().getVibratorState();
+    this.shakeUnNode.active = !AudioManager.getInstance().getVibratorState();
+
+   
   }
   nameFormat(e) {
     for (var t = e.split(""), o = t.length, n = 0, a = "", i = "", r = new RegExp(`gkey_292`), c = 0; c < o; c++) {
@@ -124,18 +89,11 @@ export default class SetUpPage extends BasePage {
     AudioManager.getInstance().playMusic("btntouch");
     if ("zd" == t) {
       this.touchZdBtn();
-    } else {
-      if ("yx" == t) {
+    } else {if ("yx" == t) {
         this.effectTouch();
       } else {
         if ("yy" == t) {
           this.musicTouch();
-        } else {
-          if ("gx" == t) {
-            this.touchPersonality();
-          } else {
-            "dm" == t && this.touchBarrageBtn();
-          }
         }
       }
     }
@@ -146,72 +104,31 @@ export default class SetUpPage extends BasePage {
     } else {
       AudioManager.getInstance().openVibrator();
     }
-    this.zdImg.spriteFrame = this.turnImgs[Number(AudioManager.getInstance().getVibratorState())];
+    this.shakeNormalNode.active = AudioManager.getInstance().getVibratorState();
+    this.shakeUnNode.active = !AudioManager.getInstance().getVibratorState();
     SdkHelper.reportData("click_vibrateTouch");
   }
-  touchBarrageBtn() {
-    AudioManager.getInstance().playMusic("btntouch");
-    var e = EngineUtil.localStorageGetItem("barrageIsOpen", "close");
-    EngineUtil.localStorageSetItem("barrageIsOpen", "open" == e ? "close" : "open");
-    var t = EngineUtil.localStorageGetItem("barrageIsOpen", "close");
-    this.barrageImg.spriteFrame = "open" == t ? this.turnImgs[1] : this.turnImgs[0];
-    SdkHelper.reportData("click_barrageTouch", {
-      state: t
-    });
-    EventMgr.trigger(GameEventType.UPDATE_DANMU);
-  }
+ 
   effectTouch() {
     if (AudioManager.getInstance().getAudioState()) {
       AudioManager.getInstance().closeAudio();
     } else {
       AudioManager.getInstance().openAudio();
     }
-    this.soundImg.spriteFrame = this.turnImgs[Number(AudioManager.getInstance().getAudioState())];
+    this.effectNormalNode.active = AudioManager.getInstance().getAudioState();
+    this.effectUnNode.active = !AudioManager.getInstance().getAudioState();
     SdkHelper.reportData("click_soundTouch");
   }
-  touchPersonality() {
-    var e = this,
-      t = PlayerDataSys.reco_switch ? 0 : 1;
-    BaseSystem.setReco({
-      reco_switch: t
-    }).then(function (o) {
-      if (o && 1 == o.code) {
-        PlayerDataSys.reco_switch = t;
-        e.gxhImg.spriteFrame = e.turnImgs[t];
-        if (t) {
-          SdkHelper.reportData("reco_switch_open");
-        } else {
-          SdkHelper.reportData("reco_switch_close");
-        }
-      }
-    }).catch(function () {});
-  }
+ 
   onLabelBtn(e, t) {
     AudioManager.getInstance().playMusic("btntouch");
     if ("yh" == t) {
-      this.userAgreement();
+      // this.userAgreement();
     } else {
       if ("ys" == t) {
         this.privacyPolicy();
-      } else {
-        if ("gy" == t) {
-          this.aboutUs();
-        } else {
-          if ("zx" == t) {
-            this.remove();
-          } else {
-            if ("tc" == t) {
-              this.logout();
-            } else {
-              if ("bz" == t) {
-                this.customerService();
-              } else {
-                "dm" == t && this.touchBarrageBtn();
-              }
-            }
-          }
-        }
       }
+      
     }
   }
   musicTouch() {
@@ -220,7 +137,8 @@ export default class SetUpPage extends BasePage {
     } else {
       AudioManager.getInstance().openBg();
     }
-    this.musicImg.spriteFrame = this.turnImgs[Number(AudioManager.getInstance().getMusicState())];
+    this.musicNormalNode.active = AudioManager.getInstance().getMusicState();
+    this.musicUnNode.active = !AudioManager.getInstance().getMusicState();
     SdkHelper.reportData("click_musicTouch");
   }
   customerService() {
@@ -234,28 +152,7 @@ export default class SetUpPage extends BasePage {
       }
     });
   }
-  aboutUs() {
-    AudioManager.getInstance().playMusic("btntouch");
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "aboutPage"
-    });
-  }
-  userAgreement() {
-    SdkHelper.reportData("u_click_user_agreement");
-    AudioManager.getInstance().playMusic("btntouch");
-    var e = PlayerDataSys.getUserAgreementUrl(0);
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "webPage",
-      data: {
-        title: `gkey_099`,
-        url: e,
-        index: 0
-      },
-      option: {
-        reuse: false
-      }
-    });
-  }
+
   privacyPolicy() {
     AudioManager.getInstance().playMusic("btntouch");
     SdkHelper.reportData("u_click_user_privacy");
@@ -312,46 +209,9 @@ export default class SetUpPage extends BasePage {
       name: "debugPage"
     });
   }
-  passClick() {
-    GameSystem.submitGame({
-      is_tg: 1,
-      complete_flag: 1,
-      skip: 1
-    }).then(function (e) {
-      EngineUtil.reconnectSuc();
-      var t = e.is_extract,
-        o = !!t,
-        n = {
-          type: 5,
-          is_force: e.levelup_force_flag,
-          is_extract: t,
-          cb: function () {
-            o || EventMgr.trigger(GameEventType.START_GAME);
-          },
-          tg_progress_info: e.tg_progress_info
-        };
-      if (gameData.isOpenDemo) {
-        EventMgr.trigger(GameEventType.START_GAME);
-      } else {
-        EventMgr.trigger(GameEventType.PAGE_SHOW, {
-          name: "settleMentPage",
-          data: n
-        });
-      }
-    }).catch(function () {});
-    this._hide();
-  }
-  updateLevelClick() {
-    var e = this.levelEditBox.string;
-    Service.updateLevel({
-      level: parseInt(e)
-    }).then(function () {
-      EventMgr.trigger(GameEventType.START_GAME);
-    }).catch(function () {});
-    this._hide();
-  }
+ 
   reStartGame() {
-    EventMgr.trigger(GameEventType.RESTART_GAME);
-    this._hide();
+      EventMgr.trigger(GameEventType.RESTART_GAME);
+      this._hide();
   }
 }
