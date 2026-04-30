@@ -20,7 +20,7 @@ export default class unlockPropPage extends BasePage {
   @property(cc.Sprite)
   propSp: cc.Sprite = null;
   @property(cc.SpriteFrame)
-  propSpList: cc.SpriteFrame = [];
+  propSpList: cc.SpriteFrame[] = [];
   @property(cc.Label)
   tipsLb: cc.Label = null;
   @property(cc.Node)
@@ -53,6 +53,7 @@ export default class unlockPropPage extends BasePage {
     this.propSp.spriteFrame = this.propSpList[this.type - 1];
     this.tipsLb.string = m[this.type];
   }
+
   playPropFlyAnim() {
     if(this.isFlying) return;
     this.isFlying = true;
@@ -92,7 +93,7 @@ export default class unlockPropPage extends BasePage {
     }).call(function () {
       cc.tween(o).to(0.1, {
         scale: 1.1
-      }).to(0.1, {
+    }).to(0.1, {
         scale: 1
       }).to(0.1, {
         scale: 0.9

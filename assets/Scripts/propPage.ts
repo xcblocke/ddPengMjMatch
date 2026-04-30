@@ -10,6 +10,7 @@ import { propCostDollar } from './config';
 import EngineUtil from './framework/EngineUtil';
 import { gameData } from './data/GameData';
 import AudioManager from './framework/controller/AudioManager';
+import GlobalApp from './common/GlobalApp';
 const {
   ccclass,
   property
@@ -24,11 +25,11 @@ export default class propPage extends BasePage {
   // @property(cc.Node)
   // title: cc.Node = null;
   @property(cc.SpriteFrame)
-  titles: cc.SpriteFrame = [];
+  titles: cc.SpriteFrame[] = [];
   @property(cc.Node)
   icon: cc.Node = null;
   @property(cc.SpriteFrame)
-  icons: cc.SpriteFrame = [];
+  icons: cc.SpriteFrame[] = [];
   @property(cc.Label)
   tipsLb: cc.Label = null;
   @property(cc.Label)
@@ -100,9 +101,8 @@ export default class propPage extends BasePage {
     super._hide.call(this);
   }
   gotoAd() {
-    if(this.isFlying) return;
-    this.isFlying = true;
-    this.cliamBtn.interactable = false;
+    if(this.isFlying) return; 
+    
     AudioManager.getInstance().playMusic("btntouch");
     // Replace ad flow with coin exchange flow.
     SdkHelper.reportData("get_prop_video", {
@@ -118,19 +118,25 @@ export default class propPage extends BasePage {
       EngineUtil.showCocosToast3("金币不足，兑换失败");
       return;
     }
+
+    this.isFlying = true;
+    this.cliamBtn.interactable = false;
+
     gameData.dollarBalance = Number(gameData.dollarBalance || 0) - cost;
     EngineUtil.setLocalData("user_dollar_balance", String(gameData.dollarBalance));
     EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance);
     if (this._type == PropType.tipCard) {
       PlayerDataSys.tipCardCount = Number(PlayerDataSys.tipCardCount || 0) + addNum;
+      this.playPropFlyAnim();
     } else if (this._type == PropType.reshuffleCard) {
       PlayerDataSys.reshuffleCardCount = Number(PlayerDataSys.reshuffleCardCount || 0) + addNum;
+      this.playPropFlyAnim();
     } else {
       EngineUtil.showCocosToast3("兑换失败");
       return;
     }
-    EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT, null);
-    this._hide();
+    // EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT, null);
+    // this._hide();
   }
   failFunc() {
     SdkHelper.showForceToast(`gkey_314`);
@@ -184,5 +190,48 @@ export default class propPage extends BasePage {
       }
       PlayerDataSys.setUserPropCount(o.data.prop_info, false);
     });
+  }
+
+  playPropFlyAnim() {
+    var e = this,
+      t = cc.instantiate(this.icon);
+    t.parent = this.icon.parent;
+    this.cliamBtn.interactable = false;
+    this.icon.parent.convertToWorldSpaceAR(this.icon.position);
+    var o = null;
+    if (this._type == PropType.tipCard) {
+      o = GlobalApp.GameMain.propContainer.getChildByName("tipBtn");
+    } else {
+      if (this._type == PropType.reshuffleCard) {
+        o = GlobalApp.GameMain.propContainer.getChildByName("reshuffleCard");
+      } else {
+        this._type == PropType.freezeCard && (o = GlobalApp.GameMain.propContainer.getChildByName("freeze"));
+      }
+    }
+    var n = o.parent.convertToWorldSpaceAR(o.position),
+      a = t.parent.convertToNodeSpaceAR(n);
+    t.scale = 0.6;
+    AudioManager.instance.playMusic("xiu");
+  
+    cc.tween(t).to(0.7, {
+      position: a,
+      scale: 0
+    }, {
+      easing: "backIn"
+    }).call(function () {
+      cc.tween(o).to(0.1, {
+        scale: 1.1
+      }).to(0.1, {
+        scale: 1
+      }).to(0.1, {
+        scale: 0.9
+      }).to(0.1, {
+        scale: 1
+      }).start();
+      EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
+      t.destroy();
+      // e.close();
+      e._hide();
+    }).start();
   }
 }
