@@ -250,13 +250,26 @@ class _GameSystem {
   }
   useProp(e) {
     var t = e.code;
+    var reqPropId = Number(e && e.prop_id || 0);
     SdkHelper.reportData("use_prop", {
       prop_type: t,
       level: gameData.id
     });
     return new Promise(function (t, o) {
       Service.useProp(e).then(function (e) {
-        PlayerDataSys.setUserPropCount(e.data.prop_info);
+        // Merge server prop info with local counts.
+        // Reason: propPage now supports local coin exchange; server prop_info may lag behind.
+        var srv = (e && e.data && e.data.prop_info) ? e.data.prop_info : {};
+        var curTip = Number(PlayerDataSys.tipCardCount || 0);
+        var curReshuffle = Number(PlayerDataSys.reshuffleCardCount || 0);
+        var curFreeze = Number(PlayerDataSys.freezeCardCount || 0);
+        var usedId = reqPropId;
+        var merged = {
+          prop1_num: Math.max(Number(srv.prop1_num || 0), Math.max(0, curReshuffle - (usedId == 1 ? 1 : 0))),
+          prop2_num: Math.max(Number(srv.prop2_num || 0), Math.max(0, curTip - (usedId == 2 ? 1 : 0))),
+          prop3_num: Math.max(Number(srv.prop3_num || 0), Math.max(0, curFreeze - (usedId == 3 ? 1 : 0)))
+        };
+        PlayerDataSys.setUserPropCount(merged);
         t(e);
       }).finally(function () {
         o();

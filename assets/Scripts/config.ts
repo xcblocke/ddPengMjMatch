@@ -1,3 +1,5 @@
+import { PropType } from "./framework/enum/AllEnum";
+
 export var PageConfig = {
   bottomTab: [{
     name: `gkey_263`
@@ -32,4 +34,8 @@ export enum EAppThemeType {
 }
 export var appTheme = EAppThemeType.Theme2;
 
-export let levelRewardCoin = 300;
+export let levelRewardCoin = 200;
+export let propCostDollar = {
+  [PropType.tipCard]: 100,
+  [PropType.reshuffleCard]: 100,
+};

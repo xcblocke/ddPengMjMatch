@@ -78,6 +78,9 @@ export default class settleMentPage extends BasePage {
   @property(cc.Node)
   dollarNode: cc.Node = null;
 
+  @property(cc.Button)
+  claimBtnNode: cc.Button = null;
+
   tg_gold_reward = 0;
   cash_reward = 0;
   lotteryRunning = false;
@@ -214,6 +217,7 @@ export default class settleMentPage extends BasePage {
     var e = this;
     if(this._coinFlyOnClaim) return;
     this._coinFlyOnClaim = true;
+    this.claimBtnNode.interactable = false;
     SetNode2Top.setTopZIndex(GlobalApp.GameMain.dollarNode);
     EventMgr.trigger(GameEventType.SHOWEFFECT, {
       start: this.dollarNode.parent.convertToWorldSpaceAR(this.dollarNode.position),
@@ -242,7 +246,7 @@ export default class settleMentPage extends BasePage {
     this._cb && this._cb();
   }
   allBtnClick() {
-    this._coinFlyOnClaim = false;
+    
     var e = this;
     if (!this._inOperation) {
       // btn_claim -> allBtnClick, used for the local coin system.
@@ -251,6 +255,7 @@ export default class settleMentPage extends BasePage {
       this._inOperation = true;
       this.scheduleOnce(function () {
         e._inOperation = false;
+        e._coinFlyOnClaim = false;
       }, 0.5);
       this.openVideo(1);
     }
@@ -267,6 +272,7 @@ export default class settleMentPage extends BasePage {
       this._inOperation = true;
       this.scheduleOnce(function () {
         e._inOperation = false;
+        e._coinFlyOnClaim = false;
       }, 0.5);
       AudioManager.getInstance().stopEffect("yanhua");
       if (1 == gameData.gameLevel) {
