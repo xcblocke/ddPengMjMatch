@@ -7,6 +7,28 @@ const {
   ccclass,
   property
 } = cc._decorator;
+
+/** Same outcome as closing freePropPage: grant props + toast, without opening the modal. */
+export function applyFreePropRewardIfAny() {
+  var fp = gameData.free_prop;
+  if (!fp || "object" != typeof fp || 0 === Object.keys(fp).length) {
+    return;
+  }
+  PlayerDataSys.tipCardCount += fp.count;
+  EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    name: "rewardToastPage",
+    data: {
+      cash: 0,
+      red: 0,
+      propInfo: {
+        type: fp.prop_id,
+        num: fp.count
+      }
+    }
+  });
+  gameData.free_prop = {};
+}
+
 @ccclass
 export default class freePropPage extends BasePage {
   onLoad() {
@@ -19,19 +41,7 @@ export default class freePropPage extends BasePage {
   }
   _init() {}
   close() {
-    PlayerDataSys.tipCardCount += gameData.free_prop.count;
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "rewardToastPage",
-      data: {
-        cash: 0,
-        red: 0,
-        propInfo: {
-          type: gameData.free_prop.prop_id,
-          num: gameData.free_prop.count
-        }
-      }
-    });
-    gameData.free_prop = {};
+    applyFreePropRewardIfAny();
     this._hide();
   }
 }

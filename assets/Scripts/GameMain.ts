@@ -25,6 +25,7 @@ import LevelStart from './LevelStart';
 import mainBtnGroupCtrl from './mainBtnGroupCtrl';
 import { GuideEnum } from './framework/enum/GuideConfig';
 import { levelRewardCoin } from './config';
+import { applyFreePropRewardIfAny } from './freePropPage';
 const {
   ccclass,
   property
@@ -828,40 +829,8 @@ export default class GameMain extends cc.Component {
           nodes: [o]
         });
         EventMgr.trigger(GameEventType.USER_OPERATE_TIP);
-        n = JSON.parse(cc.sys.localStorage.getItem("unLockHuaCardGuide")) || [];
-        a = gameConfig.getTujianConfig();
-        i = null;
-        for (r in a) a[r].level_count_limit == gameData.lun_level - 1 && 1 != gameData.lun_level && (i = {
-          type: a[r].type,
-          id: Number(r),
-          name: a[r].name
-        });
-        if (i && -1 == n.indexOf(gameData.lun_level.toString())) {
-          await PageMgr.showPageByEnum(PageEnum.unlockHuaCardPage, {
-            type: i.type,
-            id: i.id,
-            name: i.name
-          });
-          if (!(6 != gameData.lun_level)) {
-            await EngineUtil.sleep(500);
-            this.mainBtnGroupCtrl.showTujianBtn();
-            await EngineUtil.sleep(500);
-            await GlobalApp.PackagingProcessGuide.showGuideNode({
-              guideType: GuideEnum.tujianGuide,
-              nodes: [this.mainBtnGroupCtrl.tujianBtn]
-            });
-            GameSystem.getTujianInfo().then(function (e) {
-              e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-                name: "tujianPage",
-                data: e.data
-              });
-            });
-          }
-        }
         // Do not auto-open atlas withdraw related popups (tujianWdPage / tujianAutoWdPage).
-        if (Object.keys(gameData.free_prop).length > 0) {
-          await PageMgr.showPageByEnum(PageEnum.freePropPage);
-        }
+        applyFreePropRewardIfAny();
         EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
         return;
       }
@@ -872,40 +841,8 @@ export default class GameMain extends cc.Component {
           nodes: [o]
         });
         EventMgr.trigger(GameEventType.USER_RESHUFFLE_CARD);
-        n = JSON.parse(cc.sys.localStorage.getItem("unLockHuaCardGuide")) || [];
-        a = gameConfig.getTujianConfig();
-        i = null;
-        for (r in a) a[r].level_count_limit == gameData.lun_level - 1 && 1 != gameData.lun_level && (i = {
-          type: a[r].type,
-          id: Number(r),
-          name: a[r].name
-        });
-        if (i && -1 == n.indexOf(gameData.lun_level.toString())) {
-          await PageMgr.showPageByEnum(PageEnum.unlockHuaCardPage, {
-            type: i.type,
-            id: i.id,
-            name: i.name
-          });
-          if (!(6 != gameData.lun_level)) {
-            await EngineUtil.sleep(500);
-            this.mainBtnGroupCtrl.showTujianBtn();
-            await EngineUtil.sleep(500);
-            await GlobalApp.PackagingProcessGuide.showGuideNode({
-              guideType: GuideEnum.tujianGuide,
-              nodes: [this.mainBtnGroupCtrl.tujianBtn]
-            });
-            GameSystem.getTujianInfo().then(function (e) {
-              e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-                name: "tujianPage",
-                data: e.data
-              });
-            });
-          }
-        }
         // Do not auto-open atlas withdraw related popups (tujianWdPage / tujianAutoWdPage).
-        if (Object.keys(gameData.free_prop).length > 0) {
-          await PageMgr.showPageByEnum(PageEnum.freePropPage);
-        }
+        applyFreePropRewardIfAny();
         EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
         return;
       }
@@ -918,40 +855,8 @@ export default class GameMain extends cc.Component {
         EventMgr.trigger(GameEventType.USER_FREEZE);
       }
     }
-    n = JSON.parse(cc.sys.localStorage.getItem("unLockHuaCardGuide")) || [];
-    a = gameConfig.getTujianConfig();
-    i = null;
-    for (r in a) a[r].level_count_limit == gameData.lun_level - 1 && 1 != gameData.lun_level && (i = {
-      type: a[r].type,
-      id: Number(r),
-      name: a[r].name
-    });
-    if (i && -1 == n.indexOf(gameData.lun_level.toString())) {
-      await PageMgr.showPageByEnum(PageEnum.unlockHuaCardPage, {
-        type: i.type,
-        id: i.id,
-        name: i.name
-      });
-      if (!(6 != gameData.lun_level)) {
-        await EngineUtil.sleep(500);
-        this.mainBtnGroupCtrl.showTujianBtn();
-        await EngineUtil.sleep(500);
-        await GlobalApp.PackagingProcessGuide.showGuideNode({
-          guideType: GuideEnum.tujianGuide,
-          nodes: [this.mainBtnGroupCtrl.tujianBtn]
-        });
-        GameSystem.getTujianInfo().then(function (e) {
-          e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-            name: "tujianPage",
-            data: e.data
-          });
-        });
-      }
-    }
     // Do not auto-open atlas withdraw related popups (tujianWdPage / tujianAutoWdPage).
-    if (Object.keys(gameData.free_prop).length > 0) {
-      await PageMgr.showPageByEnum(PageEnum.freePropPage);
-    }
+    applyFreePropRewardIfAny();
     EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
     return;
   }
