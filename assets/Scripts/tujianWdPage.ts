@@ -49,7 +49,6 @@ export default class tujianWdPage extends BasePage {
     t || AudioManager.getInstance().playMusic("btntouch");
     this.unschedule(this.timerCallback);
     this.wd_status = true;
-    AudioManager.getInstance().stopCash("finish_step_wd");
     this.cb && this.cb();
     this._hide();
   }

@@ -31,7 +31,6 @@ export default class wdSuccRealPage extends BasePage {
     SdkHelper.reportData("wd_success", {
       game_level: gameData.gameLevel
     });
-    AudioManager.getInstance().playCash("wd_success");
     var t = e.amount,
       o = e.gameSucc,
       n = e.cash_balance,
@@ -59,7 +58,6 @@ export default class wdSuccRealPage extends BasePage {
   }
   closePage() {
     AudioManager.getInstance().playMusic("btntouch");
-    AudioManager.getInstance().stopCash("wd_success");
     if ("tujian" == this.fromPage) {
       this.cb && this.cb();
     } else {

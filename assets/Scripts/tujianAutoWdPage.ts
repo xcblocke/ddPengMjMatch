@@ -16,7 +16,6 @@ export default class tujianAutoWdPage extends BasePage {
   gameSucc = false;
   _init(e) {
     var t = this;
-    AudioManager.getInstance().playCash("step_wd_page");
     this.cb = null == e ? void 0 : e.cb;
     this.pro_sprite.fillRange = 0;
     this.pro_sprite.node.stopAllActions();
@@ -28,7 +27,6 @@ export default class tujianAutoWdPage extends BasePage {
   }
   closePage() {
     var e = this;
-    AudioManager.getInstance().stopCash("step_wd");
     GameSystem.favoriteExtract().then(function (t) {
       if (t && 1 == t.code) {
         var o = t.data,
@@ -50,7 +48,6 @@ export default class tujianAutoWdPage extends BasePage {
     }).catch(function () {
       SdkHelper.showToast(`gkey_525`);
     });
-    AudioManager.getInstance().stopCash("step_wd_page");
     this._hide();
   }
 }

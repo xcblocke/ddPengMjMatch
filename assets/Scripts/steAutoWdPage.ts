@@ -27,7 +27,6 @@ export default class steAutoWdPage extends BasePage {
     SdkHelper.reportData("steo_auto_wd_page", {
       game_level: gameData.gameLevel
     });
-    AudioManager.getInstance().playCash("step_wd_page");
     console.log("steAutoWdPage", e);
     var o = e.gameSucc,
       n = e.extract_status,
@@ -54,7 +53,6 @@ export default class steAutoWdPage extends BasePage {
     var e = this,
       t = 0;
     t = this.gameSucc ? Number(gameData.gameLevel) : Number(gameData.successCount);
-    AudioManager.getInstance().stopMusic("step_wd", false);
     if (this.levle_threshold) {
       var o = EngineUtil.findIndex(gameConfig.cashExtractLevel, t),
         n = this.extract_info[o].extract_status,
@@ -138,7 +136,6 @@ export default class steAutoWdPage extends BasePage {
         SdkHelper.showToast(`gkey_525`);
       });
     }
-    AudioManager.getInstance().stopCash("step_wd_page");
     this._hide();
   }
 }

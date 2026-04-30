@@ -111,9 +111,7 @@ export default class wdPage extends BasePage {
         });
         gameData.load_guide = false;
       });
-    } else {
-      t || AudioManager.getInstance().playCash("wd_cash_page");
-    }
+    } 
   }
   createItem(e) {
     for (var t = 0; t < e.length; t++) if (this.content_node.childrenCount >= e.length) this.content_node.children[t].getComponent("wdItem").init(e[t]);else {
@@ -124,7 +122,6 @@ export default class wdPage extends BasePage {
   }
   closePage() {
     AudioManager.getInstance().playMusic("btntouch");
-    AudioManager.getInstance().stopCash("wd_cash_page");
     this.back_hand.active = false;
     this.cb && this.cb();
     this._hide();

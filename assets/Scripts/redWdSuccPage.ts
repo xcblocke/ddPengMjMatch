@@ -17,7 +17,6 @@ export default class redWdSuccPage extends BasePage {
   @property(cc.Label)
   dz_time: cc.Label = null;
   _init(e) {
-    AudioManager.getInstance().playCash("wd_success");
     var t = e.amount,
       o = e.account_time,
       n = void 0 === o ? Date.now() : o;
@@ -28,7 +27,6 @@ export default class redWdSuccPage extends BasePage {
   start() {}
   clickClose() {
     AudioManager.getInstance().playMusic("btntouch");
-    AudioManager.getInstance().stopCash("wd_success");
     this.updateGoldInfo();
     this._hide();
   }

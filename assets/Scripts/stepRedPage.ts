@@ -18,7 +18,6 @@ export default class stepRedPage extends BasePage {
   cb = null;
   tg_gold_reward = 0;
   _init(e) {
-    AudioManager.getInstance().playCash("step_red");
     SdkHelper.reportData("show_step_red_page");
     if (e) {
       this.cb = null == e ? void 0 : e.cb;
@@ -31,7 +30,6 @@ export default class stepRedPage extends BasePage {
   clickClose() {
     var e = this;
     AudioManager.getInstance().playMusic("btntouch");
-    AudioManager.getInstance().stopMusic("step_red", false);
     if (this.tg_gold_reward > 0) {
       PlayerDataSys.setUserGoldBalance(PlayerDataSys.goldBalance + this.tg_gold_reward, false);
       EventMgr.trigger(GameEventType.SHOWEFFECT, {

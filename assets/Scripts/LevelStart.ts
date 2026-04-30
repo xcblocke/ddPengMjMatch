@@ -92,17 +92,7 @@ export default class LevelStart extends cc.Component {
       this.csah_hf.x = -500;
       this.csah_hf.stopAllActions();
       this.cash_text2_hf.string = `{"gkey_327":{"v1":"${(a - gameData.successCount)}","v2":"${100 * i}"}}`;
-      if (gameData.gameLevel <= 5) {
-        if (4 == gameData.gameLevel) {
-          AudioManager.getInstance().playCash("step_reward10");
-        } else {
-          AudioManager.getInstance().playCash("step_reward5");
-        }
-      } else if (6 == gameData.gameLevel) AudioManager.getInstance().playCash("step_reward8");else if (100 * i <= 500) {
-        var c = "makeMnSound/step_" + (a - gameData.successCount),
-          s = "makeMnSound/step_" + 100 * i + "_";
-        AudioManager.getInstance().playAudioQueue([c, s]);
-      }
+     
       cc.tween(this.csah_hf).delay(0.7).to(0.2, {
         x: 0,
         opacity: 255
@@ -139,11 +129,7 @@ export default class LevelStart extends cc.Component {
       this.cash_text3.active = false;
       this.csah_tgbg.active = true;
       this.csah_tgbg.getComponent(cc.RichText).string = `gkey_330`;
-      AudioManager.getInstance().playCash("level_1_show");
-    } else if (gameData.gameLevel <= 5) AudioManager.getInstance().playCash("step_reward4");else if (gameData.gameLevel > 6 && gameData.gameLevel <= 10) AudioManager.getInstance().playCash("step_reward7");else if (100 * a <= 500) {
-      var i = "step_" + 100 * a + "_";
-      AudioManager.getInstance().playAudioQueue(["step_bg", i]);
-    }
+    } 
     cc.tween(this.csah_hf).delay(0.5).to(0.2, {
       x: 0,
       opacity: 255
@@ -170,7 +156,6 @@ export default class LevelStart extends cc.Component {
       this.node.active = false;
       e && e();
     } else {
-      AudioManager.getInstance().playCash("step_reward1");
       this.year_hf.stopAllActions();
       this.year_hf.active = true;
       this.year_hf.opacity = 0;
@@ -210,12 +195,7 @@ export default class LevelStart extends cc.Component {
     this.red2_ratio1.string = "" + i;
     this.red2_ratio2.string = "" + c;
     this.red2_tgbg.string = `{"gkey_331":{"v1":"${c}"}}`;
-    if ("s1" == PlayerDataSys.gold_extract_0303_ab) {
-      var u = Number(c.replace(`gkey_037`, ""));
-      u <= 300 && AudioManager.getInstance().playCash("step_" + 10 * u);
-    }
-    var f = Number(c.replace(`gkey_037`, ""));
-    f <= 300 && AudioManager.getInstance().playCash("step_" + 10 * f);
+  
     cc.tween(this.red_hf).delay(0.5).to(0.2, {
       x: 0,
       opacity: 255
@@ -241,9 +221,11 @@ export default class LevelStart extends cc.Component {
     var n = EngineUtil.findIndex(gameConfig.redBagLevel, this.game_level),
       a = [PlayerDataSys.level_3_show_gold_reward, 888];
     this.red_text3.string = a[n] + "";
-    if (gameData.gameLevel <= 5) AudioManager.getInstance().playCash("step_reward3");else if (8 == gameData.gameLevel) {
+    if (gameData.gameLevel <= 5)  {
+
+    }
+    else if (8 == gameData.gameLevel) {
       this.red_text3.string = "888";
-      AudioManager.getInstance().playCash("step_reward9");
     }
     4 == gameData.gameLevel && (this.red_text3.string = "1000");
     cc.tween(this.red_hf).delay(0.5).to(0.2, {

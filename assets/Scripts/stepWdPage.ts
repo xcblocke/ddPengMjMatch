@@ -35,7 +35,6 @@ export default class stepWdPage extends BasePage {
   timerCallback = null;
   _init(e) {
     var t = this;
-    AudioManager.getInstance().playCash("finish_step_wd");
     var o = Number(gameData.successCount);
     SdkHelper.reportData("step_wd_page", {
       game_level: o
@@ -92,7 +91,6 @@ export default class stepWdPage extends BasePage {
     this.unschedule(this.timerCallback);
     this.wd_status = true;
     this.gotoWdPage();
-    AudioManager.getInstance().stopCash("finish_step_wd");
   }
   gotoWdPage() {
     this._hide();

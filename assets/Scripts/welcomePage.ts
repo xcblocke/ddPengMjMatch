@@ -13,10 +13,8 @@ export default class welcomePage extends BasePage {
     super._onShow.call(this);
   }
   _init() {
-    AudioManager.instance.playMusic("first_1");
   }
   close() {
-    AudioManager.instance.stopMusic("first_1", false);
     this._hide();
   }
 }

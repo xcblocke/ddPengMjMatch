@@ -87,7 +87,6 @@ export default class redWdPage extends BasePage {
     this.clickToast = "";
     this.gold_count.string = i;
     this.setItems(c);
-    t || AudioManager.getInstance().playCash("red_page");
   }
   _init2(e, t = false) {
     var o = e.cb,
@@ -103,7 +102,6 @@ export default class redWdPage extends BasePage {
     this.clickToast = "";
     this.gold_count.string = a;
     this.setItems(i);
-    t || AudioManager.getInstance().playCash("red_page");
   }
   setTop(e, t, o, n) {
     this.extract_count.string = `{"gkey_508":{"v1":"${t}","v2":"${n}"}}`;
@@ -142,7 +140,6 @@ export default class redWdPage extends BasePage {
     this.cb && this.cb();
     this.cb = null;
     AudioManager.getInstance().playMusic("btntouch");
-    AudioManager.getInstance().stopCash("red_page");
     this._hide();
   }
   checkGuide() {
@@ -157,7 +154,6 @@ export default class redWdPage extends BasePage {
   setGuideStep() {
     this.guide_step++;
     1 == this.guide_step && SdkHelper.reportData("red_wd_guide_1");
-    this.guide_step > this.guide_count && AudioManager.getInstance().stopCash("red_wd_guide_1");
   }
   hisBtnClick() {
     GameSystem.withdrawHistory().then(function (e) {
