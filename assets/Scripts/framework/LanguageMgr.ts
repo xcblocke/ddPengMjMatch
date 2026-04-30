@@ -173,7 +173,7 @@ export default class i18 {
         }
 
         let data = getContryData(lan);
-        i18.myLanguge = CC_DEBUG ? "zh" : data.language;
+        i18.myLanguge = "zh";//CC_DEBUG ? "zh" : data.language;
         i18.updataString();
     }
 
