@@ -4,7 +4,7 @@ import EventMgr from './framework/Event/EventMgr';
 import GameEventType from './framework/Event/GameEventType';
 import SdkHelper from './framework/SdkHelper';
 import { CUSTOMER_SERVICE } from './framework/SystemConfig';
-import EngineUtil from './framework/EngineUtil'; 
+import EngineUtil from './framework/EngineUtil';
 import BasePage from './view/BasePage';
 import PageMgr from './view/PageMgr';
 import ClientData from './framework/Event/ClientData';
@@ -17,7 +17,7 @@ export default class SetUpPage extends BasePage {
   cb = null;
   @property(cc.Label)
   versionLabel: cc.Label = null;
- 
+
   @property(cc.Node)
   musicNormalNode: cc.Node = null;
   @property(cc.Node)
@@ -28,7 +28,7 @@ export default class SetUpPage extends BasePage {
   effectNormalNode: cc.Node = null;
   @property(cc.Node)
   effectUnNode: cc.Node = null;
- 
+
 
   @property(cc.Node)
   shakeNormalNode: cc.Node = null;
@@ -38,14 +38,14 @@ export default class SetUpPage extends BasePage {
 
   comeinTime = 0;
   start() {
-   
+
   }
   _init() {
     this.setInfo();
   }
   onEnable() {
     super.onEnable.call(this);
-  
+
     this.comeinTime = new Date().getTime();
     SdkHelper.reportData("b_entry_page", {
       act_page: "setting_page"
@@ -70,7 +70,8 @@ export default class SetUpPage extends BasePage {
     AudioManager.getInstance().playMusic("btntouch");
     if ("zd" == t) {
       this.touchZdBtn();
-    } else {if ("yx" == t) {
+    } else {
+      if ("yx" == t) {
         this.effectTouch();
       } else {
         if ("yy" == t) {
@@ -89,7 +90,7 @@ export default class SetUpPage extends BasePage {
     this.shakeUnNode.active = !AudioManager.getInstance().getVibratorState();
     SdkHelper.reportData("click_vibrateTouch");
   }
- 
+
   effectTouch() {
     if (AudioManager.getInstance().getAudioState()) {
       AudioManager.getInstance().closeAudio();
@@ -100,7 +101,7 @@ export default class SetUpPage extends BasePage {
     this.effectUnNode.active = !AudioManager.getInstance().getAudioState();
     SdkHelper.reportData("click_soundTouch");
   }
- 
+
   onLabelBtn(e, t) {
     AudioManager.getInstance().playMusic("btntouch");
     if ("yh" == t) {
@@ -109,7 +110,7 @@ export default class SetUpPage extends BasePage {
       if ("ys" == t) {
         this.privacyPolicy();
       }
-      
+
     }
   }
   musicTouch() {
@@ -177,9 +178,10 @@ export default class SetUpPage extends BasePage {
       name: "debugPage"
     });
   }
- 
+
   reStartGame() {
-      EventMgr.trigger(GameEventType.RESTART_GAME);
-      this._hide();
+    AudioManager.getInstance().playMusic("btntouch");
+    EventMgr.trigger(GameEventType.RESTART_GAME);
+    this._hide();
   }
 }

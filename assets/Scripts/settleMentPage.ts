@@ -106,6 +106,9 @@ export default class settleMentPage extends BasePage {
     this.onlyBtnNode.active = false;
     this.cashNode.active = false;
     this.goldNode.active = false;
+
+    this.claimBtnNode.interactable = true;
+
     SdkHelper.reportData("pass_game_level", {
       duration: gameData.gameTime
     });

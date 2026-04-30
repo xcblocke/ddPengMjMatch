@@ -25,6 +25,12 @@ export default class unlockPropPage extends BasePage {
   tipsLb: cc.Label = null;
   @property(cc.Node)
   btnNode: cc.Node = null;
+
+  @property(cc.Button)
+  cliamBtn: cc.Button = null;
+
+  isFlying = false;
+
   type = PropType.tipCard;
   _onHide() {
     super._onHide.call(this);
@@ -36,6 +42,8 @@ export default class unlockPropPage extends BasePage {
     AudioManager.instance.playMusic("get");
     this.btnNode.opacity = 0;
     this.type = e.info.type;
+    this.cliamBtn.interactable = true;
+    this.isFlying = false;
     cc.tween(this.btnNode).delay(0.5).to(1, {
       opacity: 255
     }).start();
@@ -46,9 +54,12 @@ export default class unlockPropPage extends BasePage {
     this.tipsLb.string = m[this.type];
   }
   playPropFlyAnim() {
+    if(this.isFlying) return;
+    this.isFlying = true;
     var e = this,
       t = cc.instantiate(this.propSp.node);
     t.parent = this.propSp.node.parent;
+    this.cliamBtn.interactable = false;
     this.propSp.node.parent.convertToWorldSpaceAR(this.propSp.node.position);
     var o = null;
     if (this.type == PropType.tipCard) {

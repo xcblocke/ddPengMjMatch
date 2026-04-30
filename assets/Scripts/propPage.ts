@@ -9,6 +9,7 @@ import BasePage, { AnimType } from './view/BasePage';
 import { propCostDollar } from './config';
 import EngineUtil from './framework/EngineUtil';
 import { gameData } from './data/GameData';
+import AudioManager from './framework/controller/AudioManager';
 const {
   ccclass,
   property
@@ -38,6 +39,12 @@ export default class propPage extends BasePage {
 
   @property(cc.Label)
   goldBubbleLb: cc.Label = null;
+
+  @property(cc.Button)
+  cliamBtn: cc.Button = null;
+
+  isFlying = false;
+
   _type = 0;
   /** 本弹窗一次兑换的道具张数（与 numLb 的 xN 一致） */
   _buyCount = 1;
@@ -53,6 +60,8 @@ export default class propPage extends BasePage {
     });
   }
   _init(e) {
+    this.cliamBtn.interactable = true;
+    this.isFlying = false;
     var t = e.type - 1;
     // this.title.getComponent(cc.Sprite).spriteFrame = this.titles[t];
     this.icon.getComponent(cc.Sprite).spriteFrame = this.icons[t];
@@ -84,12 +93,17 @@ export default class propPage extends BasePage {
     this._totalCostDollar = costDollarNum;
   }
   close() {
+    AudioManager.getInstance().playMusic("btntouch");
     SdkHelper.reportData("get_prop_close", {
       prop_id: this._type
     });
     super._hide.call(this);
   }
   gotoAd() {
+    if(this.isFlying) return;
+    this.isFlying = true;
+    this.cliamBtn.interactable = false;
+    AudioManager.getInstance().playMusic("btntouch");
     // Replace ad flow with coin exchange flow.
     SdkHelper.reportData("get_prop_video", {
       idx: this._type
