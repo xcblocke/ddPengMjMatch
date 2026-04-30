@@ -16,17 +16,12 @@ const {
 @ccclass
 export default class gameOverPage extends BasePage {
   @property(cc.Node)
-  pages: cc.Node = [];
+  pages: cc.Node[] = [];
   @property(cc.Node)
-  normalNodeList: cc.Node = [];
+  normalNodeList: cc.Node[] = [];
   @property(cc.Node)
-  timeOutNodeList: cc.Node = [];
-  @property(cc.Label)
-  btnLb: cc.Label = null;
-  @property(cc.Label)
-  btn2Lb: cc.Label = null;
-  @property(cc.Label)
-  pro: cc.Label = null;
+  timeOutNodeList: cc.Node[] = [];
+
   failType = FailedType.Normal;
   curIndex = 0;
   nowIndex = 0;
@@ -38,39 +33,39 @@ export default class gameOverPage extends BasePage {
   }
   async _init(e) {
     var t, o, n, a, i;
-    this.pages[this.curIndex].active = false;
-    this.pages[this.curIndex].scale = 0;
+    this.pages[this.curIndex].active = true;
+    this.pages[this.curIndex].scale = 1;
     SdkHelper.reportData("game_fail_page", {
       fail_type: e.type
     });
     AudioManager.getInstance().playMusic("gameOver");
     this.failType = e.type;
-    if (e.type == FailedType.TIME_OUT) {
-      this.normalNodeList.forEach(function (e) {
-        e.active = false;
-      });
-      this.timeOutNodeList.forEach(function (e) {
-        e.active = true;
-      });
-      this.btnLb.string = `gkey_033`;
-      this.btn2Lb.string = `gkey_033`;
-    } else {
-      this.normalNodeList.forEach(function (e) {
-        e.active = true;
-      });
-      this.timeOutNodeList.forEach(function (e) {
-        e.active = false;
-      });
-      this.btnLb.string = `gkey_033`;
-      this.btn2Lb.string = `gkey_033`;
-      t = gameData.getMjListLength();
-      o = GlobalApp.GameMain.cardGrid;
-      n = 0;
-      for (a = 0; a < o.length; a++) for (i = 0; i < o[a].length; i++) o[a][i] && n++;
-      console.log("count", n, t);
-      this.pro.string = `{"gkey_313":{"v1":"${Math.floor((t - n) / t * 100)}"}}`;
-    }
-    this.showNextPage();
+    // if (e.type == FailedType.TIME_OUT) {
+    //   this.normalNodeList.forEach(function (e) {
+    //     e.active = false;
+    //   });
+    //   this.timeOutNodeList.forEach(function (e) {
+    //     e.active = true;
+    //   });
+     
+    // } else {
+    //   this.normalNodeList.forEach(function (e) {
+    //     e.active = true;
+    //   });
+    //   this.timeOutNodeList.forEach(function (e) {
+    //     e.active = false;
+    //   });
+      
+    //   t = gameData.getMjListLength();
+    //   o = GlobalApp.GameMain.cardGrid;
+    //   n = 0;
+    //   for (a = 0; a < o.length; a++) for (i = 0; i < o[a].length; i++) o[a][i] && n++;
+    //   console.log("count", n, t);
+    // }
+    this.scheduleOnce(() => {
+      this.openVideo();
+    }, 1.5);
+    // this.showNextPage();
     return;
   }
   showNextPage() {
@@ -92,6 +87,9 @@ export default class gameOverPage extends BasePage {
       easing: "backOut"
     }).start();
   }
+
+
+
   openVideo(e = 0) {
     var t = this;
     SdkHelper.reportData("fail_video_click", {
