@@ -223,6 +223,7 @@ export default class settleMentPage extends BasePage {
     this._coinFlyOnClaim = true;
     this.claimBtnNode.interactable = false;
     SetNode2Top.setTopZIndex(GlobalApp.GameMain.dollarNode);
+     AudioManager.getInstance().playMusic("addbalance");
     EventMgr.trigger(GameEventType.SHOWEFFECT, {
       start: this.dollarNode.parent.convertToWorldSpaceAR(this.dollarNode.position),
       num: 4,
