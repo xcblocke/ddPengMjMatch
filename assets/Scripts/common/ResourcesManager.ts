@@ -34,37 +34,78 @@ export default class ResourcesManager {
       return t.name == e;
     });
   }
-  loadDir(e, t, o) {
-    return new Promise(function (n, a) {
+  loadDir(e, t, o, n?) {
+    return new Promise(function (a, r) {
       if (e) {
-        e.loadDir(t, o, function (e, t) {
+        var i = function (e, t) {
           if (e) {
-            a(e);
+            r(e);
           } else {
-            n(t);
+            a(t);
           }
-        });
+        };
+        if (n) {
+          e.loadDir(t, o, n, i);
+        } else {
+          e.loadDir(t, o, i);
+        }
       } else {
-        a();
+        r();
       }
     });
   }
-  async loadGameRes() {
+  /**
+   * 加载游戏运行所需 resources 子目录；onProgress 为整体 0~1，含每个 loadDir 内部进度（较平滑）
+   */
+  async loadGameRes(onProgress?: (p: number) => void) {
     var e = this;
     return new Promise(async function (t, o) {
       const __async_this = e;
-      var e_local, n, a, r, c, s;
+      var e_local,
+        n,
+        a,
+        r,
+        c,
+        s,
+        dirs = [{
+          path: "preload/icons",
+          type: cc.SpriteFrame
+        }, {
+          path: "preload/bg",
+          type: cc.SpriteFrame
+        }, {
+          path: "preload/mj",
+          type: cc.SpriteFrame
+        }, {
+          path: "preload/prefabs",
+          type: cc.Prefab
+        }],
+        totalDirs = dirs.length,
+        u = function (dirIndex, finished, dirTotal) {
+          if (!onProgress || !dirTotal || dirTotal <= 0) return;
+          var p = (dirIndex + finished / dirTotal) / totalDirs;
+          onProgress(p > 1 ? 1 : p);
+        };
       try {
         e_local = cc.assetManager.getBundle("resources");
         n = __async_this;
-        n._iconFrames = await __async_this.loadDir(e_local, "preload/icons", cc.SpriteFrame);
+        n._iconFrames = await __async_this.loadDir(e_local, dirs[0].path, dirs[0].type, function (t, o) {
+          u(0, t, o);
+        });
         a = __async_this;
-        a._bgFrames = await __async_this.loadDir(e_local, "preload/bg", cc.SpriteFrame);
+        a._bgFrames = await __async_this.loadDir(e_local, dirs[1].path, dirs[1].type, function (t, o) {
+          u(1, t, o);
+        });
         r = __async_this;
-        r._mahjongFrames = await __async_this.loadDir(e_local, "preload/mj", cc.SpriteFrame);
+        r._mahjongFrames = await __async_this.loadDir(e_local, dirs[2].path, dirs[2].type, function (t, o) {
+          u(2, t, o);
+        });
         c = __async_this;
-        c._prefabs = await __async_this.loadDir(e_local, "preload/prefabs", cc.Prefab);
-        t();
+        c._prefabs = await __async_this.loadDir(e_local, dirs[3].path, dirs[3].type, function (t, o) {
+          u(3, t, o);
+        });
+        onProgress && onProgress(1);
+        t(undefined);
       } catch (__error_0_0) {
         s = __error_0_0;
         console.log(s);

@@ -37,16 +37,51 @@ export default class LoadProgress extends cc.Component {
   _animObj = null;
   _curPercent = 0;
   _loadType = LoadProgressType.FakeAnim;
+  /** 为 true 时：外部设置的是目标值，每帧用插值逼近，避免进度猛跳 */
+  _smoothFollow = false;
+  _smoothTarget = 0;
   get curPercent() {
     return this._curPercent;
   }
   set curPercent(e) {
-    // clamp to [0, 1]
     e = Math.max(0, Math.min(1, e));
+    if (this._smoothFollow) {
+      this._smoothTarget = e;
+      return;
+    }
+    this.applyPercentImmediate(e);
+  }
+  /** 进入场景加载阶段时调用：进度改为平滑跟随目标 */
+  beginSmoothFollow() {
+    this._smoothFollow = true;
+    this._smoothTarget = this._curPercent;
+  }
+  /** 关闭插值并一次性对齐到当前目标（用于切场景前瞬间拉满，避免还要等插值） */
+  snapSmoothToTarget() {
+    this.applyPercentImmediate(this._smoothTarget);
+  }
+  endSmoothFollow() {
+    this._smoothFollow = false;
+  }
+  applyPercentImmediate(e) {
     this._curPercent = e;
     this.progress.fillRange = e;
-    this.progressLabel.string = Math.floor(100 * e) + "%";
+    this.progressLabel.string = Math.round(100 * e) + "%";
     this.updateHandlePos();
+  }
+  update(dt) {
+    if (!this._smoothFollow || !this.progress) return;
+    var target = this._smoothTarget;
+    var cur = this._curPercent;
+    var diff = target - cur;
+    if (Math.abs(diff) < 1e-4) {
+      if (cur !== target) this.applyPercentImmediate(target);
+      return;
+    }
+    var k = 18;
+    var alpha = 1 - Math.exp(-k * dt);
+    if (alpha > 1) alpha = 1;
+    this.applyPercentImmediate(cur + diff * alpha);
   }
   get loadType() {
     return this._loadType;
@@ -58,6 +93,7 @@ export default class LoadProgress extends cc.Component {
   init() {
     this.progressHandle && (this.progressHandle.active = this.isHasHandle);
     this._animObj = null;
+    this._smoothFollow = false;
     this.curPercent = 0;
   }
 

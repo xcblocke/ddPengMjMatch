@@ -402,15 +402,39 @@ export default class loading extends cc.Component {
     (function () {
       e.loadProgress.stopFakeProgress();
       e.loadProgress.loadType = LoadProgressType.LoadScene;
+      e.loadProgress.beginSmoothFollow();
       var o = 1 - e.loadProgress.curPercent,
-        n = e.loadProgress.curPercent;
-      cc.director.preloadScene(t, function (t, a) {
-        e.loadProgress.curPercent = n + t / a * o;
-      }, async function () {
-        const __async_this = e;
-        await Res.loadGameRes();
+        n = e.loadProgress.curPercent,
+        preloadShare = 0.5,
+        preload01 = 0,
+        res01 = 0,
+        merge = function () {
+          var m = preloadShare * preload01 + (1 - preloadShare) * res01;
+          e.loadProgress.curPercent = n + o * m;
+        };
+      var preloadPromise = new Promise(function (resolve) {
+        cc.director.preloadScene(t, function (c, total) {
+          if (!total || total <= 0) return;
+          preload01 = c / total;
+          merge();
+        }, function (err) {
+          preload01 = 1;
+          merge();
+          resolve(null);
+        });
+      });
+      var resPromise = Res.loadGameRes(function (p) {
+        res01 = p;
+        merge();
+      });
+      Promise.all([preloadPromise, resPromise]).then(function () {
+        if (!e.node || !cc.isValid(e.node)) return;
+        e.loadProgress.curPercent = 1;
+        e.loadProgress.snapSmoothToTarget();
+        e.loadProgress.endSmoothFollow();
         cc.director.loadScene(t);
-        return;
+      }).catch(function (err) {
+        console.error("loadScene pipeline", err);
       });
     })();
   }
