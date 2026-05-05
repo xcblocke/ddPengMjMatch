@@ -42,8 +42,7 @@ export default class GameMain extends cc.Component {
 
   @property(cc.Node)
   map_root: cc.Node = null;
-  @property(cc.Node)
-  mapBgBottom: cc.Node = null;
+  
   @property(cc.Button)
   backStepBtn: cc.Button = null;
   @property(cc.Prefab)
@@ -409,19 +408,15 @@ export default class GameMain extends cc.Component {
       if (6 == this.gridCols && 8 == this.gridRows) {
         this.gridBgNode.height = 980;
         this.map_root.y = 0;
-        this.mapBgBottom.y = -493;
       } else if (8 == this.gridCols && 10 == this.gridRows) {
         this.gridBgNode.height = 920;
         this.map_root.y = -30;
-        this.mapBgBottom.y = -430;
       } else if (10 == this.gridCols && 12 == this.gridRows) {
         this.gridBgNode.height = 885;
         this.map_root.y = -50;
-        this.mapBgBottom.y = -400;
       } else {
         this.gridBgNode.height = 750;
         this.map_root.y = -100;
-        this.mapBgBottom.y = -260;
       }
       var n = 686.38 / (116.48 * o + -2.5 * (o - 1)),
         a = 942 / (130 * t + -14 * (t - 1)),
@@ -633,12 +628,6 @@ export default class GameMain extends cc.Component {
   updateGameSkin() {
     this.bg.getComponent(cc.Sprite).spriteFrame = Res.getBgSpriteFrame("bg" + gameData.gameSkinData.bgSkin.toString());
     this.gridBgNode.getComponent(cc.Sprite).spriteFrame = Res.getBgSpriteFrame("gridBg" + gameData.gameSkinData.bgSkin.toString());
-    this.mapBgBottom.getComponent(cc.Sprite).spriteFrame = Res.getBgSpriteFrame("bottom" + gameData.gameSkinData.bgSkin.toString());
-    if (gameData.gameSkinData.bgSkin == BgSkinType.BgSkin2) {
-      this.gridBgNode.getChildByName("snow").active = true;
-    } else {
-      this.gridBgNode.getChildByName("snow").active = false;
-    }
   }
   updatePorpCount() {
     var e = this;
