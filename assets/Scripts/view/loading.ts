@@ -35,10 +35,10 @@ export default class loading extends cc.Component {
   @property(cc.Node)
   line: cc.Node = null;
   hasAgree = false;
-  @property(cc.Node)
-  gou: cc.Node = null;
-  @property(cc.Node)
-  showLogin: cc.Node = null;
+  // @property(cc.Node)
+  // gou: cc.Node = null;
+  // @property(cc.Node)
+  // showLogin: cc.Node = null;
   @property(cc.Node)
   back: cc.Node = null;
   @property(cc.Node)
@@ -281,7 +281,7 @@ export default class loading extends cc.Component {
         PlayerDataSys.initUserId(o.data);
         t.getUserInfo();
       } else if (gameData.isOpenDemo) t.touristsLogin();else if (cc.sys.isBrowser || !cc.sys.isNative || HotUpdate.getInstance().checkReviewVMVersion()) t.touristsLogin();else {
-        t.showLogin.active = true;
+        // t.showLogin.active = true;
         t.loading.active = false;
         SdkHelper.reportData("show_wx_login");
       }
@@ -310,12 +310,12 @@ export default class loading extends cc.Component {
         t.getUserInfo();
       } else {
         if (-8888 == o.code) {
-          t.showLogin.active = true;
+          // t.showLogin.active = true;
           t.loading.active = false;
           return;
         }
         if (cc.sys.isNative && !HotUpdate.getInstance().checkReviewVMVersion()) {
-          t.showLogin.active = true;
+          // t.showLogin.active = true;
           t.loading.active = false;
         } else {
           PlayerDataSys.initUserId(o.data);
@@ -326,7 +326,7 @@ export default class loading extends cc.Component {
   }
   getUserInfo(e) {
     var t = this;
-    this.showLogin.active = false;
+    // this.showLogin.active = false;
     this.loading.active = true;
     BaseSystem.getUserInfo().then(function (o) {
       console.log("user info--------------", o);
@@ -452,7 +452,7 @@ export default class loading extends cc.Component {
   }
   agree() {
     this.hasAgree = !this.hasAgree;
-    this.gou.active = this.hasAgree;
+    // this.gou.active = this.hasAgree;
   }
   doWxLogin() {
     var e = this;
