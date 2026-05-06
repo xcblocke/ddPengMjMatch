@@ -24,7 +24,7 @@ import { gameConfig } from './data/GameConfig';
 import LevelStart from './LevelStart';
 import mainBtnGroupCtrl from './mainBtnGroupCtrl';
 import { GuideEnum } from './framework/enum/GuideConfig';
-import { levelRewardCoin } from './config';
+import { levelRewardCoin, MainConfig, ServerType } from './config';
 import { applyFreePropRewardIfAny } from './freePropPage';
 const {
   ccclass,
@@ -159,7 +159,7 @@ export default class GameMain extends cc.Component {
 
     AudioManager.getInstance().playMusic("bgm", true, true);
     GlobalApp.GameMain = this;
-    if (!EngineUtil.isOnlineRelease() && !gameData.isOpenDemo) {
+    if (MainConfig.curServerType !== ServerType.release) {
       var e = ResourcesManager.getInstance().getPrefab("DebugNode"),
         t = cc.instantiate(e);
       t.getComponent(DebugNode).init();

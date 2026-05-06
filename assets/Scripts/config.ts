@@ -13,3 +13,13 @@ export let propCostDollar = {
   [PropType.tipCard]: 100,
   [PropType.reshuffleCard]: 100,
 };
+
+export enum ServerType {
+  develop = 1,  // 开发服
+  release = 2, // 正式服
+}
+
+export const MainConfig = {
+  curServerType: 1,
+  serveUrl: "",
+};
