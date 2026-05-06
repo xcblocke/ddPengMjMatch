@@ -93,7 +93,7 @@ class l {
       p = e.cb,
       d = void 0 === p ? function () {} : p;
     AudioManager.getInstance().playMusic("addbalance");
-    var f = n ? PlayerDataSys.goldBalance : PlayerDataSys.cashBalance;
+    var f = n ? PlayerDataSys.goldBalance : PlayerDataSys.coinBalance;
     return new Promise(function (e) {
       EventMgr.trigger(GameEventType.SHOWEFFECT, {
         start: u ? t.add(cc.v3(-cc.winSize.width / 2, -cc.winSize.height / 2, 0)) : t,

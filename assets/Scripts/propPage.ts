@@ -171,17 +171,17 @@ export default class propPage extends BasePage {
             num: a
           };
         }
-        (o.data.cash_reward > 0 || o.data.gold_reward > 0 || null != n) && EventMgr.trigger(GameEventType.PAGE_SHOW, {
+        (o.data.coin_reward > 0 || o.data.gold_reward > 0 || null != n) && EventMgr.trigger(GameEventType.PAGE_SHOW, {
           name: "rewardToastPage",
           data: {
-            cash: 0,
+            coin: 0,
             red: 0,
             propInfo: n
           }
         });
         t._hide();
       };
-      if (o.data.cash_reward > 0 || o.data.gold_reward > 0) {
+      if (o.data.coin_reward > 0 || o.data.gold_reward > 0) {
         n();
       } else {
         setTimeout(function () {

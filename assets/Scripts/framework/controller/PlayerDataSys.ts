@@ -11,7 +11,7 @@ import { CUSTOMER_SERVICE, IOS_USER_AGREEMENT, USER_AGREEMENT, IOS_PRIVACY_AGREE
 import EngineUtil from '../EngineUtil';
 import { MathUtils } from '../../Utils/MathUtil';
 class _PlayerDataSys extends PlayerDataMgr {
-  _cash_extract_amount = 35;
+  _coin_extract_amount = 35;
   free_lottery_flag = -1;
   rewardList = [];
   new_user_reward_flag = false;
@@ -19,7 +19,7 @@ class _PlayerDataSys extends PlayerDataMgr {
   sign_in_info = [];
   login_extract_info = [];
   login_days = 0;
-  cash_limit = 0;
+  coin_limit = 0;
   curLuckPopCount = 0;
   curForceCount = 0;
   signPopupFlag = 0;
@@ -38,7 +38,7 @@ class _PlayerDataSys extends PlayerDataMgr {
     e.is_reviewer;
     var t = e.level,
       o = e.big_scroll_xc_count,
-      n = e.cash_balance,
+      n = e.coin_balance,
       a = e.bind_wx,
       c = e.gender,
       l = e.create_time,
@@ -48,24 +48,24 @@ class _PlayerDataSys extends PlayerDataMgr {
       h = e.reco_switch,
       g = e.gold_balance,
       _ = e.novice_status,
-      y = e.cash_extract_amount,
+      y = e.coin_extract_amount,
       m = e.prop_info,
       v = e.extract_desc,
       b = e.free_lottery_flag,
       w = e.guide_step_new,
-      S = (e.real_success_count, e.extract_cash_desc),
+      S = (e.real_success_count, e.extract_coin_desc),
       E = e.ab_info,
       P = e.extract_status,
       C = e.task_show,
-      D = e.cash_limit,
+      D = e.coin_limit,
       O = e.level_3_show_gold_reward,
       T = e.favorite_info,
       A = e.sign_in_info,
       k = e.gold_extract_desc,
-      R = e.cash_extract_desc;
+      R = e.coin_extract_desc;
     try {
       gameData.showTask = e.show_task;
-      this._cash_extract_amount = y;
+      this._coin_extract_amount = y;
       this.big_scroll_xc_count = o;
       this.user_level = t || 1;
       this.reco_switch = h;
@@ -74,16 +74,16 @@ class _PlayerDataSys extends PlayerDataMgr {
       this.gender = c;
       this.headimgurl = d;
       this.nickname = u || `{"gkey_276":{"v1":"${1248152}"}}`;
-      this.cashBalance = n;
+      this.coinBalance = n;
       this.goldBalance = g;
       gameData.extract_desc = v;
-      gameData.extract_cash_desc = S;
-      this.cash_limit = D;
+      gameData.extract_coin_desc = S;
+      this.coin_limit = D;
       this.guide_step_new = BigInt(w);
       this.sign_in_info = A;
       this.task_show = C;
       this.signPopupFlag = e.sign_popup_flag || 0;
-      gameData.isOpenDemo && (this.goldBalance = LocalData.getInstance().getUserCashData() || 0);
+      gameData.isOpenDemo && (this.goldBalance = LocalData.getInstance().getUserCoinData() || 0);
       var I = LocalData.getInstance().getDebugData();
       I && (gameData.debugData = I);
       var N = _;
@@ -95,7 +95,7 @@ class _PlayerDataSys extends PlayerDataMgr {
       this.free_lottery_flag = b;
       this.level_3_show_gold_reward = O || 0;
       gameData.gold_extract_desc = k;
-      gameData.cash_extract_desc = R;
+      gameData.coin_extract_desc = R;
       var M = this.yid,
         x = this.userid;
       SdkHelper.setUserInfo({
@@ -151,8 +151,8 @@ class _PlayerDataSys extends PlayerDataMgr {
     }
     return false;
   }
-  getCashExtractAmount() {
-    return this._cash_extract_amount;
+  getCoinExtractAmount() {
+    return this._coin_extract_amount;
   }
   initUserId(e) {
     var t = e.user_id,
@@ -177,31 +177,31 @@ class _PlayerDataSys extends PlayerDataMgr {
     this.nickname = a || "";
     this.bindwx = 1;
   }
-  addUserCashBalance(e) {
+  addUserCoinBalance(e) {
     if (e >= 0) {
-      this.cashBalance += e;
+      this.coinBalance += e;
       gameData.isOpenDemo || EventMgr.trigger(GameEventType.UPDATE_BALANCE);
     }
   }
-  getCashBalance(e = this.cashBalance) {
+  getCoinBalance(e = this.coinBalance) {
     if (!e) {
-      e = this.cashBalance;
+      e = this.coinBalance;
       var t = cc.sys.localStorage.getItem("make_up_reward");
-      if (t) return this.getCNCashNum(e - Number(t));
+      if (t) return this.getCNCoinNum(e - Number(t));
     }
-    return this.getCNCashNum(e);
+    return this.getCNCoinNum(e);
   }
-  getCashBalanceWithUnit(e = this.cashBalance, t = `gkey_002`) {
+  getCoinBalanceWithUnit(e = this.coinBalance, t = `gkey_002`) {
     if (!e) {
-      e = this.cashBalance;
+      e = this.coinBalance;
       var o = cc.sys.localStorage.getItem("make_up_reward");
-      if (o) return this.getCNCashNum(e - Number(o)) + t;
+      if (o) return this.getCNCoinNum(e - Number(o)) + t;
     }
-    return this.getCNCashNum(e) + t;
+    return this.getCNCoinNum(e) + t;
   }
-  setUserCashBalance(e, t = true) {
+  setUserCoinBalance(e, t = true) {
     e = e < 0 ? 0 : e;
-    this.cashBalance = e;
+    this.coinBalance = e;
     t && EventMgr.trigger(GameEventType.UPDATE_BALANCE);
   }
   addUserGoldBalance(e, t = true) {
@@ -209,7 +209,7 @@ class _PlayerDataSys extends PlayerDataMgr {
       this.goldBalance += e;
       t && EventMgr.trigger(GameEventType.UPDATE_GOLDBALANCE);
     }
-    gameData.isOpenDemo && LocalData.getInstance().setUserCashData(this.goldBalance);
+    gameData.isOpenDemo && LocalData.getInstance().setUserCoinData(this.goldBalance);
   }
   getGoldBalance(e = this.goldBalance) {
     return this.getCNGoldBalanceNum(e);
@@ -238,7 +238,7 @@ class _PlayerDataSys extends PlayerDataMgr {
     console.log("this.freezeCardCount", this.freezeCardCount);
     t && EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
   }
-  getCNCashNum(e, t = 1000) {
+  getCNCoinNum(e, t = 1000) {
     if (0 == e) return e.toString();
     var o = Math.floor(100 * e) / 100 / 100,
       n = parseInt(o.toString()),
@@ -275,7 +275,7 @@ class _PlayerDataSys extends PlayerDataMgr {
     this.setUserGoldBalance(this.goldBalance);
     console.log("withDrawal", e);
     this.rewardList.push(e);
-    LocalData.getInstance().setUserCashData(this.goldBalance);
+    LocalData.getInstance().setUserCoinData(this.goldBalance);
   }
   getCustomerServiceUrl() {
     var e = SdkHelper.getChannelName().toLowerCase();

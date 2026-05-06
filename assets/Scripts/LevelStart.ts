@@ -19,14 +19,18 @@ export default class LevelStart extends cc.Component {
   year_hf: cc.Node = null;
   @property(cc.Node)
   csah_tgbg: cc.Node = null;
+
+
   @property(cc.Node)
-  cash_text2: cc.Node = null;
+  coin_text2: cc.Node = null;
   @property(cc.RichText)
-  cash_text2_hf: cc.RichText = null;
+  coin_text2_hf: cc.RichText = null;
   @property(cc.RichText)
-  cash_text3_hf: cc.RichText = null;
+  cointext3_hf: cc.RichText = null;
   @property(cc.Node)
-  cash_text3: cc.Node = null;
+  coin_text3: cc.Node = null;
+
+
   @property(cc.Node)
   red_node1: cc.Node = null;
   @property(cc.Node)
@@ -49,8 +53,8 @@ export default class LevelStart extends cc.Component {
     // 只保留一次开场横幅动画
     this.csah_hf.active = true;
     this.csah_tgbg.active = true;
-    this.cash_text2.active = false;
-    this.cash_text3.active = false;
+    this.coin_text2.active = false;
+    this.coin_text3.active = false;
     this.year_hf.active = false;
     this.red_hf.active = false;
     this.red_node1.active = false;
@@ -77,17 +81,17 @@ export default class LevelStart extends cc.Component {
     this.unscheduleAllCallbacks();
     EventMgr.ignoreAllByCaller(this);
   }
-  showCashOne(e, t = "") {
+  showCoinOne(e, t = "") {
     var o = this;
     if (gameData.gameLevel > 85) {
       this.node.active = false;
       e && e();
     } else {
       var n = Math.floor(this.game_level / 5) + 2,
-        a = gameConfig.cashExtractLevel[n],
+        a = gameConfig.coinExtractLevel[n],
         i = gameConfig.withdrawPercent3[n];
       this.csah_hf.active = true;
-      this.cash_text2.active = true;
+      this.coin_text2.active = true;
       this.csah_hf.opacity = 0;
       this.csah_hf.x = -500;
       this.csah_hf.stopAllActions();
@@ -100,7 +104,7 @@ export default class LevelStart extends cc.Component {
         opacity: 0
       }).call(function () {
         o.csah_hf.active = false;
-        o.cash_text2.active = false;
+        o.coin_text2.active = false;
         if ("" != t) {
           if ("showGoldOne" == t && 3 == gameData.gameLevel) o.showGoldOne(e);else if ("showGoldTwo" == t) o.showGoldTwo(e);else if ("showGoldThree" == t) o.showGoldThree(e);else {
             o.node.active = false;
@@ -113,17 +117,17 @@ export default class LevelStart extends cc.Component {
       }).start();
     }
   }
-  showCashTwo(e, t = "") {
+  showCoinTwo(e, t = "") {
     var o = this;
-    var n = EngineUtil.findIndex(gameConfig.cashExtractLevel, this.game_level),
+    var n = EngineUtil.findIndex(gameConfig.coinExtractLevel, this.game_level),
       a = gameConfig.withdrawPercent3[n];
     this.csah_hf.stopAllActions();
     this.csah_hf.active = true;
-    this.cash_text3.active = true;
+    this.coin_text3.active = true;
     this.csah_hf.opacity = 0;
     this.csah_hf.x = -500;
     if (1 == gameData.gameLevel) {
-      this.cash_text3.active = false;
+      this.coin_text3.active = false;
       this.csah_tgbg.active = true;
     } 
     cc.tween(this.csah_hf).delay(0.5).to(0.2, {
@@ -134,7 +138,7 @@ export default class LevelStart extends cc.Component {
       opacity: 0
     }).call(function () {
       o.csah_hf.active = false;
-      o.cash_text3.active = false;
+      o.coin_text3.active = false;
       if ("" != t) {
         if ("showGoldOne" == t && 3 == gameData.gameLevel) o.showGoldOne(e);else if ("showGoldTwo" == t) o.showGoldTwo(e);else if ("showGoldThree" == t) o.showGoldThree(e);else {
           o.node.active = false;

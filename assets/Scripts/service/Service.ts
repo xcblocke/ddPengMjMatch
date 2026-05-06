@@ -125,9 +125,9 @@ export default class Service {
         //         "ab_info": {},
         //         "big_scroll_xc_count": 9,
         //         "bind_wx": 0,
-        //         "cash_balance": 0,
-        //         "cash_extract_desc": "\n        1.由于微信支付需要实名制,非实名用户账号无法支持提现,请务必将提现的微信号进行实名认证;\n        2.由于微信官方要求，单笔提现金额最低为0.1元;\n        3.提现申请一般是秒到账,如果突发意外情况,也会在1-3个工作日内审核到账,请耐心等待;\n        4.用户达成提现要求即可提现到账,为保障全体用户利益,对有作弊嫌疑的用户,需经过审核验证或者满足活跃条件才可全部提现,否则不能提现;\n        5.若发现用户有恶意作弊行为,一律封禁账号并扣除账户所有余额。\n    ",
-        //         "cash_limit": 8000,
+        //         "coin_balance": 0,
+        //         "coin_extract_desc": "\n        1.由于微信支付需要实名制,非实名用户账号无法支持提现,请务必将提现的微信号进行实名认证;\n        2.由于微信官方要求，单笔提现金额最低为0.1元;\n        3.提现申请一般是秒到账,如果突发意外情况,也会在1-3个工作日内审核到账,请耐心等待;\n        4.用户达成提现要求即可提现到账,为保障全体用户利益,对有作弊嫌疑的用户,需经过审核验证或者满足活跃条件才可全部提现,否则不能提现;\n        5.若发现用户有恶意作弊行为,一律封禁账号并扣除账户所有余额。\n    ",
+        //         "coin_limit": 8000,
         //         "conf_info": {
         //             "atlas_conf": {
         //                 "1": {"if_unlock": 1, "level_count_limit": 0, "money": 0, "name": "经典", "type": 1},
@@ -2687,20 +2687,20 @@ export default class Service {
         //             "parameter_conf": {
         //                 "": {"para_key": "", "para_meaning": "困难关卡前发放的提示道具", "para_value": ""},
         //                 "bubble_step": {"para_key": "bubble_step", "para_meaning": "夸奖气泡弹出间隔（麻将对数）", "para_value": 15},
-        //                 "cash_1": {"para_key": "cash_1", "para_meaning": "第一关现金奖励（分）", "para_value": 1000},
-        //                 "cash_2": {"para_key": "cash_2", "para_meaning": "第二关现金奖励（分）", "para_value": 600},
-        //                 "cash_welfare": {
-        //                     "para_key": "cash_welfare",
+        //                 "coin_1": {"para_key": "coin_1", "para_meaning": "第一关现金奖励（分）", "para_value": 1000},
+        //                 "coin_2": {"para_key": "coin_2", "para_meaning": "第二关现金奖励（分）", "para_value": 600},
+        //                 "coin_welfare": {
+        //                     "para_key": "coin_welfare",
         //                     "para_meaning": "第五大关通关补贴后现金余额（分）",
         //                     "para_value": 770000
         //                 },
-        //                 "cash_welfare_rate_max": {
-        //                     "para_key": "cash_welfare_rate_max",
+        //                 "coin_welfare_rate_max": {
+        //                     "para_key": "coin_welfare_rate_max",
         //                     "para_meaning": "现金补贴余额倍率上限",
         //                     "para_value": 1.0006
         //                 },
-        //                 "cash_welfare_rate_min": {
-        //                     "para_key": "cash_welfare_rate_min",
+        //                 "coin_welfare_rate_min": {
+        //                     "para_key": "coin_welfare_rate_min",
         //                     "para_meaning": "现金补贴余额倍率下限",
         //                     "para_value": 1
         //                 },
@@ -2751,8 +2751,8 @@ export default class Service {
         //                     "para_meaning": "幸运奖励间隔（麻将对数）",
         //                     "para_value": 16
         //                 },
-        //                 "newer_cash_reward": {
-        //                     "para_key": "newer_cash_reward",
+        //                 "newer_coin_reward": {
+        //                     "para_key": "newer_coin_reward",
         //                     "para_meaning": "新手奖励现金（包装流程后发）",
         //                     "para_value": 100000
         //                 },
@@ -2761,8 +2761,8 @@ export default class Service {
         //                 "red_bag_level": {"para_key": "red_bag_level", "para_meaning": "红包引导关卡", "para_value": 8},
         //                 "red_bag_value": {"para_key": "red_bag_value", "para_meaning": "红包奖励金额", "para_value": 888},
         //                 "reward_base": {"para_key": "reward_base", "para_meaning": "奖励基础值（分）", "para_value": 50},
-        //                 "right_cash_reward": {
-        //                     "para_key": "right_cash_reward",
+        //                 "right_coin_reward": {
+        //                     "para_key": "right_coin_reward",
         //                     "para_meaning": "消除微信奖励（分）",
         //                     "para_value": 100
         //                 },
@@ -2771,8 +2771,8 @@ export default class Service {
         //                     "para_meaning": "消除红包奖励",
         //                     "para_value": 0.1
         //                 },
-        //                 "show_cash_reward": {
-        //                     "para_key": "show_cash_reward",
+        //                 "show_coin_reward": {
+        //                     "para_key": "show_coin_reward",
         //                     "para_meaning": "弹窗展示现金金额（分）",
         //                     "para_value": 20000
         //                 },
@@ -2796,8 +2796,8 @@ export default class Service {
         //         "is_tourists": true,
         //         "level_3_show_gold_reward": 1000,
         //         "level_desc_info": {
-        //             "cash_extract_level": [1, 2, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85],
-        //             "cash_limit": [0, 0, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000],
+        //             "coin_extract_level": [1, 2, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85],
+        //             "coin_limit": [0, 0, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000, 800000],
         //             "gold_extract_level": [0, 5, 8, 11, 15, 19, 25, 39, 60, 80, 100, 120, 140, 160, 180, 200, 250, 300, 350, 400],
         //             "gold_extract_title": ["1倍", "1.2倍", "1.4倍", "1.6倍", "1.8倍", "2倍", "2.2倍", "20倍", "100倍", "300倍", "500倍", "1000倍", "2000倍", "3000倍", "5000倍", "10000倍", "20000倍", "30000倍", "50000倍", "80000倍"],
         //             "lucky_level_count_limit": [3, 13, 30, 55, 88, 121, 154, 187],
@@ -2989,9 +2989,9 @@ export default class Service {
     static startGame(t) {
        
         //     "code": 1, "data": {
-        //         "bubble_cash_balance": "通过<color=#E52724>本关</color>，自动发起<color=#E52724>1%</color>收款",
+        //         "bubble_coin_balance": "通过<color=#E52724>本关</color>，自动发起<color=#E52724>1%</color>收款",
         //         "bubble_gold_balance": "再闯关<color=#E52724>5</color>次，可<color=#E52724>1.2倍</color>提现",
-        //         "cash_balance": 0,
+        //         "coin_balance": 0,
         //         "complete_atlas": {},
         //         "free_prop": {},
         //         "game_level": 1,
@@ -3164,8 +3164,8 @@ export default class Service {
         n = await HttpUtil.Post(Service.genRequestUrl(RequestType.SubmitGame), o);
         if (Object.keys(n.data).length > 0) {
             gameData.clearSubmitData = n.data;
-            PlayerDataSys.cashBalance = n.data.cash_balance;
-            gameData.cashBubbleTip = n.data.bubble_cash_balance;
+            PlayerDataSys.coinBalance = n.data.coin_balance;
+            gameData.coinBubbleTip = n.data.bubble_coin_balance;
             gameData.goldBubbleTip = n.data.bubble_gold_balance;
         }
         return n;
@@ -3333,10 +3333,10 @@ export default class Service {
         return HttpUtil.Post(Service.genRequestUrl(RequestType.getHandBookPage), o);
     }
 
-    static async getBigCashExtractInfo() {
+    static async getBigCoinExtractInfo() {
         var t;
         t = Service.getRequestData(null);
-        return HttpUtil.Post(Service.genRequestUrl(RequestType.getBigCashVerifyInfo), t);
+        return HttpUtil.Post(Service.genRequestUrl(RequestType.getBigCoinVerifyInfo), t);
     }
 
     static getTaskScorllMsg() {

@@ -2,7 +2,7 @@ declare const cc: any;
 const STORAGE_KEY = "offline_runtime_state_v1";
 const STATE_VERSION = 1;
 const LOOP_START_LEVEL = 22;
-const DEFAULT_CASH_LIMIT = 5000;
+const DEFAULT_COIN_LIMIT = 5000;
 const DEFAULT_SIGN_REWARDS = [20, 30, 40, 50, 60, 80, 100, 120, 150, 180, 200, 220, 250, 300, 888, 1888];
 const DEFAULT_LUCKY_DRAW = [{
   id: 1,
@@ -11,7 +11,7 @@ const DEFAULT_LUCKY_DRAW = [{
   money: 10,
   showMoney: 10,
   type: 1,
-  priceName: "Auto cash 0.1",
+  priceName: "Auto coin 0.1",
   waitDayLimit: 0,
   userLevelLimit: 0
 }, {
@@ -31,7 +31,7 @@ const DEFAULT_LUCKY_DRAW = [{
   money: 1200,
   showMoney: 1200,
   type: 1,
-  priceName: "Cash 12.0",
+  priceName: "Coin 12.0",
   waitDayLimit: 0,
   userLevelLimit: 0
 }, {
@@ -51,7 +51,7 @@ const DEFAULT_LUCKY_DRAW = [{
   money: 0,
   showMoney: 8888,
   type: 1,
-  priceName: "Cash 88.88",
+  priceName: "Coin 88.88",
   waitDayLimit: 2,
   userLevelLimit: 30
 }, {
@@ -71,7 +71,7 @@ const DEFAULT_LUCKY_DRAW = [{
   money: 0,
   showMoney: 18888,
   type: 1,
-  priceName: "Cash 188.88",
+  priceName: "Coin 188.88",
   waitDayLimit: 2,
   userLevelLimit: 30
 }, {
@@ -81,7 +81,7 @@ const DEFAULT_LUCKY_DRAW = [{
   money: 0,
   showMoney: 88888,
   type: 1,
-  priceName: "Cash 888.88",
+  priceName: "Coin 888.88",
   waitDayLimit: 2,
   userLevelLimit: 30
 }];
@@ -117,8 +117,8 @@ const DEFAULT_ATLAS_CONF = {
 };
 const DEFAULT_PARAMETER_CONF = {
   bubble_step: { para_value: 15 },
-  cash_1: { para_value: 5 },
-  cash_2: { para_value: 10 },
+  coin_1: { para_value: 5 },
+  coin_2: { para_value: 10 },
   force_cd_1: { para_value: 3 },
   force_step: { para_value: 10 },
   bigmoney_gold_only: { para_value: 888 },
@@ -141,10 +141,10 @@ const DEFAULT_COMBO_CONF = {
   "3": { count_max: 999, count_min: 7, time_limit: 5 }
 };
 const DEFAULT_LEVEL_DESC_INFO = {
-  cash_extract_level: [0, 1, 3, 5, 8, 12, 16, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+  coin_extract_level: [0, 1, 3, 5, 8, 12, 16, 20, 25, 30, 35, 40, 45, 50, 55, 60],
   gold_extract_level: [0, 2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40, 48, 56, 60],
   red_bag_level: [4, 8],
-  cash_limit: [1000, 3000, 5000, 8000, 10000, 15000],
+  coin_limit: [1000, 3000, 5000, 8000, 10000, 15000],
   withdraw_percent_3: [0, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
   gold_extract_title: ["1", "1.2", "1.5", "2", "2.5", "3", "4", "5", "6", "8", "10", "12", "15", "20", "30"],
   lucky_level_count_limit: [4, 10, 16, 22, 28, 34, 40],
@@ -370,7 +370,7 @@ function createDefaultState() {
     createTime: nowSeconds(),
     currentProfileIndex: 0,
     successCount: 0,
-    cashBalance: 0,
+    coinBalance: 0,
     goldBalance: 0,
     propInfo: {
       prop1_num: 1,
@@ -387,11 +387,11 @@ function createDefaultState() {
     signInInfo: createSignInInfo(),
     luckyDrawState: createLuckyDrawState(),
     luckyCount: 0,
-    pendingSettlementCash: 0,
+    pendingSettlementCoin: 0,
     recoSwitch: 1,
     bigScrollXcCount: 5,
     freeLotteryFlag: 0,
-    cashExtractAmount: 35,
+    coinExtractAmount: 35,
     lastWithdrawTime: 0
   };
 }
@@ -436,7 +436,7 @@ function getUserLevel(state) {
   return Math.max(1, Math.floor(state.successCount / 10) + 1);
 }
 
-function getPassCashReward(profile) {
+function getPassCoinReward(profile) {
   var level = profile.level_info.level_id;
   return Math.min(30, 5 + Math.floor(level / 2));
 }
@@ -452,8 +452,8 @@ function getPassGoldReward(profile) {
   return 0;
 }
 
-function getBubbleCashText(state) {
-  return "Cash: " + (state.cashBalance / 100).toFixed(2);
+function getBubbleCoinText(state) {
+  return "Coin: " + (state.coinBalance / 100).toFixed(2);
 }
 
 function getBubbleGoldText(state, profile) {
@@ -461,11 +461,11 @@ function getBubbleGoldText(state, profile) {
 }
 
 function getPendingReward(state, fallbackReward) {
-  return state.pendingSettlementCash > 0 ? state.pendingSettlementCash : fallbackReward;
+  return state.pendingSettlementCoin > 0 ? state.pendingSettlementCoin : fallbackReward;
 }
 
 function consumePendingReward(state) {
-  state.pendingSettlementCash = 0;
+  state.pendingSettlementCoin = 0;
 }
 
 function updateLuckyCount(state) {
@@ -572,15 +572,15 @@ function getTujianInfo(state) {
   };
 }
 
-function getCashWithdrawInfo(state) {
+function getCoinWithdrawInfo(state) {
   var percents = [0.01, 0.02, 0.05, 0.1, 0.2];
   var levels = [1, 3, 5, 10, 15];
   var info = [];
   for (var i = 0; i < levels.length; i++) {
-    var amount = Math.max(0, Math.floor(state.cashBalance * percents[i]));
+    var amount = Math.max(0, Math.floor(state.coinBalance * percents[i]));
     info.push({
       amount: amount,
-      cash_limit: DEFAULT_LEVEL_DESC_INFO.cash_limit[Math.min(i, DEFAULT_LEVEL_DESC_INFO.cash_limit.length - 1)],
+      coin_limit: DEFAULT_LEVEL_DESC_INFO.coin_limit[Math.min(i, DEFAULT_LEVEL_DESC_INFO.coin_limit.length - 1)],
       extract_amount: amount,
       extract_status: 0,
       id: i + 1,
@@ -649,12 +649,12 @@ function buildUserInfo(state) {
     },
     big_scroll_xc_count: state.bigScrollXcCount,
     bind_wx: 0,
-    bubble_cash_balance: getBubbleCashText(state),
+    bubble_coin_balance: getBubbleCoinText(state),
     bubble_gold_balance: getBubbleGoldText(state, profile),
-    cash_balance: state.cashBalance,
-    cash_extract_amount: state.cashExtractAmount,
-    cash_extract_desc: "Offline withdraw description",
-    cash_limit: DEFAULT_CASH_LIMIT,
+    coin_balance: state.coinBalance,
+    coin_extract_amount: state.coinExtractAmount,
+    coin_extract_desc: "Offline withdraw description",
+    coin_limit: DEFAULT_COIN_LIMIT,
     complete_atlas: {},
     conf_info: {
       atlas_conf: clone(DEFAULT_ATLAS_CONF),
@@ -664,7 +664,7 @@ function buildUserInfo(state) {
       parameter_conf: clone(DEFAULT_PARAMETER_CONF)
     },
     create_time: state.createTime,
-    extract_cash_desc: "Offline cash extract rule",
+    extract_coin_desc: "Offline coin extract rule",
     extract_desc: "Offline extract description",
     extract_status: 0,
     favorite_info: clone(state.favoriteInfo),
@@ -841,14 +841,14 @@ export default class OfflineService {
             unlockList.push(3);
           }
           response = success({
-            big_cash_verify_info: {
+            big_coin_verify_info: {
               current_verify_commission: 0,
               extract_list: [],
               verify_commission: 0
             },
-            bubble_cash_balance: getBubbleCashText(state),
+            bubble_coin_balance: getBubbleCoinText(state),
             bubble_gold_balance: getBubbleGoldText(state, profile),
-            cash_balance: state.cashBalance,
+            coin_balance: state.coinBalance,
             complete_atlas: {},
             free_prop: {},
             game_level: gameLevel,
@@ -856,7 +856,7 @@ export default class OfflineService {
             gold_bubble_flag: state.luckyCount > 0 ? 1 : 0,
             is_extract: 0,
             levelup_gold: 0,
-            levelup_only_cash: getPassCashReward(profile),
+            levelup_only_coin: getPassCoinReward(profile),
             lucky_bubble: state.luckyCount > 0 ? "Lucky draw ready" : "Clear more levels",
             lucky_count: state.luckyCount,
             lun_level: profile.lun_level,
@@ -876,11 +876,11 @@ export default class OfflineService {
       case "game/clear_submit":
         {
           var currentProfile = getCurrentProfile(state);
-          var passCashReward = getPassCashReward(currentProfile);
+          var passCoinReward = getPassCoinReward(currentProfile);
           var passGoldReward = getPassGoldReward(currentProfile);
           if (payload.is_tg == 1) {
             state.successCount += 1;
-            state.pendingSettlementCash = passCashReward;
+            state.pendingSettlementCoin = passCoinReward;
             if (passGoldReward > 0) {
               state.goldBalance += passGoldReward;
             }
@@ -889,16 +889,16 @@ export default class OfflineService {
           }
           saveState(state);
           response = success({
-            big_cash_verify_info: {
+            big_coin_verify_info: {
               current_verify_commission: 0,
               extract_list: [],
               verify_commission: 0
             },
-            bubble_cash_balance: getBubbleCashText(state),
+            bubble_coin_balance: getBubbleCoinText(state),
             bubble_gold_balance: getBubbleGoldText(state, currentProfile),
-            cash_balance: state.cashBalance,
-            cash_limit: DEFAULT_LEVEL_DESC_INFO.cash_limit,
-            cash_reward: 0,
+            coin_balance: state.coinBalance,
+            coin_limit: DEFAULT_LEVEL_DESC_INFO.coin_limit,
+            coin_reward: 0,
             extract_status: 0,
             force_flag: 0,
             gold_balance: state.goldBalance,
@@ -911,14 +911,14 @@ export default class OfflineService {
             make_up_reward: "",
             process_info: null,
             prop_info: clone(state.propInfo),
-            show_only_reward: passCashReward,
-            show_xc_video_reward: passCashReward * DEFAULT_PARAMETER_CONF.lucky_reward_rate_video_rate.para_value,
+            show_only_reward: passCoinReward,
+            show_xc_video_reward: passCoinReward * DEFAULT_PARAMETER_CONF.lucky_reward_rate_video_rate.para_value,
             speed_reward: 0,
             sucess_count: state.successCount,
             task_popup_flag: 0,
             tg_gold_reward: passGoldReward,
             tg_progress_info: {},
-            tg_reward: passCashReward,
+            tg_reward: passCoinReward,
             tx_ratio: {},
             xc_seven_count_popup_flag: 0
           });
@@ -927,14 +927,14 @@ export default class OfflineService {
       case "game/only_reward":
         {
           var rewardProfile = getCurrentProfile(state);
-          var onlyReward = getPendingReward(state, getPassCashReward(rewardProfile));
-          state.cashBalance += onlyReward;
+          var onlyReward = getPendingReward(state, getPassCoinReward(rewardProfile));
+          state.coinBalance += onlyReward;
           consumePendingReward(state);
           saveState(state);
           response = success({
-            bubble_cash_balance: getBubbleCashText(state),
+            bubble_coin_balance: getBubbleCoinText(state),
             bubble_gold_balance: getBubbleGoldText(state, rewardProfile),
-            cash_balance: state.cashBalance,
+            coin_balance: state.coinBalance,
             gold_balance: state.goldBalance,
             gold_reward: 0,
             make_up_reward: "",
@@ -945,7 +945,7 @@ export default class OfflineService {
       case "game/clear_video":
         {
           var rewardData = {
-            cash_reward: 0,
+            coin_reward: 0,
             gold_reward: 0
           };
           if (payload.prop_type > 0) {
@@ -962,25 +962,25 @@ export default class OfflineService {
             }
           } else {
             var videoProfile = getCurrentProfile(state);
-            var baseReward = getPendingReward(state, getPassCashReward(videoProfile));
+            var baseReward = getPendingReward(state, getPassCoinReward(videoProfile));
             var videoReward = baseReward;
             if (payload.isSettle && payload.is_over && payload.double_num) {
               videoReward = baseReward * Number(payload.double_num);
             } else if (payload.is_over) {
               videoReward = baseReward * DEFAULT_PARAMETER_CONF.lucky_reward_rate_video_rate.para_value;
             }
-            rewardData.cash_reward = videoReward;
-            state.cashBalance += videoReward;
+            rewardData.coin_reward = videoReward;
+            state.coinBalance += videoReward;
             consumePendingReward(state);
           }
           saveState(state);
           response = {
             code: 1,
             data: {
-              bubble_cash_balance: getBubbleCashText(state),
+              bubble_coin_balance: getBubbleCoinText(state),
               bubble_gold_balance: getBubbleGoldText(state, getCurrentProfile(state)),
-              cash_balance: state.cashBalance,
-              cash_reward: rewardData.cash_reward,
+              coin_balance: state.coinBalance,
+              coin_reward: rewardData.coin_reward,
               gold_balance: state.goldBalance,
               gold_bubble_flag: state.luckyCount > 0 ? 1 : 0,
               gold_reward: rewardData.gold_reward,
@@ -1073,10 +1073,10 @@ export default class OfflineService {
         response = success({});
         break;
       case "extract/gallery_extract":
-      case "game/map_cash_extract":
+      case "game/map_coin_extract":
         response = success({
           amount: 0,
-          cash_balance: state.cashBalance,
+          coin_balance: state.coinBalance,
           withdraw_percent: 1
         });
         break;
@@ -1097,7 +1097,7 @@ export default class OfflineService {
             state.luckyDrawState[luckyId - 1].status = 1;
             if (drawItem.type === 1) {
               amount = Number(drawItem.money || 0);
-              state.cashBalance += amount;
+              state.coinBalance += amount;
             } else if (luckyId === 2) {
               state.propInfo.prop2_num += 3;
             } else if (luckyId === 4) {
@@ -1120,22 +1120,22 @@ export default class OfflineService {
           info: buildLuckyDrawInfo(state)
         });
         break;
-      case "extract/cash_extract_info":
+      case "extract/coin_extract_info":
         response = success({
           extract_status: 0,
-          info: getCashWithdrawInfo(state)
+          info: getCoinWithdrawInfo(state)
         });
         break;
-      case "extract/cash_extract":
-      case "extract/cash_extract_v2":
+      case "extract/coin_extract":
+      case "extract/coin_extract_v2":
         {
-          var withdrawAmount = state.cashBalance;
-          state.cashBalance = 0;
+          var withdrawAmount = state.coinBalance;
+          state.coinBalance = 0;
           state.lastWithdrawTime = nowSeconds();
           saveState(state);
           response = success({
             amount: withdrawAmount,
-            cash_balance: state.cashBalance,
+            coin_balance: state.coinBalance,
             extract_amount: withdrawAmount,
             extract_status: 2,
             limit_days_begin_time: state.lastWithdrawTime,
@@ -1166,7 +1166,7 @@ export default class OfflineService {
         });
         break;
       case "extract/balance_details":
-      case "extract/extract_cash_record":
+      case "extract/extract_coin_record":
         response = success({
           list: []
         });
@@ -1183,9 +1183,9 @@ export default class OfflineService {
       case "game/fragmentation":
       case "game/set_card_num":
       case "game/subsidy_reward":
-      case "game/big_cash_verify_info":
+      case "game/big_coin_verify_info":
         response = success({
-          big_cash_verify_info: {
+          big_coin_verify_info: {
             current_verify_commission: 0,
             extract_list: [],
             verify_commission: 0

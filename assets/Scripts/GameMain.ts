@@ -283,7 +283,7 @@ export default class GameMain extends cc.Component {
       };
       if (gameData.hasGradeChange() && !gameData.isOpenDemo) {
         EventMgr.trigger(GameEventType.PAGE_SHOW, {
-          name: "gradeCashPage",
+          name: "gradeBalancePage",
           data: {
             cb: o_local,
             gradeDis: gameData.gradeDis
@@ -756,12 +756,12 @@ export default class GameMain extends cc.Component {
       });
       SdkHelper.reportData("pass_game_level_balance", {
         duration: gameData.gameTime,
-        cashNum: PlayerDataSys.cashBalance,
+        cionNum: PlayerDataSys.coinBalance,
         goldNum: PlayerDataSys.goldBalance
       });
       var o = t.force_flag;
       gameData.tg_reward = t.tg_reward;
-      gameData.canCashExtract = t.is_extract;
+      gameData.canCoinExtract = t.is_extract;
       gameData.extractStatus = t.extract_status;
       // Local-only coin reward is applied after settlement "claim".
       // Store pending add amount now, so settleMentPage can animate + update coin UI.

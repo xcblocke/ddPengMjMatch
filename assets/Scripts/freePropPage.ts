@@ -18,7 +18,7 @@ export function applyFreePropRewardIfAny() {
   EventMgr.trigger(GameEventType.PAGE_SHOW, {
     name: "rewardToastPage",
     data: {
-      cash: 0,
+      balance: 0,
       red: 0,
       propInfo: {
         type: fp.prop_id,

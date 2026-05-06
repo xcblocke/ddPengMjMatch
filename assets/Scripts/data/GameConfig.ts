@@ -10,11 +10,11 @@ export default class GameConfig {
   _level_conf = null;
   _combo_conf = null;
   _glory_conf = null;
-  _cash_limit = [];
+  _coin_limit = [];
   _withdraw_percent_3 = [];
   _gold_extract_title = [];
   _lucky_level_count_limit = [];
-  _cash_extract_level = [];
+  _coin_extract_level = [];
   _gold_extract_level = [];
   _red_bag_level = [];
   _card_group_conf = null;
@@ -61,11 +61,11 @@ export default class GameConfig {
   set gloryConfig(e) {
     this._glory_conf = e;
   }
-  get cashLimit() {
-    return this._cash_limit;
+  get coinLimit() {
+    return this._coin_limit;
   }
-  set cashLimit(e) {
-    this._cash_limit = e;
+  set coinLimit(e) {
+    this._coin_limit = e;
   }
   get withdrawPercent3() {
     return this._withdraw_percent_3;
@@ -85,11 +85,11 @@ export default class GameConfig {
   set lucky_level_count_limit(e) {
     this._lucky_level_count_limit = e;
   }
-  get cashExtractLevel() {
-    return this._cash_extract_level;
+  get coinExtractLevel() {
+    return this._coin_extract_level;
   }
-  set cashExtractLevel(e) {
-    this._cash_extract_level = e;
+  set coinExtractLevel(e) {
+    this._coin_extract_level = e;
   }
   get goldExtractLevel() {
     return this._gold_extract_level;
@@ -110,13 +110,13 @@ export default class GameConfig {
   getStepRewardConfig() {
     return {
       goldReward: 0,
-      cashOnlyReward: 0
+      coinOnlyReward: 0
     };
   }
   getSettleMentConfig() {
     return {
       goldReward: 0,
-      cashOnlyReward: 0
+      coinOnlyReward: 0
     };
   }
   getComboBubbleStep() {
@@ -169,9 +169,9 @@ export default class GameConfig {
   getAssetInfoById(e) {
     return this.cardConfig[e];
   }
-  getTotalGloryCash() {
+  getTotalGloryCoin() {
     var e = 0;
-    for (var t in this._glory_conf) e += this._glory_conf[t].cash;
+    for (var t in this._glory_conf) e += this._glory_conf[t].coin;
     return e;
   }
   getLuckPopCount() {
@@ -183,8 +183,8 @@ export default class GameConfig {
   getStepShowGoldCount() {
     return this._parameter_conf.bigmoney_gold_only.para_value;
   }
-  getSettleMentShowCashCount(e) {
-    return 1 == e ? this._parameter_conf.cash_1.para_value : 2 == e ? this._parameter_conf.cash_2.para_value : void 0;
+  getSettleMentShowCoinCount(e) {
+    return 1 == e ? this._parameter_conf.coin_1.para_value : 2 == e ? this._parameter_conf.coin_2.para_value : void 0;
   }
 }
 export var WdReqType = {

@@ -38,8 +38,8 @@ export default class packagingProcess extends cc.Component {
       //   EngineUtil.setGuideLocal(GuideEnum.welcomeGuideTip);
       //   SdkHelper.reportData("first_guide_page");
       // }
-      // if (gameData.canCashExtract) {
-      //   gameData.canCashExtract = false;
+      // if (gameData.canCoinExtract) {
+      //   gameData.canCoinExtract = false;
       //   // Do not auto-open withdraw related popups (stepWdPage / wdPage).
       // }
       // // Disabled: do not auto-open yearReardPage popup.
@@ -69,13 +69,13 @@ export default class packagingProcess extends cc.Component {
       return;
     }
     e = false;
-    t = Number(EngineUtil.getLocalData("wdCashLoad") || 0);
-    if (PlayerDataSys.cashBalance >= 100 * PlayerDataSys.cash_limit && !t) {
+    t = Number(EngineUtil.getLocalData("wdCoinLoad") || 0);
+    if (PlayerDataSys.coinBalance >= 100 * PlayerDataSys.coin_limit && !t) {
       e = true;
-      EngineUtil.setLocalData("wdCashLoad", "1");
+      EngineUtil.setLocalData("wdCoinLoad", "1");
     }
-    if (!(!gameData.canCashExtract && !e)) {
-      gameData.canCashExtract = false;
+    if (!(!gameData.canCoinExtract && !e)) {
+      gameData.canCoinExtract = false;
       // Do not auto-open withdraw related popups (stepWdPage / wdPage).
     }
     // if (gameConfig.redBagLevel.includes(gameData.gameLevel)) {

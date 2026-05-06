@@ -18,28 +18,28 @@ export default class GameData {
   _gameLevel = 0;
   _rewardInfos = null;
   _curClearNum = 0;
-  _levelCashNum = 0;
+  _levelCoinNum = 0;
   _hasUnExtract = false;
-  _cashBubbleTip = "";
+  _coinBubbleTip = "";
   _goldBubbleTips = "";
   _gradeDis = null;
   _onlyReward = 0;
-  _levelupOnlyCash = 0;
-  _levelupCash = 0;
+  _levelupOnlyCoin = 0;
+  _levelupCoin = 0;
   _levelupGold = 0;
   lastCountLuckPop = 0;
   lastCountLotteryPop = 0;
   successCount = 0;
   load_guide = false;
-  _luckyCash = 0;
+  _luckyCoin = 0;
   _luckyGold = 0;
-  _luckyOnlyCash = 0;
+  _luckyOnlyCoin = 0;
   showTask = false;
   linkTimes = 0;
   guideStep = 0;
   _grade_pop_data = null;
   tg_reward = 0;
-  // Local-only "gold coin" system (separate from cash/gold balance extracted from server).
+  // Local-only "gold coin" system (separate from coin/gold balance extracted from server).
   dollarBalance = 0;
   // Coin reward added for the last level pass; used for flying animation on settlement claim.
   dollarLastAdd = 0;
@@ -87,21 +87,21 @@ export default class GameData {
   totalClearNum = 0;
   gameTime = 0;
   extract_desc = "";
-  extract_cash_desc = "";
+  extract_coin_desc = "";
   luckyTotal = 0;
   luckyCurCount = 0;
   lotteryTotal = 0;
   lotteryCurCount = 0;
   globalCanClick = true;
   third_extract_level = 0;
-  canCashExtract = false;
+  canCoinExtract = false;
   extractStatus = 0;
   needLevel = 0;
   isUseFreeze = false;
   skinCfg = [];
-  cashOutTipsArr = [];
+  coinOutTipsArr = [];
   gold_extract_desc = "";
-  cash_extract_desc = "";
+  coin_extract_desc = "";
   id = 0;
   levelId = 0;
   turnId = 0;
@@ -124,37 +124,37 @@ export default class GameData {
     LotteryVisible: false,
     TujianVisible: false
   };
-  isOldCashGuide = false;
+  isOldCoinGuide = false;
   operStep = 0;
   verifyCommssionExtractOld = false;
   static _instance = null;
   get bigVerifyInfo() {
-    return this.startGameData.big_cash_verify_info;
+    return this.startGameData.big_coin_verify_info;
   }
   get leastVerifyCommission() {
     return this.bigVerifyInfo.verify_commission - this.bigVerifyInfo.current_verify_commission;
   }
-  get SumVierfyCash() {
-    var e = gameData.clearSubmitData.big_cash_verify_info.extract_list.reduce(function (e, t) {
+  get SumVierfyCoin() {
+    var e = gameData.clearSubmitData.big_coin_verify_info.extract_list.reduce(function (e, t) {
       return {
         amount: e.amount + t.amount,
         id: "1"
       };
     });
-    console.log("SumVierfyCash", e.amount);
+    console.log("SumVierfyCoin", e.amount);
     return e.amount;
   }
-  get levelupOnlyCash() {
-    return this._levelupOnlyCash;
+  get levelupOnlyCoin() {
+    return this._levelupOnlyCoin;
   }
-  set levelupOnlyCash(e) {
-    this._levelupOnlyCash = e;
+  set levelupOnlyCoin(e) {
+    this._levelupOnlyCoin = e;
   }
-  get levelupCash() {
-    return this._levelupCash;
+  get levelupCoin() {
+    return this._levelupCoin;
   }
-  set levelupCash(e) {
-    this._levelupCash = e;
+  set levelupCoin(e) {
+    this._levelupCoin = e;
   }
   get levelupGold() {
     return this._levelupGold;
@@ -162,11 +162,11 @@ export default class GameData {
   set levelupGold(e) {
     this._levelupGold = e;
   }
-  get luckyCash() {
-    return this._luckyCash;
+  get luckyCoin() {
+    return this._luckyCoin;
   }
-  set luckyCash(e) {
-    this._luckyCash = e;
+  set luckyCoin(e) {
+    this._luckyCoin = e;
   }
   get luckyGold() {
     return this._luckyGold;
@@ -174,11 +174,11 @@ export default class GameData {
   set luckyGold(e) {
     this._luckyGold = e;
   }
-  get luckyOnlyCash() {
-    return this._luckyOnlyCash;
+  get luckyOnlyCoin() {
+    return this._luckyOnlyCoin;
   }
-  set luckyOnlyCash(e) {
-    this._luckyOnlyCash = e;
+  set luckyOnlyCoin(e) {
+    this._luckyOnlyCoin = e;
   }
   get onlyReward() {
     return this._onlyReward;
@@ -192,11 +192,11 @@ export default class GameData {
   set gradeDis(e) {
     this._gradeDis = e;
   }
-  get cashBubbleTip() {
-    return this._cashBubbleTip;
+  get coinBubbleTip() {
+    return this._coinBubbleTip;
   }
-  set cashBubbleTip(e) {
-    this._cashBubbleTip = e;
+  set coinBubbleTip(e) {
+    this._coinBubbleTip = e;
   }
   get goldBubbleTip() {
     return this._goldBubbleTips;
@@ -210,11 +210,11 @@ export default class GameData {
   set hasUnExtract(e) {
     this._hasUnExtract = e;
   }
-  get levelCashNum() {
-    return this._levelCashNum;
+  get levelCoinNum() {
+    return this._levelCoinNum;
   }
-  set levelCashNum(e) {
-    this._levelCashNum = e;
+  set levelCoinNum(e) {
+    this._levelCoinNum = e;
   }
   get curClearNum() {
     return this._curClearNum;
@@ -248,8 +248,8 @@ export default class GameData {
     return !(!this._gradeDis || !this._gradeDis.hasOwnProperty("old_tx_ratio"));
   }
   updataRewardInfo(e) {
-    this.levelupCash = e.show_only_reward;
-    this.luckyCash = e.show_xc_video_reward;
+    this.levelupCoin = e.show_only_reward;
+    this.luckyCoin = e.show_xc_video_reward;
   }
   deepCopyNestedArrays(e) {
     var t = this;
@@ -274,21 +274,21 @@ export default class GameData {
         c = n.level_data,
         p = n.countdown;
       this.third_extract_level = e.third_extract_level;
-      this.canCashExtract = e.is_extract;
+      this.canCoinExtract = e.is_extract;
       this.process_info = e.process_info || null;
       this.comboCount = 0;
       this.lun_level = i;
       this.free_prop = e.free_prop;
-      this.cashBubbleTip = e.bubble_cash_balance;
+      this.coinBubbleTip = e.bubble_coin_balance;
       this.goldBubbleTip = e.bubble_gold_balance;
       this.completeAtlas = e.complete_atlas;
       this.lucky_count = e.lucky_count;
       this.lucky_bubble = e.lucky_bubble;
       this.xc_count_wait_time = 0;
       this.gameLevel = (null == e ? void 0 : e.game_level) || 1;
-      this._levelCashNum = (null == e ? void 0 : e.profile.cash_num) || 0;
+      this._levelCoinNum = (null == e ? void 0 : e.profile.coin_num) || 0;
       this.levelupGold = null == e ? void 0 : e.levelup_gold;
-      this.levelupOnlyCash = null == e ? void 0 : e.levelup_only_cash;
+      this.levelupOnlyCoin = null == e ? void 0 : e.levelup_only_coin;
       this.id = e.lun_level;
       this.roundId = r.round_id;
       this.roundMax = r.round_max;
@@ -342,10 +342,10 @@ export default class GameData {
     return this.turnId == this.turnMax && this.roundId == this.roundMax;
   }
   updateBubble(e, t = false) {
-    var o = e.bubble_cash_balance,
+    var o = e.bubble_coin_balance,
       n = e.bubble_gold_balance;
     if (void 0 !== o) {
-      this.cashBubbleTip = o;
+      this.coinBubbleTip = o;
       t || EventMgr.trigger(GameEventType.UPDATE_BUBBLE);
     }
     if (void 0 !== n) {

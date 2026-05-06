@@ -46,14 +46,14 @@ class _GameSystem {
         const __async_this = o;
         var o_local, a, r, c;
         console.log("video reward-------------", n);
-        gameData.cashBubbleTip = n.data.bubble_cash_balance;
+        gameData.coinBubbleTip = n.data.bubble_coin_balance;
         gameData.goldBubbleTip = n.data.bubble_gold_balance;
         n.data.make_up_reward && cc.sys.localStorage.setItem("make_up_reward", n.data.make_up_reward);
         gameData.tg_gold_reward > 0 && (n.data.gold_balance -= gameData.tg_gold_reward);
-        PlayerDataSys.setUserCashBalance(n.data.cash_balance, false);
+        PlayerDataSys.setUserCoinBalance(n.data.coin_balance, false);
         PlayerDataSys.setUserGoldBalance(n.data.gold_balance, false);
         n.isComplete = false;
-        o_local = n.data.cash_reward;
+        o_local = n.data.coin_reward;
         a = n.data.gold_reward;
         gameData.gameLevel <= 2 && (o_local = gameData.tg_reward);
         r = n.data.gold_bubble_flag;
@@ -79,10 +79,10 @@ class _GameSystem {
         var t_local, a;
         n.data.make_up_reward && cc.sys.localStorage.setItem("make_up_reward", n.data.make_up_reward);
         gameData.tg_gold_reward > 0 && (n.data.gold_balance -= gameData.tg_gold_reward);
-        gameData.cashBubbleTip = n.data.bubble_cash_balance;
+        gameData.coinBubbleTip = n.data.bubble_coin_balance;
         gameData.goldBubbleTip = n.data.bubble_gold_balance;
         PlayerDataSys.setUserGoldBalance(n.data.gold_balance, false);
-        PlayerDataSys.setUserCashBalance(n.data.cash_balance, false);
+        PlayerDataSys.setUserCoinBalance(n.data.coin_balance, false);
         t_local = n.data.reward;
         a = n.data.gold_reward;
         gameData.gameLevel <= 2 && (t_local = gameData.tg_reward);
@@ -166,10 +166,10 @@ class _GameSystem {
           gameData.successCount = a.data.sucess_count;
           gameData.gameState = GameState.gameResult;
         }
-        var c = a.data.cash_reward;
+        var c = a.data.coin_reward;
         gameData.updataRewardInfo(a.data);
         gameData.tg_gold_reward = a.data.tg_gold_reward;
-        gameData.canCashExtract = a.data.is_extract;
+        gameData.canCoinExtract = a.data.is_extract;
         var s = a.data.speed_reward;
         console.log("guideStep == ", PlayerDataSys.guideStep);
         PlayerDataSys.taskPopupFlag = a.data.task_popup_flag || 0;
@@ -180,8 +180,8 @@ class _GameSystem {
           rnum: s,
           cb: function () {
             EventMgr.trigger(GameEventType.UPDATE_BALANCE, {
-              start: PlayerDataSys.cashBalance - s,
-              end: PlayerDataSys.cashBalance
+              start: PlayerDataSys.coinBalance - s,
+              end: PlayerDataSys.coinBalance
             });
             EventMgr.trigger(GameEventType.SHOWBALANCEEFFECT, {
               type: 0,
@@ -216,10 +216,10 @@ class _GameSystem {
           type: 0,
           rnum: f,
           cb: function () {
-            console.log("cashBalance == ", PlayerDataSys.cashBalance);
+            console.log("coinBalance == ", PlayerDataSys.coinBalance);
             EventMgr.trigger(GameEventType.UPDATE_BALANCE, {
-              start: PlayerDataSys.cashBalance - c,
-              end: PlayerDataSys.cashBalance
+              start: PlayerDataSys.coinBalance - c,
+              end: PlayerDataSys.coinBalance
             });
             EventMgr.trigger(GameEventType.SHOWBALANCEEFFECT, {
               type: 0,
@@ -230,14 +230,14 @@ class _GameSystem {
         gameData.lucky_count = a.data.lucky_count;
         gameData.onlyReward = a.data.show_only_reward;
         gameData.gradeDis = a.data.tx_ratio;
-        a.data.bubble_cash_balance && (gameData.cashBubbleTip = a.data.bubble_cash_balance);
+        a.data.bubble_coin_balance && (gameData.coinBubbleTip = a.data.bubble_coin_balance);
         a.data.bubble_gold_balance && (gameData.goldBubbleTip = a.data.bubble_gold_balance);
         0 != Object.keys(a.data.tx_ratio).length && (gameData.gradeDis = a.data.tx_ratio);
         var g = a.data.gold_bubble_flag;
         EventMgr.trigger(GameEventType.FRESH_RED_BUBBLE, g);
         if (!gameData.isOpenDemo) {
           gameData.tg_gold_reward > 0 && (a.data.gold_balance -= gameData.tg_gold_reward);
-          PlayerDataSys.setUserCashBalance(null === (i = null == a ? void 0 : a.data) || void 0 === i ? void 0 : i.cash_balance, false);
+          PlayerDataSys.setUserCoinBalance(null === (i = null == a ? void 0 : a.data) || void 0 === i ? void 0 : i.coin_balance, false);
           PlayerDataSys.setUserGoldBalance(null === (r = null == a ? void 0 : a.data) || void 0 === r ? void 0 : r.gold_balance, false);
         }
         PlayerDataSys.user_level = a.data.level;
@@ -290,7 +290,7 @@ class _GameSystem {
       }, t, o).then(function (e) {
         EngineUtil.reconnectSuc();
         var t = 0;
-        gameData.canCashExtract || (gameData.canCashExtract = e.is_extract);
+        gameData.canCoinExtract || (gameData.canCoinExtract = e.is_extract);
         var o = e.xc_seven_count_popup_flag,
           a = e.force_flag;
         e.is_extract && EventMgr.trigger(GameEventType.HIDE_BUBBLE);
@@ -364,7 +364,7 @@ class _GameSystem {
     n && (r = 1);
     console.log("istg", r, t, o);
     EventMgr.trigger(GameEventType.FRESH_GAME_LEVELINFO);
-    var c = this.getCashReward(e);
+    var c = this.getCoinReward(e);
     0 != gameData.debugData.passLevelReward && n && (c = gameData.debugData.passLevelReward);
     if (c > 0) {
       EventMgr.trigger(GameEventType.SHOWEFFECT, {
@@ -408,7 +408,7 @@ class _GameSystem {
       EventMgr.trigger(GameEventType.SHOW_SETTLMENT_PAGE, s);
     }
   }
-  getCashReward(e) {
+  getCoinReward(e) {
     var t = 0;
     console.log("gameData.debugData.isOpenMingma", gameData.debugData.isOpenMingma);
     if (gameData.debugData.nextMustMoney > 0) {
@@ -432,11 +432,11 @@ class _GameSystem {
     var t = e.parameter_conf;
     gameData.red_bag_value.push(Number(t.red_bag_value.para_value));
   }
-  initCashGoldInfo(e) {
-    gameConfig.cashExtractLevel = e.cash_extract_level;
+  initCoinGoldInfo(e) {
+    gameConfig.coinExtractLevel = e.coin_extract_level;
     gameConfig.goldExtractLevel = e.gold_extract_level;
     gameConfig.redBagLevel = e.red_bag_level;
-    gameConfig.cashLimit = e.cash_limit;
+    gameConfig.coinLimit = e.coin_limit;
     gameConfig.withdrawPercent3 = e.withdraw_percent_3;
     gameConfig.gold_extract_title = e.gold_extract_title;
     gameConfig.lucky_level_count_limit = e.lucky_level_count_limit;

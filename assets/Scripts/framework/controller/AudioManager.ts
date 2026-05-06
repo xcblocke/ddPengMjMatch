@@ -30,11 +30,11 @@ export default class AudioManager extends cc.Component {
     this.effectOpen = Number(EngineUtil.localStorageGetItem("effect_audio", "1"));
     this.vibratorOpen = Number(EngineUtil.localStorageGetItem("vibratorOpen", "1"));
   }
-  playCash(e) {
+  playCoinSound(e) {
     console.log("播放赚钱相关语音:" + e);
     this.playMusic("makeMnSound/" + e);
   }
-  stopCash(e) {
+  stopCoinSound(e) {
     this.stopMusic("makeMnSound/" + e);
   }
   playBtn() {

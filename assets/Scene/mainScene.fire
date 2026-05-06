@@ -3199,7 +3199,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "cashBg",
+    "_name": "balanceBg",
     "_objFlags": 0,
     "_parent": {
       "__id__": 66
@@ -5624,7 +5624,7 @@
     "goldNode": {
       "__id__": 97
     },
-    "cashBubbleNode": {
+    "coinBubbleNode": {
       "__id__": 71
     },
     "goldBubbleNode": {
@@ -11018,7 +11018,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "cash_hf",
+    "_name": "balance_hf",
     "_objFlags": 0,
     "_parent": {
       "__id__": 244
@@ -13864,16 +13864,16 @@
     "csah_tgbg": {
       "__id__": 248
     },
-    "cash_text2": {
+    "coin_text2": {
       "__id__": 250
     },
-    "cash_text2_hf": {
+    "coin_text2_hf": {
       "__id__": 252
     },
-    "cash_text3_hf": {
+    "cointext3_hf": {
       "__id__": 257
     },
-    "cash_text3": {
+    "coin_text3": {
       "__id__": 255
     },
     "red_node1": {

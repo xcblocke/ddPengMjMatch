@@ -37,7 +37,7 @@ export enum FailedType {
 export var PageEnum = {
   turntablePage: "turntablePage",
   turntableRewardPage: "turntableRewardPage",
-  gradeCashPage: "gradeCashPage",
+  gradeBalancePage: "gradeBalancePage",
   stepRewardPage: "stepRewardPage",
   settleMentPage: "settleMentPage",
   wdReqPageReview: "wdReqPageReview",

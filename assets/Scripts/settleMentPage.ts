@@ -35,7 +35,7 @@ export default class settleMentPage extends BasePage {
   canClick = false;
   _cb = null;
   _is_extract = false;
-  _cash_num = 0;
+
   _inOperation = false;
   _showType = -1;
   _isforce = false;
@@ -49,7 +49,6 @@ export default class settleMentPage extends BasePage {
   claimBtnNode: cc.Button = null;
 
   tg_gold_reward = 0;
-  cash_reward = 0;
   lotteryRunning = false;
   currentSweepTime = 0;
   isLeftToRight = true;
@@ -77,7 +76,7 @@ export default class settleMentPage extends BasePage {
     });
     SdkHelper.reportData("pass_game_level_balance", {
       duration: gameData.gameTime,
-      cashNum: PlayerDataSys.cashBalance,
+      coinNum: PlayerDataSys.coinBalance,
       goldNum: PlayerDataSys.goldBalance
     });
     GlobalApp.GameMain.clearGameUI();
@@ -357,7 +356,7 @@ export default class settleMentPage extends BasePage {
       skip: 1
     }).then(function (t) {
       gameData.tg_reward = t.tg_reward;
-      gameData.canCashExtract = t.is_extract;
+      gameData.canCoinExtract = t.is_extract;
       gameData.extractStatus = t.extract_status;
       e._hide();
       e._cb && e._cb();

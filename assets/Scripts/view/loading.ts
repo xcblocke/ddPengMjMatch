@@ -338,14 +338,14 @@ export default class loading extends cc.Component {
         PlayerDataSys.offTime = a || 0;
         PlayerDataSys.setUserInfo(o.data);
         GameSystem.initGameConfig(o.data.conf_info);
-        GameSystem.initCashGoldInfo(o.data.level_desc_info);
+        GameSystem.initCoinGoldInfo(o.data.level_desc_info);
         gameData.info = o.data;
         GameConfig.getInstance().paramConfig = o.data.conf_info.parameter_conf;
         GameConfig.getInstance().comboConfig = o.data.conf_info.combo_conf;
         GameConfig.getInstance().atlasConfig = o.data.conf_info.atlas_conf;
         GameConfig.getInstance().levelConfig = o.data.conf_info.level_conf;
         GameConfig.getInstance().cardGroupConfig = o.data.conf_info.card_conf;
-        gameData.cashBubbleTip = o.data.bubble_cash_balance;
+        gameData.coinBubbleTip = o.data.bubble_coin_balance;
         gameData.goldBubbleTip = o.data.bubble_gold_balance;
         t.checkReport();
       }

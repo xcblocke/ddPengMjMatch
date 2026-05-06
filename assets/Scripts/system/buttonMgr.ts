@@ -38,7 +38,7 @@ export default class buttonMgr extends cc.Component {
       EngineUtil.reconnectSuc();
       var t = e.levelup_force_flag;
       gameData.tg_reward = e.tg_reward;
-      gameData.canCashExtract = e.is_extract;
+      gameData.canCoinExtract = e.is_extract;
       gameData.extractStatus = e.extract_status;
       // On level pass: update localStorage + GameData immediately, but do not refresh top UI yet.
       if (gameData.dollarRewardAppliedLevel !== gameData.gameLevel) {

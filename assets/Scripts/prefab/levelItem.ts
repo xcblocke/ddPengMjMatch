@@ -20,8 +20,10 @@ export default class levelItem extends cc.Component {
   current_node: cc.Node = null;
   @property(cc.Node)
   last_node: cc.Node = null;
+
+
   @property(cc.Node)
-  cash_bubble_node: cc.Node = null;
+  balance_bubble_node: cc.Node = null;
   @property(cc.Node)
   login_bubble_node: cc.Node = null;
   @property(cc.Node)
@@ -62,12 +64,12 @@ export default class levelItem extends cc.Component {
       this.login_bubble_node.active = true;
       this.signNum.string = "" + PlayerDataSys.level_3_show_gold_reward;
     } else this.login_bubble_node.active = false;
-    if (gameConfig.cashExtractLevel.includes(this.current_num)) {
-      this.cash_bubble_node.active = true;
+    if (gameConfig.coinExtractLevel.includes(this.current_num)) {
+      this.balance_bubble_node.active = true;
     } else {
-      this.cash_bubble_node.active = false;
+      this.balance_bubble_node.active = false;
     }
-    3 == this.current_num && (this.cash_bubble_node.active = true);
+    3 == this.current_num && (this.balance_bubble_node.active = true);
     if (this.current_num == gameData.gameLevel) {
       if (gameData.turnMax > 1) {
         if (gameData.roundMax > 1) {
@@ -112,9 +114,9 @@ export default class levelItem extends cc.Component {
       this.unlock_node.active = false;
       this.green_arrow.active = false;
       this.gray_arrow.active = false;
-      this.cash_bubble_node.children[0].getComponent(cc.Label).string = `gkey_471`;
+      this.balance_bubble_node.children[0].getComponent(cc.Label).string = `gkey_471`;
     } else {
-      this.cash_bubble_node.children[0].getComponent(cc.Label).string = `gkey_003`;
+      this.balance_bubble_node.children[0].getComponent(cc.Label).string = `gkey_003`;
       this.last_node.active = false;
       this.jindu.active = false;
       console.log("gameData.gameLevel", gameData.gameLevel);
@@ -143,7 +145,7 @@ export default class levelItem extends cc.Component {
         this.current_node.active = false;
         this.green_arrow.active = false;
         this.gray_arrow.active = true;
-        this.cash_bubble_node.active = false;
+        this.balance_bubble_node.active = false;
         this.login_bubble_node.active = false;
       }
     }

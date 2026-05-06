@@ -1,7 +1,7 @@
 export default class PlayerDataMgr {
   gold_menkan = "s1";
   days_task = "s0";
-  cash_menkan = "s1";
+  coin_menkan = "s1";
   attenuation = "s1";
   slot_ab = "s2";
   gold_extract_0303_ab = "s0";
@@ -27,7 +27,7 @@ export default class PlayerDataMgr {
   gender = `gkey_269`;
   bindphone = 0;
   bindwx = 0;
-  cashBalance = 0;
+  coinBalance = 0;
   gameTime = 0;
   userCpm = {};
   get user_level() {
@@ -72,12 +72,12 @@ export default class PlayerDataMgr {
   set goldBalance(e) {
     this.gold_balance = e;
   }
-  get cashBalance() {
+  get coinBalance() {
     var e = cc.sys.localStorage.getItem("make_up_reward");
-    return e ? this.cash_balance - Number(e) : this.cash_balance;
+    return e ? this.coin_balance - Number(e) : this.coin_balance;
   }
-  set cashBalance(e) {
-    this.cash_balance = e;
+  set coinBalance(e) {
+    this.coin_balance = e;
   }
   get userid() {
     return this.user_id;
