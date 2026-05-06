@@ -29,6 +29,9 @@ export default class unlockPropPage extends BasePage {
   @property(cc.Button)
   cliamBtn: cc.Button = null;
 
+  @property(cc.Animation)
+  lightAnim: cc.Animation = null;
+
   isFlying = false;
 
   type = PropType.tipCard;
@@ -41,6 +44,7 @@ export default class unlockPropPage extends BasePage {
   _init(e) {
     AudioManager.instance.playMusic("get");
     this.btnNode.opacity = 0;
+    this.playLightAnim();
     this.type = e.info.type;
     this.cliamBtn.interactable = true;
     this.isFlying = false;
@@ -52,6 +56,11 @@ export default class unlockPropPage extends BasePage {
     cc.sys.localStorage.setItem("unLockPropGuide", JSON.stringify(t));
     this.propSp.spriteFrame = this.propSpList[this.type - 1];
     this.tipsLb.string = m[this.type];
+  }
+
+  playLightAnim() {
+    let animWrap = this.lightAnim.play("light");
+    animWrap.wrapMode = cc.WrapMode.Loop;
   }
 
   playPropFlyAnim() {

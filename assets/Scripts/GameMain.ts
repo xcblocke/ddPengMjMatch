@@ -108,6 +108,10 @@ export default class GameMain extends cc.Component {
   mainBtnGroupCtrl: mainBtnGroupCtrl = null;
   @property(cc.Node)
   teachGuideNode: cc.Node = null;
+
+  @property(sp.Skeleton)
+  ruchangAni: sp.Skeleton = null;
+
   // Main scene coin UI (top-left in screenshot 1).
   _coinTextNode: cc.Node = null;
   _coinTextLabel: cc.Label = null;
@@ -154,6 +158,7 @@ export default class GameMain extends cc.Component {
     return this._cardScale;
   }
   start() {
+    this.playRuchangAni();
     GlobaldataMgr.auth_type && SdkHelper.ysdkLogin();
     this.demoNode.active = gameData.isOpenDemo;
     AudioManager.getInstance().playMusic("bgm", true, true);
@@ -165,6 +170,21 @@ export default class GameMain extends cc.Component {
       cc.game.addPersistRootNode(t);
     }
   }
+
+  playRuchangAni() {
+    this.ruchangAni.setAnimation(0, "guan", false);
+    this.ruchangAni.setCompleteListener((event) => {
+      if (event.animation.name === "guan") { 
+        this.scheduleOnce(() => {
+          this.ruchangAni.setAnimation(0, "jingzhi", false);
+        }, 0.4);
+      } else if (event.animation.name === "jingzhi") {
+        this.ruchangAni.setAnimation(0, "kai", false);
+        this.startGame(false, true);
+      } 
+    });
+  }
+
   onLoad() {
     cc.internal && cc.internal.inputManager && (cc.internal.inputManager._maxTouches = 1);
     gameData.gameUIRoot = this.node;
@@ -183,7 +203,7 @@ export default class GameMain extends cc.Component {
     this.clearGameUI();
     this.initCoinBalance();
     this.addEvent();
-    this.startGame(false, true);
+    
   }
   getCellW() {
     return this._scaledCardWidth + this._gapX;

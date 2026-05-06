@@ -1,0 +1,55 @@
+
+lianji.png
+size: 849,175
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+di
+  rotate: false
+  xy: 372, 91
+  size: 296, 82
+  orig: 298, 84
+  offset: 1, 1
+  index: -1
+guang
+  rotate: false
+  xy: 2, 3
+  size: 368, 170
+  orig: 392, 186
+  offset: 12, 8
+  index: -1
+saoguang
+  rotate: true
+  xy: 670, 76
+  size: 97, 177
+  orig: 109, 177
+  offset: 6, 0
+  index: -1
+shan
+  rotate: false
+  xy: 780, 32
+  size: 42, 42
+  orig: 45, 46
+  offset: 2, 2
+  index: -1
+shou
+  rotate: false
+  xy: 741, 24
+  size: 37, 50
+  orig: 39, 52
+  offset: 1, 1
+  index: -1
+xiongmao
+  rotate: false
+  xy: 660, 2
+  size: 79, 72
+  orig: 81, 74
+  offset: 1, 1
+  index: -1
+zi
+  rotate: false
+  xy: 372, 18
+  size: 286, 71
+  orig: 286, 71
+  offset: 0, 0
+  index: -1
