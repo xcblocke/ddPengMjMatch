@@ -58,7 +58,7 @@ export default class topBarrage extends cc.Component {
       t && EngineUtil.loaderHead(t, this.top_head);
       this.top_desc && (this.top_desc.string = o);
       this.top_name && (this.top_name.string = n);
-      this.top_count && (this.top_count.string = `{"gkey_039":{"v1":"${a}"}}`);
+      this.top_count && (this.top_count.string = "");
       this.showTop();
     }
   }

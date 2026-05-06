@@ -1,12 +1,10 @@
-import SceneA from './SceneA';
+
 const {
   ccclass,
   property
 } = cc._decorator;
 @ccclass
 export default class buttonContrl extends cc.Component {
-  @property(SceneA)
-  sceneA: SceneA = null;
   @property(cc.Node)
   parentNodes: cc.Node = [];
   close(e) {
