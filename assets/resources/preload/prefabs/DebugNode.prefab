@@ -403,7 +403,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 130.11,
+      "width": 24.99,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -415,7 +415,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        137.11,
+        34.43600000000001,
         -19,
         0,
         0,
@@ -455,8 +455,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "gkey_208",
-    "_N$string": "gkey_208",
+    "_string": "m",
+    "_N$string": "m",
     "_fontSize": 30,
     "_lineHeight": 40,
     "_enableWrapText": true,
@@ -484,7 +484,7 @@
     "alignMode": 2,
     "_target": null,
     "_alignFlags": 8,
-    "_left": 7,
+    "_left": 9.446000000000005,
     "_right": 0,
     "_top": 0,
     "_bottom": 0,
@@ -541,7 +541,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 130.11,
+      "width": 15,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -553,7 +553,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        163.887,
+        61.213,
         -45.259,
         0,
         0,
@@ -593,8 +593,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "gkey_209",
-    "_N$string": "gkey_209",
+    "_string": "s",
+    "_N$string": "s",
     "_fontSize": 30,
     "_lineHeight": 40,
     "_enableWrapText": true,
@@ -622,7 +622,7 @@
     "alignMode": 2,
     "_target": null,
     "_alignFlags": 8,
-    "_left": 33.777,
+    "_left": 46.213,
     "_right": 0,
     "_top": 0,
     "_bottom": 0,

@@ -61,15 +61,15 @@ export default class HttpUtil {
                             }
                             i(l);
                         } else {
-                            console.log(`gkey_302`);
+                            console.log(`data not exist`);
                             c({
                                 code: -1,
-                                message: "返回数据不存在",
+                                message: "data not exist",
                                 http_status: s.status
                             });
                         }
                     } else {
-                        console.log("请求失败");
+                        console.log("request error");
                         c({
                             code: -1,
                             message: "xhr.status" + s.status,

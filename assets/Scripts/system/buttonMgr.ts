@@ -213,7 +213,9 @@ export default class buttonMgr extends cc.Component {
   }
   demoWdTBtnClick() {
     var e = PlayerDataSys.goldBalance;
-    if (e < 0.01) EngineUtil.showCocosToast3(`{"gkey_528":{"v1":"${0.01}"}}`);else {
+    if (e < 0.01) {
+
+    }else {
       PlayerDataSys.withDrawal(e);
       EventMgr.trigger(GameEventType.PAGE_SHOW, {
         name: "wdSuccPage",

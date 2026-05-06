@@ -1,7 +1,5 @@
 import { PropType } from "./framework/enum/AllEnum";
 
-export var privacy = `{"gkey_268":{"v1":"${2026}","v2":"${0o3}","v3":"${23}","v4":"${1}","v5":"${2}","v6":"${3}","v7":"${4}","v8":"${5}","v9":"${6}","v10":"${7}","v11":"${8}","v12":"${9}","v13":"${10}","v14":"${11}"}}`;
-export var resBasePath = "sceneA/";
 export enum EAppThemeType {
   Theme1 = 0,
   Theme2 = 1,

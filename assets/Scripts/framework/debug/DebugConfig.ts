@@ -47,7 +47,7 @@ export var DebugConfig = [{
   title: `gkey_279`,
   isOpen: false,
   children: [{
-    title: `gkey_028`,
+    title: "jump to",
     type: DebugType.Button,
     func: function () {
       GlobalApp.GameMain.passClick();

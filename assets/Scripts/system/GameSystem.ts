@@ -59,7 +59,7 @@ class _GameSystem {
         r = n.data.gold_bubble_flag;
         EventMgr.trigger(GameEventType.FRESH_RED_BUBBLE, r);
         "";
-        c = 2 == e.video_type || 3 == e.video_type ? `gkey_484` : `gkey_529`;
+        c = 2 == e.video_type || 3 == e.video_type ? `gkey_484` : `gkey_484`;
         // Disabled: do not auto-open reward toast popup during settlement flow.
         t(n);
         return;

@@ -91,7 +91,6 @@ export default class LevelStart extends cc.Component {
       this.csah_hf.opacity = 0;
       this.csah_hf.x = -500;
       this.csah_hf.stopAllActions();
-      this.cash_text2_hf.string = `{"gkey_327":{"v1":"${(a - gameData.successCount)}","v2":"${100 * i}"}}`;
      
       cc.tween(this.csah_hf).delay(0.7).to(0.2, {
         x: 0,
@@ -123,12 +122,9 @@ export default class LevelStart extends cc.Component {
     this.cash_text3.active = true;
     this.csah_hf.opacity = 0;
     this.csah_hf.x = -500;
-    this.cash_text3_hf.string = `{"gkey_328":{"v1":"${100 * a}"}}`;
-    4 == gameData.gameLevel && (this.cash_text3_hf.string = `{"gkey_329":{"v1":"${2}","v2":"${100}"}}`);
     if (1 == gameData.gameLevel) {
       this.cash_text3.active = false;
       this.csah_tgbg.active = true;
-      this.csah_tgbg.getComponent(cc.RichText).string = `gkey_330`;
     } 
     cc.tween(this.csah_hf).delay(0.5).to(0.2, {
       x: 0,
@@ -194,7 +190,6 @@ export default class LevelStart extends cc.Component {
       c = gameConfig.gold_extract_title[a];
     this.red2_ratio1.string = "" + i;
     this.red2_ratio2.string = "" + c;
-    this.red2_tgbg.string = `{"gkey_331":{"v1":"${c}"}}`;
   
     cc.tween(this.red_hf).delay(0.5).to(0.2, {
       x: 0,

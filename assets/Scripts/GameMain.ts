@@ -54,11 +54,7 @@ export default class GameMain extends cc.Component {
     displayName: "游戏提示"
   })
   gameTips: cc.Node = [];
-  @property({
-    type: cc.Node,
-    displayName: "素材ui"
-  })
-  demoNode: cc.Node = null;
+
   @property({
     type: cc.Node,
     displayName: "背景"
@@ -160,7 +156,7 @@ export default class GameMain extends cc.Component {
   start() {
     this.playRuchangAni();
     GlobaldataMgr.auth_type && SdkHelper.ysdkLogin();
-    this.demoNode.active = gameData.isOpenDemo;
+
     AudioManager.getInstance().playMusic("bgm", true, true);
     GlobalApp.GameMain = this;
     if (!EngineUtil.isOnlineRelease() && !gameData.isOpenDemo) {

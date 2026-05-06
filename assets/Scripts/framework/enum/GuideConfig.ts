@@ -88,7 +88,7 @@ GuideConfig[GuideEnum.redShow3] = {
   isUnShowText: true
 };
 GuideConfig[GuideEnum.redShow4] = {
-  des: `{"gkey_301":{"v1":"${i(\"0.1元\")}","v2":"${i(\"2关\")}"}}`,
+  des: `gkey_301`,
   isBlackClose: true,
   scale: 1,
   audioName: ""

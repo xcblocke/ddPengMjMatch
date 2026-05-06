@@ -115,26 +115,6 @@ export default class settleMentPage extends BasePage {
     // this.scheduleOnce(function () {
     //   t.playAnim();
     // }, 0.2);
-    this.showDesc();
-  }
-  showDesc() {
-    var e = "",
-      t = gameData.lun_level;
-    if (gameConfig.goldExtractLevel.includes(t)) {
-      var o = EngineUtil.findIndex(gameConfig.goldExtractLevel, t);
-      e = `{"gkey_516":{"v1":"${gameConfig.gold_extract_title[o]}"}}`;
-    } else if (gameConfig.cashExtractLevel.includes(gameData.gameLevel)) {
-      var n = EngineUtil.findIndex(gameConfig.cashExtractLevel, gameData.gameLevel),
-        a = gameConfig.withdrawPercent3[n];
-      e = `{"gkey_517":{"v1":"${PlayerDataSys.getCashBalance(a * PlayerDataSys.cashBalance)}"}}`;
-      e = `{"gkey_518":{"v1":"${PlayerDataSys.getCNCashNum(10000 * a)}"}}`;
-    } else {
-      n = Math.floor(gameData.gameLevel / 5) + 2;
-      var i = gameConfig.cashExtractLevel[n];
-      a = gameConfig.withdrawPercent3[n];
-      e = `{"gkey_519":{"v1":"${(i - gameData.gameLevel)}","v2":"${PlayerDataSys.getCashBalance(a * PlayerDataSys.cashBalance)}"}}`;
-    }
-   
   }
 
 
@@ -225,7 +205,6 @@ export default class settleMentPage extends BasePage {
     SdkHelper.reportData("tg_reward_video_click");
     if (this.canClick) {
       var o = function o() {
-        SdkHelper.showForceToast(`gkey_272`);
         // AudioManager.getInstance().playNativeMusic("video_big_reward");
         EventMgr.trigger(GameEventType.STOP_GAME_TIME);
         var o = function (t, o) {
