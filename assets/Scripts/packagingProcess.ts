@@ -40,7 +40,7 @@ export default class packagingProcess extends cc.Component {
       // }
       // if (gameData.canCoinExtract) {
       //   gameData.canCoinExtract = false;
-      //   // Do not auto-open withdraw related popups (stepWdPage / wdPage).
+      //   // Do not auto-open exchange related popups (stepWdPage / wdPage).
       // }
       // // Disabled: do not auto-open yearReardPage popup.
       // if (!(3 != gameData.lun_level || this.testGuideHas(GuideEnum.yearRewardGuide))) {
@@ -76,7 +76,7 @@ export default class packagingProcess extends cc.Component {
     }
     if (!(!gameData.canCoinExtract && !e)) {
       gameData.canCoinExtract = false;
-      // Do not auto-open withdraw related popups (stepWdPage / wdPage).
+      // Do not auto-open exchange related popups (stepWdPage / wdPage).
     }
     // if (gameConfig.redBagLevel.includes(gameData.gameLevel)) {
     //   await this.showStepRedRewardPage();

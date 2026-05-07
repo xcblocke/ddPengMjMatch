@@ -834,7 +834,7 @@ export default class GameMain extends cc.Component {
           nodes: [o]
         });
         EventMgr.trigger(GameEventType.USER_OPERATE_TIP);
-        // Do not auto-open atlas withdraw related popups (tujianWdPage / tujianAutoWdPage).
+        // Do not auto-open atlas exchange related popups (tujianWdPage / tujianAutoWdPage).
         applyFreePropRewardIfAny();
         EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
         return;
@@ -846,7 +846,7 @@ export default class GameMain extends cc.Component {
           nodes: [o]
         });
         EventMgr.trigger(GameEventType.USER_RESHUFFLE_CARD);
-        // Do not auto-open atlas withdraw related popups (tujianWdPage / tujianAutoWdPage).
+        // Do not auto-open atlas exchange related popups (tujianWdPage / tujianAutoWdPage).
         applyFreePropRewardIfAny();
         EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
         return;
@@ -860,7 +860,7 @@ export default class GameMain extends cc.Component {
         EventMgr.trigger(GameEventType.USER_FREEZE);
       }
     }
-    // Do not auto-open atlas withdraw related popups (tujianWdPage / tujianAutoWdPage).
+    // Do not auto-open atlas exchange related popups (tujianWdPage / tujianAutoWdPage).
     applyFreePropRewardIfAny();
     EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
     return;

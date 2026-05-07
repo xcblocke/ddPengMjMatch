@@ -117,8 +117,8 @@ class _GameSystem {
   getExtractInfo(e = {}) {
     return Service.getExtractInfo(e);
   }
-  gotoWithdraw_v2(e) {
-    return Service.gotoWithdraw_v2(e);
+  gotoExchange_v2(e) {
+    return Service.gotoExchange_v2(e);
   }
   getGoldExtractInfo() {
     return Service.getGoldExtractInfo();
@@ -138,9 +138,9 @@ class _GameSystem {
   getBigMsg() {
     return Service.getBigMsg();
   }
-  gotoWithdraw(e) {
+  gotoExchange(e) {
     return new Promise(function (t, o) {
-      Service.gotoWithdraw(e).then(function (e) {
+      Service.gotoExchange(e).then(function (e) {
         gameData.hasUnExtract && (gameData.hasUnExtract = false);
         t(e);
       }).catch(function (e) {
@@ -148,11 +148,11 @@ class _GameSystem {
       });
     });
   }
-  getWithdrawDetail(e) {
-    return Service.getWithdrawDetail(e);
+  getExchangeDetail(e) {
+    return Service.getExchangeDetail(e);
   }
-  gotoGoldWithdraw(e) {
-    return Service.gotoGoldWithdraw(e);
+  gotoGoldExchange(e) {
+    return Service.gotoGoldExchange(e);
   }
   submitGame(e = {
     is_tg: 0
@@ -384,7 +384,7 @@ class _GameSystem {
           });
           console.log("gameData.debugData", gameData.debugData);
           if (gameData.debugData.isOpenAutoGet) {
-            PlayerDataSys.withDrawal(c);
+            PlayerDataSys.exchange(c);
             EventMgr.trigger(GameEventType.PAGE_SHOW, {
               name: "wdSuccPage",
               data: {
@@ -437,12 +437,12 @@ class _GameSystem {
     gameConfig.goldExtractLevel = e.gold_extract_level;
     gameConfig.redBagLevel = e.red_bag_level;
     gameConfig.coinLimit = e.coin_limit;
-    gameConfig.withdrawPercent3 = e.withdraw_percent_3;
+    gameConfig.exchangePercent3 = e.exchange_percent_3;
     gameConfig.gold_extract_title = e.gold_extract_title;
     gameConfig.lucky_level_count_limit = e.lucky_level_count_limit;
   }
-  withdrawHistory() {
-    return Service.withdrawHistory();
+  exchangeHistory() {
+    return Service.exchangeHistory();
   }
   removeUser(e) {
     return Service.removeUser(e);

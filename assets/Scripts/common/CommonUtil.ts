@@ -83,7 +83,7 @@ class l {
       });
     });
   }
-  flyWithdraw(e) {
+  flyExchange(e) {
     var t = e.pos,
       o = e.num,
       n = e.type,

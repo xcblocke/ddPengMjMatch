@@ -216,7 +216,7 @@ export default class buttonMgr extends cc.Component {
     if (e < 0.01) {
 
     }else {
-      PlayerDataSys.withDrawal(e);
+      PlayerDataSys.exchange(e);
       EventMgr.trigger(GameEventType.PAGE_SHOW, {
         name: "wdSuccPage",
         data: {

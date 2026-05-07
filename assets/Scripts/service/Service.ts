@@ -2803,7 +2803,7 @@ export default class Service {
         //             "lucky_level_count_limit": [3, 13, 30, 55, 88, 121, 154, 187],
         //             "new_year_level": 2,
         //             "red_bag_level": [8],
-        //             "withdraw_percent_3": [0.01, 0.02, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80]
+        //             "exchange_percent_3": [0.01, 0.02, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80]
         //         },
         //         "login_days": 1,
         //         "nickname": null,
@@ -3228,9 +3228,9 @@ export default class Service {
         return HttpUtil.Post(Service.genRequestUrl(RequestType.GetExtractInfo), o);
     }
 
-    static gotoWithdraw_v2(t) {
+    static gotoExchange_v2(t) {
         var o = Service.getRequestData(t);
-        return HttpUtil.Post(Service.genRequestUrl(RequestType.GotoWithdraw_v2), o);
+        return HttpUtil.Post(Service.genRequestUrl(RequestType.GotoExchange_v2), o);
     }
 
     static getGoldExtractInfo() {
@@ -3263,24 +3263,24 @@ export default class Service {
         return HttpUtil.Post(Service.genRequestUrl(RequestType.GetBigMsg), t);
     }
 
-    static gotoWithdraw(t) {
+    static gotoExchange(t) {
         var o = Service.getRequestData(t);
-        return HttpUtil.Post(Service.genRequestUrl(RequestType.GotoWithdraw), o);
+        return HttpUtil.Post(Service.genRequestUrl(RequestType.GotoExchange), o);
     }
 
-    static gotoGoldWithdraw(t) {
+    static gotoGoldExchange(t) {
         var o = Service.getRequestData(t);
-        return HttpUtil.Post(Service.genRequestUrl(RequestType.GotoGoldWithdraw), o);
+        return HttpUtil.Post(Service.genRequestUrl(RequestType.GotoGoldExchange), o);
     }
 
-    static getWithdrawDetail(t) {
+    static getExchangeDetail(t) {
         var o = Service.getRequestData(t);
-        return HttpUtil.Post(Service.genRequestUrl(RequestType.WithdrawDetail), o);
+        return HttpUtil.Post(Service.genRequestUrl(RequestType.ExchangeDetail), o);
     }
 
-    static withdrawHistory() {
+    static exchangeHistory() {
         var t = Service.getRequestData(null);
-        return HttpUtil.Post(Service.genRequestUrl(RequestType.WithdrawHistory), t);
+        return HttpUtil.Post(Service.genRequestUrl(RequestType.ExchangeHistory), t);
     }
 
     static removeUser(t) {

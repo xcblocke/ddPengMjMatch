@@ -11,7 +11,7 @@ export default class GameConfig {
   _combo_conf = null;
   _glory_conf = null;
   _coin_limit = [];
-  _withdraw_percent_3 = [];
+  _exchange_percent_3 = [];
   _gold_extract_title = [];
   _lucky_level_count_limit = [];
   _coin_extract_level = [];
@@ -67,11 +67,11 @@ export default class GameConfig {
   set coinLimit(e) {
     this._coin_limit = e;
   }
-  get withdrawPercent3() {
-    return this._withdraw_percent_3;
+  get exchangePercent3() {
+    return this._exchange_percent_3;
   }
-  set withdrawPercent3(e) {
-    this._withdraw_percent_3 = e;
+  set exchangePercent3(e) {
+    this._exchange_percent_3 = e;
   }
   get gold_extract_title() {
     return this._gold_extract_title;

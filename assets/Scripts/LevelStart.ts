@@ -89,7 +89,7 @@ export default class LevelStart extends cc.Component {
     } else {
       var n = Math.floor(this.game_level / 5) + 2,
         a = gameConfig.coinExtractLevel[n],
-        i = gameConfig.withdrawPercent3[n];
+        i = gameConfig.exchangePercent3[n];
       this.csah_hf.active = true;
       this.coin_text2.active = true;
       this.csah_hf.opacity = 0;
@@ -120,7 +120,7 @@ export default class LevelStart extends cc.Component {
   showCoinTwo(e, t = "") {
     var o = this;
     var n = EngineUtil.findIndex(gameConfig.coinExtractLevel, this.game_level),
-      a = gameConfig.withdrawPercent3[n];
+      a = gameConfig.exchangePercent3[n];
     this.csah_hf.stopAllActions();
     this.csah_hf.active = true;
     this.coin_text3.active = true;

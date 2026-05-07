@@ -270,10 +270,10 @@ class _PlayerDataSys extends PlayerDataMgr {
   isTencent() {
     return new RegExp("tencent").test(ClientData.channel_name);
   }
-  withDrawal(e) {
+  exchange(e) {
     this.goldBalance = 0;
     this.setUserGoldBalance(this.goldBalance);
-    console.log("withDrawal", e);
+    console.log("exchange", e);
     this.rewardList.push(e);
     LocalData.getInstance().setUserCoinData(this.goldBalance);
   }

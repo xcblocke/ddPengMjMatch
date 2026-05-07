@@ -145,7 +145,7 @@ const DEFAULT_LEVEL_DESC_INFO = {
   gold_extract_level: [0, 2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40, 48, 56, 60],
   red_bag_level: [4, 8],
   coin_limit: [1000, 3000, 5000, 8000, 10000, 15000],
-  withdraw_percent_3: [0, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+  exchange_percent_3: [0, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
   gold_extract_title: ["1", "1.2", "1.5", "2", "2.5", "3", "4", "5", "6", "8", "10", "12", "15", "20", "30"],
   lucky_level_count_limit: [4, 10, 16, 22, 28, 34, 40],
   new_year_level: [4, 8]
@@ -392,7 +392,7 @@ function createDefaultState() {
     bigScrollXcCount: 5,
     freeLotteryFlag: 0,
     coinExtractAmount: 35,
-    lastWithdrawTime: 0
+    lastExchangeTime: 0
   };
 }
 
@@ -572,7 +572,7 @@ function getTujianInfo(state) {
   };
 }
 
-function getCoinWithdrawInfo(state) {
+function getCoinExchangeInfo(state) {
   var percents = [0.01, 0.02, 0.05, 0.1, 0.2];
   var levels = [1, 3, 5, 10, 15];
   var info = [];
@@ -589,14 +589,14 @@ function getCoinWithdrawInfo(state) {
       limit_days_begin_time: nowSeconds(),
       limit_days_end_time: nowSeconds() + 60,
       status: 0,
-      withdraw_percent: percents[Math.min(i, 1)],
-      withdraw_percent_3: percents[i]
+      exchange_percent: percents[Math.min(i, 1)],
+      exchange_percent_3: percents[i]
     });
   }
   return info;
 }
 
-function getGoldWithdrawInfo(state) {
+function getGoldExchangeInfo(state) {
   var maxId = 1;
   if (state.successCount >= 20) {
     maxId = 2;
@@ -629,7 +629,7 @@ function getGoldWithdrawInfo(state) {
       sign_pass: state.successCount,
       sign_pass_limit: 0,
       title: titles[i],
-      withdraw_percent: i === 0 ? 0.01 : i === 1 ? 0.02 : 1
+      exchange_percent: i === 0 ? 0.01 : i === 1 ? 0.02 : 1
     });
   }
   return {
@@ -653,7 +653,7 @@ function buildUserInfo(state) {
     bubble_gold_balance: getBubbleGoldText(state, profile),
     coin_balance: state.coinBalance,
     coin_extract_amount: state.coinExtractAmount,
-    coin_extract_desc: "Offline withdraw description",
+    coin_extract_desc: "Offline exchange description",
     coin_limit: DEFAULT_COIN_LIMIT,
     complete_atlas: {},
     conf_info: {
@@ -1077,7 +1077,7 @@ export default class OfflineService {
         response = success({
           amount: 0,
           coin_balance: state.coinBalance,
-          withdraw_percent: 1
+          exchange_percent: 1
         });
         break;
       case "game/lucky_draw_info":
@@ -1123,30 +1123,30 @@ export default class OfflineService {
       case "extract/coin_extract_info":
         response = success({
           extract_status: 0,
-          info: getCoinWithdrawInfo(state)
+          info: getCoinExchangeInfo(state)
         });
         break;
       case "extract/coin_extract":
       case "extract/coin_extract_v2":
         {
-          var withdrawAmount = state.coinBalance;
+          var exchangeAmount = state.coinBalance;
           state.coinBalance = 0;
-          state.lastWithdrawTime = nowSeconds();
+          state.lastExchangeTime = nowSeconds();
           saveState(state);
           response = success({
-            amount: withdrawAmount,
+            amount: exchangeAmount,
             coin_balance: state.coinBalance,
-            extract_amount: withdrawAmount,
+            extract_amount: exchangeAmount,
             extract_status: 2,
-            limit_days_begin_time: state.lastWithdrawTime,
-            limit_days_end_time: state.lastWithdrawTime + 60,
-            withdraw_percent: 1,
-            withdraw_percent_3: 1
+            limit_days_begin_time: state.lastExchangeTime,
+            limit_days_end_time: state.lastExchangeTime + 60,
+            exchange_percent: 1,
+            exchange_percent_3: 1
           });
         }
         break;
       case "extract/gold_extract_info":
-        response = success(getGoldWithdrawInfo(state));
+        response = success(getGoldExchangeInfo(state));
         break;
       case "extract/gold_extract":
         {
