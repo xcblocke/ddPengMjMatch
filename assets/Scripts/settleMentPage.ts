@@ -136,8 +136,11 @@ export default class settleMentPage extends BasePage {
           type: 3,
           num: levelRewardCoin
         });
-        
-        e.allBtnClick();
+        // Do not call allBtnClick -> openVideo: on browser AdManager plays success immediately; on APK it waits for reward video (3~5s). Local coin claim does not need an ad.
+        SdkHelper.reportData("big_reward_all");
+        SetNode2Top.restoreNode(GlobalApp.GameMain.dollarNode);
+        e._coinFlyOnClaim = false;
+        e.close();
       }
     });
   }
