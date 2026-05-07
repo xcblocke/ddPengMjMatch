@@ -870,7 +870,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 269.22,
+      "width": 427.56,
       "height": 75.6
     },
     "_anchorPoint": {
@@ -882,8 +882,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        9.413,
-        9.342,
+        3.349,
+        11.516,
         0,
         0,
         0,
@@ -938,7 +938,7 @@
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
-    "_N$overflow": 0,
+    "_N$overflow": 2,
     "_N$cacheMode": 0,
     "_id": ""
   },

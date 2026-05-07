@@ -85,6 +85,7 @@ export default class unlockPropPage extends BasePage {
       a = t.parent.convertToNodeSpaceAR(n);
     t.scale = 0.6;
     AudioManager.instance.playMusic("xiu");
+    AudioManager.instance.playMusic("dztx");
     if (this.type == PropType.tipCard) {
       PlayerDataSys.tipCardCount = 1;
     } else {
@@ -94,22 +95,18 @@ export default class unlockPropPage extends BasePage {
         this.type == PropType.freezeCard && (PlayerDataSys.freezeCardCount = 1);
       }
     }
-    cc.tween(t).to(0.7, {
-      position: a,
-      scale: 0
-    }, {
-      easing: "backIn"
-    }).call(function () {
-      cc.tween(o).to(0.1, {
-        scale: 1.1
-    }).to(0.1, {
-        scale: 1
-      }).to(0.1, {
-        scale: 0.9
-      }).to(0.1, {
-        scale: 1
-      }).start();
+    cc.tween(t)
+    .to(0.7, {position: a,scale: 0}, {easing: "backIn"})
+    .call(function () {
+     
+        cc.tween(o)
+        .to(0.1, { scale: 1.1})
+        .to(0.1, {scale: 1})
+        .to(0.1, {scale: 0.9})
+        .to(0.1, {scale: 1})
+        .start();
       EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
+     
       t.destroy();
       e.close();
     }).start();

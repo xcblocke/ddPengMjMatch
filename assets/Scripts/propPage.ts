@@ -212,6 +212,7 @@ export default class propPage extends BasePage {
       a = t.parent.convertToNodeSpaceAR(n);
     t.scale = 0.6;
     AudioManager.instance.playMusic("xiu");
+    AudioManager.instance.playMusic("dztx");
   
     cc.tween(t).to(0.7, {
       position: a,

@@ -898,7 +898,7 @@ export default class GameMain extends cc.Component {
         this.teachingStepCardList = o.map(function (e) {
           return e.cardData.id;
         });
-        r = "试试点击远距离<color=#F8F500>同行/列</c>的麻将";
+        r = `gkey_313`;
         break;
       case 3:
         n = {

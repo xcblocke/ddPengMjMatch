@@ -13,7 +13,7 @@ export var LoadProgressTip = {
   FakeAnim: `gkey_213`,
   CheckHotUpdate: `gkey_273`,
   PreLoadRes: `gkey_274`,
-  LoadScene: `gkey_275`
+  LoadScene: `gkey_213`
 };
 @ccclass
 @menu("自定义组件/LoadProgress")

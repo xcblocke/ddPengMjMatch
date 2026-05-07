@@ -1,263 +1,437 @@
-[{
-	"key": "gkey_000",
-	"zh": "关"
-},  {
-	"key": "gkey_002",
-	"zh": "元"
-}, {
-	"key": "gkey_003",
-	"zh": "自动收款"
-} , {
-	"key": "gkey_010",
-	"zh": "重新开始"
-} , {
-	"key": "gkey_051",
-	"zh": "立即领取"
-}, {
-	"key": "gkey_052",
-	"zh": "清空格子内麻将并放到屏幕外"
-},{
-	"key": "gkey_064",
-	"zh": "等级"
-},{
-	"key": "gkey_152",
-	"zh": "随机打乱所有的牌"
-},  {
-	"key": "gkey_192",
-	"zh": "不足不足不足"
-},{
-	"key": "gkey_198",
-	"zh": "看视频幸苦了"
-},  {
-	"key": "gkey_200",
-	"zh": "日"
-}, {
-	"key": "gkey_210",
-	"zh": "开始xxx_1"
-}, {
-	"key": "gkey_211",
-	"zh": "触发"
-}, {
-	"key": "gkey_212",
-	"zh": "通关越多,输出比例越高！"
-}, {
-	"key": "gkey_213",
-	"zh": "加载中..."
-},{
-	"key": "gkey_217",
-	"zh": "领红包"
-}, {
-	"key": "gkey_218",
-	"zh": "可抽奖"
-}, {
-	"key": "gkey_220",
-	"zh": "连击"
-}, {
-	"key": "gkey_225",
-	"zh": "移出三个方块"
-}, {
-	"key": "gkey_226",
-	"zh": "使用道具"
-}, {
-	"key": "gkey_227",
-	"zh": "回退一步"
-}, {
-	"key": "gkey_228",
-	"zh": "消除一组方块"
-}, {
-	"key": "gkey_230",
-	"zh": "Level xxx_1"
-},  {
-	"key": "gkey_238", 
-	"zh": "点击麻将对"
-},{
-	"key": "gkey_257",
-	"zh": "隐私政策"
-},{
-	"key": "gkey_262",
-	"zh": "添加按钮统一音效"
-}, {
-	"key": "gkey_269",
-	"zh": "保密"
-}, {
-	"key": "gkey_270",
-	"zh": "错误:xxx_1"
-}, {
-	"key": "gkey_271",
-	"zh": "点击过快，请稍后再试"
-},  {
-	"key": "gkey_273",
-	"zh": "热更新中..."
-}, {
-	"key": "gkey_274",
-	"zh": "预加载资源..."
-}, {
-	"key": "gkey_275",
-	"zh": "加载场景..."
-}, {
-	"key": "gkey_276",
-	"zh": "\"游客xxx_1\""
-}, {
-	"key": "gkey_277",
-	"zh": "删除用户"
-}, {
-	"key": "gkey_278",
-	"zh": "确认删除"
-}, {
-	"key": "gkey_279",
-	"zh": "基础测试"
-}, {
-	"key": "gkey_280",
-	"zh": "广告开关"
-}, {
-	"key": "gkey_281",
-	"zh": "广告已关"
-}, {
-	"key": "gkey_282",
-	"zh": "广告已开"
-}, {
-	"key": "gkey_283",
-	"zh": "对局时间"
-}, {
-	"key": "gkey_284",
-	"zh": "重开游戏"
-}, {
-	"key": "gkey_285",
-	"zh": "跳指定关文本"
-}, {
-	"key": "gkey_286",
-	"zh": "跳指定关"
-}, {
-	"key": "gkey_287",
-	"zh": "页面展示"
-}, {
-	"key": "gkey_289",
-	"zh": "年"
-}, {
-	"key": "gkey_290",
-	"zh": "月"
-}, {
-	"key": "gkey_292",
-	"zh": "[一-龥]+"
-}, {
-	"key": "gkey_293",
-	"zh": "xxx_1年xxx_2xxx_3月xxx_4日xxx_5:xxx_6:"
-}, {
-	"key": "gkey_294",
-	"zh": "已过期"
-}, {
-	"key": "gkey_295",
-	"zh": "xxx_1年"
-}, {
-	"key": "gkey_296",
-	"zh": "xxx_1月"
-}, {
-	"key": "gkey_297",
-	"zh": "xxx_1天"
-}, {
-	"key": "gkey_298",
-	"zh": "点击抽奖"
-}, {
-	"key": "gkey_299",
-	"zh": "恭喜您"
-}, {
-	"key": "gkey_300",
-	"zh": "点击这里"
-}, {
-	"key": "gkey_301",
-	"zh": "金币够了"
-},  {
-	"key": "gkey_303",
-	"zh": "拉取广告出错，领取失败"
-}, {
-	"key": "gkey_304",
-	"zh": "xxx_1年xxx_2xxx_3月xxx_4日"
-}, {
-	"key": "gkey_305",
-	"zh": "xxx_1秒"
-}, {
-	"key": "gkey_306",
-	"zh": "xxx_1分"
-}, {
-	"key": "gkey_307",
-	"zh": "xxx_1小时"
-}, {
-	"key": "gkey_308",
-	"zh": "已在防沉迷系统实名认证，可直接进入游戏"
-}, {
-	"key": "gkey_309",
-	"zh": "试试点击<color=#F8F500>相邻</c>的麻将"
-}, {
-	"key": "gkey_310",
-	"zh": "试试<color=#F8F500>水平</c>挪动麻将"
-}, {
-	"key": "gkey_311",
-	"zh": "试试<color=#F8F500>竖直</c>挪动麻将"
-}, {
-	"key": "gkey_312",
-	"zh": "消除<color=#F8F500>花牌</c>\n可随机带走一对麻将"
-}, {
-	"key": "gkey_314",
-	"zh": "未看完广告<br><fontcolor='#F74708'>奖励领取失败</font>"
-}, {
-	"key": "gkey_324",
-	"zh": "xxx_1/xxx_2xxx_3"
-}, {
-	"key": "gkey_325",
-	"zh": "xxx_1/xxx_2轮"
-}, {
-	"key": "gkey_332",
-	"zh": "正在连接..."
-},  {
-	"key": "gkey_468",
-	"zh": "xxx_1/xxx_2局xxx_3/xxx_4轮"
-}, {
-	"key": "gkey_469",
-	"zh": "xxx_1/xxx_2局xxx_3/xxx_4轮xxx_5/xxx_6场"
-}, {
-	"key": "gkey_470",
-	"zh": "xxx_1/xxx_2局"
-}, {
-	"key": "gkey_471",
-	"zh": "全部金币"
-}, {
-	"key": "gkey_484",
-	"zh": "恭喜获得"
-},  {
-	"key": "gkey_486",
-	"zh": "提示一组可消除的牌"
-}, {
-	"key": "gkey_487",
-	"zh": "\"冻结时间xxx_1秒\""
-},{
-	"key": "gkey_521",
-	"zh": "未看完广告<br><fontcolor='#F74708'>只领取了少量奖励</font>"
-}, {
-	"key": "gkey_527",
-	"zh": "手速过快，稍后再试"
-}, {
-	"key": "gkey_530",
-	"zh": "通过第xxx_1关可领取"
-}, {
-	"key": "gkey_550",
-	"zh": "提示一组可清除的牌"
-},{
-	"key": "gkey_584",
-	"zh": "领取"
-}, {
-	"key": "gkey_585",
-	"zh": "解锁新道具"
-}, {
-	"key": "gkey_586",
-	"zh": "提示"
-}, {
-	"key": "gkey_587",
-	"zh": "设置"
-}, {
-	"key": "gkey_589",
-	"zh": "无匹配麻将"
-}, {
-	"key": "gkey_590",
-	"zh": "桌面将自动刷新"
-}
+[
+	{
+		"key": "gkey_000",
+		"zh": "关",
+		"en": "Level"
+	},
+	{
+		"key": "gkey_002",
+		"zh": "元",
+		"en": "Yuan"
+	},
+	{
+		"key": "gkey_003",
+		"zh": "自动收款",
+		"en": "Auto Collect"
+	},
+	{
+		"key": "gkey_010",
+		"zh": "重新开始",
+		"en": "Restart"
+	},
+	{
+		"key": "gkey_051",
+		"zh": "立即领取",
+		"en": "Claim Now"
+	},
+	{
+		"key": "gkey_052",
+		"zh": "清空格子内麻将并放到屏幕外",
+		"en": "Clear grid tiles to off-screen"
+	},
+	{
+		"key": "gkey_064",
+		"zh": "等级",
+		"en": "Level"
+	},
+	{
+		"key": "gkey_152",
+		"zh": "随机打乱所有的牌",
+		"en": "Shuffle all tiles"
+	},
+	{
+		"key": "gkey_192",
+		"zh": "不足不足不足",
+		"en": "Not enough"
+	},
+	{
+		"key": "gkey_198",
+		"zh": "看视频幸苦了",
+		"en": "Thanks for watching"
+	},
+	{
+		"key": "gkey_200",
+		"zh": "日",
+		"en": "Day"
+	},
+	{
+		"key": "gkey_210",
+		"zh": "开始xxx_1",
+		"en": "Start xxx_1"
+	},
+	{
+		"key": "gkey_211",
+		"zh": "触发",
+		"en": "Trigger"
+	},
+	{
+		"key": "gkey_212",
+		"zh": "通关越多,输出比例越高！",
+		"en": "More clears = higher payout!"
+	},
+	{
+		"key": "gkey_213",
+		"zh": "加载中...",
+		"en": "Loading..."
+	},
+	{
+		"key": "gkey_217",
+		"zh": "领红包",
+		"en": "Claim Bonus"
+	},
+	{
+		"key": "gkey_218",
+		"zh": "可抽奖",
+		"en": "Draw Available"
+	},
+	{
+		"key": "gkey_220",
+		"zh": "连击",
+		"en": "Combo"
+	},
+	{
+		"key": "gkey_225",
+		"zh": "移出三个方块",
+		"en": "Remove 3 tiles"
+	},
+	{
+		"key": "gkey_226",
+		"zh": "使用道具",
+		"en": "Use Item"
+	},
+	{
+		"key": "gkey_227",
+		"zh": "回退一步",
+		"en": "Undo"
+	},
+	{
+		"key": "gkey_228",
+		"zh": "消除一组方块",
+		"en": "Clear 1 set"
+	},
+	{
+		"key": "gkey_230",
+		"zh": "Level xxx_1",
+		"en": "Level xxx_1"
+	},
+	{
+		"key": "gkey_238",
+		"zh": "点击麻将对",
+		"en": "Tap tile pair"
+	},
+	{
+		"key": "gkey_257",
+		"zh": "隐私政策",
+		"en": "Privacy Policy"
+	},
+	{
+		"key": "gkey_262",
+		"zh": "添加按钮统一音效",
+		"en": "Add unified UI sound"
+	},
+	{
+		"key": "gkey_269",
+		"zh": "保密",
+		"en": "Secret"
+	},
+	{
+		"key": "gkey_270",
+		"zh": "错误:xxx_1",
+		"en": "Error: xxx_1"
+	},
+	{
+		"key": "gkey_271",
+		"zh": "点击过快，请稍后再试",
+		"en": "Tapping too fast, try later"
+	},
+	{
+		"key": "gkey_273",
+		"zh": "热更新中...",
+		"en": "Hot updating..."
+	},
+	{
+		"key": "gkey_274",
+		"zh": "预加载资源...",
+		"en": "Preloading..."
+	},
+	{
+		"key": "gkey_276",
+		"zh": "\"游客xxx_1\"",
+		"en": "\"Guest xxx_1\""
+	},
+	{
+		"key": "gkey_277",
+		"zh": "删除用户",
+		"en": "Delete User"
+	},
+	{
+		"key": "gkey_278",
+		"zh": "确认删除",
+		"en": "Confirm Delete"
+	},
+	{
+		"key": "gkey_279",
+		"zh": "基础测试",
+		"en": "Basic Test"
+	},
+	{
+		"key": "gkey_280",
+		"zh": "广告开关",
+		"en": "Ad Switch"
+	},
+	{
+		"key": "gkey_281",
+		"zh": "广告已关",
+		"en": "Ads Off"
+	},
+	{
+		"key": "gkey_282",
+		"zh": "广告已开",
+		"en": "Ads On"
+	},
+	{
+		"key": "gkey_283",
+		"zh": "对局时间",
+		"en": "Match Time"
+	},
+	{
+		"key": "gkey_284",
+		"zh": "重开游戏",
+		"en": "Restart Game"
+	},
+	{
+		"key": "gkey_285",
+		"zh": "跳指定关文本",
+		"en": "Jump to Level Text"
+	},
+	{
+		"key": "gkey_286",
+		"zh": "跳指定关",
+		"en": "Jump to Level"
+	},
+	{
+		"key": "gkey_287",
+		"zh": "页面展示",
+		"en": "Page Display"
+	},
+	{
+		"key": "gkey_289",
+		"zh": "年",
+		"en": "Year"
+	},
+	{
+		"key": "gkey_290",
+		"zh": "月",
+		"en": "Month"
+	},
+	{
+		"key": "gkey_292",
+		"zh": "[一-龥]+",
+		"en": "[Chinese characters]+"
+	},
+	{
+		"key": "gkey_293",
+		"zh": "xxx_1年xxx_2xxx_3月xxx_4日xxx_5:xxx_6:",
+		"en": "xxx_1-xxx_2-xxx_3 xxx_4:xxx_5:xxx_6"
+	},
+	{
+		"key": "gkey_294",
+		"zh": "已过期",
+		"en": "Expired"
+	},
+	{
+		"key": "gkey_295",
+		"zh": "xxx_1年",
+		"en": "xxx_1 Y"
+	},
+	{
+		"key": "gkey_296",
+		"zh": "xxx_1月",
+		"en": "xxx_1 M"
+	},
+	{
+		"key": "gkey_297",
+		"zh": "xxx_1天",
+		"en": "xxx_1 D"
+	},
+	{
+		"key": "gkey_298",
+		"zh": "点击抽奖",
+		"en": "Tap to Draw"
+	},
+	{
+		"key": "gkey_299",
+		"zh": "恭喜您",
+		"en": "Congratulations"
+	},
+	{
+		"key": "gkey_300",
+		"zh": "点击这里",
+		"en": "Click Here"
+	},
+	{
+		"key": "gkey_301",
+		"zh": "金币够了",
+		"en": "Enough Coins"
+	},
+	{
+		"key": "gkey_303",
+		"zh": "拉取广告出错，领取失败",
+		"en": "Ad error, claim failed"
+	},
+	{
+		"key": "gkey_304",
+		"zh": "xxx_1年xxx_2xxx_3月xxx_4日",
+		"en": "xxx_1-xxx_2-xxx_3 xxx_4"
+	},
+	{
+		"key": "gkey_305",
+		"zh": "xxx_1秒",
+		"en": "xxx_1s"
+	},
+	{
+		"key": "gkey_306",
+		"zh": "xxx_1分",
+		"en": "xxx_1m"
+	},
+	{
+		"key": "gkey_307",
+		"zh": "xxx_1小时",
+		"en": "xxx_1h"
+	},
+	{
+		"key": "gkey_308",
+		"zh": "已在防沉迷系统实名认证，可直接进入游戏",
+		"en": "Verified, enter game"
+	},
+	{
+		"key": "gkey_309",
+		"zh": "试试点击<color=#F8F500>相邻</c>的麻将",
+		"en": "Tap <color=#F8F500>adjacent</c> tiles"
+	},
+	{
+		"key": "gkey_310",
+		"zh": "试试<color=#F8F500>水平</c>挪动麻将",
+		"en": "Move tiles <color=#F8F500>horizontally</c>"
+	},
+	{
+		"key": "gkey_311",
+		"zh": "试试<color=#F8F500>竖直</c>挪动麻将",
+		"en": "Move tiles <color=#F8F500>vertically</c>"
+	},
+	{
+		"key": "gkey_312",
+		"zh": "消除<color=#F8F500>花牌</c>\n可随机带走一对麻将",
+		"en": "Clear <color=#F8F500>flower tile</c> to remove a random pair"
+	},
+	{
+		"key": "gkey_313",
+		"zh": "试试点击远距离<color=#F8F500>同行/列</c>的麻将",
+		"en": "Move tiles <color=#F8F500>in the same row/column</c>"
+	},
+	{
+		"key": "gkey_314",
+		"zh": "未看完广告<br><fontcolor='#F74708'>奖励领取失败</font>",
+		"en": "Ad skipped<br><fontcolor='#F74708'>Claim failed</font>"
+	},
+	{
+		"key": "gkey_324",
+		"zh": "xxx_1/xxx_2xxx_3",
+		"en": "xxx_1/xxx_2 xxx_3"
+	},
+	{
+		"key": "gkey_325",
+		"zh": "xxx_1/xxx_2轮",
+		"en": "xxx_1/xxx_2 Rounds"
+	},
+	{
+		"key": "gkey_332",
+		"zh": "正在连接...",
+		"en": "Connecting..."
+	},
+	{
+		"key": "gkey_468",
+		"zh": "xxx_1/xxx_2局xxx_3/xxx_4轮",
+		"en": "Game xxx_1/xxx_2 Round xxx_3/xxx_4"
+	},
+	{
+		"key": "gkey_469",
+		"zh": "xxx_1/xxx_2局xxx_3/xxx_4轮xxx_5/xxx_6场",
+		"en": "Game xxx_1/xxx_2 Round xxx_3/xxx_4 Match xxx_5/xxx_6"
+	},
+	{
+		"key": "gkey_470",
+		"zh": "xxx_1/xxx_2局",
+		"en": "Game xxx_1/xxx_2"
+	},
+	{
+		"key": "gkey_471",
+		"zh": "全部金币",
+		"en": "All Coins"
+	},
+	{
+		"key": "gkey_484",
+		"zh": "恭喜获得",
+		"en": "Congratulations"
+	},
+	{
+		"key": "gkey_486",
+		"zh": "提示一组可消除的牌",
+		"en": "Hint one clearable set"
+	},
+	{
+		"key": "gkey_487",
+		"zh": "\"冻结时间xxx_1秒\"",
+		"en": "\"Freeze xxx_1s\""
+	},
+	{
+		"key": "gkey_521",
+		"zh": "未看完广告<br><fontcolor='#F74708'>只领取了少量奖励</font>",
+		"en": "Ad skipped<br><fontcolor='#F74708'>Claimed partial reward</font>"
+	},
+	{
+		"key": "gkey_527",
+		"zh": "手速过快，稍后再试",
+		"en": "Tapping too fast, try later"
+	},
+	{
+		"key": "gkey_530",
+		"zh": "通过第xxx_1关可领取",
+		"en": "Pass level xxx_1 to claim"
+	},
+	{
+		"key": "gkey_550",
+		"zh": "提示一组可清除的牌",
+		"en": "Hint one clearable set"
+	},
+	{
+		"key": "gkey_584",
+		"zh": "领取",
+		"en": "Claim"
+	},
+	{
+		"key": "gkey_585",
+		"zh": "解锁新道具",
+		"en": "Unlock new item"
+	},
+	{
+		"key": "gkey_586",
+		"zh": "提示",
+		"en": "Hint"
+	},
+	{
+		"key": "gkey_587",
+		"zh": "设置",
+		"en": "Settings"
+	},
+	{
+		"key": "gkey_589",
+		"zh": "无匹配麻将",
+		"en": "No matching tiles"
+	},
+	{
+		"key": "gkey_590",
+		"zh": "桌面将自动刷新",
+		"en": "Board will auto-refresh"
+	}
 ]
