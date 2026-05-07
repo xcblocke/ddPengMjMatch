@@ -19,7 +19,7 @@ export default class SdkHelper {
       ii: "li",
       madr: "madr",
       wmr: "wmr",
-      version_name: "1.0.0.0",
+      version_name: "1.0.0",
       channel_name: "web"
     };
   }

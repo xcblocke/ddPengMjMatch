@@ -1188,7 +1188,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 120.18,
+      "width": 123.2,
       "height": 35.28
     },
     "_anchorPoint": {
@@ -1251,7 +1251,7 @@
     "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_batchAsBitmap": false,
-    "_styleFlags": 0,
+    "_styleFlags": 4,
     "_underlineHeight": 0,
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
