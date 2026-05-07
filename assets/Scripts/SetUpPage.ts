@@ -59,7 +59,7 @@ export default class SetUpPage extends BasePage {
     EventMgr.ignore(GameEventType.CLOSE_PERSONPAGE, this._hide, this);
   }
   setInfo() {
-    this.versionLabel.string = ClientData.version_name;
+    this.versionLabel.string = "v1.0.0";
     this.musicNormalNode.active = AudioManager.getInstance().getMusicState();
     this.musicUnNode.active = !AudioManager.getInstance().getMusicState();
     this.effectNormalNode.active = AudioManager.getInstance().getAudioState();
