@@ -78,6 +78,12 @@
         "__id__": 8
       },
       {
+        "__id__": 309
+      },
+      {
+        "__id__": 314
+      },
+      {
         "__id__": 318
       }
     ],
@@ -400,21 +406,15 @@
       },
       {
         "__id__": 245
-      },
-      {
-        "__id__": 307
-      },
-      {
-        "__id__": 312
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 316
+        "__id__": 307
       },
       {
-        "__id__": 317
+        "__id__": 308
       }
     ],
     "_prefab": null,
@@ -13969,15 +13969,52 @@
     "_id": "34NlomsqVBBor/jEL0Xw91"
   },
   {
+    "__type__": "cc.Widget",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 8
+    },
+    "_enabled": true,
+    "alignMode": 1,
+    "_target": null,
+    "_alignFlags": 45,
+    "_left": 0,
+    "_right": 0,
+    "_top": 0,
+    "_bottom": 0,
+    "_verticalCenter": 0,
+    "_horizontalCenter": 0,
+    "_isAbsLeft": true,
+    "_isAbsRight": true,
+    "_isAbsTop": true,
+    "_isAbsBottom": true,
+    "_isAbsHorizontalCenter": true,
+    "_isAbsVerticalCenter": true,
+    "_originalWidth": 720,
+    "_originalHeight": 1560,
+    "_id": "f5ZXgusAZLYq3RD8KFgXGd"
+  },
+  {
+    "__type__": "cc.SafeArea",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 8
+    },
+    "_enabled": true,
+    "_id": "246pkm/h1Df7X9ryD2fw32"
+  },
+  {
     "__type__": "cc.Node",
     "_name": "teachGuide",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 8
+      "__id__": 2
     },
     "_children": [
       {
-        "__id__": 308
+        "__id__": 310
       }
     ],
     "_active": false,
@@ -14035,17 +14072,17 @@
     "_name": "gborder",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 307
+      "__id__": 309
     },
     "_children": [
       {
-        "__id__": 309
+        "__id__": 311
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 311
+        "__id__": 313
       }
     ],
     "_prefab": null,
@@ -14101,13 +14138,13 @@
     "_name": "tip",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 308
+      "__id__": 310
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 310
+        "__id__": 312
       }
     ],
     "_prefab": null,
@@ -14163,7 +14200,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 309
+      "__id__": 311
     },
     "_enabled": true,
     "_fontFamily": "Arial",
@@ -14186,7 +14223,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 308
+      "__id__": 310
     },
     "_enabled": true,
     "_materials": [
@@ -14218,14 +14255,14 @@
     "_name": "__operate_tip_overlay__",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 8
+      "__id__": 2
     },
     "_children": [
       {
-        "__id__": 313
+        "__id__": 315
       },
       {
-        "__id__": 315
+        "__id__": 317
       }
     ],
     "_active": false,
@@ -14283,13 +14320,13 @@
     "_name": "mask",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 312
+      "__id__": 314
     },
     "_children": [],
     "_active": false,
     "_components": [
       {
-        "__id__": 314
+        "__id__": 316
       }
     ],
     "_prefab": null,
@@ -14345,7 +14382,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 313
+      "__id__": 315
     },
     "_enabled": true,
     "_materials": [
@@ -14377,7 +14414,7 @@
     "_name": "content",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 312
+      "__id__": 314
     },
     "_children": [],
     "_active": true,
@@ -14429,43 +14466,6 @@
     "_groupIndex": 0,
     "groupIndex": 0,
     "_id": "91oTyanS5BFIuxkZ8fZut1"
-  },
-  {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 8
-    },
-    "_enabled": true,
-    "alignMode": 1,
-    "_target": null,
-    "_alignFlags": 45,
-    "_left": 0,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 720,
-    "_originalHeight": 1560,
-    "_id": "f5ZXgusAZLYq3RD8KFgXGd"
-  },
-  {
-    "__type__": "cc.SafeArea",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 8
-    },
-    "_enabled": true,
-    "_id": "246pkm/h1Df7X9ryD2fw32"
   },
   {
     "__type__": "cc.Node",
@@ -14720,7 +14720,7 @@
       "__id__": 57
     },
     "teachGuideNode": {
-      "__id__": 307
+      "__id__": 309
     },
     "ruchangAni": {
       "__id__": 319
