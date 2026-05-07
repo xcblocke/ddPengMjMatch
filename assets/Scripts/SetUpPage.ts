@@ -8,6 +8,7 @@ import EngineUtil from './framework/EngineUtil';
 import BasePage from './view/BasePage';
 import PageMgr from './view/PageMgr';
 import ClientData from './framework/Event/ClientData';
+import UrlMgr from './service/UrlMgr';
 const {
   ccclass,
   property
@@ -138,18 +139,25 @@ export default class SetUpPage extends BasePage {
   privacyPolicy() {
     AudioManager.getInstance().playMusic("btntouch");
     SdkHelper.reportData("u_click_user_privacy");
-    var e = PlayerDataSys.getPrivacyAgreementUrl();
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "webPage",
-      data: {
-        title: `gkey_257`,
-        url: e,
-        index: 1
-      },
-      option: {
-        reuse: false
-      }
-    });
+    // var e = PlayerDataSys.getPrivacyAgreementUrl();
+    // EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //   name: "webPage",
+    //   data: {
+    //     title: `gkey_257`,
+    //     url: e,
+    //     index: 1
+    //   },
+    //   option: {
+    //     reuse: false
+    //   }
+    // });
+    if (cc.sys.isNative) { // 判断是否为原生平台 (Android/iOS)
+        cc.sys.openURL(UrlMgr.getInstance().privacyUrl);
+        console.log(`尝试在系统浏览器中打开：${UrlMgr.getInstance().privacyUrl}`);
+    } else {
+        // Web端预览时的备用方案
+        window.open(UrlMgr.getInstance().privacyUrl, '_blank');
+    }
   }
 
   logout() {

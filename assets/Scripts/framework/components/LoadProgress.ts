@@ -1,3 +1,5 @@
+import UrlMgr from "../../service/UrlMgr";
+
 const {
   ccclass,
   property,
@@ -95,6 +97,16 @@ export default class LoadProgress extends cc.Component {
     this._animObj = null;
     this._smoothFollow = false;
     this.curPercent = 0;
+  }
+
+  onClickPrivacy() {
+    if (cc.sys.isNative) { // 判断是否为原生平台 (Android/iOS)
+        cc.sys.openURL(UrlMgr.getInstance().privacyUrl);
+        console.log(`尝试在系统浏览器中打开：${UrlMgr.getInstance().privacyUrl}`);
+    } else {
+        // Web端预览时的备用方案
+        window.open(UrlMgr.getInstance().privacyUrl, '_blank');
+    }
   }
 
   updateHandlePos() {
