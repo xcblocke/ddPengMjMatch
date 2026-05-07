@@ -31,8 +31,19 @@ export default class gameOverPage extends BasePage {
   _onShow() {
     super._onShow.call(this);
   }
+
+  onLoad(): void {
+    this._saveContent();
+    this._createPeneLock();
+    // this._createBlack();
+    this._createContent();
+    this._createTouchLock();
+    this.registerBtnEvent(this.node);
+  }
+
   async _init(e) {
     var t, o, n, a, i;
+    this.curIndex = 0;
     this.pages[this.curIndex].active = true;
     this.pages[this.curIndex].scale = 1;
     SdkHelper.reportData("game_fail_page", {
