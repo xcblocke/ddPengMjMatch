@@ -12,8 +12,8 @@ export default class SdkHelper {
   static clientData = null;
   static user_id = "";
   static comeInGameTime = 0;
-  static getClientInfo() {
-    SdkHelper.clientData || (!cc.sys.isBrowser && cc.sys.isNative && SdkHelper.EnableSDK ? cc.sys.os === cc.sys.OS_ANDROID ? SdkHelper.clientData = JSON.parse(CallAndroid.getInstance().getClientInfo()) : cc.sys.os === cc.sys.OS_IOS && (SdkHelper.clientData = JSON.parse(CalliOS.getInstance().getClientInfo())) : SdkHelper.clientData = {
+  static _defaultClientData() {
+    return {
       device_id: "test" + EngineUtil.getRandId(),
       aid: "aid",
       ii: "li",
@@ -21,7 +21,32 @@ export default class SdkHelper {
       wmr: "wmr",
       version_name: "1.0.0.0",
       channel_name: "web"
-    });
+    };
+  }
+  static getClientInfo() {
+    if (SdkHelper.clientData) {
+      return SdkHelper.clientData;
+    }
+    if (cc.sys.isBrowser || !cc.sys.isNative || !SdkHelper.EnableSDK) {
+      SdkHelper.clientData = SdkHelper._defaultClientData();
+      return SdkHelper.clientData;
+    }
+    // Native: when JNI fails (e.g. JavaScriptHelper not in APK, emulator), getClientInfo is undefined -> JSON.parse would throw "Unexpected token u"
+    var raw: any = null;
+    if (cc.sys.os === cc.sys.OS_ANDROID) {
+      raw = CallAndroid.getInstance().getClientInfo();
+    } else if (cc.sys.os === cc.sys.OS_IOS) {
+      raw = CalliOS.getInstance().getClientInfo();
+    }
+    if (raw != null && typeof raw === "string" && raw.length > 0 && raw !== "null" && raw !== "undefined") {
+      try {
+        SdkHelper.clientData = JSON.parse(raw);
+      } catch (_e) {
+        SdkHelper.clientData = SdkHelper._defaultClientData();
+      }
+    } else {
+      SdkHelper.clientData = SdkHelper._defaultClientData();
+    }
     return SdkHelper.clientData;
   }
   static requestTDId() {
@@ -245,6 +270,9 @@ export default class SdkHelper {
     return cc.sys.isNative ? "" : cc.sys.os != cc.sys.OS_ANDROID || cc.sys.isBrowser ? cc.sys.os == cc.sys.OS_IOS ? "" : void 0 : CallAndroid.getInstance().getOAID();
   }
   static requestBasicPermission() {
-    if (cc.sys.isNative) return jsb.reflection.callStaticMethod("org/cocos2dx/javascript/JavaScriptHelper", "requestBasicPermission", "()V");
+    // 与 CallAndroid 一致：不调用 JavaScriptHelper JNI，避免无壳包崩溃
+    if (cc.sys.isNative && cc.sys.os === cc.sys.OS_ANDROID) {
+      return;
+    }
   }
 }
