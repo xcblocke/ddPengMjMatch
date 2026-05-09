@@ -13,6 +13,7 @@ import { gameConfig } from './data/GameConfig';
 import EngineUtil from './framework/EngineUtil';
 import { levelRewardCoin } from './config';
 import SetNode2Top from './common/SetNode2Top';
+import GameUtils from './wordframe/GameUtils';
 const {
   ccclass,
   property
@@ -111,6 +112,7 @@ export default class settleMentPage extends BasePage {
     1 == gameData.gameLevel && GameSystem.updateGuideIno({
       novice_status: 4
     });
+    GameUtils.checkPopUp(true, () => {});
     // this.scheduleOnce(function () {
     //   t.playAnim();
     // }, 0.2);

@@ -1,0 +1,83 @@
+
+iconB.png
+size: 251,122
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+glass_piggy_top
+  rotate: false
+  xy: 2, 35
+  size: 81, 85
+  orig: 81, 85
+  offset: 0, 0
+  index: -1
+qian7
+  rotate: false
+  xy: 2, 2
+  size: 86, 31
+  orig: 86, 31
+  offset: 0, 0
+  index: -1
+qian_card
+  rotate: false
+  xy: 85, 56
+  size: 89, 64
+  orig: 92, 65
+  offset: 2, 1
+  index: -1
+qian_yida_1
+  rotate: false
+  xy: 189, 34
+  size: 43, 34
+  orig: 45, 36
+  offset: 1, 1
+  index: -1
+qian_yida_2
+  rotate: false
+  xy: 189, 4
+  size: 43, 28
+  orig: 45, 30
+  offset: 1, 1
+  index: -1
+qian_yida_3
+  rotate: false
+  xy: 189, 4
+  size: 43, 28
+  orig: 45, 30
+  offset: 1, 1
+  index: -1
+qian_yida_4
+  rotate: true
+  xy: 154, 8
+  size: 46, 33
+  orig: 48, 35
+  offset: 1, 1
+  index: -1
+qian_yida_5
+  rotate: false
+  xy: 208, 97
+  size: 41, 23
+  orig: 43, 25
+  offset: 1, 1
+  index: -1
+qian_yida_6
+  rotate: false
+  xy: 208, 72
+  size: 41, 23
+  orig: 43, 25
+  offset: 1, 1
+  index: -1
+redeenstar
+  rotate: false
+  xy: 176, 70
+  size: 30, 50
+  orig: 44, 59
+  offset: 7, 4
+  index: -1
+shouji
+  rotate: true
+  xy: 90, 3
+  size: 51, 62
+  orig: 51, 62
+  offset: 0, 0
+  index: -1

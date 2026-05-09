@@ -1,0 +1,83 @@
+
+boxflybox.png
+size: 194,260
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+boxe
+  rotate: false
+  xy: 2, 139
+  size: 120, 119
+  orig: 122, 121
+  offset: 1, 1
+  index: -1
+boxe1
+  rotate: false
+  xy: 2, 66
+  size: 120, 71
+  orig: 122, 73
+  offset: 1, 1
+  index: -1
+d
+  rotate: false
+  xy: 124, 185
+  size: 68, 73
+  orig: 68, 73
+  offset: 0, 0
+  index: -1
+e_noad
+  rotate: true
+  xy: 2, 2
+  size: 62, 49
+  orig: 62, 49
+  offset: 0, 0
+  index: -1
+input
+  rotate: true
+  xy: 124, 81
+  size: 102, 34
+  orig: 102, 34
+  offset: 0, 0
+  index: -1
+qian1
+  rotate: true
+  xy: 107, 11
+  size: 53, 42
+  orig: 55, 44
+  offset: 1, 1
+  index: -1
+qian2
+  rotate: true
+  xy: 107, 11
+  size: 53, 42
+  orig: 55, 44
+  offset: 1, 1
+  index: -1
+qian3
+  rotate: false
+  xy: 53, 14
+  size: 52, 50
+  orig: 54, 52
+  offset: 1, 1
+  index: -1
+qian4
+  rotate: true
+  xy: 160, 128
+  size: 55, 32
+  orig: 57, 34
+  offset: 1, 1
+  index: -1
+qian5
+  rotate: true
+  xy: 160, 71
+  size: 55, 32
+  orig: 57, 34
+  offset: 1, 1
+  index: -1
+qian6
+  rotate: true
+  xy: 151, 25
+  size: 44, 41
+  orig: 46, 43
+  offset: 1, 1
+  index: -1

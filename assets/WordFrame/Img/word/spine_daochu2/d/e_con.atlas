@@ -1,0 +1,13 @@
+
+e_con.png
+size: 540,55
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+-s-txt_congrats_confirm
+  rotate: false
+  xy: 2, 2
+  size: 536, 51
+  orig: 536, 51
+  offset: 0, 0
+  index: -1

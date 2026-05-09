@@ -1,0 +1,41 @@
+
+e_pig.png
+size: 807,233
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+fr_event_big
+  rotate: false
+  xy: 466, 18
+  size: 200, 213
+  orig: 200, 213
+  offset: 0, 0
+  index: -1
+fr_event_tai
+  rotate: false
+  xy: 668, 5
+  size: 122, 45
+  orig: 122, 45
+  offset: 0, 0
+  index: -1
+fr_eventdeng1
+  rotate: false
+  xy: 234, 2
+  size: 230, 229
+  orig: 232, 231
+  offset: 1, 1
+  index: -1
+fr_eventdeng2
+  rotate: false
+  xy: 2, 2
+  size: 230, 229
+  orig: 232, 231
+  offset: 1, 1
+  index: -1
+pig
+  rotate: true
+  xy: 668, 52
+  size: 179, 137
+  orig: 179, 137
+  offset: 0, 0
+  index: -1

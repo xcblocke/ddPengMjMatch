@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "e1082df2-2b4e-42f8-9893-1795cabf3d24",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 118,
+  "height": 118,
+  "platformSettings": {},
+  "subMetas": {
+    "icon_qiwiwallet_114": {
+      "ver": "1.0.6",
+      "uuid": "a117d89c-7ec1-4212-85f9-fb12d45d312d",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "e1082df2-2b4e-42f8-9893-1795cabf3d24",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 114,
+      "height": 114,
+      "rawWidth": 118,
+      "rawHeight": 118,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

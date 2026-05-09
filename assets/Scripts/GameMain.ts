@@ -26,6 +26,7 @@ import mainBtnGroupCtrl from './mainBtnGroupCtrl';
 import { GuideEnum } from './framework/enum/GuideConfig';
 import { levelRewardCoin, MainConfig, ServerType } from './config';
 import { applyFreePropRewardIfAny } from './freePropPage';
+import GameUtils from './wordframe/GameUtils';
 const {
   ccclass,
   property
@@ -273,13 +274,15 @@ export default class GameMain extends cc.Component {
       EventMgr.trigger(GameEventType.UPDATE_LEVEL_INFO);
       EventMgr.trigger(GameEventType.FRESH_RED_BUBBLE);
       o_local = function o() {
-        SdkHelper.reportData("show_game_level");
-        if (gameData.isOpenDemo) n.initGameData(e);else {
-          n.levelStart.active = true;
-          n.levelStart.getComponent(LevelStart).init({
-            cb: n.initGameData.bind(n, e)
-          });
-        }
+        GameUtils.beforeGameLevelStart(gameData.gameLevel, null, null, () => {
+          SdkHelper.reportData("show_game_level");
+          if (gameData.isOpenDemo) n.initGameData(e);else {
+            n.levelStart.active = true;
+            n.levelStart.getComponent(LevelStart).init({
+              cb: n.initGameData.bind(n, e)
+            });
+          }
+        });
       };
       if (gameData.hasGradeChange() && !gameData.isOpenDemo) {
         EventMgr.trigger(GameEventType.PAGE_SHOW, {
@@ -358,6 +361,9 @@ export default class GameMain extends cc.Component {
     gameData.dollarRewardAppliedLevel = curLevel;
     EngineUtil.setLocalData("user_dollar_balance", String(gameData.dollarBalance));
     EngineUtil.setLocalData("user_dollar_reward_applied_level", String(gameData.dollarRewardAppliedLevel));
+    try {
+      cc.director.emit("goldPlus", add, false);
+    } catch (_e) {}
   }
   reStartGame() {
     AudioManager.getInstance().playMusic("btntouch");

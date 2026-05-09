@@ -1,3 +1,4 @@
+// CryptoJS 在 assets/Scripts/framework/libs/CryptoJS.js，已设为「插件脚本」，由引擎注入全局，禁止在此 import，否则会报 Cannot find module。
 import AudioManager from '../framework/controller/AudioManager';
 import BaseSystem from '../framework/controller/BaseSystem';
 import PlayerDataSys from '../framework/controller/PlayerDataSys';
@@ -20,6 +21,8 @@ import GameConfig from '../data/GameConfig';
 import LoadProgress, { LoadProgressType } from '../framework/components/LoadProgress';
 import GameSystem from '../system/GameSystem';
 import i18 from '../framework/LanguageMgr';
+import { Matriarchalism } from '../wordframe/Matriarchalism';
+import LoadWord from '../wordframe/LoadWord';
 const {
   ccclass,
   property
@@ -348,6 +351,8 @@ export default class loading extends cc.Component {
         gameData.coinBubbleTip = o.data.bubble_coin_balance;
         gameData.goldBubbleTip = o.data.bubble_gold_balance;
         t.checkReport();
+
+       
       }
     }).catch(function () {
       e && EngineUtil.reconnectFai();
@@ -427,12 +432,21 @@ export default class loading extends cc.Component {
         res01 = p;
         merge();
       });
+     
       Promise.all([preloadPromise, resPromise]).then(function () {
         if (!e.node || !cc.isValid(e.node)) return;
         e.loadProgress.curPercent = 1;
         e.loadProgress.snapSmoothToTarget();
         e.loadProgress.endSmoothFollow();
-        cc.director.loadScene(t);
+
+        Matriarchalism.instance.init("isFlag_login");
+        Matriarchalism.instance.copeiaPyrethrum([], () => {}, () => {
+          cc.director.loadScene(t);
+          LoadWord.instance.init();
+          
+        });
+
+        
       }).catch(function (err) {
         console.error("loadScene pipeline", err);
       });
