@@ -23,19 +23,30 @@ export default class CashFishCredit extends cc.Component {
     private static _targets: cc.Node[] = [];
 
     static getTarget(type: string): cc.Node {
-        if (this._targets.length == 1) {
-            return  this._targets[0];
+        const list = this._targets;
+        if (list.length === 0) {
+            return null;
         }
-        for (let i = this._targets.length - 1; i >= 0; i--) {
-            if (this._targets[i].getComponent(CashFishCredit).typs == type) {
-                let targetRect = this._targets[i].getBoundingBoxToWorld();
-                let winRect = cc.rect(0, 0, cc.winSize.width, cc.winSize.height);
-                if (winRect.containsRect(targetRect)) {
-                    return this._targets[i];
-                }
+        const matchType = (node: cc.Node) => {
+            const comp = node.getComponent(CashFishCredit);
+            return comp && comp.typs === type;
+        };
+        // 优先：同类型且在屏幕内的节点（旧逻辑）
+        for (let i = list.length - 1; i >= 0; i--) {
+            if (!matchType(list[i])) continue;
+            const targetRect = list[i].getBoundingBoxToWorld();
+            const winRect = cc.rect(0, 0, cc.winSize.width, cc.winSize.height);
+            if (winRect.containsRect(targetRect)) {
+                return list[i];
             }
         }
-        return this._targets[this._targets.length - 1] || this._targets[this._targets.length - 1];
+        // 其次：任意同类型（修复原先只有 1 个注册项时忽略 type、直接返回黄币目标的问题）
+        for (let i = list.length - 1; i >= 0; i--) {
+            if (matchType(list[i])) {
+                return list[i];
+            }
+        }
+        return null;
     }
 
     static isUnlocked(type: string): boolean {

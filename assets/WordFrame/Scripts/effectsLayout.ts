@@ -200,11 +200,11 @@ export default class effectsLayout extends cc.Component {
                         delay = 1.5;
                     }
 
-                    let target = CashFishCredit.getTarget("greenCoin");
-                    target = target.getChildByName("coin") || target;
-                    let targetPosition = target.convertToWorldSpaceAR(cc.v3());
+                    let target =
+                        CashFishCredit.getTarget("greenCoin") ||
+                        cc.find("coinText", cc.director.getScene());
 
-                    this.playGlodTween(startPosition, targetPosition, true, nodeCount, undefined, startYVar, delay, () => {
+                    const finishGreenCredit = () => {
                         cc.director.emit("FRESH_CREDIT", {
                             type: "greenCoin",
                             num: FrameData.saveData.credit.greenCoin + charityNum,
@@ -225,7 +225,16 @@ export default class effectsLayout extends cc.Component {
                             callbackDone = true;
                             callback?.();
                         }
-                    }, false);
+                    };
+
+                    if (target) {
+                        target = target.getChildByName("coin") || target;
+                        const targetPosition = target.convertToWorldSpaceAR(cc.v3());
+                        this.playGlodTween(startPosition, targetPosition, true, nodeCount, undefined, startYVar, delay, finishGreenCredit, false);
+                    } else {
+                        console.warn("effectsLayout.piaoCoin: no greenCoin / coinText fly target");
+                        finishGreenCredit();
+                    }
                 } else {
                     if (charityNum < 0 && !FrameSDK.frameData.gameData.noProfitAd) {
                         const finalNumber = Math.max(0, FrameData.saveData.credit.greenCoin + charityNum);
