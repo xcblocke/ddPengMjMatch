@@ -1,5 +1,6 @@
 import { gameData } from './data/GameData';
 import EventMgr from './framework/Event/EventMgr';
+import GameEventType from './framework/Event/GameEventType';
 import PlayerDataSys from './framework/controller/PlayerDataSys';
 import AudioManager from './framework/controller/AudioManager';
 import SdkHelper from './framework/SdkHelper';
@@ -64,13 +65,17 @@ export default class LevelStart extends cc.Component {
     this.csah_hf.stopAllActions();
     this.csah_hf.x = -500;
     this.csah_hf.opacity = 0;
-    cc.tween(this.csah_hf).delay(0.4).to(0.2, {
+    cc.tween(this.csah_hf)
+      .delay(0.4)
+      .to(0.2, {
       x: 0,
       opacity: 255
     }).delay(1.2).to(0.2, {
       x: 500,
       opacity: 0
     }).call(function () {
+      EventMgr.trigger(GameEventType.UPDATE_LEVEL_INFO);
+      cc.director.emit("resfLv");
       t.csah_hf.active = false;
       t.csah_tgbg.active = false;
       t.node.active = false;
