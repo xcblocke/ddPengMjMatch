@@ -40,6 +40,15 @@ export default class TopBar extends cc.Component {
     EventMgr.ignoreAllByCaller(this);
   }
   start() {
+    let coinNode = this.node.getChildByName("coinNode")
+    if (coinNode) {
+      coinNode.active = false;
+    }
+    let level_info = this.node.getChildByName("level_info")
+    if (level_info) {
+      level_info.active = false;
+    }
+
     this.label0.string = PlayerDataSys.getCoinBalance();
     this.label1.string = PlayerDataSys.getGoldBalance();
     this.coinBubbleNode.active = false;
