@@ -9,7 +9,7 @@ import GlobaldataMgr from './framework/data/GlobaldataMgr';
 import { gameData, GameState } from './data/GameData';
 import UserProp from './UserProp';
 import GlobalApp from './common/GlobalApp';
-import { FailedType, BgSkinType, PropType, VideoType, PageEnum } from './framework/enum/AllEnum';
+import { FailedType, BgSkinType, PropType, VideoType } from './framework/enum/AllEnum';
 import packagingProcess from './packagingProcess';
 import ResourcesManager, { Res } from './common/ResourcesManager';
 import DebugNode from './framework/debug/DebugNode';
@@ -23,7 +23,6 @@ import { Constants } from './common/Constants';
 import { gameConfig } from './data/GameConfig';
 import LevelStart from './LevelStart';
 import mainBtnGroupCtrl from './mainBtnGroupCtrl';
-import { GuideEnum } from './framework/enum/GuideConfig';
 import { levelRewardCoin, MainConfig, ServerType } from './config';
 import { applyFreePropRewardIfAny } from './freePropPage';
 import GameUtils from './wordframe/GameUtils';
@@ -626,7 +625,7 @@ export default class GameMain extends cc.Component {
     this.scheduleOnce(this.showTipNode, this._tipTime);
   }
   showTipNode() {
-    gameData.gameState == GameState.gameing && gameData.gameLevel > 3 && (this.tipPropBubbleNode.active = true);
+    gameData.gameState == GameState.gameing && gameData.gameLevel > 2 && (this.tipPropBubbleNode.active = true);
   }
   hideTipNode() {
     this.tipPropBubbleNode.active = false;
@@ -672,7 +671,7 @@ export default class GameMain extends cc.Component {
             n.active = 0 == PlayerDataSys.reshuffleCardCount;
             o.active = 0 != PlayerDataSys.reshuffleCardCount;
           } else if ("tipBtn" == t.name) {
-            t.active = gameData.gameLevel >= 3;
+            t.active = gameData.gameLevel >= 2;
             o.getComponent(cc.Label).string = 0 == PlayerDataSys.tipCardCount ? "+" : "" + PlayerDataSys.tipCardCount;
             n.active = 0 == PlayerDataSys.tipCardCount;
             o.active = 0 != PlayerDataSys.tipCardCount;
@@ -798,72 +797,34 @@ export default class GameMain extends cc.Component {
       await EngineUtil.sleep(1000);
       this.showNextTeachingStep();
     }
+    t = JSON.parse(cc.sys.localStorage.getItem("unLockPropGuide")) || [];
+    // 第二关一次性解锁「刷新 + 提示」，各 1 次；不弹 unlockPropPage、不走道具教程
+    if (2 == gameData.gameLevel && -1 == t.indexOf("2")) {
+      PlayerDataSys.reshuffleCardCount = 1;
+      PlayerDataSys.tipCardCount = 1;
+      t.push("2");
+      cc.sys.localStorage.setItem("unLockPropGuide", JSON.stringify(t));
+      EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
+      applyFreePropRewardIfAny();
+      EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
+      return;
+    }
     e = null;
-    2 == gameData.gameLevel && (e = {
-      type: PropType.reshuffleCard,
-      level: gameData.gameLevel
-    });
-    3 == gameData.gameLevel && (e = {
-      type: PropType.tipCard,
-      level: gameData.gameLevel
-    });
     4 == gameData.gameLevel && (e = {
       type: PropType.freezeCard,
       level: gameData.gameLevel
     });
-    t = JSON.parse(cc.sys.localStorage.getItem("unLockPropGuide")) || [];
     if (!(!e || -1 != t.indexOf(gameData.gameLevel.toString()))) {
-      if (e.type == PropType.tipCard) {
-        PlayerDataSys.tipCardCount = 0;
-      } else {
-        if (e.type == PropType.reshuffleCard) {
-          PlayerDataSys.reshuffleCardCount = 0;
-        } else {
-          e.type == PropType.freezeCard && (PlayerDataSys.freezeCardCount = 0);
-        }
-      }
+      e.type == PropType.freezeCard && (PlayerDataSys.freezeCardCount = 0);
       EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
       await EngineUtil.sleep(500);
       if (e.type == PropType.freezeCard) {
         // Freeze prop: do not show unlock UI; also mark as unlocked so it won't retry.
         t.push(gameData.gameLevel.toString());
         cc.sys.localStorage.setItem("unLockPropGuide", JSON.stringify(t));
-        return;
-      }
-      await PageMgr.showPageByEnum(PageEnum.unlockPropPage, {
-        info: e
-      });
-      if (!(e.type != PropType.tipCard)) {
-        o = this.propContainer.getChildByName("tipBtn");
-        await GlobalApp.PackagingProcessGuide.showGuideNode({
-          guideType: GuideEnum.prop1Guide,
-          nodes: [o]
-        });
-        EventMgr.trigger(GameEventType.USER_OPERATE_TIP);
-        // Do not auto-open atlas exchange related popups (tujianWdPage / tujianAutoWdPage).
         applyFreePropRewardIfAny();
         EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
         return;
-      }
-      if (!(e.type != PropType.reshuffleCard)) {
-        o = this.propContainer.getChildByName("reshuffleCard");
-        await GlobalApp.PackagingProcessGuide.showGuideNode({
-          guideType: GuideEnum.prop2Guide,
-          nodes: [o]
-        });
-        EventMgr.trigger(GameEventType.USER_RESHUFFLE_CARD);
-        // Do not auto-open atlas exchange related popups (tujianWdPage / tujianAutoWdPage).
-        applyFreePropRewardIfAny();
-        EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
-        return;
-      }
-      if (!(e.type != PropType.freezeCard)) {
-        o = this.propContainer.getChildByName("freeze");
-        await GlobalApp.PackagingProcessGuide.showGuideNode({
-          guideType: GuideEnum.prop3Guide,
-          nodes: [o]
-        });
-        EventMgr.trigger(GameEventType.USER_FREEZE);
       }
     }
     // Do not auto-open atlas exchange related popups (tujianWdPage / tujianAutoWdPage).
