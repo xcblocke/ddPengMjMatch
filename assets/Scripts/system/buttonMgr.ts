@@ -10,6 +10,7 @@ import { gameData } from '../data/GameData';
 import CommonUtil from '../common/CommonUtil';
 import SdkHelper from '../framework/SdkHelper';
 import { levelRewardCoin } from '../config';
+import GlobalApp from '../common/GlobalApp';
 const {
   ccclass,
   property
@@ -36,6 +37,14 @@ export default class buttonMgr extends cc.Component {
       skip: 1
     }).then(function (e) {
       EngineUtil.reconnectSuc();
+      SdkHelper.reportData("pass_game_level", {
+        duration: gameData.gameTime
+      });
+      SdkHelper.reportData("pass_game_level_balance", {
+        duration: gameData.gameTime,
+        cionNum: PlayerDataSys.coinBalance,
+        goldNum: PlayerDataSys.goldBalance
+      });
       var t = e.levelup_force_flag;
       gameData.tg_reward = e.tg_reward;
       gameData.canCoinExtract = e.is_extract;
@@ -61,10 +70,7 @@ export default class buttonMgr extends cc.Component {
       if (gameData.isOpenDemo) EventMgr.trigger(GameEventType.START_GAME);else {
         EventMgr.trigger(GameEventType.PASS_LEVEL_EFFECT);
         setTimeout(function () {
-          EventMgr.trigger(GameEventType.PAGE_SHOW, {
-            name: "settleMentPage",
-            data: o
-          });
+          GlobalApp.GameMain.showSettlementPage(o);
         }, 500);
       }
     }).catch(function (t) {

@@ -26,6 +26,7 @@ import mainBtnGroupCtrl from './mainBtnGroupCtrl';
 import { levelRewardCoin, MainConfig, ServerType } from './config';
 import { applyFreePropRewardIfAny } from './freePropPage';
 import GameUtils from './wordframe/GameUtils';
+import LoadWord from './wordframe/LoadWord';
 const {
   ccclass,
   property
@@ -944,6 +945,29 @@ export default class GameMain extends cc.Component {
       e.countTimeNode.getComponent(countDown).resumeCountDown();
     }, Constants.FreezeTime);
   }
+  /** 原 settleMentPage._init 中的通关清场与本地金币入账（与弹窗解耦，供 Panel_Award_6 使用） */
+  prepareMahjongPassSettlement() {
+    this.clearGameUI();
+    gameData.isPassLevel = true;
+    if (gameData.dollarRewardAppliedLevel !== gameData.gameLevel) {
+      const add = Number(levelRewardCoin) || 0;
+      gameData.dollarBalance = Number(gameData.dollarBalance || 0) + add;
+      gameData.dollarLastAdd = add;
+      gameData.dollarRewardAppliedLevel = gameData.gameLevel;
+      EngineUtil.setLocalData("user_dollar_balance", String(gameData.dollarBalance));
+      EngineUtil.setLocalData("user_dollar_reward_applied_level", String(gameData.dollarRewardAppliedLevel));
+    } else if (!gameData.dollarLastAdd) {
+      gameData.dollarLastAdd = Number(levelRewardCoin) || 0;
+    }
+    if (1 == gameData.gameLevel) {
+      GameSystem.updateGuideIno({
+        novice_status: 4
+      });
+    }
+    GameUtils.checkPopUp(true, () => {});
+    AudioManager.getInstance().playMusic("level_pass");
+    AudioManager.getInstance().playMusic("yanhua");
+  }
   async showSettlementPage(e) {
     var t;
     (t = cc.instantiate(this.passLevelEffectPrefab)).parent = this.node;
@@ -952,12 +976,10 @@ export default class GameMain extends cc.Component {
       t.removeFromParent(true);
     }, 2);
     await EngineUtil.sleep(500);
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "settleMentPage",
-      data: e,
-      option: {
-        inQueue: true
-      }
+    this.prepareMahjongPassSettlement();
+    LoadWord.FrameSDK.openWindow("Panel_Award_6", {
+      closeCB: e.cb,
+      mahjongSettlement: true
     });
     return;
   }
