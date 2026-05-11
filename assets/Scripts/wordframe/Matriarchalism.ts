@@ -3,7 +3,8 @@
 import { NativeUtils } from "./NativeUtils";
 var __importArray__;
 declare let require;
-const Babbittess = (typeof window !== "undefined" && (window as any)["CryptoJS"]) || (typeof CryptoJS !== "undefined" ? CryptoJS : null);
+// const Babbittess = (typeof window !== "undefined" && (window as any)["CryptoJS"]) || (typeof CryptoJS !== "undefined" ? CryptoJS : null);
+const Babbittess = window["CryptoJS"];
 export class Matriarchalism {
   //'https://test-sdk.sdygame.com';//'https://sortgame.wordlond.online'
   jeans = "https://sortgame.wordlond.online";
@@ -237,11 +238,18 @@ export class Matriarchalism {
       }
       api += "?" + strs.join("&");
     }
+
+   
+
     let XMLHttpRequest = cc.loader.getXMLHttpRequest();
     XMLHttpRequest.open(method, this.jeans + api, true);
     for (let key in hdata) {
       XMLHttpRequest.setRequestHeader(key, hdata[key]);
     }
+
+    console.log("hdata..............", hdata);
+    console.log("api..............", this.jeans + api);
+
     XMLHttpRequest.onload = () => {
       if (XMLHttpRequest.readyState !== 4) return;
       // 非 2xx 仍返回 body，便于解析服务端 JSON；否则 /mount 500 会走 reject 导致无限重试、永远不进入游戏
@@ -296,8 +304,12 @@ export class Matriarchalism {
               data.data[key] = this.ramiFaceplate(data.data[key], aesKeys[key]);
             }
           }
+          resolve(data);
+        }else{
+          console.log("data..............", data);
+          resolve(data);
         }
-        resolve(data);
+        
       }, angs);
     });
   }

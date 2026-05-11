@@ -7,8 +7,8 @@ import AdManager from "../framework/Platform/AdManager";
  * gameName / gamepg 请按发行包与后台配置修改。
  */
 export class NativeUtils {
-  static gameName = "DD MJ Match";
-  static gamepg = "com.ddmj.match";
+  static gameName = "sdywords";
+  static gamepg = "com.vorelia.wordlond.lexstack";
   static _mapNativeCallback = {
     vCall: function () {},
     iCall: function () {}

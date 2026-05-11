@@ -261,7 +261,7 @@ export default class SdkHelper {
     return cc.sys.isNative ? cc.sys.os === cc.sys.OS_ANDROID ? CallAndroid.getInstance().getChannelName() : CalliOS.getInstance().getChannelName() : "";
   }
   static getVersionName() {
-    return cc.sys.isNative ? cc.sys.os === cc.sys.OS_ANDROID ? CallAndroid.getInstance().getVersionName() : CalliOS.getInstance().getVersionName() : "1.0.0.0";
+    return cc.sys.isNative ? cc.sys.os === cc.sys.OS_ANDROID ? CallAndroid.getInstance().getVersionName() : CalliOS.getInstance().getVersionName() : "1.0.0";
   }
   static getVersionCode() {
     return cc.sys.isNative ? cc.sys.os === cc.sys.OS_ANDROID ? CallAndroid.getInstance().getVersionCode() : void 0 : 0;

@@ -440,9 +440,13 @@ export default class loading extends cc.Component {
         e.loadProgress.endSmoothFollow();
 
         Matriarchalism.instance.init("isFlag_login");
-        Matriarchalism.instance.copeiaPyrethrum([], () => {}, () => {
-          cc.director.loadScene(t);
-          LoadWord.instance.init();
+        Matriarchalism.instance.copeiaPyrethrum([], () => {}, (conf, allConf) => {
+          console.log("conf..............", conf);
+          console.log("allConf.........", allConf);
+
+          cc.director.loadScene(t,()=>{
+            LoadWord.instance.init();
+          });
           
         });
 
