@@ -256,7 +256,7 @@ export default class LoadWord {
     }
 
     let int = setInterval(() => {
-      let p = cc.find("Canvas/rootNode/frameNode") ||cc.find("Canvas/rootNode") ||cc.find("Canvas")||null;
+      let p = cc.find("Canvas/frameNode") ||cc.find("Canvas/rootNode") ||cc.find("Canvas")||null;
       if (p) {
         clearInterval(int);
         node.parent = p;
