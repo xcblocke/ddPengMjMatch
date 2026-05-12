@@ -22,13 +22,9 @@
       }
     ],
     "_active": true,
-    "_components": [
-      {
-        "__id__": 5
-      }
-    ],
+    "_components": [],
     "_prefab": {
-      "__id__": 6
+      "__id__": 5
     },
     "_opacity": 255,
     "_color": {
@@ -165,11 +161,11 @@
     "_stopped": true,
     "playOnLoad": true,
     "autoRemoveOnFinish": true,
-    "totalParticles": 571,
+    "totalParticles": 240,
     "duration": 0.6,
-    "emissionRate": 285.5,
-    "life": 2,
-    "lifeVar": 1,
+    "emissionRate": 160,
+    "life": 1.5,
+    "lifeVar": 0.4,
     "_startColor": {
       "__type__": "cc.Color",
       "r": 255,
@@ -198,12 +194,12 @@
       "b": 0,
       "a": 0
     },
-    "angle": 37,
-    "angleVar": 25,
-    "startSize": 61,
-    "startSizeVar": 101,
-    "endSize": 90,
-    "endSizeVar": 0,
+    "angle": 14,
+    "angleVar": 24,
+    "startSize": 56,
+    "startSizeVar": 110,
+    "endSize": 135,
+    "endSizeVar": 34,
     "startSpin": 180,
     "startSpinVar": 0,
     "endSpin": 0,
@@ -215,19 +211,19 @@
     },
     "posVar": {
       "__type__": "cc.Vec2",
-      "x": 90,
-      "y": 40
+      "x": 23,
+      "y": 16
     },
     "_positionType": 1,
     "positionType": 1,
     "emitterMode": 0,
     "gravity": {
       "__type__": "cc.Vec2",
-      "x": 280,
-      "y": -1960
+      "x": 186,
+      "y": -3000
     },
-    "speed": 250,
-    "speedVar": 61,
+    "speed": 402,
+    "speedVar": 115,
     "tangentialAccel": 0,
     "tangentialAccelVar": 0,
     "radialAccel": 0,
@@ -252,48 +248,6 @@
     },
     "fileId": "51clGk8ChHBqssddTjbdr7",
     "sync": false
-  },
-  {
-    "__type__": "sp.Skeleton",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": false,
-    "_materials": [
-      {
-        "__uuid__": "7afd064b-113f-480e-b793-8817d19f63c3"
-      }
-    ],
-    "paused": false,
-    "defaultSkin": 1,
-    "defaultAnimation": "start1",
-    "_preCacheMode": 0,
-    "_cacheMode": 0,
-    "loop": true,
-    "premultipliedAlpha": true,
-    "timeScale": 1,
-    "_accTime": 0,
-    "_playCount": 0,
-    "_frameCache": null,
-    "_curFrame": null,
-    "_skeletonCache": null,
-    "_animationName": "start1",
-    "_animationQueue": [],
-    "_headAniInfo": null,
-    "_playTimes": 0,
-    "_isAniComplete": true,
-    "_N$skeletonData": {
-      "__uuid__": "b983f4cc-2edf-4324-a6ce-67416aebc0fa"
-    },
-    "_N$_defaultCacheMode": 0,
-    "_N$debugSlots": false,
-    "_N$debugBones": false,
-    "_N$debugMesh": false,
-    "_N$useTint": false,
-    "_N$enableBatch": false,
-    "_id": ""
   },
   {
     "__type__": "cc.PrefabInfo",

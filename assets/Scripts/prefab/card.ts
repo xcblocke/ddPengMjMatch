@@ -303,16 +303,44 @@ export default class card extends cc.Component {
       var a = this.content.parent.convertToWorldSpaceAR(this.content.position),
         i = GlobalApp.GameMain.node.convertToNodeSpaceAR(a);
       n.position = i;
-      var r = "";
-      if (Constants.isSpecialCard(this.cardData.type)) r = "0";else {
-        r = gameData.gameSkinData.cardSkin.toString();
-        gameData.gameSkinData.cardSkin == CardSkinType.CardSkin4 && (r = "3");
+      // var r = "";
+      // if (Constants.isSpecialCard(this.cardData.type)) r = "0";else {
+      //   r = gameData.gameSkinData.cardSkin.toString();
+      //   gameData.gameSkinData.cardSkin == CardSkinType.CardSkin4 && (r = "3");
+      // }
+      // n.getComponent(sp.Skeleton).setSkin(r);
+      // n.getComponent(sp.Skeleton).setAnimation(0, "start1", false);
+      // n.getComponent(sp.Skeleton).setCompleteListener(function () {
+      //   n.destroy();
+      // });
+      const pss = n.getComponentInChildren(cc.ParticleSystem);
+      if (pss) {
+        pss.resetSystem();
+        this._scheduleDestroyParticleRoot(n);
       }
-      n.getComponent(sp.Skeleton).setSkin(r);
-      n.getComponent(sp.Skeleton).setAnimation(0, "start1", false);
-      n.getComponent(sp.Skeleton).setCompleteListener(function () {
-        n.destroy();
-      });
+    }
+  }
+
+
+  _scheduleDestroyParticleRoot(root: cc.Node) {
+    let maxT = 0.15;
+    const visit = (node: cc.Node) => {
+      const p = node.getComponent(cc.ParticleSystem);
+      if (p) {
+        const t = (p.duration || 0) + (p.life || 0) + (p.lifeVar || 0);
+        maxT = Math.max(maxT, t);
+      }
+      const ch = node.children;
+      for (let i = 0; i < ch.length; i++) visit(ch[i]);
+    };
+    visit(root);
+    const gm = GlobalApp.GameMain;
+    if (gm && gm.node && gm.node.isValid) {
+      gm.scheduleOnce(() => {
+        if (root && root.isValid) root.destroy();
+      }, maxT + 0.12);
+    } else if (root && root.isValid) {
+      root.runAction(cc.sequence(cc.delayTime(maxT + 0.12), cc.callFunc(() => root.destroy())));
     }
   }
 }
