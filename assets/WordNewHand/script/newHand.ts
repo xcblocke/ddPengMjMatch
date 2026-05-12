@@ -20,8 +20,8 @@ export default class newHand extends cc.Component {
     root1: cc.Node = null;
     @property(cc.Node)
     root2: cc.Node = null;
-    @property(sp.Skeleton)
-    doorSkeleton: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // doorSkeleton: sp.Skeleton = null;
     config = null;
     frameData: {
         gameName: string;
@@ -60,10 +60,10 @@ export default class newHand extends cc.Component {
             }
         }).start();
         this.schedule(this.getFrame);
-        if(this.doorSkeleton){
-            this.doorSkeleton.setAnimation(0,"start",false);
-            this.doorSkeleton.addAnimation(0, "loop", true);
-        }
+        // if(this.doorSkeleton){
+        //     this.doorSkeleton.setAnimation(0,"start",false);
+        //     this.doorSkeleton.addAnimation(0, "loop", true);
+        // }
     }
 
     openRoot1() {

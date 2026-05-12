@@ -10,11 +10,11 @@ export default class Panel_Award_Luck extends cc.Component {
     @property(cc.Node)
     panel_window: cc.Node = null;
 
-    @property(sp.Skeleton)
-    titleSkeleton: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // titleSkeleton: sp.Skeleton = null;
 
-    @property(sp.Skeleton)
-    bodySkeleton: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // bodySkeleton: sp.Skeleton = null;
     @property(sp.Skeleton)
     card1Skeleton: sp.Skeleton = null;
     @property(sp.Skeleton)
@@ -57,26 +57,26 @@ export default class Panel_Award_Luck extends cc.Component {
         FrameSDK.frameData.sdkFuc.ppEvent("freeShow");
         this.node.opacity = 255;
 
-        if (this.bodySkeleton) {
-            this.bodySkeleton.setAnimation(0, "6start", false);
-            this.bodySkeleton.addAnimation(0, "6loop", true);
-            this.bodySkeleton.setCompleteListener(() => {
-                this.allNode.active = true;
+        // if (this.bodySkeleton) {
+        //     this.bodySkeleton.setAnimation(0, "6start", false);
+        //     this.bodySkeleton.addAnimation(0, "6loop", true);
+        //     this.bodySkeleton.setCompleteListener(() => {
+        //         this.allNode.active = true;
 
-            })
-            // if(this.card1Skeleton){
-            //     this.card1Skeleton.setAnimation(0, "1start", false);
-            //     this.card1Skeleton.addAnimation(0, "1loop", true);
-            // }
-            if (this.card2Skeleton) {
-                this.card2Skeleton.setAnimation(0, "2_bian", false);
-                this.card2Skeleton.addAnimation(0, "3_loop", true);
-            }
-        }
-        if (this.titleSkeleton) {
-            this.titleSkeleton.setAnimation(0, "start", false);
-            this.titleSkeleton.addAnimation(0, "loop", true);
-        }
+        //     })
+        //     // if(this.card1Skeleton){
+        //     //     this.card1Skeleton.setAnimation(0, "1start", false);
+        //     //     this.card1Skeleton.addAnimation(0, "1loop", true);
+        //     // }
+        //     if (this.card2Skeleton) {
+        //         this.card2Skeleton.setAnimation(0, "2_bian", false);
+        //         this.card2Skeleton.addAnimation(0, "3_loop", true);
+        //     }
+        // }
+        // if (this.titleSkeleton) {
+        //     this.titleSkeleton.setAnimation(0, "start", false);
+        //     this.titleSkeleton.addAnimation(0, "loop", true);
+        // }
 
 
     }

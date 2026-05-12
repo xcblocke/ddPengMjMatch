@@ -6,8 +6,8 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Panel_Award_3 extends cc.Component {
 
-    @property(sp.Skeleton)
-    titleSkeleton: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // titleSkeleton: sp.Skeleton = null;
 
     @property(sp.Skeleton)
     contentSkeleton: sp.Skeleton = null;
@@ -85,12 +85,15 @@ export default class Panel_Award_3 extends cc.Component {
 
         this.node.opacity = 255;
 
-        this.titleSkeleton.setAnimation(0, 'start', false);
-        this.titleSkeleton.addAnimation(0, 'loop', true);
-
         if(this.contentSkeleton){
-            this.contentSkeleton.setAnimation(0, '3start', false);
-            this.contentSkeleton.addAnimation(0, '3loop', true);
+            this.contentSkeleton.setCompleteListener((event)=>{
+                if(event.animation.name == 'start'){
+                    this.contentSkeleton.setAnimation(0, 'qiehuan', false);
+                }else if(event.animation.name == 'qiehuan'){
+                    this.contentSkeleton.setAnimation(0, 'loop', false);
+                }
+            });
+            this.contentSkeleton.setAnimation(0, 'start', false);
         }
 
         this.labelRootNode.children.forEach((node, index) => {
