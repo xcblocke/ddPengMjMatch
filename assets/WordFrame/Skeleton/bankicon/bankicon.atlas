@@ -1,0 +1,48 @@
+
+bankicon.png
+size: 321,100
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bi
+  rotate: false
+  xy: 212, 2
+  size: 89, 59
+  orig: 91, 61
+  offset: 1, 1
+  index: -1
+pen1
+  rotate: false
+  xy: 2, 3
+  size: 114, 95
+  orig: 116, 99
+  offset: 1, 1
+  index: -1
+pen2
+  rotate: false
+  xy: 118, 5
+  size: 92, 56
+  orig: 94, 58
+  offset: 1, 1
+  index: -1
+saoguang
+  rotate: true
+  xy: 118, 63
+  size: 35, 136
+  orig: 39, 136
+  offset: 2, 0
+  index: -1
+shadow
+  rotate: true
+  xy: 303, 13
+  size: 85, 16
+  orig: 90, 20
+  offset: 2, 2
+  index: -1
+shan
+  rotate: false
+  xy: 256, 65
+  size: 32, 33
+  orig: 38, 37
+  offset: 3, 3
+  index: -1
