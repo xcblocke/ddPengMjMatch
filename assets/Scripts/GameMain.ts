@@ -169,6 +169,7 @@ export default class GameMain extends cc.Component {
   }
 
   playRuchangAni() {
+    this.ruchangAni.node.active = true;
     this.ruchangAni.setAnimation(0, "guan", false);
     this.ruchangAni.setCompleteListener((event) => {
       if (event.animation.name === "guan") { 
@@ -177,6 +178,10 @@ export default class GameMain extends cc.Component {
         }, 0.4);
       } else if (event.animation.name === "jingzhi") {
         this.ruchangAni.setAnimation(0, "kai", false);
+        // this.ruchangAni.node.active = false;
+        // this.startGame(false, true);
+      } else if (event.animation.name === "kai") {
+        this.ruchangAni.node.active = false;
         this.startGame(false, true);
       } 
     });
