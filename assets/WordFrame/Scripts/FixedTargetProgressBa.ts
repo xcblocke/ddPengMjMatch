@@ -37,6 +37,13 @@ export default class LevelProgressBar extends cc.Component {
     @property({ type: cc.SpriteFrame })//"目标大关卡背景（特殊样式）"
     sfTarget: cc.SpriteFrame = null;
 
+    @property({ type: cc.SpriteFrame })//"目标大关卡背景（特殊样式）"
+    greeYezi: cc.SpriteFrame = null;
+
+    @property({ type: cc.SpriteFrame })//"目标大关卡背景（特殊样式）"
+    redYezi: cc.SpriteFrame = null;
+
+
     @property(cc.Node)
     turn_node: cc.Node = null;
     @property(cc.Label)
@@ -187,7 +194,7 @@ export default class LevelProgressBar extends cc.Component {
 
         if (this.baricon_node && this.baricon_node.parent) {
             const iconLocalPos = this.baricon_node.parent.convertToNodeSpaceAR(worldPos);
-            this.baricon_node.setPosition(iconLocalPos);
+            this.baricon_node.setPosition(cc.v3(iconLocalPos.x + 6, iconLocalPos.y -2 , 0));
         }
     }
 
@@ -208,8 +215,9 @@ export default class LevelProgressBar extends cc.Component {
             let withdrawNode = comp.WithdrawNode;
             let gn_unlock = comp.gn_unlock;
             let level_loop = comp.level_loop;
+            let statueNode = comp.statueNode;
             const label = comp.LevelNumber;
-            gou.active = false;
+           
             currNode.active = false;
             withdrawNode.active = false;
             gn_unlock.active = false;
@@ -220,6 +228,12 @@ export default class LevelProgressBar extends cc.Component {
             const passLevel = FrameSDK.frameData.gameData.passLevel;
             const displayLevelNum = passLevel <= 0 && levelNum === 15 ? 20 : levelNum;
             label.string = displayLevelNum.toString();
+
+           
+            
+            // console.log("gou.active", gou.active);
+            // console.log("passLevel............", passLevel);
+            // console.log("displayLevelNum.......", displayLevelNum);
 
             // --- 状态与样式判断 ---
 
@@ -235,8 +249,8 @@ export default class LevelProgressBar extends cc.Component {
 
                 if (levelNum === currentLevel) {
                     if (this.sfCurrent) sprite.spriteFrame = this.sfCurrent;
-                    currNode.active = true;
-                    gou.active = false;
+                    // currNode.active = true;
+                    // gou.active = false;
                 }
 
                 // 特殊情况：如果当前关卡正好等于目标关卡（例如到了100关）
@@ -256,29 +270,42 @@ export default class LevelProgressBar extends cc.Component {
                     // checkMark.active = true;
                     currNode.active = false;
                     gou.active = true;
+                    if(statueNode)
+                        {
+                            statueNode.active = true;
+                            statueNode.getComponent(cc.Sprite).spriteFrame = this.greeYezi;
+                        }
                     if(this.turn_label){
-                        label.node.active = true;
-                        gou.active = false;
+                        // label.node.active = true;
+                        // gou.active = false;
                     }
                 }
                 else if (levelNum === currentLevel) {
                     // [当前关卡] -> 紫色选中状态
                     if (this.sfCurrent) sprite.spriteFrame = this.sfCurrent;
-
+                    if(statueNode)
+                        {
+                            statueNode.active = false;
+                        }
+                    
                     // 显示数字，隐藏打钩
                     label.node.active = true;
                     // checkMark.active = false;
                     currNode.active = true;
-                    gou.active = false;
+                    // gou.active = false;
                 }
                 else {
                     // [未通关/后续关卡] -> 灰色状态
                     // if (this.sfLocked) sprite.spriteFrame = this.sfLocked;
-
+                    if(statueNode)
+                        {
+                            statueNode.active = true;
+                            statueNode.getComponent(cc.Sprite).spriteFrame = this.redYezi;
+                        }
                     // 显示数字，隐藏打钩
                     label.node.active = true;
                     // checkMark.active = false;
-                    gou.active = false;
+                    // gou.active = false;
                 }
             }
         }

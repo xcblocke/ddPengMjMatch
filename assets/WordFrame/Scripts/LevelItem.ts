@@ -18,6 +18,8 @@ export default class LevelItem extends cc.Component {
     WithdrawNode:cc.Node = null;
     @property(cc.Node)
     gn_unlock:cc.Node = null;
+    @property(cc.Node)
+    statueNode:cc.Node = null;
     @property(cc.Sprite)
     gn_icon:cc.Sprite = null;
     @property(cc.Node)
