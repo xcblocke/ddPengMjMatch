@@ -7,14 +7,18 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Panel_Award_6 extends cc.Component {
 
-    @property(sp.Skeleton)
-    titleSkeleton: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // titleSkeleton: sp.Skeleton = null;
     @property(sp.Skeleton)
     yanhua: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // bodySkeleton: sp.Skeleton = null;
+    // @property(cc.Node)
+    // allNode: cc.Node = null;
+
     @property(sp.Skeleton)
-    bodySkeleton: sp.Skeleton = null;
-    @property(cc.Node)
-    allNode: cc.Node = null;
+    bgSkeleton: sp.Skeleton = null;
+
 
     @property(cc.Label)
     lv: cc.Label = null;
@@ -34,8 +38,8 @@ export default class Panel_Award_6 extends cc.Component {
     @property(cc.Node)
     commonActionButton: cc.Node = null;
 
-    @property(sp.Skeleton)
-    ribbonSkeleton: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // ribbonSkeleton: sp.Skeleton = null;
 
     @property(cc.Node)
     lv_proNode: cc.Node = null;
@@ -62,9 +66,21 @@ export default class Panel_Award_6 extends cc.Component {
         //     //     this.allNode.active = true;
         //     // }).start();
         // })
-        this.allNode.active = true;
+        // this.allNode.active = true;
 
         this.lv_proNode.active = FrameSDK.frameData.gameData.isFlag;
+        this.playAnim();
+    }
+
+    playAnim() {
+        if (this.bgSkeleton) {
+            this.bgSkeleton.setAnimation(0, "start", false);
+            this.bgSkeleton.setCompleteListener((event)=>{
+                if(event.animation.name == "start"){
+                    this.bgSkeleton.setAnimation(0, "loop", true);
+                }
+            });
+        }
     }
 
     onEnable() {
@@ -88,14 +104,14 @@ export default class Panel_Award_6 extends cc.Component {
         FrameSDK.frameData.sdkFuc.ppEvent("freeShow");
         this.node.opacity = 255;
 
-        if(this.bodySkeleton){
-            this.bodySkeleton.setAnimation(0, "4start", false);
-            this.bodySkeleton.addAnimation(0, "4loop", true);
-        }
-        if(this.titleSkeleton){
-            this.titleSkeleton.setAnimation(0, "start", false);
-            this.titleSkeleton.addAnimation(0, "loop", true);
-        }
+        // if(this.bodySkeleton){
+        //     this.bodySkeleton.setAnimation(0, "4start", false);
+        //     this.bodySkeleton.addAnimation(0, "4loop", true);
+        // }
+        // if(this.titleSkeleton){
+        //     this.titleSkeleton.setAnimation(0, "start", false);
+        //     this.titleSkeleton.addAnimation(0, "loop", true);
+        // }
 
         this.label_coin.string = "+" + FrameSDK.convertCoinToStr(this.adData.reward);
 
@@ -107,7 +123,7 @@ export default class Panel_Award_6 extends cc.Component {
         })
         this.commonActionButton.getComponentInChildren(cc.Label).string = `skey_034 ${FrameSDK.convertCoinToStr(free)}`;
 
-        this.ribbonSkeleton.enabled = false;
+        // this.ribbonSkeleton.enabled = false;
 
         this.adBannerButton.getChildByName("no_ad_xiao").active = true; 
     }
@@ -128,8 +144,8 @@ export default class Panel_Award_6 extends cc.Component {
             cc.tween(this.node)
                 .delay(0.2)
                 .call(() => {
-                    this.ribbonSkeleton.enabled = true;
-                    this.ribbonSkeleton.setAnimation(0, "caidai", false);
+                    // this.ribbonSkeleton.enabled = true;
+                    // this.ribbonSkeleton.setAnimation(0, "caidai", false);
                     FrameSDK.playEffect("pool_cashdone");
                 })
                 .delay(1)

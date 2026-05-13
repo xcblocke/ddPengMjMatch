@@ -7,9 +7,6 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Panel_Award_1 extends cc.Component {
 
-    // @property(sp.Skeleton)
-    // titleSkeleton: sp.Skeleton = null;
-
     @property(sp.Skeleton)
     contentSkeleton: sp.Skeleton = null;
 
@@ -54,6 +51,8 @@ export default class Panel_Award_1 extends cc.Component {
             e.click_Common();
         });
     }
+
+    
 
     onEnable() {
         this.adData = FrameData.getOutputConfig(true);
