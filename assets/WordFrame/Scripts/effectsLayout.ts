@@ -305,7 +305,7 @@ export default class effectsLayout extends cc.Component {
             const coinNode = effectsLayout._nodePool.get() ?? new cc.Node();
             const coinSprite = coinNode.getComponent(cc.Sprite) ?? coinNode.addComponent(cc.Sprite);
             coinSprite.spriteFrame = spriteFrame;
-            coinNode.scale = 1;
+            coinNode.scale = 0.7;
             coinNode.opacity = 0;
             coinNode.setPosition(startPosition);
             this.animationRootNode.addChild(coinNode);
