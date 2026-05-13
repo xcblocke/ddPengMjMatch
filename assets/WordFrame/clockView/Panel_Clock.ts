@@ -164,7 +164,7 @@ export default class Panel_Clock extends cc.Component {
     }
 
     onLoad() {
-        this.bottomNode.active = false;
+        // this.bottomNode.active = false;
         Panel_Clock.ins = this;
         this._close_target = Panel_Clock.coinTarget;
         this.panel_window = this.pnlClockView;
@@ -175,9 +175,9 @@ export default class Panel_Clock extends cc.Component {
         // this.contentSkeleton.setCompleteListener(()=>{
         //     this.bottomNode.active = true;
         // })
-        this.scheduleOnce(()=>{
-            this.bottomNode.active = true;
-        }, 0.8);
+        // this.scheduleOnce(()=>{
+        //     this.bottomNode.active = true;
+        // }, 0.8);
 
     }
 
