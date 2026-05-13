@@ -7,8 +7,8 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Panel_Award_New2 extends cc.Component {
 
-    @property(sp.Skeleton)
-    titleSkeleton: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // titleSkeleton: sp.Skeleton = null;
     @property(cc.Node)
     panel_window: cc.Node = null;
     @property(cc.Node)
@@ -28,10 +28,10 @@ export default class Panel_Award_New2 extends cc.Component {
         FrameSDK.openEffect(this, { opacity: 233 });
         FrameSDK.playEffect("newbiepage_show");
 
-        if (this.titleSkeleton) {
-            this.titleSkeleton.setAnimation(0, "start", false);
-            this.titleSkeleton.addAnimation(0, "loop", true);
-        }
+        // if (this.titleSkeleton) {
+        //     this.titleSkeleton.setAnimation(0, "start", false);
+        //     this.titleSkeleton.addAnimation(0, "loop", true);
+        // }
         this.new_coin_label.string = `${FrameSDK.convertCoinToStr(FrameData.FRAME_CONF.OutputConfig.new)}`;
         this.yue_coin_label.string = `≈${FrameSDK.convertCoinToStr(FrameData.FRAME_CONF.OutputConfig.new,true)}`;
 

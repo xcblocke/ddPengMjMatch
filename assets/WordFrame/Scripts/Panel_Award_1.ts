@@ -7,8 +7,8 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Panel_Award_1 extends cc.Component {
 
-    @property(sp.Skeleton)
-    titleSkeleton: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // titleSkeleton: sp.Skeleton = null;
 
     @property(sp.Skeleton)
     contentSkeleton: sp.Skeleton = null;
@@ -74,10 +74,10 @@ export default class Panel_Award_1 extends cc.Component {
 
         this.node.opacity = 255;
 
-        if (this.titleSkeleton) {
-            this.titleSkeleton.setAnimation(0, "start", false);
-            this.titleSkeleton.addAnimation(0, "loop", true);
-        }
+        // if (this.titleSkeleton) {
+        //     this.titleSkeleton.setAnimation(0, "start", false);
+        //     this.titleSkeleton.addAnimation(0, "loop", true);
+        // }
 
         if (this.contentSkeleton) {
             this.contentSkeleton.setAnimation(0, "1start", false);

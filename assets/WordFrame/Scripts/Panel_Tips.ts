@@ -63,6 +63,10 @@ export default class Panel_Tips extends cc.Component {
         this.onTouchCloseTips();
     }
 
+    onClickClose() {
+        this.onTouchCloseTips();
+    }
+
     hideTime = 0;
 
     onTouchCloseTips() {

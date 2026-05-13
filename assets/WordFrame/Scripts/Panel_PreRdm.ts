@@ -16,8 +16,8 @@ export default class Panel_PreRdm extends cc.Component {
 
     @property(cc.Node)
     panel_window: cc.Node = null;
-    @property(sp.Skeleton)
-    titleSkeleton: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // titleSkeleton: sp.Skeleton = null;
 
     @property(cc.Label)
     cashLabel: cc.Label = null;
@@ -61,10 +61,10 @@ export default class Panel_PreRdm extends cc.Component {
         if (this.timeLabel) {
             this.timeLabel.string = Panel_PreRdm.formatTimestampToYMD(Date.now());
         }
-        if (this.titleSkeleton) {
-            this.titleSkeleton.setAnimation(0, "start", false);
-            this.titleSkeleton.addAnimation(0, "loop", true);
-        }
+        // if (this.titleSkeleton) {
+        //     this.titleSkeleton.setAnimation(0, "start", false);
+        //     this.titleSkeleton.addAnimation(0, "loop", true);
+        // }
 
         this._paymentIDs = FrameData.CountryConf.cash_id.slice(0, 4);
         this.paymentToggleContainer.node.children.forEach((node, index) => node.getComponent(PaymentItem).paymentID = this._paymentIDs[index] ?? -1);
