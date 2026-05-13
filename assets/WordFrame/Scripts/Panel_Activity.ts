@@ -9,10 +9,10 @@ export default class Panel_Activity extends cc.Component {
     @property(cc.Node)
     panel_window: cc.Node = null;
 
-    @property(sp.Skeleton)
-    piggySkeleton: sp.Skeleton = null;
-    @property(sp.Skeleton)
-    piggySkeleton2: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // piggySkeleton: sp.Skeleton = null;
+    // @property(sp.Skeleton)
+    // piggySkeleton2: sp.Skeleton = null;
 
     @property(cc.Node)
     state1: cc.Node = null;
@@ -123,13 +123,13 @@ export default class Panel_Activity extends cc.Component {
         FrameSDK.playEffect("piggybank_show");
         cc.director.emit("UPDATA_ACTIVITY");
         this.updateUi();
-        if(this.piggySkeleton){
-            this.piggySkeleton2.setAnimation(0,"Bgstart",false);
-            this.piggySkeleton2.addAnimation(0, "Bgloop", true);
+        // if(this.piggySkeleton){
+        //     this.piggySkeleton2.setAnimation(0,"Bgstart",false);
+        //     this.piggySkeleton2.addAnimation(0, "Bgloop", true);
 
-            this.piggySkeleton.setAnimation(0,"start",false);
-            this.piggySkeleton.addAnimation(0, "loop", true);
-        }
+        //     this.piggySkeleton.setAnimation(0,"start",false);
+        //     this.piggySkeleton.addAnimation(0, "loop", true);
+        // }
     }
 
     onDisable() {
