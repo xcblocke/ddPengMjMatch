@@ -8,8 +8,8 @@
   "premultiplyAlpha": false,
   "genMipmaps": false,
   "packable": true,
-  "width": 390,
-  "height": 30,
+  "width": 602,
+  "height": 32,
   "platformSettings": {},
   "subMetas": {
     "word_bar_redeem_charity_t": {
@@ -24,9 +24,9 @@
       "offsetY": 0,
       "trimX": 0,
       "trimY": 0,
-      "width": 390,
+      "width": 300,
       "height": 30,
-      "rawWidth": 390,
+      "rawWidth": 300,
       "rawHeight": 30,
       "borderTop": 0,
       "borderBottom": 0,
