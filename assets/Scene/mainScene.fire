@@ -14818,9 +14818,6 @@
     "comboEffect15Prefab": {
       "__uuid__": "73f20df9-f809-4499-bb03-f33c0b1affd6"
     },
-    "passLevelEffectPrefab": {
-      "__uuid__": "7b9504e6-e33e-488b-a334-f7e66698f012"
-    },
     "mainBtnGroupCtrl": {
       "__id__": 57
     },

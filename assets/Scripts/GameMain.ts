@@ -99,8 +99,8 @@ export default class GameMain extends cc.Component {
   comboEffectPrefab: cc.Prefab = null;
   @property(cc.Prefab)
   comboEffect15Prefab: cc.Prefab = null;
-  @property(cc.Prefab)
-  passLevelEffectPrefab: cc.Prefab = null;
+  // @property(cc.Prefab)
+  // passLevelEffectPrefab: cc.Prefab = null;
   @property(mainBtnGroupCtrl)
   mainBtnGroupCtrl: mainBtnGroupCtrl = null;
   @property(cc.Node)
@@ -391,12 +391,12 @@ export default class GameMain extends cc.Component {
   }
   playPassLevelEffect() {
     console.log("playPassLevelEffect");
-    var e = cc.instantiate(this.passLevelEffect);
-    e.parent = this.node;
-    e.active = true;
-    this.scheduleOnce(function () {
-      e.removeFromParent(true);
-    }, 1.5);
+    // var e = cc.instantiate(this.passLevelEffect);
+    // e.parent = this.node;
+    // e.active = true;
+    // this.scheduleOnce(function () {
+    //   e.removeFromParent(true);
+    // }, 1.5);
   }
   async initGameData(e = false) {
     console.log("init game data");
@@ -974,12 +974,12 @@ export default class GameMain extends cc.Component {
     AudioManager.getInstance().playMusic("yanhua");
   }
   async showSettlementPage(e) {
-    var t;
-    (t = cc.instantiate(this.passLevelEffectPrefab)).parent = this.node;
-    t.active = true;
-    this.scheduleOnce(function () {
-      t.removeFromParent(true);
-    }, 2);
+    // var t;
+    // (t = cc.instantiate(this.passLevelEffectPrefab)).parent = this.node;
+    // t.active = true;
+    // this.scheduleOnce(function () {
+    //   t.removeFromParent(true);
+    // }, 2);
     await EngineUtil.sleep(500);
     this.prepareMahjongPassSettlement();
     LoadWord.FrameSDK.openWindow("Panel_Award_6", {
