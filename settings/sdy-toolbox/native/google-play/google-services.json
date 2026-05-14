@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "768986765296",
+    "project_id": "sdymjmatch",
+    "storage_bucket": "sdymjmatch.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768986765296:android:7a6a2e1351e0cc12b1af35",
+        "android_client_info": {
+          "package_name": "com.bluemahjong.pair.spark"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiAaX7C_eKWV5PBvgOUnsqNh5jlbN4uLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
