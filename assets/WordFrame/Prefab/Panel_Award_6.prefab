@@ -939,7 +939,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        1.686,
+        -0.931,
         1.209,
         0,
         0,
@@ -11598,7 +11598,7 @@
       "__id__": 308
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 314

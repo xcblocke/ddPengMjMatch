@@ -1915,7 +1915,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 550,
+      "width": 560,
       "height": 32.76
     },
     "_anchorPoint": {
@@ -1969,7 +1969,7 @@
       "__uuid__": "2bb54948-da53-4166-8027-c0ca7f13884d"
     },
     "_N$cacheMode": 0,
-    "_N$maxWidth": 600,
+    "_N$maxWidth": 560,
     "_N$lineHeight": 26,
     "_N$imageAtlas": {
       "__uuid__": "03966d1e-9d80-4905-8056-26e3d79e2337"
