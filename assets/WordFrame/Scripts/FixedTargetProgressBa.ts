@@ -229,8 +229,10 @@ export default class LevelProgressBar extends cc.Component {
             const displayLevelNum = passLevel <= 0 && levelNum === 15 ? 20 : levelNum;
             label.string = displayLevelNum.toString();
 
-           
-            
+            // 每格先复位：避免上一帧状态残留（例如未通过仍显示勾、未通过仍显示数字）
+            gou.active = false;
+            label.node.active = false;
+
             // console.log("gou.active", gou.active);
             // console.log("passLevel............", passLevel);
             // console.log("displayLevelNum.......", displayLevelNum);
@@ -281,31 +283,27 @@ export default class LevelProgressBar extends cc.Component {
                     }
                 }
                 else if (levelNum === currentLevel) {
-                    // [当前关卡] -> 紫色选中状态
+                    // [当前关卡] -> 红色叶子 + 数字，不打钩
                     if (this.sfCurrent) sprite.spriteFrame = this.sfCurrent;
                     if(statueNode)
                         {
                             statueNode.active = false;
                         }
                     
-                    // 显示数字，隐藏打钩
                     label.node.active = true;
-                    // checkMark.active = false;
                     currNode.active = true;
-                    // gou.active = false;
+                    gou.active = false;
                 }
                 else {
-                    // [未通关/后续关卡] -> 灰色状态
+                    // [未通过/后续关卡] -> 红色叶子，无勾、无数字
                     // if (this.sfLocked) sprite.spriteFrame = this.sfLocked;
                     if(statueNode)
                         {
                             statueNode.active = true;
                             statueNode.getComponent(cc.Sprite).spriteFrame = this.redYezi;
                         }
-                    // 显示数字，隐藏打钩
                     label.node.active = true;
-                    // checkMark.active = false;
-                    // gou.active = false;
+                    gou.active = false;
                 }
             }
         }

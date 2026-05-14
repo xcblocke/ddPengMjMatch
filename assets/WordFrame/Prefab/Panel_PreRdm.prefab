@@ -2917,14 +2917,14 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 96,
-      "g": 62,
-      "b": 62,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 488,
+      "width": 455,
       "height": 55
     },
     "_anchorPoint": {
@@ -2936,7 +2936,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -244,
+        -227.5,
         27.5,
         0,
         0,
