@@ -20,10 +20,6 @@
     "isInvite": false
   },
   "native": {
-    "GOOGLE_PLAY": {
-      "gameName": "Mahjong Pair Drift",
-      "dependencies": []
-    },
     "keystoreByGameCode": {
       "sdymjmatch": {
         "password": "sdymjmatch123",
@@ -31,6 +27,10 @@
         "aliasPassword": "sdymjmatch123",
         "fingerprint": "2A:EF:F3:FA:38:14:4E:D4:7C:B4:FB:84:B7:74:20:59:A8:A6:82:70:1E:63:57:DB:D7:BE:24:34:BC:C4:8E:2D"
       }
+    },
+    "GOOGLE_PLAY": {
+      "gameName": "Mahjong Pair Drift",
+      "dependencies": []
     }
   },
   "common": {
