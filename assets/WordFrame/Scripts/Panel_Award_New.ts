@@ -54,11 +54,11 @@ export default class Panel_Award_New extends cc.Component {
             this.titleSkeleton.addAnimation(0, "loop", true);
         }
 
-        FrameSDK.logGameEvent('sdywords_game_new', {
-            object_action: 'show',
-            object_name: 'new_3',
-        }, true);
-        FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_button", "guide_start");
+        // FrameSDK.logGameEvent('sdywords_game_new', {
+        //     object_action: 'show',
+        //     object_name: 'new_3',
+        // }, true);
+        // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_button", "guide_start");
 
         this.focus.active = true;
         this.focus.opacity = 0;
@@ -194,7 +194,7 @@ export default class Panel_Award_New extends cc.Component {
     }
 
     playSuperPrize() {
-        FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_reward", "guide_button");
+        // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_reward", "guide_button");
 
         this.superprize.node.active = true;
         this.superprize.setAnimation(0, 'start', false);

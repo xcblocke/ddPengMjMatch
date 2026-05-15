@@ -25,10 +25,11 @@ export default class newHand extends cc.Component {
     config = null;
     frameData: {
         gameName: string;
-        logLiftEvent: Function;
-        logGameEvent: Function;
-        earlierStageEvent: Function;
-        sdyEvent: Function;
+        // logLiftEvent: Function;
+        // logGameEvent: Function;
+        // earlierStageEvent: Function;
+        // sdyEvent: Function;
+        reportEventCall: Function;
         showGameGuide: Function;
     } = null;
 
@@ -43,6 +44,9 @@ export default class newHand extends cc.Component {
         this.progress.node.parent.active = true;
         this.root1.active = true;
         this.root2.active = false;
+
+        
+
         this.openRoot2();
         let code = -1;
         this.schedule(() => {
@@ -67,10 +71,11 @@ export default class newHand extends cc.Component {
     }
 
     openRoot1() {
-        this.frameData.logGameEvent("sdywords_game_new", {
-            object_action: "show",
-            object_name: "new_1"
-        }, true);
+        // this.frameData.logGameEvent("sdymjmatch_game_new", {
+        //     object_action: "show",
+        //     object_name: "new_1"
+        // }, true);
+        
         this.openEffect(this.root1);
         this.playEffect("YX_TC_01");
         cc.find("label", this.root1).getComponent(cc.Label).string = `nkey_001??&value1==${this.frameData.gameName}`;
@@ -82,10 +87,8 @@ export default class newHand extends cc.Component {
     }
 
     openRoot2() {
-        this.frameData.logGameEvent("sdywords_game_new", {
-            object_action: "show",
-            object_name: "new_2"
-        }, true);
+        this.frameData.reportEventCall('n1');
+
         this.playEffect("YX_TC_01");
         this.root2.active = true;
         this.closeEffect(this.root1);
@@ -146,15 +149,19 @@ export default class newHand extends cc.Component {
     }
 
     protected start(): void {
-        this.frameData.logLiftEvent(`game_life_key_node`, { "step": 'guide_start' });
-        this.frameData.earlierStageEvent("guide_start", "enter_success");
+        this.frameData.reportEventCall('g3');
     }
 
     onTouchGo() {
-        this.frameData.logLiftEvent(`game_life_key_node`, { "step": 'guide_end' });
-        this.frameData.sdyEvent(345, "1");
+        // this.frameData.logLiftEvent(`game_life_key_node`, { "step": 'guide_end' });
+        // this.frameData.sdyEvent(345, "1");
+        
+        // this.frameData.earlierStageEvent("guide_reward", "guide_button");
+
+        this.frameData.reportEventCall('n3');
+        this.frameData.reportEventCall('n4');
         cc.sys.localStorage.setItem("newHand", "1");
-        this.frameData.earlierStageEvent("guide_reward", "guide_button");
+       
         let FrameSDK = (<any>cc.js.getClassByName("FrameSDK"));
         FrameSDK?.openWindow("Panel_Award_New2");
         this.closeEffect(this.root2, () => {
@@ -167,7 +174,8 @@ export default class newHand extends cc.Component {
         let FrameSDK = (<any>cc.js.getClassByName("FrameSDK"));
         if (FrameSDK && FrameSDK.Panel) {
             this.unschedule(this.getFrame);
-            this.frameData.earlierStageEvent("guide_button", "guide_start");
+            // this.frameData.earlierStageEvent("guide_button", "guide_start");
+            this.frameData.reportEventCall('n2');
             cc.js.getClassByName("i18").addi18nArray(langdataArray);
             this.progress.node.parent.active = false;
             this.startButton.active = true;

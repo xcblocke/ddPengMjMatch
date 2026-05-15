@@ -35,11 +35,11 @@ export default class Panel_Award_New2 extends cc.Component {
         this.new_coin_label.string = `${FrameSDK.convertCoinToStr(FrameData.FRAME_CONF.OutputConfig.new)}`;
         this.yue_coin_label.string = `≈${FrameSDK.convertCoinToStr(FrameData.FRAME_CONF.OutputConfig.new,true)}`;
 
-        FrameSDK.logGameEvent('sdywords_game_new', {
-            object_action: 'show',
-            object_name: 'new_3',
-        }, true);
-        FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_button", "guide_start");
+        // FrameSDK.logGameEvent('sdywords_game_new', {
+        //     object_action: 'show',
+        //     object_name: 'new_3',
+        // }, true);
+        // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_button", "guide_start");
 
         const paymentIDs = FrameData.CountryConf.cash_id.slice(0, 4);
         this.paymentRootNode.children.forEach((node, index) => {
@@ -68,7 +68,7 @@ export default class Panel_Award_New2 extends cc.Component {
     }
 
     playNewCoin() {
-        FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_reward", "guide_button");
+        // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_reward", "guide_button");
 
 
         FrameSDK.logGameEvent('sdywords_game_new', {

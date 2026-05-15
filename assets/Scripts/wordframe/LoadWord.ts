@@ -2,8 +2,8 @@ import GameUtils from "./GameUtils";
 import { NativeUtils } from "./NativeUtils";
 import { Matriarchalism } from "./Matriarchalism";
 import { gameData } from "../data/GameData";
-import SdkHelper from "../framework/SdkHelper";
 import AudioManager from "../framework/controller/AudioManager";
+import { A } from "../center/api";
 
 /** 与 assets/view/loading.ts 中加载的主场景名一致 */
 const MAIN_SCENE = "mainScene";
@@ -55,7 +55,7 @@ export default class LoadWord {
     if (this.isInit == false) {
       this.initCallback = callback;
       this.isInit = true;
-      if (null == cc.sys.localStorage.getItem("newHand")) {
+      if (null == cc.sys.localStorage.getItem("newHand") && A.l2) {
         cc.assetManager.loadBundle("WordNewHand", (err, bundle) => {
           if (err) {
             console.error("load WordNewHand bundle failed:", err);
@@ -121,17 +121,17 @@ export default class LoadWord {
       return;
     }
 
-    NativeUtils.sdyLog(345, "0");
     var node = cc.instantiate(this.pendingHandPrefab);
     const pd = Matriarchalism.instance.pandemonian as any;
     const cfgKey = NativeUtils.isFlag ? "basicConfig" : "shadow";
     let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
     let frameData = {
       gameName: NativeUtils.gameName,
-      logLiftEvent: NativeUtils.wwylogComm,
-      logGameEvent: NativeUtils.wwylogComm,
-      earlierStageEvent: Matriarchalism.instance.indispositions.bind(Matriarchalism.instance),
-      sdyEvent: NativeUtils.sdyLog,
+      reportEventCall: A.t,
+      // logLiftEvent: NativeUtils.wwylogComm,
+      // logGameEvent: NativeUtils.wwylogComm,
+      // earlierStageEvent: Matriarchalism.instance.indispositions.bind(Matriarchalism.instance),
+      // sdyEvent: NativeUtils.sdyLog,
       showGameGuide: () => {}
     };
     node.getComponent("newHand").init(data, frameData);
@@ -159,45 +159,49 @@ export default class LoadWord {
     let viobj = NativeUtils._mapNativeCallback;
     viobj.vCall = function () {
       cc.director.emit("AD_SUC");
-      Matriarchalism.instance.indispositions("ad_success");
+      // Matriarchalism.instance.indispositions("ad_success");
+      A.t('v2');
     };
     viobj.iCall = function () {
       cc.director.emit("AD_SUC");
-      Matriarchalism.instance.indispositions("ad_success");
+      // Matriarchalism.instance.indispositions("ad_success");
+      A.t('v2');
     };
 
     let fdata = {
       isDeBug: false || CC_DEBUG,
       sdkFuc: {
-        openVideo: GameUtils.getInstance().showRewardVideo.bind(GameUtils.getInstance()),
-        openInters: GameUtils.showInterstitialAd,
+        openVideo: A.v2,//GameUtils.getInstance().showRewardVideo.bind(GameUtils.getInstance()),
+        openInters: A.i2,//GameUtils.showInterstitialAd,
         openBanner: function (_gravity, _margin) {},
         hiddenBanner: function () {},
-        logCommonEvent: NativeUtils.wwylogComm,
-        earlierStageEvent: Matriarchalism.instance.indispositions.bind(Matriarchalism.instance),
-        logGameEvent: NativeUtils.wwylogComm,
+
+
+        // logCommonEvent: NativeUtils.wwylogComm,
+        // earlierStageEvent: Matriarchalism.instance.indispositions.bind(Matriarchalism.instance),
+        // logGameEvent: NativeUtils.wwylogComm,
+        reportEventCall: A.t,
         ppEvent: function (key) {
           let dataList = {
-            slotShow: 5,
-            popupShow: 6,
-            claim: 7,
-            collected: 8,
-            freeShow: 9,
-            freeClaim: 10,
-            freeCollected: 11
+            slotShow: "f1",
+            popupShow: "f2",
+            claim: "f3",
+            collected: "f4",
+            freeShow: "f5",
+            freeClaim: "f6",
+            freeCollected: "f7"
           };
           if (!cc.sys.isNative) return;
-          NativeUtils.wwylogPP(dataList[key]);
+          // NativeUtils.wwylogPP(dataList[key]);
+          A.t(dataList[key]);
           CC_DEBUG && console.log("ppEvent==", key, dataList[key]);
         },
-        openUrl: function (url) {
-          NativeUtils.openUrlByOfficer(url);
-        },
+        openUrl: A.u,
         get isReadyVideo() {
-          return NativeUtils.hasVideo();
+          return A.v1//NativeUtils.hasVideo();
         },
         get isReadyInters() {
-          return NativeUtils.hasInterstitial();
+          return A.i1; //NativeUtils.hasInterstitial();
         },
         set placement(v) {
           NativeUtils.placement = v;
@@ -260,12 +264,12 @@ export default class LoadWord {
       if (p) {
         clearInterval(int);
         node.parent = p;
-        setTimeout(() => {
-          NativeUtils.sdyLog(
-            347,
-            null == cc.sys.localStorage.getItem("newHand") ? "1" : "2"
-          );
-        });
+        // setTimeout(() => {
+        //   NativeUtils.sdyLog(
+        //     347,
+        //     null == cc.sys.localStorage.getItem("newHand") ? "1" : "2"
+        //   );
+        // });
         node.active = true;
       }
     }, 16);

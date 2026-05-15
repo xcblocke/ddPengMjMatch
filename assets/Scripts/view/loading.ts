@@ -21,8 +21,8 @@ import GameConfig from '../data/GameConfig';
 import LoadProgress, { LoadProgressType } from '../framework/components/LoadProgress';
 import GameSystem from '../system/GameSystem';
 import i18 from '../framework/LanguageMgr';
-import { Matriarchalism } from '../wordframe/Matriarchalism';
 import LoadWord from '../wordframe/LoadWord';
+import { A } from '../center/api';
 const {
   ccclass,
   property
@@ -64,6 +64,7 @@ export default class loading extends cc.Component {
     
 
     i18.init(this.languageJsonData.json,cc.sys.languageCode)
+   
 
 
     if ("oppo" == SdkHelper.getChannelName() || "xiaomi" == SdkHelper.getChannelName() || "vivo" == SdkHelper.getChannelName() || "huawei" == SdkHelper.getChannelName() || "honor" == SdkHelper.getChannelName()) {
@@ -439,15 +440,29 @@ export default class loading extends cc.Component {
         e.loadProgress.snapSmoothToTarget();
         e.loadProgress.endSmoothFollow();
 
-        Matriarchalism.instance.init("isFlag_login");
-        Matriarchalism.instance.copeiaPyrethrum([], () => {}, (conf, allConf) => {
-          console.log("conf..............", conf);
-          console.log("allConf.........", allConf);
+        // Matriarchalism.instance.init("isFlag_login");
+        // Matriarchalism.instance.copeiaPyrethrum([], () => {}, (conf, allConf) => {
+        //   console.log("conf..............", conf);
+        //   console.log("allConf.........", allConf);
+
+        //   cc.director.loadScene(t,()=>{
+        //     LoadWord.instance.init();
+        //   });
+          
+        // });
+        A.l1(()=>{
+          console.log("l3。。。。。。。。。。。。。。。。。。",A.l3);
+          console.log("l4。。。。。。。。。。。。。。。。。。",A.l4);
+          A.t('g1');
 
           cc.director.loadScene(t,()=>{
+            A.t('g2');
             LoadWord.instance.init();
           });
-          
+        },{
+          m: (mute: boolean) => {
+            AudioManager.getInstance().setMute(mute);
+          },
         });
 
         

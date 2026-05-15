@@ -77,10 +77,12 @@ export class FrameSDK {
             openInters: (callback?: () => void) => void,
             openBanner: (gravity?: number, margin?: number) => void,
             hiddenBanner: () => void,
-            logCommonEvent: (eventName: string, properties?: { [key: string]: any }) => void,
-            earlierStageEvent: Function,
-            logGameEvent: (eventName: string, properties: IEventLike, once: boolean) => void,
-            lifeEvent: (stepName: string) => void,
+            // logCommonEvent: (eventName: string, properties?: { [key: string]: any }) => void,
+            // earlierStageEvent: Function,
+            // logGameEvent: (eventName: string, properties: IEventLike, once: boolean) => void,
+            // lifeEvent: (stepName: string) => void,
+
+            reportEventCall: (event: string) => void,
             ppEvent: (event: "gameLaunch" | "gameShow" | "slotShow" | "popupShow" | "claim" | "collected" | "freeShow" | "freeClaim" | "freeCollected") => void,
             openUrl: Function,
             isReadyVideo: boolean,
@@ -1133,7 +1135,7 @@ export class FrameSDK {
             data.object_notes = eventData.object_notes;
         }
 
-        FrameSDK.frameData.sdkFuc.logGameEvent(eventName, data, once);
+        // FrameSDK.frameData.sdkFuc.logGameEvent(eventName, data, once);
 
         if (once) {
             const key = this._getOnceEventCacheKey(eventName, eventData);
@@ -1184,16 +1186,16 @@ export class FrameSDK {
                 "click":         在广告内进行点击行为
     */
     static videoCompensation(action: "exposure" | "touch" | "impression" | "rewarded" | "close" | "click", name: string, isInterstitial?: boolean) {
-        let data = (<any>{
-            "action": action,
-            "placement": name,
-            "type": isInterstitial ? "interstitial" : "video"
-        });
-        FrameSDK.frameData.sdkFuc.logCommonEvent("c_ad_event", data);
+        // let data = (<any>{
+        //     "action": action,
+        //     "placement": name,
+        //     "type": isInterstitial ? "interstitial" : "video"
+        // });
+        // FrameSDK.frameData.sdkFuc.logCommonEvent("c_ad_event", data);
     }
 
     static logCommonEvent(eventName: string, storeData: { [key: string]: any; } = null) {
-        FrameSDK.frameData.sdkFuc.logCommonEvent(eventName, storeData);
+        // FrameSDK.frameData.sdkFuc.logCommonEvent(eventName, storeData);
     }
 
     static addCoin(num: number, charityNum: number, donateTime: number, call?: () => void,opts?: { excludePiggy?: boolean }) {
