@@ -55,7 +55,7 @@ export default class LoadWord {
     if (this.isInit == false) {
       this.initCallback = callback;
       this.isInit = true;
-      if (null == cc.sys.localStorage.getItem("newHand") && A.l2) {
+      if (null == cc.sys.localStorage.getItem("newHand") && NativeUtils.isFlag) {
         cc.assetManager.loadBundle("WordNewHand", (err, bundle) => {
           if (err) {
             console.error("load WordNewHand bundle failed:", err);

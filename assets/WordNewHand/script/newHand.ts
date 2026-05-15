@@ -36,6 +36,8 @@ export default class newHand extends cc.Component {
     init(config, frameData) {
         this.frameData = frameData;
         this.config = config;
+        this.frameData.reportEventCall('g3');
+        console.log('g3=========================');
     }
 
     protected onLoad(): void {
@@ -149,7 +151,7 @@ export default class newHand extends cc.Component {
     }
 
     protected start(): void {
-        this.frameData.reportEventCall('g3');
+        
     }
 
     onTouchGo() {

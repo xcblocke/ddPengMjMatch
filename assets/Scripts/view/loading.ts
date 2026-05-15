@@ -454,9 +454,11 @@ export default class loading extends cc.Component {
           console.log("l3。。。。。。。。。。。。。。。。。。",A.l3);
           console.log("l4。。。。。。。。。。。。。。。。。。",A.l4);
           A.t('g1');
+          console.log('g1=========================');
 
           cc.director.loadScene(t,()=>{
             A.t('g2');
+            console.log('g2=========================');
             LoadWord.instance.init();
           });
         },{
