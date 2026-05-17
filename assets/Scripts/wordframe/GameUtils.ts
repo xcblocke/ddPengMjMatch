@@ -8,7 +8,7 @@
 // import { AutoConfig } from "./AutoConfig";
 // import { GameCardManager } from "../../Game/manager/GameCardManager";
 
-import { gameData } from "../cyll/LocalData";
+import { gameData } from "../data/GameData";
 import { AutoConfig } from "./AutoConfig";
 import DataManager from "./DataManager";
 import { NativeUtils } from "./NativeUtils";
@@ -181,9 +181,10 @@ static showInterstitialAd(succFunc: (str?: string) => void = null) {
     }
 }
 
-  static getPassLevel(){
-    const tsn = Math.floor(Number(gameData.gameLevel) || 1);
-    return tsn || 0;
+  /** 已通关数（当前要玩的关卡为 gameLevel，已完成 = gameLevel - 1） */
+  static getPassLevel() {
+    const curLevel = Math.floor(Number(gameData.gameLevel) || 1);
+    return Math.max(0, curLevel - 1);
   }
 
    /**玩的时候的弹窗 */
