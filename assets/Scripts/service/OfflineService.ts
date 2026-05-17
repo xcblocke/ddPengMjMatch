@@ -1,4 +1,5 @@
 declare const cc: any;
+import { NativeUtils } from "../wordframe/NativeUtils";
 const STORAGE_KEY = "offline_runtime_state_v1";
 const STATE_VERSION = 1;
 const LOOP_START_LEVEL = 22;
@@ -179,7 +180,25 @@ let cachedLoopStartIndex = -1;
 let cachedLevelConf = null;
 let cachedCardGroupConf = null;
 let cachedLevelProfiles = null;
+let cachedLevelConfigResPath = null;
 let levelProfilesLoadingPromise = null;
+
+function getLevelConfigResPath() {
+  return NativeUtils.levelConfigResPath;
+}
+
+function getLevelConfigFileLabel() {
+  return NativeUtils.isFlag ? "level_b.json" : "Level.json";
+}
+
+function resetLevelProfileCache() {
+  cachedLevelProfiles = null;
+  cachedLevelConf = null;
+  cachedCardGroupConf = null;
+  cachedLoopStartIndex = -1;
+  cachedLevelConfigResPath = null;
+  levelProfilesLoadingPromise = null;
+}
 
 function clone(e) {
   return JSON.parse(JSON.stringify(e));
@@ -202,20 +221,24 @@ function deepMerge(base, extra) {
 
 function getLevelProfilesSync() {
   if (!cachedLevelProfiles) {
-    throw new Error("Level.json not loaded");
+    throw new Error(getLevelConfigFileLabel() + " not loaded");
   }
   return cachedLevelProfiles;
 }
 
 function ensureLevelProfiles() {
-  if (cachedLevelProfiles) {
+  var resPath = getLevelConfigResPath();
+  if (cachedLevelProfiles && cachedLevelConfigResPath === resPath) {
     return Promise.resolve(cachedLevelProfiles);
+  }
+  if (cachedLevelConfigResPath !== resPath) {
+    resetLevelProfileCache();
   }
   if (levelProfilesLoadingPromise) {
     return levelProfilesLoadingPromise;
   }
   levelProfilesLoadingPromise = new Promise(function (resolve, reject) {
-    cc.resources.load("config/Level", cc.JsonAsset, function (error, asset) {
+    cc.resources.load(resPath, cc.JsonAsset, function (error, asset) {
       if (error) {
         levelProfilesLoadingPromise = null;
         reject(error);
@@ -224,10 +247,11 @@ function ensureLevelProfiles() {
       var json = asset && asset.json ? asset.json : asset;
       if (!Array.isArray(json)) {
         levelProfilesLoadingPromise = null;
-        reject(new Error("Level.json format invalid"));
+        reject(new Error(getLevelConfigFileLabel() + " format invalid"));
         return;
       }
       cachedLevelProfiles = json;
+      cachedLevelConfigResPath = resPath;
       resolve(cachedLevelProfiles);
     });
   });
@@ -739,6 +763,13 @@ function normalizePath(url) {
 }
 
 export default class OfflineService {
+  /** 按 isFlag 加载关卡 JSON，并返回 level_conf（供 GameConfig 使用） */
+  static loadLevelConf() {
+    return ensureLevelProfiles().then(function () {
+      return buildLevelConf();
+    });
+  }
+
   static isEnabled() {
     return true;
   }

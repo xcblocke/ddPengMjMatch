@@ -18,6 +18,7 @@ import { Res } from '../common/ResourcesManager';
 import { gameData } from '../data/GameData';
 import LocalData from '../cyll/LocalData';
 import GameConfig from '../data/GameConfig';
+import OfflineService from '../service/OfflineService';
 import LoadProgress, { LoadProgressType } from '../framework/components/LoadProgress';
 import GameSystem from '../system/GameSystem';
 import i18 from '../framework/LanguageMgr';
@@ -347,13 +348,18 @@ export default class loading extends cc.Component {
         GameConfig.getInstance().paramConfig = o.data.conf_info.parameter_conf;
         GameConfig.getInstance().comboConfig = o.data.conf_info.combo_conf;
         GameConfig.getInstance().atlasConfig = o.data.conf_info.atlas_conf;
-        GameConfig.getInstance().levelConfig = o.data.conf_info.level_conf;
         GameConfig.getInstance().cardGroupConfig = o.data.conf_info.card_conf;
         gameData.coinBubbleTip = o.data.bubble_coin_balance;
         gameData.goldBubbleTip = o.data.bubble_gold_balance;
-        t.checkReport();
-
-       
+        OfflineService.loadLevelConf().then(function (levelConf) {
+          GameConfig.getInstance().levelConfig = levelConf;
+          t.checkReport();
+        }).catch(function (err) {
+          console.error("load level config failed", err);
+          GameConfig.getInstance().levelConfig = o.data.conf_info.level_conf;
+          t.checkReport();
+        });
+        return;
       }
     }).catch(function () {
       e && EngineUtil.reconnectFai();
