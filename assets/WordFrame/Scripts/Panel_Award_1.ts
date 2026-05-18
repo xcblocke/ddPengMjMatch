@@ -44,16 +44,12 @@ export default class Panel_Award_1 extends cc.Component {
 
     onLoad() {
         var e = this;
-        // this.adBannerButton.on(cc.Node.EventType.TOUCH_END, () => {
-        //     e.click_AD();
-        // }, this);
+        this.adBannerButton.on(cc.Node.EventType.TOUCH_END, () => {
+            e.click_AD();
+        }, this);
         this.commonActionButton.on(cc.Node.EventType.TOUCH_END, () => {
             e.click_Common();
         });
-    }
-
-    onClickBanner() {
-        this.click_AD();
     }
 
     
