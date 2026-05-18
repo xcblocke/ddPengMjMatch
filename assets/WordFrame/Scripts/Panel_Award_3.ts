@@ -57,12 +57,16 @@ export default class Panel_Award_3 extends cc.Component {
 
     onLoad() {
         var e = this;
-        this.adBannerButton.on(cc.Node.EventType.TOUCH_END, () => {
-            e.click_AD();
-        });
+        // this.adBannerButton.on(cc.Node.EventType.TOUCH_END, () => {
+        //     e.
+        // });
         this.commonActionButton.on(cc.Node.EventType.TOUCH_END, () => {
             e.click_Common();
         });
+    }
+
+    onClickBanner() {
+        this.click_AD();
     }
 
     onEnable() {
@@ -118,7 +122,9 @@ export default class Panel_Award_3 extends cc.Component {
         this.commonActionButton.getChildByName("no_ad_xiao").active = !this.isInters;
         this.commonActionButton.x = this.isInters ? 0 : 30;
 
-        this.ribbonSkeleton.enabled = false;
+        if(this.ribbonSkeleton){
+            this.ribbonSkeleton.enabled = false;
+        }
         if(!this.adData.isFree){
             FrameSDK.videoCompensation('exposure', 'reward_3');
         }
@@ -205,8 +211,10 @@ export default class Panel_Award_3 extends cc.Component {
                 .call(() => FrameSDK.playEffect("rate_show"))
                 .delay(0.2)
                 .call(() => {
-                    this.ribbonSkeleton.enabled = true;
-                    this.ribbonSkeleton.setAnimation(0, 'caidai', false);
+                    if(this.ribbonSkeleton){
+                        this.ribbonSkeleton.enabled = true;
+                        this.ribbonSkeleton.setAnimation(0, 'caidai', false);
+                    }
                     FrameSDK.playEffect("pool_cashdone");
                 })
                 .delay(1)

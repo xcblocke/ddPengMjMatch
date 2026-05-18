@@ -44,12 +44,16 @@ export default class Panel_Award_1 extends cc.Component {
 
     onLoad() {
         var e = this;
-        this.adBannerButton.on(cc.Node.EventType.TOUCH_END, () => {
-            e.click_AD();
-        }, this);
+        // this.adBannerButton.on(cc.Node.EventType.TOUCH_END, () => {
+        //     e.click_AD();
+        // }, this);
         this.commonActionButton.on(cc.Node.EventType.TOUCH_END, () => {
             e.click_Common();
         });
+    }
+
+    onClickBanner() {
+        this.click_AD();
     }
 
     
@@ -100,7 +104,9 @@ export default class Panel_Award_1 extends cc.Component {
         })
         this.commonActionButton.getComponentInChildren(cc.Label).string = `skey_122 ${FrameSDK.convertCoinToStr(free)}`;
 
-        this.ribbonSkeleton.enabled = false;
+        if(this.ribbonSkeleton){
+            this.ribbonSkeleton.enabled = false;
+        }
 
         //视频按钮的无广告图标
         this.adBannerButton.getChildByName("no_ad_xiao").active = this.adData.isFree;
@@ -190,8 +196,13 @@ export default class Panel_Award_1 extends cc.Component {
             cc.tween(this.multiplierDisplay)
                 .delay(totalTweenTime + 0.2)
                 .call(() => {
-                    this.ribbonSkeleton.enabled = true;
-                    this.ribbonSkeleton.setAnimation(0, "caidai", false);
+                    if(this.ribbonSkeleton){
+                        this.ribbonSkeleton.enabled = true;
+                        this.ribbonSkeleton.setAnimation(0, "caidai", false);   
+
+                    }
+
+                    
                     FrameSDK.playEffect("pool_cashdone");
                 })
                 .delay(1)

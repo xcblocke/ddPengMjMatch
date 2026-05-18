@@ -27,6 +27,10 @@ import { levelRewardCoin, MainConfig, ServerType } from './config';
 import { applyFreePropRewardIfAny } from './freePropPage';
 import GameUtils from './wordframe/GameUtils';
 import LoadWord from './wordframe/LoadWord';
+import { NativeUtils } from './wordframe/NativeUtils';
+import { Matriarchalism } from './wordframe/Matriarchalism';
+import { A } from './center/api';
+import RandomUtil from './framework/Utils/RandomUtil';
 const {
   ccclass,
   property
@@ -130,6 +134,9 @@ export default class GameMain extends cc.Component {
   _teachingStep = 0;
   teachingStepCardList = [];
   _comboEffect = null;
+  /** 自进入游戏起累计消除对数（过关不重置，弹产出后清零） */
+  rewardAbMergeCount = 0;
+  _rewardAbPopupPending = false;
   get gridRows() {
     return this._gridRows;
   }
@@ -270,8 +277,11 @@ export default class GameMain extends cc.Component {
     if (!t) {
       await this.packagingProcess.excuteAfterLevel();
     }
+
+    this.resetRewardAbMergeCount();
     this._stime = new Date().getTime();
     GameSystem.startGame(e ? 1 : 0).then(async function (t) {
+      
       const __async_this = o;
       var o_local,
         n = __async_this;
@@ -563,6 +573,44 @@ export default class GameMain extends cc.Component {
       });
     }
   }
+
+  rewaedAbMergeThreshold = 8;
+  getFrameConf() {
+    return A.l3?.FRAME_CONF || A.l4?.FRAME_CONF || {};
+  }
+  
+  // getRewardAbPopLevel() {
+  //   const abPop = Number(this.getFrameConf().rewaedAbTotalTime)  || [5, 8];
+  //   return abPop > 0 ? Math.floor(abPop) : 3;
+  // }
+  resetRewardAbMergeCount() {
+    this.rewardAbMergeCount = 0;
+    let timeConf = this.getFrameConf()?.rewaedAbTotalTime || [5, 8];
+    this.rewaedAbMergeThreshold = RandomUtil.rangeInt(timeConf[0], timeConf[1]);
+    CC_DEBUG && console.log("[rewardAB] merge count reset");
+  }
+  /** 消除一对麻将 +1，累计超过阈值弹产出（过关不清零） */
+  dealMergeReward() {
+    if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
+      return;
+    }
+    if (this._rewardAbPopupPending) {
+      return;
+    }
+    this.rewardAbMergeCount++;
+    if (this.rewardAbMergeCount <= this.rewaedAbMergeThreshold) {
+      return;
+    }
+    // if (GameUtils.getPassLevel() + 1 < this.getRewardAbPopLevel()) {
+    //   return;
+    // }
+    this._rewardAbPopupPending = true;
+    GameUtils.rewardAB(() => {
+      this.resetRewardAbMergeCount();
+      this._rewardAbPopupPending = false;
+    });
+  }
+  
   submitOperateInfo(e) {
     var t = this;
     console.log("submitOperateInfo", e);
@@ -571,6 +619,9 @@ export default class GameMain extends cc.Component {
       a = e.pos0,
       i = e.type,
       r = this.node.convertToWorldSpaceAR(cc.Vec2.ZERO);
+    if (1 === i) {
+      this.dealMergeReward();
+    }
     if (gameData.gameState == GameState.gameing) {
       this.isGameing = true;
       this.startShowTipNode();
