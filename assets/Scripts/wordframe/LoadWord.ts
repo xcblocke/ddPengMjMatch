@@ -168,11 +168,36 @@ export default class LoadWord {
       A.t('v2');
     };
 
+    /** FrameSDK 旧接口 (success, fail) → A.v2(tag, { onResult }) */
+    const bridgeOpenVideo = (successCallback?: () => void, failedCallback?: () => void) => {
+      const tag = NativeUtils.placement || "reward_video";
+      A.v2(tag, {
+        onResult: (result) => {
+          if (result === 1) {
+            successCallback && successCallback();
+          } else if (result === -1) {
+            failedCallback && failedCallback();
+          }
+        }
+      });
+    };
+    /** FrameSDK 旧接口 (callback) → A.i2(tag, { onResult }) */
+    const bridgeOpenInters = (callback?: () => void) => {
+      const tag = NativeUtils.placement || "inters";
+      A.i2(tag, {
+        onResult: (result) => {
+          if (result === 1) {
+            callback && callback();
+          }
+        }
+      });
+    };
+
     let fdata = {
       isDeBug: false || CC_DEBUG,
       sdkFuc: {
-        openVideo: A.v2,//GameUtils.getInstance().showRewardVideo.bind(GameUtils.getInstance()),
-        openInters: A.i2,//GameUtils.showInterstitialAd,
+        openVideo: bridgeOpenVideo,
+        openInters: bridgeOpenInters,
         openBanner: function (_gravity, _margin) {},
         hiddenBanner: function () {},
 
