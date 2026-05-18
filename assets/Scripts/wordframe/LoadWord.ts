@@ -122,9 +122,10 @@ export default class LoadWord {
     }
 
     var node = cc.instantiate(this.pendingHandPrefab);
-    const pd = Matriarchalism.instance.pandemonian as any;
-    const cfgKey = NativeUtils.isFlag ? "basicConfig" : "shadow";
+    const pd = A.l3 || A.l4  || {}; //Matriarchalism.instance.pandemonian as any;
+    const cfgKey = NativeUtils.isFlag ? "FRAME_CONF" : "FRAME_CONF";  //"basicConfig" : "shadow";
     let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
+    console.log("data===========11111",pd,cfgKey,data);
     let frameData = {
       gameName: NativeUtils.gameName,
       reportEventCall: A.t,
