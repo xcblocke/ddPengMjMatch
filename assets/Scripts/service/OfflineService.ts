@@ -273,6 +273,45 @@ function getLoopStartIndex() {
   return cachedLoopStartIndex;
 }
 
+function findProfileIndexByLevelId(levelId) {
+  var levelProfiles = getLevelProfilesSync();
+  var targetLevel = Math.floor(Number(levelId) || 0);
+  if (targetLevel < 1) {
+    return -1;
+  }
+  var bestIndex = -1;
+  var bestTurn = Number.MAX_SAFE_INTEGER;
+  for (var i = 0; i < levelProfiles.length; i++) {
+    var profile = levelProfiles[i];
+    if (!profile || !profile.level_info || profile.level_info.level_id !== targetLevel) {
+      continue;
+    }
+    var turnId = profile.level_info.turn_id || 1;
+    if (bestIndex < 0 || turnId < bestTurn) {
+      bestIndex = i;
+      bestTurn = turnId;
+    }
+  }
+  return bestIndex;
+}
+
+function applyJumpToLevel(state, levelId) {
+  var profileIndex = findProfileIndexByLevelId(levelId);
+  if (profileIndex < 0) {
+    return null;
+  }
+  state.currentProfileIndex = profileIndex;
+  state.successCount = Math.max(state.successCount, profileIndex);
+  state.pendingSettlementCoin = 0;
+  saveState(state);
+  var profile = getCurrentProfile(state);
+  return {
+    game_level: profile.level_info.level_id,
+    lun_level: profile.lun_level,
+    profile_index: profileIndex
+  };
+}
+
 function buildLevelConf() {
   var levelProfiles = getLevelProfilesSync();
   if (cachedLevelConf) {
@@ -1231,6 +1270,11 @@ export default class OfflineService {
       case "game/update_level":
       case "activity_info":
       case "game/set_level":
+        {
+          var jumpInfo = applyJumpToLevel(state, payload.level_id);
+          response = success(jumpInfo || {});
+        }
+        break;
       case "game/update_stage":
       case "game/set_number":
       case "game/create_new_user":

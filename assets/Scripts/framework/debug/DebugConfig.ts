@@ -6,6 +6,9 @@ import Service from '../../service/Service';
 import AudioManager from '../controller/AudioManager';
 import AdManager from '../Platform/AdManager';
 import EngineUtil from '../EngineUtil';
+import EventMgr from '../Event/EventMgr';
+import GameEventType from '../Event/GameEventType';
+import SdkHelper from '../SdkHelper';
 export var DebugType = {
   Button: "button",
   EditBox: "editBox",
@@ -24,6 +27,25 @@ export var DebugProperty = {
   forceCount: 0,
   luckyCount: 0
 };
+
+function readJumpLevelId(triggerItem) {
+  var levelId = Math.floor(Number(DebugProperty.levelNum) || 0);
+  if (levelId > 0) {
+    return levelId;
+  }
+  if (!triggerItem || !triggerItem.node || !triggerItem.node.parent) {
+    return 0;
+  }
+  var editBoxes = triggerItem.node.parent.getComponentsInChildren(cc.EditBox);
+  for (var i = editBoxes.length - 1; i >= 0; i--) {
+    levelId = Math.floor(Number(editBoxes[i].string) || 0);
+    if (levelId > 0) {
+      DebugProperty.levelNum = levelId;
+      return levelId;
+    }
+  }
+  return 0;
+}
 export var DebugConfig = [{
   title: `gkey_277`,
   isOpen: false,
@@ -84,10 +106,29 @@ export var DebugConfig = [{
   }, {
     title: `gkey_286`,
     type: DebugType.Button,
-    func: async function () {
-      await Service.commonApiPost(RequestType.setLevel, {
-        level_id: DebugProperty.levelNum
+    func: async function (debugItem) {
+      var levelId = readJumpLevelId(debugItem);
+      if (!levelId) {
+        SdkHelper.showToast("请输入关卡号");
+        return;
+      }
+      console.log("[debug] jump to level:", levelId);
+      var res = await Service.commonApiPost(RequestType.setLevel, {
+        level_id: levelId
       });
+      var jumpedLevel = res && res.data && res.data.game_level;
+      if (!jumpedLevel) {
+        SdkHelper.showToast(`未找到第 ${levelId} 关配置`);
+        return;
+      }
+      if (jumpedLevel !== levelId) {
+        SdkHelper.showToast(`已跳到第 ${jumpedLevel} 关`);
+      }
+      if (GlobalApp.GameMain) {
+        GlobalApp.GameMain.closeGameEvent();
+        GlobalApp.GameMain.clearGameUI();
+        EventMgr.trigger(GameEventType.RESTART_GAME);
+      }
       return;
     }
   }]

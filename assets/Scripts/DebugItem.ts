@@ -36,7 +36,14 @@ export default class DebugItem extends cc.Component {
     this.btnLabel.string = (null === (t = e.params) || void 0 === t ? void 0 : t.btnLabel) || `gkey_211`;
     this.sliderNode.getComponentsInChildren(cc.Slider)[0].progress = (null === (o = e.params) || void 0 === o ? void 0 : o.progress) || 0;
     this.toggleNode.getComponentsInChildren(cc.Toggle)[0].isChecked = (null === (n = e.params) || void 0 === n ? void 0 : n.toggle) || false;
-    this.inputNode.getComponentsInChildren(cc.EditBox)[0].string = (null === (a = e.params) || void 0 === a ? void 0 : a.editBox) || "";
+  var editBoxComp = this.inputNode.getComponentsInChildren(cc.EditBox)[0];
+    editBoxComp.string = (null === (a = e.params) || void 0 === a ? void 0 : a.editBox) || "";
+    if (e.type === DebugType.EditBox && editBoxComp) {
+      var self = this;
+      editBoxComp.node.on("editing-did-ended", function () {
+        self.func(self, editBoxComp.string);
+      }, this);
+    }
     if (e.type === DebugType.Watch) {
       this.watchValueFunc = null === (i = e.params) || void 0 === i ? void 0 : i.watchValue;
       this.startWatch((null === (c = e.params) || void 0 === c ? void 0 : c.watchInterval) || 500);
@@ -64,16 +71,12 @@ export default class DebugItem extends cc.Component {
     for (var e = [], t = 0; t < arguments.length; t++) e[t] = arguments[t];
     if (e[0] instanceof cc.Slider) {
       this.func(this, e[0].progress);
+    } else if (e[0] instanceof cc.Toggle) {
+      this.func(this, e[0].isChecked);
+    } else if (e[0] instanceof cc.EditBox) {
+      this.func(this, e[0].string);
     } else {
-      if (e[0] instanceof cc.Toggle) {
-        this.func(this, e[0].isChecked);
-      } else {
-        if (e[1] instanceof cc.EditBox) {
-          this.func(this, e[0]);
-        } else {
-          this.func(this);
-        }
-      }
+      this.func(this);
     }
   }
   onDestroy() {
