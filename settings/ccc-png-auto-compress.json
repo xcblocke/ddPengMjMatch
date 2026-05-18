@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "excludeFolders": [],
+  "excludeFiles": [],
+  "isImageNoise": true,
+  "minQuality": 40,
+  "maxQuality": 80,
+  "colors": 256,
+  "speed": 3
+}
