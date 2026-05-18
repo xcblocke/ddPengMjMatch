@@ -226,7 +226,11 @@ export default class Panel_Award_3 extends cc.Component {
         };
 
         this["noTouch"].node.active = true;
-
+        console.log("adData.isFree===========33333",this.adData.isFree, this.adData);
+        if(cc.sys.isBrowser){
+            back();
+            return;
+        }
         if (this.adData.isFree) {
             back();
         } else {
