@@ -16,6 +16,10 @@ export default class AudioManager extends cc.Component {
   clipMap = new Map();
   nowGuideAudio = "";
   _nativeAudio = new Map();
+  /** 广告展示期间临时静音（由 loading 注入的 megapauseBattleize 回调） */
+  _adMuteActive = false;
+  _savedMusicVolume = 0.3;
+  _savedEffectsVolume = 1;
   static get instance() {
     this._instance || (this._instance = new AudioManager());
     return this._instance;
@@ -48,6 +52,32 @@ export default class AudioManager extends cc.Component {
   }
   getVibratorState() {
     return 1 == this.vibratorOpen;
+  }
+  /**
+   * 插屏/激励视频展示时静音，结束后恢复（须与 openBg/openAudio 开关一致）。
+   */
+  setMute(mute: boolean) {
+    if (mute) {
+      if (this._adMuteActive) return;
+      this._adMuteActive = true;
+      this._savedMusicVolume = cc.audioEngine.getMusicVolume();
+      this._savedEffectsVolume = cc.audioEngine.getEffectsVolume();
+      cc.audioEngine.setMusicVolume(0);
+      cc.audioEngine.setEffectsVolume(0);
+      cc.audioEngine.pauseMusic();
+      cc.audioEngine.pauseAllEffects();
+    } else {
+      if (!this._adMuteActive) return;
+      this._adMuteActive = false;
+      cc.audioEngine.setMusicVolume(this._savedMusicVolume);
+      cc.audioEngine.setEffectsVolume(this._savedEffectsVolume);
+      if (1 == this.bgOpen) {
+        cc.audioEngine.resumeMusic();
+      }
+      if (1 == this.effectOpen) {
+        cc.audioEngine.resumeAllEffects();
+      }
+    }
   }
   openVibrator() {
     EngineUtil.localStorageSetItem("vibratorOpen", "1");
