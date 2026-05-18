@@ -11,6 +11,7 @@ import CommonUtil from '../common/CommonUtil';
 import SdkHelper from '../framework/SdkHelper';
 import { levelRewardCoin } from '../config';
 import GlobalApp from '../common/GlobalApp';
+import { A } from '../center/api';
 const {
   ccclass,
   property
@@ -20,6 +21,7 @@ export default class buttonMgr extends cc.Component {
   isClicking = false;
   isReqUseProp = false;
   propBtnIsFlag = false;
+  isWatchingPropVideo = false;
   passVideoClose(e) {
     e.target.parent.active = false;
   }
@@ -149,7 +151,7 @@ export default class buttonMgr extends cc.Component {
       round_id: gameData.roundId,
       set_id: gameData.setId
     });
-    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.tipCardCount <= 0) this.addPropCount(PropType.tipCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_OPERATE_TIP);else {
+    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.tipCardCount <= 0) this.watchVideoForProp(PropType.tipCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_OPERATE_TIP);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
@@ -169,7 +171,7 @@ export default class buttonMgr extends cc.Component {
       set_id: gameData.setId
     });
     AudioManager.getInstance().playMusic("btntouch");
-    if (gameData.globalCanClick) if (PlayerDataSys.reshuffleCardCount <= 0) this.addPropCount(PropType.reshuffleCard);else if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else {
+    if (gameData.globalCanClick) if (PlayerDataSys.reshuffleCardCount <= 0) this.watchVideoForProp(PropType.reshuffleCard);else if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
@@ -200,17 +202,59 @@ export default class buttonMgr extends cc.Component {
     //   EventMgr.trigger(GameEventType.USER_FREEZE);
     // }
   }
-  addPropCount(e) {
-    console.log("addPropCount", e);
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "propPage",
-      data: {
-        type: e
-      },
-      option: {
-        inQueue: true
+  getVideoTypeByProp(e) {
+    if (e == PropType.tipCard) return VideoType.TipCard;
+    if (e == PropType.reshuffleCard) return VideoType.ReshuffleCard;
+    return VideoType.FreezeCard;
+  }
+  getPropVideoTag(e) {
+    if (e == PropType.tipCard) return "use_prop_tip";
+    if (e == PropType.reshuffleCard) return "use_prop_reshuffle";
+    return "use_prop_freeze";
+  }
+  watchVideoForProp(e) {
+    var t = this;
+    if (this.isWatchingPropVideo) return;
+    var o = this.getVideoTypeByProp(e),
+      n = this.getPropVideoTag(e);
+    SdkHelper.reportData("get_prop_video", {
+      idx: e
+    });
+    A.v0(n);
+    this.isWatchingPropVideo = true;
+    A.v2(n, {
+      onResult: function (a) {
+        t.isWatchingPropVideo = false;
+        if (1 === a) {
+          t.claimPropByVideo(e, o, true);
+        } else if (-1 === a) {
+          SdkHelper.showForceToast(`gkey_314`);
+          t.claimPropByVideo(e, o, false);
+        }
       }
     });
+  }
+  claimPropByVideo(e, t, o) {
+    var n = this,
+      a = e;
+    GameSystem.videoReward({
+      video_type: t,
+      force_type: 0,
+      is_over: o
+    }, a).then(function (e) {
+      PlayerDataSys.setUserPropCount(e.prop_info, true);
+      o && SdkHelper.reportData("get_prop_succ", {
+        prop_id: a
+      });
+    }).catch(function (e) {
+      EngineUtil.httpErr(e, function () {
+        n.claimPropByVideo(a, t, o);
+      });
+    });
+  }
+  addPropCount(e) {
+    console.log("addPropCount", e);
+    this.watchVideoForProp(e);
   }
   userNoticeBtnClick() {
     EventMgr.trigger(GameEventType.PAGE_SHOW, {

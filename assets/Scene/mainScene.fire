@@ -7531,8 +7531,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 16.75,
-      "height": 16.75
+      "width": 25,
+      "height": 25
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -7767,7 +7767,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 126,
+      "width": 135.12,
       "height": 69
     },
     "_anchorPoint": {
@@ -7829,7 +7829,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 96,
+      "width": 105.12,
       "height": 30.24
     },
     "_anchorPoint": {
@@ -7943,7 +7943,7 @@
     "_enabled": true,
     "_layoutSize": {
       "__type__": "cc.Size",
-      "width": 126,
+      "width": 135.12,
       "height": 69
     },
     "_resize": 1,
@@ -8072,7 +8072,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        0,
+        1.224,
         0,
         0,
         0,
@@ -8112,7 +8112,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "2f7f9980-6749-46e9-ab1d-e289800c2a89"
+      "__uuid__": "dc79fba6-b69b-470d-b4d5-dd0e5b821f50"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -9040,7 +9040,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        0,
+        0.702,
         0,
         0,
         0,
@@ -9080,7 +9080,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "2f7f9980-6749-46e9-ab1d-e289800c2a89"
+      "__uuid__": "dc79fba6-b69b-470d-b4d5-dd0e5b821f50"
     },
     "_type": 0,
     "_sizeMode": 0,
