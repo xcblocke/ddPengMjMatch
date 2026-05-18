@@ -89,7 +89,13 @@ export default class Panel_Award_3 extends cc.Component {
             this.contentSkeleton.setAnimation(0, "start", false);
             this.contentSkeleton.setCompleteListener((event)=>{
                 if(event.animation.name == "start"){
-                    this.contentSkeleton.setAnimation(0, "loop", true);
+                    this.scheduleOnce(()=>{
+                        if(!cc.isValid(this.node) || !cc.isValid(this)){
+                            return;
+                        }
+                        this.contentSkeleton.setAnimation(0, "loop", true);
+                        this.contentSkeleton.timeScale = 0.9;
+                    }, 0.2);
                 }
             });
         }

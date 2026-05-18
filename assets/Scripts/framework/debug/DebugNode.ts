@@ -22,6 +22,9 @@ export default class DebugNode extends cc.Component {
     this.openCloseNode.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
     this.openCloseNode.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
     this.openCloseNode.on(cc.Node.EventType.TOUCH_CANCEL, this.onTouchEnd, this);
+    this.scheduleOnce(() => {
+        this.suoxiao();
+    }, 0.3);
   }
   suoxiao() {
     this.childrenNodes.forEach(function (e) {
