@@ -107,7 +107,7 @@ export default class Panel_Activity extends cc.Component {
                 lun:1
             };
 
-            FrameSDK.logGameEvent('sdywords_game_act', {
+            FrameSDK.logGameEvent('sdymjmatch_report_act', {
                 object_action: 'show',
                 object_name: `pig_start`,
                 object_notes: FrameData.saveData.activity.lun + "",
@@ -178,7 +178,7 @@ export default class Panel_Activity extends cc.Component {
                     child.getComponent(cc.Label).string = list[index];
                 });
             } else {
-                FrameSDK.logGameEvent('sdywords_game_act', {
+                FrameSDK.logGameEvent('sdymjmatch_report_act', {
                     object_action: 'show',
                     object_name: `pig_time_end`,
                     object_notes: FrameData.saveData.activity.lun + "",
@@ -215,7 +215,7 @@ export default class Panel_Activity extends cc.Component {
                     this.resetActive();
                     return;
                 }
-                FrameSDK.logGameEvent('sdywords_game_act', {
+                FrameSDK.logGameEvent('sdymjmatch_report_act', {
                     object_action: 'show',
                     object_name: `pig_get`,
                     object_notes: FrameData.saveData.activity.lun + "",
@@ -276,7 +276,7 @@ export default class Panel_Activity extends cc.Component {
                 lun: lun + 1
             };
         }
-        FrameSDK.logGameEvent('sdywords_game_act', {
+        FrameSDK.logGameEvent('sdymjmatch_report_act', {
             object_action: 'show',
             object_name: `pig_start`,
             object_notes: FrameData.saveData.activity.lun + "",

@@ -43,7 +43,7 @@ export default class Panel_Award_Luck extends cc.Component {
 
     onEnable() {
 
-        FrameSDK.logGameEvent("sdywords_game_new", {
+        FrameSDK.logGameEvent("sdymjmatch_report_new", {
             object_action: "show",
             object_name: "new_17"
         }, true);

@@ -18242,7 +18242,9 @@
       "__id__": 1
     },
     "_enabled": true,
-    "contentSkeleton": null,
+    "contentSkeleton": {
+      "__id__": 67
+    },
     "label_coin": {
       "__id__": 58
     },

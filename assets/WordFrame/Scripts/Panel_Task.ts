@@ -82,7 +82,7 @@ export default class Panel_Task extends cc.Component {
         if (FrameData.saveData.lvAwardinfo == null) {
             FrameData.saveData.lvAwardinfo = [];
 
-            FrameSDK.logGameEvent('sdywords_game_act', {
+            FrameSDK.logGameEvent('sdymjmatch_report_act', {
                 object_action: 'show',
                 object_name: `lvrew_start`,
             }, true);
@@ -186,7 +186,7 @@ export default class Panel_Task extends cc.Component {
 
     @CLICKLOCK()
     onBtnEvent(target, data: string) {
-        FrameSDK.logGameEvent('sdywords_game_act', {
+        FrameSDK.logGameEvent('sdymjmatch_report_act', {
             object_action: 'show',
             object_name: `lvrew_get`,
         });

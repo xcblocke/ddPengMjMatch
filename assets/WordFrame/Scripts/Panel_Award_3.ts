@@ -72,7 +72,7 @@ export default class Panel_Award_3 extends cc.Component {
         const free = FrameData.getCoinOutNum('free');
 
         
-        FrameSDK.logGameEvent('sdywords_game_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
             object_action: 'show',
             object_name: `rew_show`,
             object_notes: `reward_3`,
@@ -85,15 +85,13 @@ export default class Panel_Award_3 extends cc.Component {
 
         this.node.opacity = 255;
 
-        if(this.contentSkeleton){
+        if (this.contentSkeleton) {
+            this.contentSkeleton.setAnimation(0, "start", false);
             this.contentSkeleton.setCompleteListener((event)=>{
-                if(event.animation.name == 'start'){
-                    this.contentSkeleton.setAnimation(0, 'qiehuan', false);
-                }else if(event.animation.name == 'qiehuan'){
-                    this.contentSkeleton.setAnimation(0, 'loop', false);
+                if(event.animation.name == "start"){
+                    this.contentSkeleton.setAnimation(0, "loop", true);
                 }
             });
-            this.contentSkeleton.setAnimation(0, 'start', false);
         }
 
         this.labelRootNode.children.forEach((node, index) => {
@@ -179,7 +177,7 @@ export default class Panel_Award_3 extends cc.Component {
         if(!this.adData.isFree){
             FrameSDK.videoCompensation('touch', 'reward_3');
         }
-        FrameSDK.logGameEvent('sdywords_game_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
             object_action: 'show',
             object_name: `rew_ad`,
             object_notes: `reward_3`,
@@ -227,7 +225,7 @@ export default class Panel_Award_3 extends cc.Component {
             back();
         } else {
             FrameSDK.openVideo(back, fail, () => {
-                FrameSDK.logGameEvent('sdywords_game_ad', {
+                FrameSDK.logGameEvent('sdymjmatch_report_ad', {
                     object_action: 'show',
                     object_name: `reward_3`,
                     object_notes: `video`,
@@ -242,7 +240,7 @@ export default class Panel_Award_3 extends cc.Component {
         // let isInters = FrameData.saveData.skipADCount >= FrameData.FRAME_CONF.forceVideo;
         this["noTouch"].node.active = true;
 
-        FrameSDK.logGameEvent('sdywords_game_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
             object_action: 'show',
             object_name: `rew_free`,
             object_notes: `reward_3`,
@@ -258,7 +256,7 @@ export default class Panel_Award_3 extends cc.Component {
         if (this.isInters) {
             FrameSDK.videoCompensation('touch', 'reward_3',true);
             FrameSDK.openInters(callBack, () => {
-                FrameSDK.logGameEvent('sdywords_game_ad', {
+                FrameSDK.logGameEvent('sdymjmatch_report_ad', {
                     object_action: 'show',
                     object_name: `reward_3`,
                     object_notes: `inter`,

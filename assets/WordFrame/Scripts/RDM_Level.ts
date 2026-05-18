@@ -294,7 +294,7 @@ export default class RDM_Level extends cc.Component {
         let mask = cc.find("mask", this.guide).getComponent(cc.Mask);
         mask.node.active = true;
         if (this.guideInedx == 0) {
-            FrameSDK.logGameEvent('sdywords_game_new', {
+            FrameSDK.logGameEvent('sdymjmatch_report_new', {
                 object_action: 'show',
                 object_name: 'new_7',
             }, true);
@@ -306,7 +306,7 @@ export default class RDM_Level extends cc.Component {
                 y: 50
             }).union().repeatForever().start();
         } else if (this.guideInedx == 1) {
-            FrameSDK.logGameEvent('sdywords_game_new', {
+            FrameSDK.logGameEvent('sdymjmatch_report_new', {
                 object_action: 'show',
                 object_name: 'new_8',
             }, true);
@@ -332,7 +332,7 @@ export default class RDM_Level extends cc.Component {
             mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("panel_window/top/btn_close", this.node));
 
         } else if (this.guideInedx == 3) {
-            FrameSDK.logGameEvent('sdywords_game_new', {
+            FrameSDK.logGameEvent('sdymjmatch_report_new', {
                 object_action: 'show',
                 object_name: 'new_9',
             }, true);

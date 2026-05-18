@@ -83,7 +83,7 @@ export default class Panel_Award_5 extends cc.Component {
         FrameSDK.openEffect(this);
         FrameSDK.playEffect("rewardshow");
 
-        // FrameSDK.logGameEvent('sdywords_game_new', {
+        // FrameSDK.logGameEvent('sdymjmatch_report_new', {
         //     object_action: 'show',
         //     object_name: 'new_15',
         // }, true);
@@ -212,7 +212,7 @@ export default class Panel_Award_5 extends cc.Component {
                 this.boxBonusLabels[i].string = `${FrameSDK.convertCoinToStr(coin)}`;
                 this.viewData.unlockCountUpdateFunc?.(Object.keys(FrameData.saveData.award5.open).length);
                 this.updatePro();
-                // FrameSDK.logGameEvent('sdywords_game_new', {
+                // FrameSDK.logGameEvent('sdymjmatch_report_new', {
                 //     object_action: 'show',
                 //     object_name: 'new_16',
                 // }, true);

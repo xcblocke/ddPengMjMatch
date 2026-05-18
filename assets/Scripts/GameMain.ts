@@ -605,12 +605,18 @@ export default class GameMain extends cc.Component {
     //   return;
     // }
     this._rewardAbPopupPending = true;
-    GameUtils.rewardAB(() => {
-      this.resetRewardAbMergeCount();
-      this._rewardAbPopupPending = false;
-    });
+    this.scheduleOnce(() => {
+      if(!cc.isValid(this.node) || !cc.isValid(this)){
+        return;
+      }
+      GameUtils.rewardAB(() => {
+        this.resetRewardAbMergeCount();
+        this._rewardAbPopupPending = false;
+      });
+    }, 1);
+    
   }
-  
+
   submitOperateInfo(e) {
     var t = this;
     console.log("submitOperateInfo", e);

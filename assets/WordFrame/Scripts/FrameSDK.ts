@@ -1005,7 +1005,7 @@ export class FrameSDK {
         }
         if (levelC !== null && levelC !== undefined) {
             // levels.push(levelC);
-            FrameSDK?.logGameEvent("sdywords_game_lv", {
+            FrameSDK?.logGameEvent("sdymjmatch_report_lv", {
                 object_action: "show",
                 object_name: `lv_info`,
                 object_notes: levelC
@@ -1013,7 +1013,7 @@ export class FrameSDK {
         }
 
 
-        // FrameSDK.logGameEvent("sdywords_game_lv", {
+        // FrameSDK.logGameEvent("sdymjmatch_report_lv", {
         //     object_action: "show",
         //     object_name: `lv_start`,
         //     object_notes: `${levels.join("_")}`
@@ -1056,7 +1056,7 @@ export class FrameSDK {
                 // }
 
                 // if (levelA == 1) {
-                //     FrameSDK.logGameEvent('sdywords_game_new', {
+                //     FrameSDK.logGameEvent('sdymjmatch_report_new', {
                 //         object_action: 'show',
                 //         object_name: 'new_9',
                 //     }, true);
@@ -1097,7 +1097,7 @@ export class FrameSDK {
                 }
                 let isin = FrameSDK.frameData.sdkFuc.isReadyInters;
                 if (isin) {
-                    FrameSDK.logGameEvent("sdywords_game_ad", {
+                    FrameSDK.logGameEvent("sdymjmatch_report_ad", {
                         object_action: "show",
                         object_name: `enter_level`,
                         object_notes: `inter`

@@ -87,11 +87,11 @@ export default class Panel_Award_6 extends cc.Component {
         this.adData = FrameData.getCoinOutNum("box");
         const free = FrameData.getCoinOutNum("free");
 
-        FrameSDK.logGameEvent("sdywords_game_new", {
+        FrameSDK.logGameEvent("sdymjmatch_report_new", {
             object_action: "show",
             object_name: "new_16"
         }, true);
-        FrameSDK.logGameEvent("sdywords_game_rew", {
+        FrameSDK.logGameEvent("sdymjmatch_report_rew", {
             object_action: "show",
             object_name: `sup_show`,
             object_notes: `reward_6`
@@ -133,7 +133,7 @@ export default class Panel_Award_6 extends cc.Component {
         // if(!this.adData.isFree){
         //     FrameSDK.videoCompensation('exposure', 'reward_6');
         // }
-        // FrameSDK.logGameEvent("sdywords_game_rew", {
+        // FrameSDK.logGameEvent("sdymjmatch_report_rew", {
         //     object_action: "show",
         //     object_name: `rew_ad`,
         //     object_notes: `reward_6`
@@ -174,7 +174,7 @@ export default class Panel_Award_6 extends cc.Component {
         this["noTouch"].node.active = true;
         let isInters = false;//FrameSDK.isShowInters() && !this.viewData.noInters;//免费奖励不要插屏了
 
-        FrameSDK.logGameEvent("sdywords_game_rew", {
+        FrameSDK.logGameEvent("sdymjmatch_report_rew", {
             object_action: "show",
             object_name: `sup_free`,
             object_notes: `reward_6`

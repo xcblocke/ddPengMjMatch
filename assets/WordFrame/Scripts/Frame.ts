@@ -108,7 +108,7 @@ export default class Frame extends cc.Component {
     setGuideShow(isShow: boolean) {
         this.guide.active = this.hand.active = isShow;
         if (isShow) {
-            FrameSDK.logGameEvent("sdywords_game_new", {
+            FrameSDK.logGameEvent("sdymjmatch_report_new", {
                 object_action: "show",
                 object_name: "new_6"
             }, true);

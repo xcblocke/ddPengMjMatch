@@ -49,7 +49,7 @@ export default class FlyingBonus extends cc.Component {
         this._available = true;
 
         this.scheduleOnce(() => {
-            FrameSDK.logGameEvent('sdywords_game_rew', {
+            FrameSDK.logGameEvent('sdymjmatch_report_rew', {
                 object_action: 'show',
                 object_name: 'fly_sup',
             });
@@ -107,7 +107,7 @@ export default class FlyingBonus extends cc.Component {
         this._available = false;
         this.node.off(cc.Node.EventType.TOUCH_END, this._onClick, this);
 
-        FrameSDK.logGameEvent('sdywords_game_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
             object_action: 'click',
             object_name: 'fly_sup',
         });
@@ -146,7 +146,7 @@ export default class FlyingBonus extends cc.Component {
         } else {
             FrameSDK.openVideo(back, fail, () => {
                 FrameSDK.videoCompensation('touch', 'fly_sup');
-                FrameSDK.logGameEvent('sdywords_game_ad', {
+                FrameSDK.logGameEvent('sdymjmatch_report_ad', {
                     object_action: 'show',
                     object_name: `fly_sup`,
                     object_notes: `video`,
