@@ -24,6 +24,7 @@ import GameSystem from '../system/GameSystem';
 import i18 from '../framework/LanguageMgr';
 import LoadWord from '../wordframe/LoadWord';
 import { A } from '../center/api';
+import { MainConfig, ServerType } from '../config';
 const {
   ccclass,
   property
@@ -62,7 +63,11 @@ export default class loading extends cc.Component {
   @property([cc.Node])
   fcmNodeList: Array<cc.Node> = [];
   onLoad() {
-    
+
+    if(MainConfig.curServerType == ServerType.develop)
+    {
+      cc.debug.setDisplayStats(true)
+    }
 
     i18.init(this.languageJsonData.json,cc.sys.languageCode)
    
