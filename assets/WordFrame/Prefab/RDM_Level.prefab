@@ -2304,7 +2304,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 62.68,
+      "width": 76.05,
       "height": 200
     },
     "_anchorPoint": {
@@ -2316,7 +2316,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -39.508,
+        13.842,
         84.275,
         0,
         0,
@@ -2368,19 +2368,19 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 604,
+      "width": 55.05,
       "height": 42.84
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 1,
+      "x": 0.5,
       "y": 0.5
     },
     "_trs": {
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        66.229,
+        -10.5,
         -76.467,
         0,
         0,
@@ -2420,8 +2420,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "id:",
-    "_N$string": "id:",
+    "_string": "id：",
+    "_N$string": "id：",
     "_fontSize": 30,
     "_lineHeight": 34,
     "_enableWrapText": false,
@@ -2436,7 +2436,7 @@
     "_N$horizontalAlign": 2,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
-    "_N$overflow": 1,
+    "_N$overflow": 0,
     "_N$cacheMode": 0,
     "_id": ""
   },
@@ -2493,7 +2493,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        99.017,
+        27.525,
         -77.273,
         0,
         0,
@@ -2650,10 +2650,10 @@
     "node": {
       "__id__": 60
     },
-    "_enabled": false,
+    "_enabled": true,
     "_layoutSize": {
       "__type__": "cc.Size",
-      "width": 62.68,
+      "width": 76.05,
       "height": 200
     },
     "_resize": 1,
@@ -2668,7 +2668,7 @@
     "_N$paddingRight": 0,
     "_N$paddingTop": 0,
     "_N$paddingBottom": 0,
-    "_N$spacingX": 10,
+    "_N$spacingX": 0,
     "_N$spacingY": 0,
     "_N$verticalDirection": 1,
     "_N$horizontalDirection": 0,
@@ -2939,7 +2939,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 686,
-      "height": 488.96
+      "height": 421.65
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3010,7 +3010,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 686,
-      "height": 478.96
+      "height": 411.65
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3022,7 +3022,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -249.48,
+        -215.825,
         0,
         0,
         0,
@@ -3089,20 +3089,20 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 684,
-      "height": 378.96
+      "width": 664,
+      "height": 311.65
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
-      "y": 0.64
+      "y": 0.56
     },
     "_trs": {
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
         0,
-        103.05440000000002,
+        68.69900000000001,
         0,
         0,
         0,
@@ -3156,7 +3156,7 @@
         "__id__": 108
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [],
     "_prefab": {
       "__id__": 117
@@ -7356,7 +7356,7 @@
         "__id__": 222
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [],
     "_prefab": {
       "__id__": 226
@@ -8271,8 +8271,8 @@
     "_enabled": true,
     "_layoutSize": {
       "__type__": "cc.Size",
-      "width": 684,
-      "height": 378.96
+      "width": 664,
+      "height": 311.65
     },
     "_resize": 1,
     "_N$layoutType": 0,
@@ -8351,7 +8351,7 @@
       "ctor": "Float64Array",
       "array": [
         -271.645,
-        -189.48,
+        -155.825,
         0,
         0,
         0,
@@ -8742,7 +8742,7 @@
     "_layoutSize": {
       "__type__": "cc.Size",
       "width": 686,
-      "height": 478.96
+      "height": 411.65
     },
     "_resize": 1,
     "_N$layoutType": 2,
@@ -8785,7 +8785,7 @@
     "_layoutSize": {
       "__type__": "cc.Size",
       "width": 686,
-      "height": 488.96
+      "height": 421.65
     },
     "_resize": 1,
     "_N$layoutType": 2,
