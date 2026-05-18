@@ -55,11 +55,12 @@ export class NativeUtils {
   static get isFlag() {
     console.log("isFlag。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。", A.l2);
     return true;
+    return false;
     return A.l2;
   }
   /** 关卡配置 resources 路径（不含扩展名）：isFlag 用 level_b.json，否则 Level.json */
   static get levelConfigResPath() {
-    return NativeUtils.isFlag ? "config/level_b" : "config/Level";
+    return NativeUtils.isFlag ? "config/level_b" : "config/level";
   }
   /**是否无视兑换开关*/
   static isFlag_wushi = true
