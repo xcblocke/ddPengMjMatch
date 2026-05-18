@@ -2596,7 +2596,7 @@
         "level_info": {
             "level_id": 9,
             "round_id": 1,
-            "round_max": 1,
+            "round_max": 2,
             "set_id": 1,
             "set_max": 1,
             "turn_id": 1,
@@ -3011,13 +3011,13 @@
             ]
         },
         "level_info": {
-            "level_id": 10,
-            "round_id": 1,
-            "round_max": 1,
+            "level_id": 9,
+            "round_id": 2,
+            "round_max": 2,
             "set_id": 1,
             "set_max": 1,
             "turn_id": 1,
-            "turn_max": 2
+            "turn_max": 1
         },
         "lun_level": 10
     },
@@ -3430,11 +3430,11 @@
         "level_info": {
             "level_id": 10,
             "round_id": 1,
-            "round_max": 1,
+            "round_max": 3,
             "set_id": 1,
             "set_max": 1,
-            "turn_id": 2,
-            "turn_max": 2
+            "turn_id": 1,
+            "turn_max": 1
         },
         "lun_level": 11
     },
@@ -3946,12 +3946,12 @@
         },
         "level_info": {
             "level_id": 10,
-            "round_id": 1,
-            "round_max": 5,
+            "round_id": 2,
+            "round_max": 3,
             "set_id": 1,
             "set_max": 1,
-            "turn_id": 2,
-            "turn_max": 2
+            "turn_id": 1,
+            "turn_max": 1
         },
         "lun_level": 12
     },
@@ -4463,12 +4463,12 @@
         },
         "level_info": {
             "level_id": 10,
-            "round_id": 2,
-            "round_max": 5,
+            "round_id": 3,
+            "round_max": 3,
             "set_id": 1,
             "set_max": 1,
-            "turn_id": 2,
-            "turn_max": 2
+            "turn_id": 1,
+            "turn_max": 1
         },
         "lun_level": 13
     },
@@ -5099,13 +5099,13 @@
             ]
         },
         "level_info": {
-            "level_id": 10,
-            "round_id": 3,
-            "round_max": 5,
+            "level_id": 11,
+            "round_id": 1,
+            "round_max": 4,
             "set_id": 1,
             "set_max": 1,
-            "turn_id": 2,
-            "turn_max": 2
+            "turn_id": 1,
+            "turn_max": 1
         },
         "lun_level": 14
     },
@@ -5736,13 +5736,13 @@
             ]
         },
         "level_info": {
-            "level_id": 10,
-            "round_id": 3,
-            "round_max": 5,
+            "level_id": 11,
+            "round_id": 2,
+            "round_max": 4,
             "set_id": 1,
             "set_max": 1,
-            "turn_id": 2,
-            "turn_max": 2
+            "turn_id": 1,
+            "turn_max": 1
         },
         "lun_level": 15
     },
@@ -6253,13 +6253,13 @@
             ]
         },
         "level_info": {
-            "level_id": 10,
-            "round_id": 4,
-            "round_max": 5,
+            "level_id": 11,
+            "round_id": 3,
+            "round_max": 4,
             "set_id": 1,
             "set_max": 1,
-            "turn_id": 2,
-            "turn_max": 2
+            "turn_id": 1,
+            "turn_max": 1
         },
         "lun_level": 16
     },
@@ -7014,9 +7014,9 @@
             ]
         },
         "level_info": {
-            "level_id": 10,
-            "round_id": 5,
-            "round_max": 5,
+            "level_id": 11,
+            "round_id": 4,
+            "round_max": 4,
             "set_id": 1,
             "set_max": 1,
             "turn_id": 2,

@@ -181,10 +181,74 @@ static showInterstitialAd(succFunc: (str?: string) => void = null) {
     }
 }
 
-  /** 已通关数（当前要玩的关卡为 gameLevel，已完成 = gameLevel - 1） */
+  /** 已通关数（按 level_id：当前大关 gameLevel，已完成 = gameLevel - 1） */
   static getPassLevel() {
     const curLevel = Math.floor(Number(gameData.gameLevel) || 1);
     return Math.max(0, curLevel - 1);
+  }
+
+  /** 当前局信息（round_id / round_max，配置表「局」） */
+  static getCurRoundInfo() {
+    const totalRound = Math.max(1, Math.floor(Number(gameData.roundMax) || 1));
+    const roundId = Math.max(1, Math.floor(Number(gameData.roundId) || 1));
+    return {
+      totalRound,
+      curRound: Math.max(0, roundId - 1)
+    };
+  }
+
+  /** 进度条局数文案：round_max>1 时返回 "1/2" 等 */
+  static getRoundProgressText(): string | null {
+    const { totalRound, curRound } = GameUtils.getCurRoundInfo();
+    if (totalRound <= 1) {
+      return null;
+    }
+    return `${curRound + 1}/${totalRound}`;
+  }
+
+  /** 同一大关内第 2 局及以后：跳过进关弹窗链 */
+  static shouldSkipPreLevelPopups() {
+    const { totalRound, curRound } = GameUtils.getCurRoundInfo();
+    return totalRound > 1 && curRound > 0;
+  }
+
+  /**
+   * 供 WordFrame 使用的轮次信息（历史命名 turn，实际优先读 round）。
+   * curTurn 为 0-based，与 FixedTargetProgressBa 中 curTurn+1 配套。
+   */
+  static getCurTurnInfo() {
+    const round = GameUtils.getCurRoundInfo();
+    if (round.totalRound > 1) {
+      return {
+        totalTurn: round.totalRound,
+        curTurn: round.curRound
+      };
+    }
+    const totalTurn = Math.max(1, Math.floor(Number(gameData.turnMax) || 1));
+    const turnId = Math.max(1, Math.floor(Number(gameData.turnId) || 1));
+    if (totalTurn > 1) {
+      return {
+        totalTurn,
+        curTurn: Math.max(0, turnId - 1)
+      };
+    }
+    return {
+      totalTurn: 1,
+      curTurn: 0
+    };
+  }
+
+  static logLevelProgress(tag: string, extra?: Record<string, unknown>) {
+    const round = GameUtils.getCurRoundInfo();
+    console.log("[LevelFlow]", tag, JSON.stringify(Object.assign({
+      gameLevel: gameData.gameLevel,
+      lun_level: gameData.lun_level,
+      roundId: gameData.roundId,
+      roundMax: gameData.roundMax,
+      roundText: GameUtils.getRoundProgressText(),
+      passLevel: GameUtils.getPassLevel(),
+      skipPreLevelPopups: GameUtils.shouldSkipPreLevelPopups()
+    }, extra || {})));
   }
 
    /**玩的时候的弹窗 */
@@ -202,22 +266,6 @@ static beforeGameLevelStart(levelA: number, levelB?: number, levelC?: any, callb
 /**检查解锁的东西 */
 static checkPopUp(levelPassed?: boolean, callback?: () => any){
     callback && callback();
-}
-/**获取当前关卡轮次信息 */
-static getCurTurnInfo(){
-    try {
-      // 统一从 GameManager 取当前轮次，供框架进度条和弹窗展示使用。
-      // return GameManager.getInstance().getCurrentTurnInfo();
-      return {
-        totalTurn: 1,
-        curTurn: 0
-      };
-    } catch {
-      return {
-        totalTurn: 1,
-        curTurn: 0
-      };
-    }
 }
 static logGameEvA(name,key?){
     let obj = {}

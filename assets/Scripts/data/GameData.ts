@@ -117,6 +117,8 @@ export default class GameData {
   completeAtlas = {};
   lucky_count = 0;
   lucky_bubble = "";
+  /** 通关领奖后下一次 startGame 跳过进关弹窗链（缩短 8→9 等切关等待） */
+  skipNextPreLevelPopups = false;
   tg_gold_reward = 0;
   free_prop = null;
   mainBtnGroupVisible = {

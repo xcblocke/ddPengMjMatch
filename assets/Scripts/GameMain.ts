@@ -276,10 +276,17 @@ export default class GameMain extends cc.Component {
       var o_local,
         n = __async_this;
       await __async_this.packagingProcess.excuteBeforeLevel(t.data);
+      GameUtils.logLevelProgress("startGame_data_ready", { is_restart: !!e });
       EventMgr.trigger(GameEventType.UPDATE_LEVEL_INFO);
+      cc.director.emit("resfLv");
       EventMgr.trigger(GameEventType.FRESH_RED_BUBBLE);
       o_local = function o() {
-        GameUtils.beforeGameLevelStart(gameData.gameLevel, null, null, () => {
+        const roundForUi = gameData.roundMax > 1 ? gameData.roundId : undefined;
+        let levelFlowStarted = false;
+        const beginLevelFlow = () => {
+          if (levelFlowStarted) return;
+          levelFlowStarted = true;
+          GameUtils.logLevelProgress("beginLevelFlow");
           SdkHelper.reportData("show_game_level");
           if (gameData.isOpenDemo) n.initGameData(e);else {
             n.levelStart.active = true;
@@ -287,6 +294,19 @@ export default class GameMain extends cc.Component {
               cb: n.initGameData.bind(n, e)
             });
           }
+        };
+        if (gameData.skipNextPreLevelPopups || GameUtils.shouldSkipPreLevelPopups()) {
+          gameData.skipNextPreLevelPopups = false;
+          GameUtils.logLevelProgress("skip_beforeGameLevelStart");
+          beginLevelFlow();
+          return;
+        }
+        const t0 = Date.now();
+        GameUtils.beforeGameLevelStart(gameData.gameLevel, roundForUi, null, () => {
+          GameUtils.logLevelProgress("beforeGameLevelStart_done", {
+            waitMs: Date.now() - t0
+          });
+          beginLevelFlow();
         });
       };
       if (gameData.hasGradeChange() && !gameData.isOpenDemo) {
@@ -399,7 +419,7 @@ export default class GameMain extends cc.Component {
     // }, 1.5);
   }
   async initGameData(e = false) {
-    console.log("init game data");
+    GameUtils.logLevelProgress("initGameData", { is_restart: !!e });
     this.bg.zIndex = -1;
     this.map_root.active = true;
     this.isGameing = false;
@@ -415,6 +435,7 @@ export default class GameMain extends cc.Component {
     this.updatePorpCount();
     this.updateBackStepBtnState();
     await this.gameInitGuide();
+    cc.director.emit("resfLv");
     return;
   }
   createMahjong() {
@@ -761,6 +782,7 @@ export default class GameMain extends cc.Component {
       complete_flag: 1,
       skip: 1
     }).then(function (t) {
+      GameUtils.logLevelProgress("passClick_submit_ok");
       EngineUtil.reconnectSuc();
       SdkHelper.reportData("pass_game_level", {
         duration: gameData.gameTime
@@ -781,6 +803,7 @@ export default class GameMain extends cc.Component {
         type: VideoType.Pass,
         is_force: o,
         cb: function () {
+          gameData.skipNextPreLevelPopups = true;
           EventMgr.trigger(GameEventType.START_GAME);
         }
       };

@@ -201,7 +201,11 @@ export default class LoadWord {
           return A.v1//NativeUtils.hasVideo();
         },
         get isReadyInters() {
-          return A.i1; //NativeUtils.hasInterstitial();
+          try {
+            return !!NativeUtils.hasInterstitial();
+          } catch (_e) {
+            return false;
+          }
         },
         set placement(v) {
           NativeUtils.placement = v;
@@ -241,6 +245,8 @@ export default class LoadWord {
           NativeUtils.vibrate(durationInMilliseconds);
         },
         getCurTurnInfo: () => GameUtils.getCurTurnInfo(),
+        getCurRoundInfo: () => GameUtils.getCurRoundInfo(),
+        getRoundProgressText: () => GameUtils.getRoundProgressText(),
         showToast: GameUtils.getInstance().showToast.bind(GameUtils.getInstance())
       },
       gameNodeObj: {}
@@ -284,9 +290,35 @@ export default class LoadWord {
       LoadWord.FrameSDK.openLevelAward(null, null, null, null, cb);
     };
 
-    let beforeGameLevelStart = GameUtils.beforeGameLevelStart;
     GameUtils.beforeGameLevelStart = function (levelA, levelB, levelC, callback) {
-      LoadWord.FrameSDK.beforeGameLevelStart(levelA, levelB, levelC, callback);
+      if (gameData.skipNextPreLevelPopups || GameUtils.shouldSkipPreLevelPopups()) {
+        gameData.skipNextPreLevelPopups = false;
+        GameUtils.logLevelProgress("LoadWord_skip_beforeGameLevelStart", {
+          afterPass: true
+        });
+        callback && callback();
+        return;
+      }
+      const t0 = Date.now();
+      GameUtils.logLevelProgress("LoadWord_beforeGameLevelStart", { levelA, levelB });
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        GameUtils.logLevelProgress("LoadWord_beforeGameLevelStart_done", {
+          levelA,
+          waitMs: Date.now() - t0
+        });
+        callback && callback();
+      };
+      const timer = setTimeout(() => {
+        console.warn("[LoadWord] beforeGameLevelStart safety timeout 5s");
+        finish();
+      }, 5000);
+      LoadWord.FrameSDK.beforeGameLevelStart(levelA, levelB, levelC, () => {
+        clearTimeout(timer);
+        finish();
+      });
     };
 
     let checkPopUp = GameUtils.checkPopUp;
@@ -315,12 +347,18 @@ export default class LoadWord {
           );
         } catch {}
         try {
-          const CurTurnInfo = GameUtils.getCurTurnInfo();
-          totalTurn = Math.max(1, Math.floor(Number(CurTurnInfo?.totalTurn) || 1));
-          curTurn = Math.max(1, Math.floor(Number(CurTurnInfo?.curTurn) || 0) + 1);
+          const roundInfo = GameUtils.getCurRoundInfo();
+          if (roundInfo.totalRound > 1) {
+            totalTurn = roundInfo.totalRound;
+            curTurn = roundInfo.curRound + 1;
+          } else {
+            const CurTurnInfo = GameUtils.getCurTurnInfo();
+            totalTurn = Math.max(1, Math.floor(Number(CurTurnInfo?.totalTurn) || 1));
+            curTurn = Math.max(1, Math.floor(Number(CurTurnInfo?.curTurn) || 0) + 1);
+          }
         } catch {}
         nodes =
-          totalTurn > 1 ? `lv:${levelNum}_${curTurn}_${totalTurn}` : `lv:${levelNum}`;
+          totalTurn > 1 ? `lv:${levelNum}_r${curTurn}_${totalTurn}` : `lv:${levelNum}`;
       }
 
       const eventData = {

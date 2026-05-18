@@ -83,16 +83,60 @@ export default class LevelProgressBar extends cc.Component {
         console.log("Current passLevel/currentLevel:", passLevel, currentLevel); // 调试信息
         this.updateProgress(currentLevel);
 
-        if(this.turn_label){
-            let CurTurnInfo = FrameSDK.frameData.gameFuc.getCurTurnInfo();
-            this.turn_label.node.active = false;
-            if(CurTurnInfo.totalTurn > 1 && CurTurnInfo.curTurn > 0){
-                this.turn_label.string = `Round ${CurTurnInfo.curTurn+1}/${CurTurnInfo.totalTurn}`;
-                this.turn_label.node.active = true;
-            }else{
-                this.turn_label.node.active = false;
-            }
+        const roundText = this.getRoundDisplayText();
+        this.applyRoundBadge(roundText, currentLevel);
+        if (this.lv_label) {
             this.lv_label.string = `Lv.${currentLevel}`;
+        }
+    }
+
+    private getRoundDisplayText(): string | null {
+        const turnInfo = FrameSDK.frameData.gameFuc.getCurTurnInfo();
+        if (!turnInfo || turnInfo.totalTurn <= 1) {
+            return null;
+        }
+        return `${turnInfo.curTurn + 1}/${turnInfo.totalTurn}`;
+    }
+
+  /** 局数角标：当前关卡节点 FeatureTip + 顶部 CurTurnInfo/turn_label */
+    private applyRoundBadge(roundText: string | null, currentLevel: number) {
+        const showRound = !!roundText;
+        if (this.turn_label) {
+            this.turn_label.node.active = showRound;
+            if (showRound) {
+                this.turn_label.string = roundText;
+            }
+        }
+        if (this.turn_node) {
+            this.turn_node.active = showRound;
+        }
+        // let curTurnRoot = this.turn_label ? this.turn_label.node.parent : null;
+        // while (curTurnRoot && curTurnRoot !== this.node) {
+        //     if (curTurnRoot.name === "CurTurnInfo") {
+        //         curTurnRoot.active = showRound;
+        //         break;
+        //     }
+        //     curTurnRoot = curTurnRoot.parent;
+        // }
+        for (let i = 0; i < this.levelNodes.length; i++) {
+            const item = this.levelNodes[i].getComponent(LevelItem);
+            if (!item || !item.FeatureTip) {
+                continue;
+            }
+            const tipNode = item.FeatureTip.node;
+            const isCurrent = item.LevelNumber && item.LevelNumber.string === String(currentLevel);
+            if (showRound && isCurrent) {
+                if (item.level_loop) {
+                    item.level_loop.active = true;
+                }
+                tipNode.active = true;
+                item.FeatureTip.string = roundText;
+            } else {
+                tipNode.active = false;
+                if (item.level_loop) {
+                    item.level_loop.active = false;
+                }
+            }
         }
     }
 
@@ -293,6 +337,21 @@ export default class LevelProgressBar extends cc.Component {
                     label.node.active = true;
                     currNode.active = true;
                     gou.active = false;
+                    const roundText = this.getRoundDisplayText();
+                    if (comp.FeatureTip) {
+                        if (roundText) {
+                            if (comp.level_loop) {
+                                comp.level_loop.active = true;
+                            }
+                            comp.FeatureTip.node.active = true;
+                            comp.FeatureTip.string = roundText;
+                        } else {
+                            comp.FeatureTip.node.active = false;
+                            if (comp.level_loop) {
+                                comp.level_loop.active = false;
+                            }
+                        }
+                    }
                 }
                 else {
                     // [未通过/后续关卡] -> 红色叶子，无勾、无数字

@@ -280,16 +280,16 @@ function findProfileIndexByLevelId(levelId) {
     return -1;
   }
   var bestIndex = -1;
-  var bestTurn = Number.MAX_SAFE_INTEGER;
+  var bestRound = Number.MAX_SAFE_INTEGER;
   for (var i = 0; i < levelProfiles.length; i++) {
     var profile = levelProfiles[i];
     if (!profile || !profile.level_info || profile.level_info.level_id !== targetLevel) {
       continue;
     }
-    var turnId = profile.level_info.turn_id || 1;
-    if (bestIndex < 0 || turnId < bestTurn) {
+    var roundId = profile.level_info.round_id || 1;
+    if (bestIndex < 0 || roundId < bestRound) {
       bestIndex = i;
-      bestTurn = turnId;
+      bestRound = roundId;
     }
   }
   return bestIndex;
@@ -910,6 +910,13 @@ export default class OfflineService {
           if (4 === gameLevel) {
             unlockList.push(3);
           }
+          console.log("[LevelFlow] start_game", JSON.stringify({
+            profileIndex: state.currentProfileIndex,
+            game_level: gameLevel,
+            lun_level: profile.lun_level,
+            round_id: profile.level_info.round_id,
+            round_max: profile.level_info.round_max
+          }));
           response = success({
             big_coin_verify_info: {
               current_verify_commission: 0,
@@ -955,7 +962,18 @@ export default class OfflineService {
               state.goldBalance += passGoldReward;
             }
             updateLuckyCount(state);
-            state.currentProfileIndex = getNextProfileIndex(state);
+            var nextIndex = getNextProfileIndex(state);
+            var finishedRound = currentProfile.level_info.round_id || 1;
+            var totalRounds = currentProfile.level_info.round_max || 1;
+            console.log("[LevelFlow] clear_submit", JSON.stringify({
+              level_id: currentProfile.level_info.level_id,
+              finishedRound: finishedRound,
+              totalRounds: totalRounds,
+              lun_level: currentProfile.lun_level,
+              profileIndex: state.currentProfileIndex,
+              nextIndex: nextIndex
+            }));
+            state.currentProfileIndex = nextIndex;
           }
           saveState(state);
           response = success({
