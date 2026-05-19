@@ -18,7 +18,7 @@ const {
 var a;
 (a = {})[PropType.tipCard] = `gkey_486`;
 a[PropType.reshuffleCard] = `gkey_152`;
-a[PropType.freezeCard] = `{"gkey_487":{"v1":"${30}"}}`;
+a[PropType.freezeCard] = `"v1":"${30}"}`;
 var v = a;
 @ccclass
 export default class propPage extends BasePage {
