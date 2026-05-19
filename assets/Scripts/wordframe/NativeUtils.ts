@@ -53,9 +53,9 @@ export class NativeUtils {
 
   /**自己用的标记 */
   static get isFlag() {
-    console.log("isFlag。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。", A.l2);
+    console.log("isFlag 11。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。", A.l2);
     return true;
-    return false;
+    // return false;
     return A.l2;
   }
   /** 关卡配置 resources 路径（不含扩展名）：isFlag 用 level_b.json，否则 Level.json */
