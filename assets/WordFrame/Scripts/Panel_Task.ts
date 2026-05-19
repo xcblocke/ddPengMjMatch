@@ -29,37 +29,38 @@ export default class Panel_Task extends cc.Component {
     static coinTarget: cc.Node = null;
 
     static openTask(closeCB) {
-        if (FrameData.saveData.lvAwardinfo == null && FrameSDK.frameData.gameData.passLevel-1 >= FrameData.FRAME_CONF.taskLevel) {
-            Panel_Task.startTask(closeCB);
-        }
+        // if (FrameData.saveData.lvAwardinfo == null && FrameSDK.frameData.gameData.passLevel-1 >= FrameData.FRAME_CONF.taskLevel) {
+        //     Panel_Task.startTask(closeCB);
+        // }
+        closeCB?.();
     }
 
     static startTask(closeCB?: () => void) {
-        if (FrameData.saveData.lvAwardinfo) {
-            FrameSDK.openWindow("Panel_Task", {closeCB: closeCB});
-        } else if (FrameSDK.frameData.gameData.passLevel-1 >= FrameData.FRAME_CONF.taskLevel) {
-            FrameSDK.openWindow("Panel_ActivityGuide", {
-                type: 1,
-                logoType: 'levelReward',
-                dtime: 2.5,
-                text: `skey_072`,
-                closeCB: () => {
-                    FrameSDK.openWindow("Panel_Task", {closeCB: closeCB});
-                }
-            });
-        } else if(!FrameSDK.frameData.gameData.isFlag){
-            FrameSDK.openWindow("Panel_ActivityGuide", {
-                type: 1,
-                logoType: 'levelReward',
-                dtime: 2.5,
-                text: `skey_072`,
-                closeCB: () => {
-                    FrameSDK.openWindow("Panel_Task", {closeCB: closeCB});
-                }
-            });
-        }else {
+        // if (FrameData.saveData.lvAwardinfo) {
+        //     FrameSDK.openWindow("Panel_Task", {closeCB: closeCB});
+        // } else if (FrameSDK.frameData.gameData.passLevel-1 >= FrameData.FRAME_CONF.taskLevel) {
+        //     FrameSDK.openWindow("Panel_ActivityGuide", {
+        //         type: 1,
+        //         logoType: 'levelReward',
+        //         dtime: 2.5,
+        //         text: `skey_072`,
+        //         closeCB: () => {
+        //             FrameSDK.openWindow("Panel_Task", {closeCB: closeCB});
+        //         }
+        //     });
+        // } else if(!FrameSDK.frameData.gameData.isFlag){
+        //     FrameSDK.openWindow("Panel_ActivityGuide", {
+        //         type: 1,
+        //         logoType: 'levelReward',
+        //         dtime: 2.5,
+        //         text: `skey_072`,
+        //         closeCB: () => {
+        //             FrameSDK.openWindow("Panel_Task", {closeCB: closeCB});
+        //         }
+        //     });
+        // }else {
             closeCB?.();
-        }
+        // }
     }
 
     static isTaskFinish() {
