@@ -33,7 +33,7 @@ export default class Panel_Award_Luck extends cc.Component {
 
     onLoad() {
         var e = this;
-        this.allNode.active = false;
+        // this.allNode.active = false;
         if (!this.panel_window || !cc.isValid(this.panel_window)) {
             this.panel_window = cc.find("panel_window", this.node);
         }
@@ -152,9 +152,9 @@ export default class Panel_Award_Luck extends cc.Component {
             console.log("wait!!!，return");
         } else {
             this.hideTime = Date.now();
-            const rdmLevel = cc.find("Canvas/nodeUIF/Frame/popUpNode/RDM_Level");
+            const rdmLevel = cc.find("Canvas/frameNode/Frame/popUpNode/RDM_Level");
             if (rdmLevel && cc.isValid(rdmLevel)) {
-                const closeTarget = cc.find("Canvas/nodeUIF/Frame/popUpNode/RDM_Level/panel_window/word_redeem_board2");
+                const closeTarget = cc.find("Canvas/frameNode/Frame/popUpNode/RDM_Level/panel_window/word_redeem_board2");
                 this._close_target = closeTarget && cc.isValid(closeTarget) ? closeTarget : null;
             } else {
                 this._close_target = null;

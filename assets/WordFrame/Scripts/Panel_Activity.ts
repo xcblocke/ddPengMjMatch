@@ -116,10 +116,33 @@ export default class Panel_Activity extends cc.Component {
         if (FrameSDK.now < FrameData.saveData.activity.time) {
             this.schedule(this.updateTime);
         }
+
+        this.node.opacity = 0;
+
+        this.scheduleOnce(() => {
+            this.showAnim();
+        }, 0);
+    }
+
+    showAnim() {
+
+        if(this.panel_window && cc.isValid(this.panel_window)) {
+            this.node.opacity = 255;
+            this.panel_window.scale = 0.1;
+            this.panel_window.opacity = 0;
+            cc.tween(this.panel_window)
+                .to(0.25, {
+                scale: 1,
+                opacity: 255
+            }, {
+                easing: "backOut"
+            }).start();
+        }
     }
 
     protected onEnable(): void {
         // FrameSDK.openEffect(this);
+       
         FrameSDK.playEffect("piggybank_show");
         cc.director.emit("UPDATA_ACTIVITY");
         this.updateUi();
