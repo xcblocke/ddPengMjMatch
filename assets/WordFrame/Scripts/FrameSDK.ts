@@ -51,6 +51,7 @@ export class FrameSDK {
     private static bundleName = "WordFrame";
 
     static init(frameData, configs) {
+        console.log("init=========== .............. 11111",frameData, configs);
         this.frameData = frameData;
         FrameSDK.initCocosAmend();
         FrameSDK.initSettings(configs);

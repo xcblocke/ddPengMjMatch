@@ -277,7 +277,15 @@ export default class LoadWord {
       },
       gameNodeObj: {}
     };
-    const pm = Matriarchalism.instance.pandemonian;
+
+    let pdata = A.l3 || A.l4 || {};
+    let pm = null;  
+    if(pdata) {
+      pm = {
+        basicConfig: { SDK_CONF: pdata?.SDK_CONF, FRAME_CONF: pdata?.FRAME_CONF },
+        shadow: { SDK_CONF: pdata?.SDK_CONF, FRAME_CONF: pdata?.FRAME_CONF }
+      }
+    }
     // /mount 失败时 pandemonian 为空；传带空 SDK_CONF/FRAME_CONF 的对象，避免 FrameSDK.initSettings 里 for..in undefined 崩溃
     const confForFrame =
       pm ||
@@ -287,9 +295,7 @@ export default class LoadWord {
       } as any);
     LoadWord.FrameSDK.init(fdata, confForFrame);
 
-    if (pm) {
-      Matriarchalism.instance.nonsymphoniousness = true;
-    }
+    
 
     let int = setInterval(() => {
       let p = cc.find("Canvas/frameNode") ||cc.find("Canvas/rootNode") ||cc.find("Canvas")||null;
