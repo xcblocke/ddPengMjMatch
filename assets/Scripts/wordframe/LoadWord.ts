@@ -277,7 +277,7 @@ export default class LoadWord {
       gameNodeObj: {}
     };
 
-    let pdata = A.l3 || A.l4 || {};
+    let pdata = NativeUtils.isFlag ? A.l4 : A.l3;
     let pm = null;  
     if(pdata) {
       pm = {

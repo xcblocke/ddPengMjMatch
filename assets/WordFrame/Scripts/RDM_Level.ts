@@ -95,6 +95,7 @@ export default class RDM_Level extends cc.Component {
         this.coin = FrameSDK.convertCoinToStr(FrameData.credit, true);
         this.lbl_gCoin.string = this.coin;
         const rate = FrameData.FRAME_CONF.RedeemRateConfig[0];
+        console.log("rate。。。。。。。。..........", rate);
         this.rtx_tips.string = `<outline color=#914129 width=2><b>skey_094</b></outline>??&value1==<img src="dollar4" offset=-3/> <color= #86FF04><outline color=#427F04 width=2>${FrameSDK.convertCoinToStr(rate)}</outline></c>&value2==<color= #86FF04><outline color=#427F04 width=2>${FrameSDK.convertCoinToStr(rate, true)}</outline></c>`;
         FrameData.FRAME_CONF.CoinConf.forEach((value, i) => {
             let itme = this.scrollview.content.children[i] || cc.instantiate(this.scrollview.content.children[0]);

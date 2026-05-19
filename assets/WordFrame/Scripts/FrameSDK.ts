@@ -125,6 +125,7 @@ export class FrameSDK {
 
     static initSettings(data) {
         FrameData.configs = data;
+        console.log("data。。。。。。。。...........", data);
         let confName = !FrameSDK.frameData.gameData.noProfitAd ? "basicConfig" : "shadow"
         let LINK_CONF = data?.[confName] || {};
 

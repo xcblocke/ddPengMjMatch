@@ -575,7 +575,8 @@ export default class GameMain extends cc.Component {
 
   rewaedAbMergeThreshold = 8;
   getFrameConf() {
-    return A.l3?.FRAME_CONF || A.l4?.FRAME_CONF || {};
+    let pdata = NativeUtils.isFlag ? A.l4 : A.l3;
+    return pdata;
   }
   
   // getRewardAbPopLevel() {
