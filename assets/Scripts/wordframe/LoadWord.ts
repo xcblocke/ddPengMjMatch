@@ -169,7 +169,7 @@ export default class LoadWord {
       A.t('v2');
     };
 
-    /** FrameSDK 旧接口 (success, fail) → A.v2(tag, { onResult }) */
+    /** FrameSDK 旧接口 (success, fail) → A.v2(tag, { onResult })；click/succeed/fail 由 A.v2 统一打日志 */
     const bridgeOpenVideo = (successCallback?: () => void, failedCallback?: () => void) => {
       const tag = NativeUtils.placement || "reward_video";
       A.v2(tag, {

@@ -1,4 +1,4 @@
-
+import { logAd } from "../../Scripts/common/AdLog";
 import Panel_Clock from "../clockView/Panel_Clock";
 import Frame from "./Frame";
 import { FrameData } from "./FrameData";
@@ -591,6 +591,8 @@ export class FrameSDK {
 
         if (FrameData.SDK_CONF.NO_VIDEO || !FrameSDK.frameData) {
             console.log(`skip video`);
+            logAd("click");
+            logAd("succeed");
             startCallback && startCallback();
             successCallback && successCallback();
         } else {

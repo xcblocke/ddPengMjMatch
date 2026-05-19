@@ -9,6 +9,7 @@
 // import { GameCardManager } from "../../Game/manager/GameCardManager";
 
 import { gameData } from "../data/GameData";
+import { logAd } from "../common/AdLog";
 import { AutoConfig } from "./AutoConfig";
 import DataManager from "./DataManager";
 import { NativeUtils } from "./NativeUtils";
@@ -137,14 +138,21 @@ export default class GameUtils {
 showRewardVideo(succ, fail, skip?) {
     if (!GameUtils.getInstance().canWatchVideo()) return;
 
+    logAd("click");
+
     const y = () => {
+        logAd("succeed");
         null == succ || succ();
     }
 
+    const onFail = () => {
+        logAd("fail");
+        fail && fail();
+    }
 
     let cb = () => {
         NativeUtils.succBack = y;
-        NativeUtils.failBack = fail;
+        NativeUtils.failBack = onFail;
         if (cc.sys.isNative && !NativeUtils.no_video) {
             NativeUtils.showVideoAd();
         } else {
