@@ -20,6 +20,9 @@ export default class SetUpPage extends BasePage {
   @property(cc.Label)
   versionLabel: cc.Label = null;
 
+  @property(cc.Label)
+  uidLabel: cc.Label = null;
+
   @property(cc.Node)
   musicNormalNode: cc.Node = null;
   @property(cc.Node)
@@ -60,7 +63,8 @@ export default class SetUpPage extends BasePage {
     EventMgr.ignore(GameEventType.CLOSE_PERSONPAGE, this._hide, this);
   }
   setInfo() {
-    this.versionLabel.string = A.a2 || "v1.1.0";
+    this.versionLabel.string = "v" + (A.a2.length == 0 ? "v1.1.0" : A.a2);
+    this.uidLabel.string = "ID:" + (A.c0.length == 0 ? "001": A.c0);
     this.musicNormalNode.active = AudioManager.getInstance().getMusicState();
     this.musicUnNode.active = !AudioManager.getInstance().getMusicState();
     this.effectNormalNode.active = AudioManager.getInstance().getAudioState();
