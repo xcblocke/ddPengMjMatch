@@ -9,6 +9,7 @@ import BasePage from './view/BasePage';
 import PageMgr from './view/PageMgr';
 import ClientData from './framework/Event/ClientData';
 import UrlMgr from './service/UrlMgr';
+import { A } from './center/api';
 const {
   ccclass,
   property
@@ -59,7 +60,7 @@ export default class SetUpPage extends BasePage {
     EventMgr.ignore(GameEventType.CLOSE_PERSONPAGE, this._hide, this);
   }
   setInfo() {
-    this.versionLabel.string = "v1.0.0";
+    this.versionLabel.string = A.a2 || "v1.1.0";
     this.musicNormalNode.active = AudioManager.getInstance().getMusicState();
     this.musicUnNode.active = !AudioManager.getInstance().getMusicState();
     this.effectNormalNode.active = AudioManager.getInstance().getAudioState();
