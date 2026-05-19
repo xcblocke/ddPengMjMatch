@@ -55,6 +55,8 @@ export default class Panel_Award_3 extends cc.Component {
     timeArray: Array<number> = [];
     isInters:boolean = true;
 
+    targetIndex: number = 0;
+
     onLoad() {
         var e = this;
         this.adBannerButton.on(cc.Node.EventType.TOUCH_END, () => {
@@ -87,16 +89,31 @@ export default class Panel_Award_3 extends cc.Component {
 
         if (this.contentSkeleton) {
             this.contentSkeleton.setAnimation(0, "start", false);
+            this.targetIndex = 0;
+            this.beishe = this.timeArray[this.targetIndex] ?? 1;
+            this.updataBeiShe();
             this.contentSkeleton.setCompleteListener((event)=>{
                 if(event.animation.name == "start"){
-                    this.scheduleOnce(()=>{
-                        if(!cc.isValid(this.node) || !cc.isValid(this)){
-                            return;
-                        }
-                        this.contentSkeleton.setAnimation(0, "loop", true);
-                        this.contentSkeleton.timeScale = 0.9;
-                    }, 0.2);
+                    if(!cc.isValid(this.node) || !cc.isValid(this)){
+                        return;
+                    }
+                    this.contentSkeleton.setAnimation(0, "loop", true);
+                
                 }
+            });
+
+            this.contentSkeleton.setEventListener( (trackEntry, event)=>{
+                const eventName = event.data.name;
+                console.log("event===========33333",eventName);
+                if(eventName == "x2"){
+                    this.targetIndex = 0;
+                } else if(eventName == "x3"){
+                    this.targetIndex = 1;
+                } else if(eventName == "x5"){
+                    this.targetIndex = 2;
+                }
+                this.beishe = this.timeArray[this.targetIndex] ?? 1;
+                this.updataBeiShe();    
             });
         }
 
@@ -149,7 +166,7 @@ export default class Panel_Award_3 extends cc.Component {
     }
 
 
-    targetIndex: number = 0;
+   
 
     /**设置显示的东西 */
     setUi() {
@@ -279,7 +296,7 @@ export default class Panel_Award_3 extends cc.Component {
 
 
     protected update(dt: number): void {
-        this.setUi();
+        // this.setUi();
     }
 
     hideTime = 0;
