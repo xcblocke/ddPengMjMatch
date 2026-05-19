@@ -358,11 +358,11 @@ export class FrameData {
         "freeInedx": 3,
         "abAdStartLevel": 4,//xxx关前奖励免费领取包括xxx关
 
-        "charityLevel": 6,//公益解锁关卡 过关
-        "ratingLevel": 7,//评星
+        "charityLevel": 5,//公益解锁关卡 过关
+        "ratingLevel": 5,//评星
         "ratingLevel2": 9,//评星
         "taskLevel": 400000,//任务解锁
-        "bankLevel": 3,//猪解锁
+        "bankLevel": 2,//猪解锁
         "flyingBonusLevel": 5,//飞行宝箱
         "flyingBonusCoin": 500,//飞行宝箱金额
         "ClockLevel":4,//签到解锁关卡
