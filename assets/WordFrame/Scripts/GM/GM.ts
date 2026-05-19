@@ -35,6 +35,8 @@ export default class GM extends cc.Component {
     static isopen = false;
 
     static open(cb = null) {
+        console.log("FrameData.toolKey。。。。。。。。。。。。。。。。。", FrameData.toolKey);
+        console.log("toutnum...................", this.toutnum);
         if (FrameData.toolKey == "") return;
         this.toutnum++;
         if (this.toutnum >= 5 && this.isopen == false) {

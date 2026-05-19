@@ -8,6 +8,7 @@ import Panel_DailyClearanceReward from "./Panel_DailyClearanceReward";
 import RDM_Level from "./RDM_Level";
 import RDM_Toast from "./RDM_Toast";
 import i18 from "./i18";
+import GM from "./GM/GM";
 
 type GoodsList = {
     id: number,
@@ -141,6 +142,10 @@ export class FrameSDK {
             FrameData.saveData.credit.yellowCoin = FrameData.FRAME_CONF.InitialCoins[0];
             FrameData.saveData.credit.greenCoin = FrameData.FRAME_CONF.InitialCoins[1];
         }
+    }
+
+    static openGMWindow(cb = null) {
+        GM.open(  cb  );
     }
 
 

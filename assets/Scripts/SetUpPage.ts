@@ -10,6 +10,7 @@ import PageMgr from './view/PageMgr';
 import ClientData from './framework/Event/ClientData';
 import UrlMgr from './service/UrlMgr';
 import { A } from './center/api';
+import LoadWord from './wordframe/LoadWord';
 const {
   ccclass,
   property
@@ -58,6 +59,14 @@ export default class SetUpPage extends BasePage {
     EventMgr.listen(GameEventType.WXLOGIN_FINISH, this.setInfo, this);
     EventMgr.listen(GameEventType.CLOSE_PERSONPAGE, this._hide, this);
   }
+
+
+
+  onClickTitlele() {
+    LoadWord.FrameSDK.openGMWindow();
+  }
+
+
   onDisable() {
     EventMgr.ignore(GameEventType.WXLOGIN_FINISH, this.setInfo, this);
     EventMgr.ignore(GameEventType.CLOSE_PERSONPAGE, this._hide, this);
