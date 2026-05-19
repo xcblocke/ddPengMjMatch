@@ -104,7 +104,7 @@ export default class Panel_Award_3 extends cc.Component {
 
             this.contentSkeleton.setEventListener( (trackEntry, event)=>{
                 const eventName = event.data.name;
-                console.log("event===========33333",eventName);
+                // console.log("event===========33333",eventName);
                 if(eventName == "x2"){
                     this.targetIndex = 0;
                 } else if(eventName == "x3"){
