@@ -381,7 +381,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1024,
-      "height": 143
+      "height": 220
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -393,7 +393,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -69.317,
+        -32.62899999999999,
         0,
         0,
         0,
@@ -436,7 +436,7 @@
       "__uuid__": "7960ccfe-db75-48bc-8e59-74f7ce58479b"
     },
     "_type": 1,
-    "_sizeMode": 2,
+    "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -462,7 +462,7 @@
     "_alignFlags": 1,
     "_left": 0,
     "_right": 0,
-    "_top": -2.183000000000007,
+    "_top": -77.37100000000001,
     "_bottom": 0,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
@@ -10570,7 +10570,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -294.351,
+        -202.88599999999997,
         0,
         0,
         0,
@@ -10856,7 +10856,7 @@
     "_alignFlags": 1,
     "_left": 0,
     "_right": 0,
-    "_top": 946.851,
+    "_top": 855.386,
     "_bottom": 0,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
@@ -10931,7 +10931,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        288.05,
+        235.353,
         0,
         0,
         0,
@@ -11217,7 +11217,7 @@
     "_alignFlags": 1,
     "_left": 0,
     "_right": 0,
-    "_top": 364.45,
+    "_top": 417.147,
     "_bottom": 0,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
@@ -11295,7 +11295,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        548.05,
+        514.337,
         0,
         0,
         0,
@@ -11469,7 +11469,7 @@
       "ctor": "Float64Array",
       "array": [
         -255.628,
-        110.065,
+        125.278,
         0,
         0,
         0,
@@ -11581,7 +11581,7 @@
     "_alignFlags": 1,
     "_left": 0,
     "_right": 0,
-    "_top": 104.44999999999999,
+    "_top": 138.163,
     "_bottom": 0,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
