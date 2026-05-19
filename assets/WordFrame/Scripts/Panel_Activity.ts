@@ -119,7 +119,7 @@ export default class Panel_Activity extends cc.Component {
     }
 
     protected onEnable(): void {
-        FrameSDK.openEffect(this);
+        // FrameSDK.openEffect(this);
         FrameSDK.playEffect("piggybank_show");
         cc.director.emit("UPDATA_ACTIVITY");
         this.updateUi();
