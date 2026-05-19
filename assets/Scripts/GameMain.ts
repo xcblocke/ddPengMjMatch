@@ -28,7 +28,6 @@ import { applyFreePropRewardIfAny } from './freePropPage';
 import GameUtils from './wordframe/GameUtils';
 import LoadWord from './wordframe/LoadWord';
 import { NativeUtils } from './wordframe/NativeUtils';
-import { Matriarchalism } from './wordframe/Matriarchalism';
 import { A } from './center/api';
 import RandomUtil from './framework/Utils/RandomUtil';
 const {

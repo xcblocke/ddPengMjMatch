@@ -1,6 +1,5 @@
 import GameUtils from "./GameUtils";
 import { NativeUtils } from "./NativeUtils";
-import { Matriarchalism } from "./Matriarchalism";
 import { gameData } from "../data/GameData";
 import AudioManager from "../framework/controller/AudioManager";
 import { A } from "../center/api";
