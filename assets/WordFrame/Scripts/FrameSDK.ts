@@ -73,6 +73,19 @@ export class FrameSDK {
 
     }
 
+    static getSafeAreaData() {
+        const safeAreaRect = cc.sys.getSafeAreaRect();
+        let viewSze = cc.view.getFrameSize()
+        let visibleSze = cc.view.getVisibleSize()       
+        console.log("getSafeAreaData============safeAreaRect", safeAreaRect.width, safeAreaRect.height);
+        console.log("getSafeAreaData============viewSze", viewSze.width, viewSze.height);
+        console.log("getSafeAreaData============visibleSze", visibleSze.width, visibleSze.height);
+        return {
+          width:  safeAreaRect.width,
+          height: visibleSze.height - safeAreaRect.height,
+        }
+      }
+
     static frameData: {
         isDeBug: boolean,
         sdkFuc: {
@@ -128,6 +141,7 @@ export class FrameSDK {
     static initSettings(data) {
         FrameData.configs = data;
         console.log("data。。。。。。。。...........", data);
+        console.log("data。。。。。。。。...........112", !FrameSDK.frameData.gameData.noProfitAd);
         let confName = !FrameSDK.frameData.gameData.noProfitAd ? "basicConfig" : "shadow"
         let LINK_CONF = data?.[confName] || {};
 

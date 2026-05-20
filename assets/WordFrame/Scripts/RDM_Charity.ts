@@ -33,6 +33,9 @@ export default class RDM_Charity extends cc.Component {
     @property(cc.ScrollView)
     scrollview: cc.ScrollView = null;
 
+    @property([cc.Node])
+    stepNodes: cc.Node[] = [];
+
     @property(cc.Node)
     guide: cc.Node = null;
 
@@ -49,7 +52,7 @@ export default class RDM_Charity extends cc.Component {
             FrameData.saveData.charityGuideIndex = 2;
             this.scheduleOnce(() => {
                 this.openGuide();
-            });
+            },0.15);
         }
 
         this.scheduleOnce(() => {
@@ -151,7 +154,9 @@ export default class RDM_Charity extends cc.Component {
         mask.node.active = true;
         if (this.guideInedx == 0) {
             cc.find("tips1", this.guide).active = true;
-            mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("panel_window/node_list2", this.node));
+            mask.spriteFrame = this.stepNodes[0].getComponent(cc.Sprite).spriteFrame;//FrameSDK.getNodeTexture(cc.find("node_list2", this.node));
+            mask.node.setContentSize(this.stepNodes[0].getContentSize())
+            mask.node.position = cc.v3(0, cc.find("node_list2", this.node).position.y);
             cc.tween(cc.find("tips1/hand", this.guide)).by(0.5, {x: 50, y: -50}).by(0.5, {
                 x: -50,
                 y: 50
@@ -159,8 +164,17 @@ export default class RDM_Charity extends cc.Component {
         } else if (this.guideInedx == 1) {
             cc.find("tips2", this.guide).active = true;
             let data = RDM_Charity.getData(FrameData.FRAME_CONF.CoinConf[0].rdm_id);
-            mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("panel_window/scrollview/view/content/item", this.node));
+            // mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("panel_window/scrollview/view/content/item", this.node));
             cc.find("tips2/label", this.guide).getComponent(cc.Label).string = `skey_109??&value1==${data.total}`;
+            // mask.node.position.y = this.safeAreaData.height;
+
+            mask.spriteFrame = this.stepNodes[1].getComponent(cc.Sprite).spriteFrame;//FrameSDK.getNodeTexture(cc.find("node_list2", this.node));
+            mask.node.setContentSize(this.stepNodes[1].getContentSize())
+
+            let itemNode = this.scrollview.content.getChildByName("node_list2");
+            let posInA = this.node.convertToNodeSpaceAR(itemNode.convertToWorldSpaceAR(cc.v2(0, 0)));
+            mask.node.position = cc.v3(0, posInA.y);
+
             cc.tween(cc.find("tips2/hand", this.guide)).by(0.5, {x: 50, y: -50}).by(0.5, {
                 x: -50,
                 y: 50
@@ -173,7 +187,12 @@ export default class RDM_Charity extends cc.Component {
                 x: -50,
                 y: 50
             }).union().repeatForever().start();
-            mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("panel_window/top/btn_close", this.node));
+            // mask.node.position.y = this.safeAreaData.height;
+            // mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("panel_window/top/btn_close", this.node));
+            mask.spriteFrame = this.stepNodes[2].getComponent(cc.Sprite).spriteFrame;//FrameSDK.getNodeTexture(cc.find("node_list2", this.node));
+            mask.node.setContentSize(this.stepNodes[2].getContentSize())
+
+            mask.node.position = cc.find("btn_close", this.node).position;
 
         } else if (this.guideInedx == 3) {
             this.node.destroy();

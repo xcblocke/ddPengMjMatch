@@ -277,14 +277,8 @@ export default class LoadWord {
       gameNodeObj: {}
     };
 
-    let pdata = NativeUtils.isFlag ? A.l4 : A.l3;
-    let pm = null;  
-    if(pdata) {
-      pm = {
-        basicConfig: { SDK_CONF: pdata?.SDK_CONF, FRAME_CONF: pdata?.FRAME_CONF },
-        shadow: { SDK_CONF: pdata?.SDK_CONF, FRAME_CONF: pdata?.FRAME_CONF }
-      }
-    }
+  
+    let pm = NativeUtils.isFlag ? A.l4 : A.l3;
     // /mount 失败时 pandemonian 为空；传带空 SDK_CONF/FRAME_CONF 的对象，避免 FrameSDK.initSettings 里 for..in undefined 崩溃
     const confForFrame =
       pm ||

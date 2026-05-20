@@ -32,6 +32,9 @@ export default class RDM_Level extends cc.Component {
     @property(cc.ScrollView)
     scrollview: cc.ScrollView = null;
 
+    @property([cc.Node])
+    stepNodes: cc.Node[] = [];
+
     coin: string = "0";
     guideInedx: number = 0;
     private ka1Value = RDM_Level.DEFAULT_KA1_VALUE;
@@ -41,7 +44,9 @@ export default class RDM_Level extends cc.Component {
 
     viewData:{closeCB?: Function} = null;
 
+
     protected onLoad(): void {
+        
         this.loadDibuStats();
         this.showTurnList();
         cc.director.on("REFRESH_INFO", this.updateUI, this);
@@ -51,7 +56,8 @@ export default class RDM_Level extends cc.Component {
             FrameData.saveData.guideInedx = 2;
             this.scheduleOnce(() => {
                 this.openGuide();
-            });
+            }, 0.15);
+            
         }
         this.scheduleOnce(() => {
             this.scrollview.node.height = this.scrollview.node.convertToWorldSpaceAR(cc.v2()).y;
@@ -136,6 +142,8 @@ export default class RDM_Level extends cc.Component {
                 total: conf.rdm_1,
                 tips: `skey_049??&value1==<color= #FFF95C><outline color=#982025 width=3>${passLevel <= 0 ? 20 : conf.rdm_1}</outline></c>`
             };
+            
+            
         } else if (status == 2) {
             let data = FrameData.saveData.CoinStep[id];
             rdata = {
@@ -301,7 +309,9 @@ export default class RDM_Level extends cc.Component {
             }, true);
 
             cc.find("tips1", this.guide).active = true;
-            mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("panel_window/node_list2", this.node));
+            mask.spriteFrame = this.stepNodes[0].getComponent(cc.Sprite).spriteFrame;//FrameSDK.getNodeTexture(cc.find("node_list2", this.node));
+            mask.node.setContentSize(this.stepNodes[0].getContentSize())
+            mask.node.position = cc.v3(0, cc.find("node_list2", this.node).position.y);
             cc.tween(cc.find("tips1/hand", this.guide)).by(0.5, {x: 50, y: -50}).by(0.5, {
                 x: -50,
                 y: 50
@@ -313,7 +323,16 @@ export default class RDM_Level extends cc.Component {
             }, true);
 
             cc.find("tips2", this.guide).active = true;
-            mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("panel_window/scrollview/view/content/item", this.node));
+            // mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("scrollview/view/content/item", this.node));
+
+            mask.spriteFrame = this.stepNodes[1].getComponent(cc.Sprite).spriteFrame;//FrameSDK.getNodeTexture(cc.find("node_list2", this.node));
+            mask.node.setContentSize(this.stepNodes[1].getContentSize())
+            
+
+            let itemNode = this.scrollview.content.getChildByName("item");
+            let posInA = this.node.convertToNodeSpaceAR(itemNode.convertToWorldSpaceAR(cc.v2(0, 0)));
+            mask.node.position = cc.v3(0, posInA.y);
+
             cc.tween(cc.find("tips2/hand", this.guide)).by(0.5, {x: 50, y: -50}).by(0.5, {
                 x: -50,
                 y: 50
@@ -326,11 +345,18 @@ export default class RDM_Level extends cc.Component {
                 data.total = 20
             }
             cc.find("tips3/label", this.guide).getComponent(cc.Label).string = `skey_040??&value1==${data.total - data.now}`;
+            // mask.node.position.y = this.safeAreaData.height;
             cc.tween(cc.find("tips3/hand", this.guide)).by(0.5, {x: 50, y: -50}).by(0.5, {
                 x: -50,
                 y: 50
             }).union().repeatForever().start();
-            mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("panel_window/top/btn_close", this.node));
+            
+            // mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("btn_close", this.node));
+
+            mask.spriteFrame = this.stepNodes[2].getComponent(cc.Sprite).spriteFrame;//FrameSDK.getNodeTexture(cc.find("node_list2", this.node));
+            mask.node.setContentSize(this.stepNodes[2].getContentSize())
+
+            mask.node.position = cc.find("btn_close", this.node).position;
 
         } else if (this.guideInedx == 3) {
             FrameSDK.logGameEvent('sdymjmatch_report_new', {

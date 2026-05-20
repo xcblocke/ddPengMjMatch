@@ -40,6 +40,7 @@ export default class GM extends cc.Component {
         if (FrameData.toolKey == "") return;
         this.toutnum++;
         if (this.toutnum >= 5 && this.isopen == false) {
+            this.toutnum = 0;
             this.isopen = true;
             FrameSDK.loadPrefab("Panel_GM", (prefab) => {
                 let node: cc.Node = cc.instantiate(prefab);
