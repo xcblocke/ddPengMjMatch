@@ -622,26 +622,30 @@ export default class GameMain extends cc.Component {
     if (!cc.isValid(this.node)) {
       return;
     }
+    if (gameData.gameState === GameState.gameResult) {
+      this.resetRewardAbMergeCount();
+      return;
+    }
     GameUtils.rewardAB(() => {
       this.resetRewardAbMergeCount();
     });
   }
-  /** 消除一对麻将 +1，累计超过阈值弹产出；过关时清零 */
-  dealMergeReward() {
-    console.log("dealMergeReward..........................",this.rewardAbMergeCount, this.rewaedAbMergeThreshold);
+  /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
+  dealMergeReward(levelCleared = false) {
     if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
       return;
     }
-    console.log("dealMergeReward..........................111",this.rewardAbMergeCount, this.rewaedAbMergeThreshold);
     if (this._rewardAbPopupPending) {
       return;
     }
-    console.log("dealMergeReward..........................222",this.rewardAbMergeCount, this.rewaedAbMergeThreshold);
     this.rewardAbMergeCount++;
     if (this.rewardAbMergeCount <= this.rewaedAbMergeThreshold) {
       return;
     }
-    console.log("dealMergeReward..........................333",this.rewardAbMergeCount, this.rewaedAbMergeThreshold);
+    if (levelCleared) {
+      this.rewardAbMergeCount = 0;
+      return;
+    }
     this._rewardAbPopupPending = true;
     this.scheduleOnce(this._onRewardAbMergePopup, 1);
   }
@@ -655,7 +659,7 @@ export default class GameMain extends cc.Component {
       i = e.type,
       r = this.node.convertToWorldSpaceAR(cc.Vec2.ZERO);
     if (1 === i) {
-      this.dealMergeReward();
+      this.dealMergeReward(n);
     }
     if (gameData.gameState == GameState.gameing) {
       this.isGameing = true;
