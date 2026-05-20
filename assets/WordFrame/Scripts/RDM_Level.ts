@@ -75,13 +75,13 @@ export default class RDM_Level extends cc.Component {
             node.getComponent(PaymentItem).paymentID = paymentIDs[index] ?? 0;
         });
         this.updateDibu();
-        let hand = cc.find("panel_window/hand", this.node);
+        let hand = cc.find("hand", this.node);
         hand && (hand.active = false);
         cc.director.on("showBackHand", this.showBackHand, this);
     }
 
     showBackHand(){
-        let hand = cc.find("panel_window/hand", this.node);
+        let hand = cc.find("hand", this.node);
         hand.active = true;
         if(hand){
             cc.tween(hand).by(0.5, {x: 50, y: -50}).by(0.5, {

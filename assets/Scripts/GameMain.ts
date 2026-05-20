@@ -133,7 +133,7 @@ export default class GameMain extends cc.Component {
   _teachingStep = 0;
   teachingStepCardList = [];
   _comboEffect = null;
-  /** 自进入游戏起累计消除对数（过关不重置，弹产出后清零） */
+  /** 本关累计消除对数，过关或弹产出后清零 */
   rewardAbMergeCount = 0;
   _rewardAbPopupPending = false;
   get gridRows() {
@@ -585,36 +585,38 @@ export default class GameMain extends cc.Component {
   // }
   resetRewardAbMergeCount() {
     this.rewardAbMergeCount = 0;
+    this._rewardAbPopupPending = false;
+    this.unschedule(this._onRewardAbMergePopup);
     let timeConf = this.getFrameConf()?.rewaedAbTotalTime || [5, 8];
     this.rewaedAbMergeThreshold = RandomUtil.rangeInt(timeConf[0], timeConf[1]);
     CC_DEBUG && console.log("[rewardAB] merge count reset");
   }
-  /** 消除一对麻将 +1，累计超过阈值弹产出（过关不清零） */
+  _onRewardAbMergePopup() {
+    if (!cc.isValid(this.node)) {
+      return;
+    }
+    GameUtils.rewardAB(() => {
+      this.resetRewardAbMergeCount();
+    });
+  }
+  /** 消除一对麻将 +1，累计超过阈值弹产出；过关时清零 */
   dealMergeReward() {
+    console.log("dealMergeReward..........................",this.rewardAbMergeCount, this.rewaedAbMergeThreshold);
     if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
       return;
     }
+    console.log("dealMergeReward..........................111",this.rewardAbMergeCount, this.rewaedAbMergeThreshold);
     if (this._rewardAbPopupPending) {
       return;
     }
+    console.log("dealMergeReward..........................222",this.rewardAbMergeCount, this.rewaedAbMergeThreshold);
     this.rewardAbMergeCount++;
     if (this.rewardAbMergeCount <= this.rewaedAbMergeThreshold) {
       return;
     }
-    // if (GameUtils.getPassLevel() + 1 < this.getRewardAbPopLevel()) {
-    //   return;
-    // }
+    console.log("dealMergeReward..........................333",this.rewardAbMergeCount, this.rewaedAbMergeThreshold);
     this._rewardAbPopupPending = true;
-    this.scheduleOnce(() => {
-      if(!cc.isValid(this.node) || !cc.isValid(this)){
-        return;
-      }
-      GameUtils.rewardAB(() => {
-        this.resetRewardAbMergeCount();
-        this._rewardAbPopupPending = false;
-      });
-    }, 1);
-    
+    this.scheduleOnce(this._onRewardAbMergePopup, 1);
   }
 
   submitOperateInfo(e) {
@@ -665,6 +667,7 @@ export default class GameMain extends cc.Component {
       if (n) {
         gameData.gameState = GameState.gameResult;
         this.stopUpdateGameTime();
+        this.resetRewardAbMergeCount();
       }
       var v = function v(e) {
         if (e.is_tg) {
@@ -833,6 +836,7 @@ export default class GameMain extends cc.Component {
   passClick() {
     var e = this;
     this.closeGameEvent();
+    this.resetRewardAbMergeCount();
     gameData.gameState = GameState.gameResult;
     GameSystem.submitGame({
       is_tg: 1,
@@ -1032,6 +1036,7 @@ export default class GameMain extends cc.Component {
   }
   /** 原 settleMentPage._init 中的通关清场与本地金币入账（与弹窗解耦，供 Panel_Award_6 使用） */
   prepareMahjongPassSettlement() {
+    this.resetRewardAbMergeCount();
     this.clearGameUI();
     gameData.isPassLevel = true;
     if (gameData.dollarRewardAppliedLevel !== gameData.gameLevel) {

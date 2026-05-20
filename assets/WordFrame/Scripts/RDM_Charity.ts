@@ -171,7 +171,7 @@ export default class RDM_Charity extends cc.Component {
             mask.spriteFrame = this.stepNodes[1].getComponent(cc.Sprite).spriteFrame;//FrameSDK.getNodeTexture(cc.find("node_list2", this.node));
             mask.node.setContentSize(this.stepNodes[1].getContentSize())
 
-            let itemNode = this.scrollview.content.getChildByName("node_list2");
+            let itemNode = this.scrollview.content.getChildByName("item");
             let posInA = this.node.convertToNodeSpaceAR(itemNode.convertToWorldSpaceAR(cc.v2(0, 0)));
             mask.node.position = cc.v3(0, posInA.y);
 
