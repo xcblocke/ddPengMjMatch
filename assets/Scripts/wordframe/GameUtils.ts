@@ -267,6 +267,10 @@ static showInterstitialAd(succFunc: (str?: string) => void = null) {
 static rewardPass(cb?){
     cb && cb();
 }
+/** 关卡开始横幅（WordFrame Panel_ShowLevel） */
+static showLevelStartBanner(callback?: () => void, level?: number) {
+    callback && callback();
+}
 //**关卡前的小弹窗 */
 static beforeGameLevelStart(levelA: number, levelB?: number, levelC?: any, callback?: () => any){
     callback && callback();

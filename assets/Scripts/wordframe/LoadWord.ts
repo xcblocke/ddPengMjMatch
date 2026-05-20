@@ -315,6 +315,15 @@ export default class LoadWord {
       LoadWord.FrameSDK.openLevelAward(null, null, null, null, cb);
     };
 
+    GameUtils.showLevelStartBanner = function (callback, level) {
+      const sdk = LoadWord.FrameSDK;
+      if (sdk && sdk.Panel && typeof sdk.showLevelStartBanner === "function") {
+        sdk.showLevelStartBanner(callback, level);
+      } else {
+        callback && callback();
+      }
+    };
+
     GameUtils.beforeGameLevelStart = function (levelA, levelB, levelC, callback) {
       if (gameData.skipNextPreLevelPopups || GameUtils.shouldSkipPreLevelPopups()) {
         gameData.skipNextPreLevelPopups = false;
@@ -326,23 +335,12 @@ export default class LoadWord {
       }
       const t0 = Date.now();
       GameUtils.logLevelProgress("LoadWord_beforeGameLevelStart", { levelA, levelB });
-      let done = false;
-      const finish = () => {
-        if (done) return;
-        done = true;
+      LoadWord.FrameSDK.beforeGameLevelStart(levelA, levelB, levelC, () => {
         GameUtils.logLevelProgress("LoadWord_beforeGameLevelStart_done", {
           levelA,
           waitMs: Date.now() - t0
         });
         callback && callback();
-      };
-      const timer = setTimeout(() => {
-        console.warn("[LoadWord] beforeGameLevelStart safety timeout 5s");
-        finish();
-      }, 5000);
-      LoadWord.FrameSDK.beforeGameLevelStart(levelA, levelB, levelC, () => {
-        clearTimeout(timer);
-        finish();
       });
     };
 

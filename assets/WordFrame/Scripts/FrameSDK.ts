@@ -868,7 +868,7 @@ export class FrameSDK {
             return;
         }
         FrameData.saveData.preAwardType = (FrameData.saveData.preAwardType + 1) % 2;
-        FrameSDK.openWindow("Panel_Award_" + (FrameData.saveData.preAwardType === 1 ? "3" : "1"), {
+        FrameSDK.openWindow("Panel_Award_" + (FrameData.saveData.preAwardType === 1 ? "3" : "3"), {
             closeCB: () => {
                 call && call();
             }
@@ -907,6 +907,17 @@ export class FrameSDK {
             let node: cc.Node = cc.instantiate(prefab);
             node.getComponent(name).viewData = data;
             node.parent = parent || FrameSDK.Panel;
+        });
+    }
+
+    /** 关卡开始横幅（Panel_ShowLevel 预制体） */
+    static showLevelStartBanner(callback?: () => void, level?: number): void {
+        const lv = level != null && !isNaN(Number(level))
+            ? Math.floor(Number(level))
+            : FrameSDK.frameData.gameData.passLevel + 1;
+        FrameSDK.openWindow("Panel_ShowLevel", {
+            level: lv,
+            closeCB: callback
         });
     }
 
@@ -1106,8 +1117,6 @@ export class FrameSDK {
                     resolve();
                     return;
                 }
-                // 某些渠道/原生桥接可能会重复触发广告回调（success/close 等），
-                // 这里确保 Promise 只 resolve 一次，避免 “resolveAfterPromiseResolved” 类错误。
                 let isResolved = false;
                 const safeResolve = () => {
                     if (isResolved) { return; }
@@ -1128,7 +1137,8 @@ export class FrameSDK {
                     });
                 }
                 FrameSDK.openInters(cb, () => { }, "level_start_inters");
-
+            })).then(() => new Promise<void>(resolve => {
+                FrameSDK.showLevelStartBanner(resolve, levelA);
             }))
             .then(() => {
                 callback?.();

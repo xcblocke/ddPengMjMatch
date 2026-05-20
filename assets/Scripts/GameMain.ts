@@ -128,6 +128,8 @@ export default class GameMain extends cc.Component {
   _stime = 0;
   _gameTipIndex = 0;
   isHaveShowGame = false;
+  /** 关卡前置弹窗 + Level 横幅结束后才允许生成牌面 */
+  _mahjongSpawnAllowed = false;
   gameCountDownTime = 0;
   _tipTime = 8;
   _teachingStep = 0;
@@ -290,24 +292,45 @@ export default class GameMain extends cc.Component {
       cc.director.emit("resfLv");
       EventMgr.trigger(GameEventType.FRESH_RED_BUBBLE);
       o_local = function o() {
+        n._mahjongSpawnAllowed = false;
+        n.map_root.active = false;
+        n.mahjongContainer.removeAllChildren();
         const roundForUi = gameData.roundMax > 1 ? gameData.roundId : undefined;
         let levelFlowStarted = false;
-        const beginLevelFlow = () => {
+        const onLevelFlowDone = () => {
+          GameUtils.logLevelProgress("onLevelFlowDone_initGameData");
+          n._mahjongSpawnAllowed = true;
+          EventMgr.trigger(GameEventType.UPDATE_LEVEL_INFO);
+          cc.director.emit("resfLv");
+          n.initGameData(e);
+        };
+        const showLevelBannerThenStart = () => {
+          const sdk = LoadWord.FrameSDK;
+          if (sdk && sdk.Panel && typeof sdk.showLevelStartBanner === "function") {
+            sdk.showLevelStartBanner(onLevelFlowDone, gameData.gameLevel);
+          } else {
+            n.levelStart.active = true;
+            n.levelStart.getComponent(LevelStart).init({ cb: onLevelFlowDone });
+          }
+        };
+        const beginLevelFlow = (needLevelBanner = false) => {
           if (levelFlowStarted) return;
           levelFlowStarted = true;
-          GameUtils.logLevelProgress("beginLevelFlow");
+          GameUtils.logLevelProgress("beginLevelFlow", { needLevelBanner });
           SdkHelper.reportData("show_game_level");
-          if (gameData.isOpenDemo) n.initGameData(e);else {
-            n.levelStart.active = true;
-            n.levelStart.getComponent(LevelStart).init({
-              cb: n.initGameData.bind(n, e)
-            });
+          if (gameData.isOpenDemo) {
+            n._mahjongSpawnAllowed = true;
+            n.initGameData(e);
+          } else if (needLevelBanner) {
+            showLevelBannerThenStart();
+          } else {
+            onLevelFlowDone();
           }
         };
         if (gameData.skipNextPreLevelPopups || GameUtils.shouldSkipPreLevelPopups()) {
           gameData.skipNextPreLevelPopups = false;
           GameUtils.logLevelProgress("skip_beforeGameLevelStart");
-          beginLevelFlow();
+          beginLevelFlow(true);
           return;
         }
         const t0 = Date.now();
@@ -315,7 +338,7 @@ export default class GameMain extends cc.Component {
           GameUtils.logLevelProgress("beforeGameLevelStart_done", {
             waitMs: Date.now() - t0
           });
-          beginLevelFlow();
+          beginLevelFlow(false);
         });
       };
       if (gameData.hasGradeChange() && !gameData.isOpenDemo) {
@@ -428,6 +451,10 @@ export default class GameMain extends cc.Component {
     // }, 1.5);
   }
   async initGameData(e = false) {
+    if (!this._mahjongSpawnAllowed) {
+      GameUtils.logLevelProgress("initGameData_blocked_wait_level_banner");
+      return;
+    }
     GameUtils.logLevelProgress("initGameData", { is_restart: !!e });
     this.bg.zIndex = -1;
     this.map_root.active = true;

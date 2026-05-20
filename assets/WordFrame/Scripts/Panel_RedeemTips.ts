@@ -28,6 +28,15 @@ export default class Panel_RedeemTips extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
     viewData: { level: number, currentBonus: number, closeCB?: () => void } = null;
+    private _closed = false;
+
+    private finishClose() {
+        if (this._closed) return;
+        this._closed = true;
+        const cb = this.viewData?.closeCB;
+        if (this.viewData) this.viewData.closeCB = null;
+        cb?.();
+    }
 
     protected onLoad(): void {
         let x = cc.winSize.width * 0.5 + this.bg.width * 0.5;
@@ -53,7 +62,7 @@ export default class Panel_RedeemTips extends cc.Component {
         }).delay(1).to(0.7, {x: -x}, {
             easing: "backIn"
         }).call(() => {
-            FrameSDK.closeEffect(this, null);
+            FrameSDK.closeEffect(this, () => this.finishClose());
         }).start();
     }
 
@@ -67,8 +76,7 @@ export default class Panel_RedeemTips extends cc.Component {
     }
 
     onDisable() {
-        var e, t;
-        null === (t = (e = this.viewData).closeCB) || void 0 === t || t.call(e);
+        this.finishClose();
     }
 
     // update (dt) {}
