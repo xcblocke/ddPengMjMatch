@@ -57,6 +57,8 @@ export default class Panel_Award_3 extends cc.Component {
 
     targetIndex: number = 0;
 
+    clickBeishu = 0;
+
     onLoad() {
         var e = this;
         this.adBannerButton.on(cc.Node.EventType.TOUCH_END, () => {
@@ -72,6 +74,7 @@ export default class Panel_Award_3 extends cc.Component {
         this.getYCoin = FrameData.getCoinOutNum('draw');
         this.timeArray.push(...FrameData.getCoinOutNum('drawRate'));
         const free = FrameData.getCoinOutNum('free');
+        this.clickBeishu = 0;
 
         
         FrameSDK.logGameEvent('sdymjmatch_report_rew', {
@@ -98,13 +101,14 @@ export default class Panel_Award_3 extends cc.Component {
                         return;
                     }
                     this.contentSkeleton.setAnimation(0, "loop", true);
+                    this.contentSkeleton.timeScale = 0.6;
                 
                 }
             });
 
             this.contentSkeleton.setEventListener( (trackEntry, event)=>{
                 const eventName = event.data.name;
-                // console.log("event===========33333",eventName);
+                console.log("event===========33333",eventName);
                 if(eventName == "x2"){
                     this.targetIndex = 0;
                 } else if(eventName == "x3"){
@@ -208,6 +212,8 @@ export default class Panel_Award_3 extends cc.Component {
 
         this.pointerIndicator.pauseAllActions();
         this.setUi();
+        console.log("beishe===========33333",this.beishe);
+        this.clickBeishu = this.beishe;
 
         const fail = () => {
             this.pointerIndicator.resumeAllActions();
@@ -219,7 +225,7 @@ export default class Panel_Award_3 extends cc.Component {
             FrameSDK.frameData.sdkFuc.ppEvent(this.adData.isFree ? 'freeCollected' : 'collected');
 
             this.multiplierDisplay.active = true;
-            this.multiplierDisplay.children.forEach(value => value.active = value.name == this.beishe.toString());
+            this.multiplierDisplay.children.forEach(value => value.active = value.name == this.clickBeishu.toString());
             this.multiplierDisplay.stopAllActions();
 
             cc.tween(this.multiplierDisplay)
@@ -236,7 +242,7 @@ export default class Panel_Award_3 extends cc.Component {
                 })
                 .delay(1)
                 .call(() => {
-                    FrameSDK.addCoin(this.beishe * this.getYCoin, this.adData.isFree ? 0 : FrameData.getCoinOutNum('charity'), this.adData.isFree ? 0 : 1, this.viewData?.closeCB);
+                    FrameSDK.addCoin(this.clickBeishu * this.getYCoin, this.adData.isFree ? 0 : FrameData.getCoinOutNum('charity'), this.adData.isFree ? 0 : 1, this.viewData?.closeCB);
                     this.close();
                 })
                 .start();
