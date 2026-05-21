@@ -35,6 +35,13 @@ export default class Frame extends cc.Component {
     // LIFE-CYCLE CALLBACKS:
     static ins: Frame = null;
     private _lastVideoSucTs: number = 0;
+    private _onGuide2Tap = () => {
+        if (!(this.guide2?.active || this.hand2?.active)) {
+            return;
+        }
+        this.setGuide2Show(false);
+        FrameSDK.openPanel_Charity();
+    };
 
 
 
@@ -69,6 +76,9 @@ export default class Frame extends cc.Component {
 
         this.setGuideShow(false);
         this.setGuide2Show(false);
+        // guide2 覆盖层会拦截底层按钮点击，这里直接监听引导层点击来触发 Charity 弹窗
+        this.guide2 && this.guide2.on(cc.Node.EventType.TOUCH_END, this._onGuide2Tap, this);
+        this.hand2 && this.hand2.on(cc.Node.EventType.TOUCH_END, this._onGuide2Tap, this);
         FrameSDK.currLevel = FrameSDK.frameData.gameData.passLevel + 1;
 
         FrameSDK.addFlagListen(()=>{
@@ -79,6 +89,8 @@ export default class Frame extends cc.Component {
     }
 
     onDestroy() {
+        this.guide2 && this.guide2.off(cc.Node.EventType.TOUCH_END, this._onGuide2Tap, this);
+        this.hand2 && this.hand2.off(cc.Node.EventType.TOUCH_END, this._onGuide2Tap, this);
         cc.director.removeAll(this);
         Frame.ins = null;
     }
@@ -135,14 +147,11 @@ export default class Frame extends cc.Component {
     @CLICKLOCK()
     onBtnEvent(target, data: string) {
         if (data == "1") {
-            // charity 引导手势点击后，需要先关闭引导，再弹 RDM_Charity；
-            // 常规点击该区域仍然打开 RDM_Level（提现页）。
+            // guide2 教程态由 guide2/hand2 覆盖层点击统一处理，避免与按钮事件双触发导致重复弹窗。
             if (this.guide2.active || this.hand2.active) {
-                this.setGuide2Show(false);
-                FrameSDK.openPanel_Charity();
-            } else {
-                FrameSDK.openPanel_Yellow();
+                return;
             }
+            FrameSDK.openPanel_Yellow();
         }
     }
 

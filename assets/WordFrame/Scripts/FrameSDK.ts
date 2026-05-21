@@ -62,10 +62,19 @@ export class FrameSDK {
     private static _settlementCoinFlyPending = 0;
     private static _afterSettlementCoinFlyQueue: Array<() => void> = [];
     private static _settlementPhase = false;
+    /** 弹窗异步加载中的互斥锁，防止同一弹窗被连续点开两次 */
+    private static _popupOpeningFlags = new Set<string>();
     /** 教程进行中延迟的弹窗任务 */
     private static _afterTutorialIdleQueue: Array<() => void> = [];
     private static _tutorialFlushTimer: any = null;
     private static _tutorialFlushing = false;
+    /** 教程期间点击过多时，只保留一次 Charity 打开请求 */
+    private static _pendingOpenCharityAfterTutorial = false;
+    /** 教程期间点击过多时，只保留一次 Yellow 打开请求 */
+    private static _pendingOpenYellowAfterTutorial = false;
+    /** 手动点击防重：对应弹窗关闭前只允许触发一次 */
+    private static _manualYellowOpenLocked = false;
+    private static _manualCharityOpenLocked = false;
     /** 教程进行中也允许打开的弹窗（新手补贴页等） */
     private static readonly TUTORIAL_EXEMPT_WINDOWS = new Set([
         "Panel_Guide",
@@ -869,7 +878,41 @@ export class FrameSDK {
     }
 
     static openPanel_Yellow(call?: Function, autoChain = false) {
+        const isManual = !autoChain && !call;
+        if (isManual && FrameSDK._manualYellowOpenLocked) {
+            return;
+        }
+        if (isManual) {
+            FrameSDK._manualYellowOpenLocked = true;
+        }
+        if (FrameSDK.isTutorialActive()) {
+            if (FrameSDK._pendingOpenYellowAfterTutorial) {
+                return;
+            }
+            FrameSDK._pendingOpenYellowAfterTutorial = true;
+            FrameSDK.runAfterTutorialIdle(() => {
+                FrameSDK._pendingOpenYellowAfterTutorial = false;
+                FrameSDK.openPanel_Yellow(call, autoChain);
+            });
+            return;
+        }
         const open = () => {
+            if (FrameSDK._popupOpeningFlags.has("RDM_Level") || FrameSDK._popupOpeningFlags.has("RDM_Charity")) {
+                if (autoChain && call) {
+                    FrameSDK.runAfterTutorialIdle(() => FrameSDK.openPanel_Yellow(call, autoChain));
+                }
+                return;
+            }
+            if (FrameSDK.Panel && cc.isValid(FrameSDK.Panel)) {
+                const existed = FrameSDK.Panel.children.some((child) => child && cc.isValid(child) && child.name === "RDM_Level");
+                if (existed) {
+                    if (autoChain && call) {
+                        FrameSDK.runAfterTutorialIdle(() => FrameSDK.openPanel_Yellow(call, autoChain));
+                    }
+                    return;
+                }
+            }
+            FrameSDK._popupOpeningFlags.add("RDM_Level");
             FrameSDK.loadPrefab("RDM_Level", prefab => {
                 let node: cc.Node = cc.instantiate(prefab);
                 node.parent = FrameSDK.Panel;
@@ -880,6 +923,7 @@ export class FrameSDK {
                     autoChain: autoChain && !!call
                 };
                 node.getComponent(RDM_Level).viewData = vd;
+                FrameSDK._popupOpeningFlags.delete("RDM_Level");
             });
         };
         const run = () => {
@@ -893,11 +937,36 @@ export class FrameSDK {
     }
 
     static openPanel_Charity() {
-        FrameSDK.runAfterTutorialIdle(() => {
-            FrameSDK.loadPrefab("RDM_Charity", prefab => {
-                let node: cc.Node = cc.instantiate(prefab);
-                node.parent = FrameSDK.Panel;
+        const isManual = true;
+        if (isManual && FrameSDK._manualCharityOpenLocked) {
+            return;
+        }
+        FrameSDK._manualCharityOpenLocked = true;
+        if (FrameSDK.isTutorialActive()) {
+            if (FrameSDK._pendingOpenCharityAfterTutorial) {
+                return;
+            }
+            FrameSDK._pendingOpenCharityAfterTutorial = true;
+            FrameSDK.runAfterTutorialIdle(() => {
+                FrameSDK._pendingOpenCharityAfterTutorial = false;
+                FrameSDK.openPanel_Charity();
             });
+            return;
+        }
+        if (FrameSDK._popupOpeningFlags.has("RDM_Charity") || FrameSDK._popupOpeningFlags.has("RDM_Level")) {
+            return;
+        }
+        if (FrameSDK.Panel && cc.isValid(FrameSDK.Panel)) {
+            const existed = FrameSDK.Panel.children.some((child) => child && cc.isValid(child) && child.name === "RDM_Charity");
+            if (existed) {
+                return;
+            }
+        }
+        FrameSDK._popupOpeningFlags.add("RDM_Charity");
+        FrameSDK.loadPrefab("RDM_Charity", prefab => {
+            let node: cc.Node = cc.instantiate(prefab);
+            node.parent = FrameSDK.Panel;
+            FrameSDK._popupOpeningFlags.delete("RDM_Charity");
         });
     }
 
@@ -1025,6 +1094,9 @@ export class FrameSDK {
 
     /** Frame 提现引导 / RDM 内引导 / 局内教学 / 新手补贴页 等是否进行中 */
     static isTutorialActive(): boolean {
+        if (FrameSDK._popupOpeningFlags.has("RDM_Level") || FrameSDK._popupOpeningFlags.has("RDM_Charity")) {
+            return true;
+        }
         if (Frame.ins) {
             if (Frame.ins.guide && Frame.ins.guide.active) {
                 return true;
@@ -1083,6 +1155,14 @@ export class FrameSDK {
     }
 
     static notifyTutorialStateChanged(): void {
+        const hasLevel = !!(FrameSDK.Panel && cc.isValid(FrameSDK.Panel) && FrameSDK.Panel.children.some((child) => child && cc.isValid(child) && child.name === "RDM_Level"));
+        const hasCharity = !!(FrameSDK.Panel && cc.isValid(FrameSDK.Panel) && FrameSDK.Panel.children.some((child) => child && cc.isValid(child) && child.name === "RDM_Charity"));
+        if (!hasLevel && !FrameSDK._popupOpeningFlags.has("RDM_Level")) {
+            FrameSDK._manualYellowOpenLocked = false;
+        }
+        if (!hasCharity && !FrameSDK._popupOpeningFlags.has("RDM_Charity")) {
+            FrameSDK._manualCharityOpenLocked = false;
+        }
         FrameSDK._scheduleTutorialFlush();
     }
 

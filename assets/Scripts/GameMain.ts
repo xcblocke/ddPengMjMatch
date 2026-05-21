@@ -670,7 +670,7 @@ export default class GameMain extends cc.Component {
     }
     this._rewardAbPopupPending = true;
     this.rewardAbMergeCount = 0;
-    this.scheduleOnce(this._onRewardAbMergePopup, 0.5);
+    this.scheduleOnce(this._onRewardAbMergePopup, 1.1);
   }
 
   submitOperateInfo(e) {
