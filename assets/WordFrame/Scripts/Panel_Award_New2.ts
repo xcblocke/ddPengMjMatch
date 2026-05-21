@@ -68,20 +68,29 @@ export default class Panel_Award_New2 extends cc.Component {
     }
 
     playNewCoin() {
-        // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_reward", "guide_button");
-
-
         FrameSDK.logGameEvent('sdymjmatch_report_new', {
             object_action: 'show',
             object_name: 'new_5',
         }, true);
 
-        FrameSDK.addCoin(FrameData.FRAME_CONF.OutputConfig.new, 0, 0, () => {
-            Frame.ins.setGuideShow(true);
-        });
+        const coinNum = FrameData.FRAME_CONF.OutputConfig.new;
+        const flowDoneCB = this.viewData && this.viewData.closeCB;
+        if (this.viewData) {
+            this.viewData.closeCB = null;
+        }
 
-        this.onTouchCloseTips();
+        const runCongratsThenFly = () => {
+            FrameSDK.addCoin(coinNum, 0, 0, () => {
+                Frame.ins.setGuideShow(true);
+                flowDoneCB && flowDoneCB();
+            });
+        };
 
+        if (Date.now() - this.hideTime <= 300) {
+            return;
+        }
+        this.hideTime = Date.now();
+        FrameSDK.closeEffect(this, runCongratsThenFly);
     }
 
     hideTime = 0;

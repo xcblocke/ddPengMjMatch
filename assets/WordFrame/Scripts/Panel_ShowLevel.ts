@@ -14,9 +14,11 @@ export default class Panel_ShowLevel extends cc.Component {
     bgNode: cc.Node = null;
 
 
+
     viewData: { level?: number, closeCB?: () => void } = null;
     black_sprite: cc.Sprite = null;
     private _closed = false;
+
 
     private finishClose() {
         if (this._closed) return;

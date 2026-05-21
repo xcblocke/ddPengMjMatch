@@ -155,17 +155,23 @@ export default class newHand extends cc.Component {
     }
 
     onTouchGo() {
-        // this.frameData.logLiftEvent(`game_life_key_node`, { "step": 'guide_end' });
-        // this.frameData.sdyEvent(345, "1");
-        
-        // this.frameData.earlierStageEvent("guide_reward", "guide_button");
-
         this.frameData.reportEventCall('n3');
         this.frameData.reportEventCall('n4');
-        cc.sys.localStorage.setItem("newHand", "1");
-       
+
         let FrameSDK = (<any>cc.js.getClassByName("FrameSDK"));
-        FrameSDK?.openWindow("Panel_Award_New2");
+        const LoadWordCls = (<any>cc.js.getClassByName("LoadWord"));
+        const isFirstEntry =
+            !cc.sys.localStorage.getItem("newHand") &&
+            FrameSDK?.frameData?.gameData?.isFlag;
+
+        if (isFirstEntry && LoadWordCls?.instance) {
+            FrameSDK?.openWindow("Panel_Award_New2", {
+                closeCB: () => LoadWordCls.instance.completeFirstEntryAndStartGame()
+            });
+        } else {
+            cc.sys.localStorage.setItem("newHand", "1");
+            FrameSDK?.openWindow("Panel_Award_New2");
+        }
         this.closeEffect(this.root2, () => {
             this.frameData.showGameGuide();
             this.node.destroy();

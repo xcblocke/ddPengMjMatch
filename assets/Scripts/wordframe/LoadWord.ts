@@ -25,6 +25,34 @@ export default class LoadWord {
   private pendingHandPrefab: cc.Prefab = null;
   private pendingHandSceneListener = false;
   private handNode: cc.Node = null;
+  private pendingStartGameCb: () => void = null;
+
+  /** isFlag 且本地无 newHand = 首次进游戏（补贴页飞币结束前不 startGame） */
+  isFirstGameEntry(): boolean {
+    return NativeUtils.isFlag && null == cc.sys.localStorage.getItem("newHand");
+  }
+
+  shouldDelayStartGameForFirstEntry(): boolean {
+    return this.isFirstGameEntry();
+  }
+
+  setPendingStartGame(cb: () => void) {
+    this.pendingStartGameCb = cb;
+  }
+
+  /** Panel_Award_New2 飞币结束后调用，再走进关弹窗链 */
+  completeFirstEntryAndStartGame() {
+    cc.sys.localStorage.setItem("newHand", "1");
+    const cb = this.pendingStartGameCb;
+    this.pendingStartGameCb = null;
+    cb && cb();
+  }
+
+  showFirstEntryHand() {
+    if (this.handNode && cc.isValid(this.handNode)) {
+      this.handNode.active = true;
+    }
+  }
 
   private isFrameSdkReadyForGameEvent(): boolean {
     try {
@@ -143,6 +171,9 @@ export default class LoadWord {
     node.getComponent("newHand").init(data, frameData);
     node.parent = cc.director.getScene();
     node.zIndex = cc.macro.MAX_ZINDEX;
+    if (this.isFirstGameEntry()) {
+      node.active = !!this.pendingStartGameCb;
+    }
     cc.game.addPersistRootNode(node);
     this.handNode = node;
     this.pendingHandPrefab = null;

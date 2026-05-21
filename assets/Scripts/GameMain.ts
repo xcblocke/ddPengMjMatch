@@ -190,7 +190,12 @@ export default class GameMain extends cc.Component {
         // this.startGame(false, true);
       } else if (event.animation.name === "kai") {
         this.ruchangAni.node.active = false;
-        this.startGame(false, true);
+        if (LoadWord.instance.shouldDelayStartGameForFirstEntry()) {
+          LoadWord.instance.setPendingStartGame(() => this.startGame(false, true));
+          LoadWord.instance.showFirstEntryHand();
+        } else {
+          this.startGame(false, true);
+        }
       } 
     });
   }

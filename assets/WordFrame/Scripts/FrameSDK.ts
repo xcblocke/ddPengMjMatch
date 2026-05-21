@@ -1015,15 +1015,26 @@ export class FrameSDK {
         return passLevel + 1 >= need;
     }
 
+    /** 关卡横幅弹出前等待，避免与上一弹窗/飞币动画衔接太紧 */
+    static LEVEL_BANNER_OPEN_DELAY_MS = 200;
+
     /** 关卡开始横幅（Panel_ShowLevel 预制体） */
     static showLevelStartBanner(callback?: () => void, level?: number): void {
         const lv = level != null && !isNaN(Number(level))
             ? Math.floor(Number(level))
             : FrameSDK.frameData.gameData.passLevel + 1;
-        FrameSDK.openWindow("Panel_ShowLevel", {
-            level: lv,
-            closeCB: callback
-        });
+        const open = () => {
+            FrameSDK.openWindow("Panel_ShowLevel", {
+                level: lv,
+                closeCB: callback
+            });
+        };
+        const delay = FrameSDK.LEVEL_BANNER_OPEN_DELAY_MS;
+        if (delay > 0) {
+            setTimeout(open, delay);
+        } else {
+            open();
+        }
     }
 
     static openGradeNum: number = 0;
