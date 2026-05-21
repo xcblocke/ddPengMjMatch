@@ -153,7 +153,7 @@ export class FrameSDK {
         FrameData.configs = data;
         console.log("data。。。。。。。。...........", data);
         console.log("data。。。。。。。。...........112", !FrameSDK.frameData.gameData.noProfitAd);
-        let confName = !FrameSDK.frameData.gameData.noProfitAd ? "agility" : "partyplay"
+        let confName = !FrameSDK.frameData.gameData.noProfitAd ? "basicConfig" : "partyplay"
         let LINK_CONF = data?.[confName] || {};
 
         for (let key in LINK_CONF.SDK_CONF) {

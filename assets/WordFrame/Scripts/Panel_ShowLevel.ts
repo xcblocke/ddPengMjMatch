@@ -30,7 +30,7 @@ export default class Panel_ShowLevel extends cc.Component {
 
     protected onLoad(): void {
         let x = cc.winSize.width * 0.5 + this.bgNode.width * 0.5;
-        this.bgNode.x = x;
+        this.bgNode.x = x + 300;
 
         const level = this.viewData?.level != null
             ? Math.floor(Number(this.viewData.level))
@@ -52,9 +52,9 @@ export default class Panel_ShowLevel extends cc.Component {
 
         FrameSDK.playEffect("rewardshow");
 
-        cc.tween(this.bgNode).to(0.7, {x: 0}, {
+        cc.tween(this.bgNode).to(0.8, {x: 0}, {
             easing: "backOut"
-        }).delay(1).to(0.7, {x: -x}, {
+        }).delay(1).to(0.8, {x: -x - 300}, {
             easing: "backIn"
         }).call(() => {
             this.dismissPanel();

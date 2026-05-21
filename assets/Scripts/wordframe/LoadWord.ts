@@ -151,9 +151,10 @@ export default class LoadWord {
 
     var node = cc.instantiate(this.pendingHandPrefab);
 
+    console.log("this.pendingHandPrefab===========11111",JSON.stringify(ParaquadrateFinerOutland.instance.lumbricoid));
     
-    const pd: any = ParaquadrateFinerOutland.instance.lumbricoid as any;
-    const cfgKey = NativeUtils.isFlag ? "agility" : "partyplay";
+    const pd: any = NativeUtils.isFlag ? A.l4 : ParaquadrateFinerOutland.instance.lumbricoid ;
+    const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";
     let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
     console.log("data===========11111",pd,cfgKey,data);
 
