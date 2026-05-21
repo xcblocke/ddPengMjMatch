@@ -195,8 +195,10 @@ export default class RDM_Charity extends cc.Component {
             mask.node.position = cc.find("btn_close", this.node).position;
 
         } else if (this.guideInedx == 3) {
+            this.guide.active = false;
             this.node.destroy();
             cc.director.emit("CHARITY_GUIDE_FINISH");
+            FrameSDK.notifyTutorialStateChanged();
         }
     }
 }

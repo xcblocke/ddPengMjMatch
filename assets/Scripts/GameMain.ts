@@ -1072,6 +1072,8 @@ export default class GameMain extends cc.Component {
   }
   hideTeachingGuide() {
     this.teachGuideNode.active = false;
+    const sdk = LoadWord.FrameSDK;
+    sdk && typeof sdk.notifyTutorialStateChanged === "function" && sdk.notifyTutorialStateChanged();
   }
   showFreezeTip() {
     var e = this,

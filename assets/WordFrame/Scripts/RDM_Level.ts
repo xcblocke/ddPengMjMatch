@@ -95,6 +95,7 @@ export default class RDM_Level extends cc.Component {
         this.unscheduleAllCallbacks();
         this.clearDibuRollTweens();
         cc.director.removeAll(this);
+        FrameSDK.notifyTutorialStateChanged();
     }
 
     updateUI() {

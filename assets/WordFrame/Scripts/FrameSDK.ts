@@ -1,4 +1,5 @@
 import { logAd } from "../../Scripts/common/AdLog";
+import GlobalApp from "../../Scripts/common/GlobalApp";
 import Panel_Clock from "../clockView/Panel_Clock";
 import Frame from "./Frame";
 import { FrameData } from "./FrameData";
@@ -61,6 +62,16 @@ export class FrameSDK {
     private static _settlementCoinFlyPending = 0;
     private static _afterSettlementCoinFlyQueue: Array<() => void> = [];
     private static _settlementPhase = false;
+    /** 教程进行中延迟的弹窗任务 */
+    private static _afterTutorialIdleQueue: Array<() => void> = [];
+    private static _tutorialFlushTimer: any = null;
+    private static _tutorialFlushing = false;
+    /** 教程进行中也允许打开的弹窗（新手补贴页等） */
+    private static readonly TUTORIAL_EXEMPT_WINDOWS = new Set([
+        "Panel_Guide",
+        "Panel_Award_New2",
+        "Panel_Award_New",
+    ]);
 
     static init(frameData, configs) {
         console.log("init=========== 11111", JSON.stringify(frameData));
@@ -80,7 +91,9 @@ export class FrameSDK {
         FrameSDK.onlineTimeUpdate();
         FrameSDK.resetNextData();
         FrameSDK.updataTimeQueueUp();
-        cc.director.on("addCoin_A", FrameSDK.addCoin_A, FrameSDK)
+        cc.director.on("addCoin_A", FrameSDK.addCoin_A, FrameSDK);
+        cc.director.on("NEW_HAND_FINISH", FrameSDK.notifyTutorialStateChanged, FrameSDK);
+        cc.director.on("CHARITY_GUIDE_FINISH", FrameSDK.notifyTutorialStateChanged, FrameSDK);
 
     }
 
@@ -867,37 +880,45 @@ export class FrameSDK {
                 node.getComponent(RDM_Level).viewData = vd;
             });
         };
-        if (autoChain && FrameSDK.isSettlementCoinFlyPending()) {
-            FrameSDK.runAfterSettlementCoinFly(open);
-            return;
-        }
-        open();
+        const run = () => {
+            if (autoChain && FrameSDK.isSettlementCoinFlyPending()) {
+                FrameSDK.runAfterSettlementCoinFly(open);
+                return;
+            }
+            open();
+        };
+        FrameSDK.runAfterTutorialIdle(run);
     }
 
     static openPanel_Charity() {
-        FrameSDK.loadPrefab("RDM_Charity", prefab => {
-            let node: cc.Node = cc.instantiate(prefab);
-            node.parent = FrameSDK.Panel;
+        FrameSDK.runAfterTutorialIdle(() => {
+            FrameSDK.loadPrefab("RDM_Charity", prefab => {
+                let node: cc.Node = cc.instantiate(prefab);
+                node.parent = FrameSDK.Panel;
+            });
         });
     }
 
     static currLevel: number = 0;
 
     static openABAward(call?: Function) {
-        if (FrameSDK.isSettlementPhase()) {
-            call && call();
-            return;
-        }
-        if (FrameSDK.frameData.gameData.passLevel + 1 < FrameData.FRAME_CONF.AbPop) {
-            call && call();
-            return;
-        }
-        FrameData.saveData.preAwardType = (FrameData.saveData.preAwardType + 1) % 2;
-        FrameSDK.openWindow("Panel_Award_" + (FrameData.saveData.preAwardType === 1 ? "3" : "1"), {
-            closeCB: () => {
+        const run = () => {
+            if (FrameSDK.isSettlementPhase()) {
                 call && call();
+                return;
             }
-        });
+            if (FrameSDK.frameData.gameData.passLevel + 1 < FrameData.FRAME_CONF.AbPop) {
+                call && call();
+                return;
+            }
+            FrameData.saveData.preAwardType = (FrameData.saveData.preAwardType + 1) % 2;
+            FrameSDK.openWindow("Panel_Award_" + (FrameData.saveData.preAwardType === 1 ? "3" : "1"), {
+                closeCB: () => {
+                    call && call();
+                }
+            });
+        };
+        FrameSDK.runAfterTutorialIdle(run);
     }
 
     static openLevelAward(externalNode?: cc.Node, unlockCountUpdateFunc?: (unlockCount: number) => any, superExternalNode?: cc.Node, param?: any, callback?: (type: "home" | "continue") => any): void {
@@ -928,11 +949,18 @@ export class FrameSDK {
     }
 
     static openWindow(name: string, data: any = {}, parent?: cc.Node) {
-        FrameSDK.loadPrefab(name, (prefab) => {
-            let node: cc.Node = cc.instantiate(prefab);
-            node.getComponent(name).viewData = data;
-            node.parent = parent || FrameSDK.Panel;
-        });
+        const open = () => {
+            FrameSDK.loadPrefab(name, (prefab) => {
+                let node: cc.Node = cc.instantiate(prefab);
+                node.getComponent(name).viewData = data;
+                node.parent = parent || FrameSDK.Panel;
+            });
+        };
+        if (!FrameSDK.isTutorialExemptWindow(name) && FrameSDK.isTutorialActive()) {
+            FrameSDK.runAfterTutorialIdle(open);
+            return;
+        }
+        open();
     }
 
     /** 仅 autoChain 为 true 时执行 closeCB（手动按钮打开的弹窗勿设 autoChain） */
@@ -989,6 +1017,108 @@ export class FrameSDK {
         fn();
     }
 
+    static isTutorialExemptWindow(name: string): boolean {
+        return FrameSDK.TUTORIAL_EXEMPT_WINDOWS.has(name);
+    }
+
+    /** Frame 提现引导 / RDM 内引导 / 局内教学 / 新手补贴页 等是否进行中 */
+    static isTutorialActive(): boolean {
+        if (Frame.ins) {
+            if (Frame.ins.guide && Frame.ins.guide.active) {
+                return true;
+            }
+            if (Frame.ins.hand && Frame.ins.hand.active) {
+                return true;
+            }
+            if (Frame.ins.guide2 && Frame.ins.guide2.active) {
+                return true;
+            }
+            if (Frame.ins.hand2 && Frame.ins.hand2.active) {
+                return true;
+            }
+        }
+        const LW: any = cc.js.getClassByName("LoadWord");
+        const handNode = LW && LW.instance && LW.instance.handNode;
+        if (handNode && cc.isValid(handNode) && handNode.activeInHierarchy) {
+            return true;
+        }
+        const gm = GlobalApp && GlobalApp.GameMain;
+        if (gm && gm.teachGuideNode && cc.isValid(gm.teachGuideNode) && gm.teachGuideNode.active) {
+            return true;
+        }
+        if (!FrameSDK.Panel || !cc.isValid(FrameSDK.Panel)) {
+            return false;
+        }
+        for (let i = 0; i < FrameSDK.Panel.children.length; i++) {
+            const child = FrameSDK.Panel.children[i];
+            if (!child || !cc.isValid(child) || !child.activeInHierarchy) {
+                continue;
+            }
+            if (child.name === "Panel_Guide") {
+                return true;
+            }
+            if (child.name === "RDM_Level") {
+                const comp: any = child.getComponent("RDM_Level");
+                if (comp && comp.guide && comp.guide.active) {
+                    return true;
+                }
+            }
+            if (child.name === "RDM_Charity") {
+                const comp: any = child.getComponent("RDM_Charity");
+                if (comp && comp.guide && comp.guide.active) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** 教程结束后再执行弹窗逻辑（与结算飞币队列独立） */
+    static runAfterTutorialIdle(fn: () => void): void {
+        if (!fn) {
+            return;
+        }
+        if (!FrameSDK.isTutorialActive()) {
+            fn();
+            return;
+        }
+        FrameSDK._afterTutorialIdleQueue.push(fn);
+        FrameSDK._scheduleTutorialFlush();
+    }
+
+    static notifyTutorialStateChanged(): void {
+        FrameSDK._scheduleTutorialFlush();
+    }
+
+    private static _scheduleTutorialFlush(): void {
+        if (FrameSDK._tutorialFlushTimer != null) {
+            return;
+        }
+        FrameSDK._tutorialFlushTimer = setTimeout(() => {
+            FrameSDK._tutorialFlushTimer = null;
+            FrameSDK._flushTutorialQueue();
+        }, 0);
+    }
+
+    private static _flushTutorialQueue(): void {
+        if (FrameSDK.isTutorialActive()) {
+            return;
+        }
+        if (FrameSDK._tutorialFlushing || FrameSDK._afterTutorialIdleQueue.length === 0) {
+            return;
+        }
+        FrameSDK._tutorialFlushing = true;
+        const fn = FrameSDK._afterTutorialIdleQueue.shift();
+        try {
+            fn && fn();
+        } finally {
+            FrameSDK._tutorialFlushing = false;
+            if (FrameSDK._afterTutorialIdleQueue.length > 0) {
+                FrameSDK._scheduleTutorialFlush();
+            }
+        }
+    }
+
     /** 打开结算面板前关闭会与 CONGRATES/飞币 叠层的弹窗 */
     static dismissSettlementBlockingPopups(): void {
         if (!FrameSDK.Panel || !cc.isValid(FrameSDK.Panel)) {
@@ -1027,6 +1157,10 @@ export class FrameSDK {
 
     /** 关卡开始横幅（Panel_ShowLevel 预制体） */
     static showLevelStartBanner(callback?: () => void, level?: number): void {
+        FrameSDK.runAfterTutorialIdle(() => FrameSDK._showLevelStartBannerImpl(callback, level));
+    }
+
+    private static _showLevelStartBannerImpl(callback?: () => void, level?: number): void {
         const lv = level != null && !isNaN(Number(level))
             ? Math.floor(Number(level))
             : FrameSDK.frameData.gameData.passLevel + 1;
@@ -1076,7 +1210,9 @@ export class FrameSDK {
     /**通关后调用 关卡数值增加后（须在结算飞币结束后）*/
     static checkPopUp(levelPassed: boolean, callback?: () => any): void {
         FrameSDK.runAfterSettlementCoinFly(() => {
-            FrameSDK._checkPopUpImpl(levelPassed, callback);
+            FrameSDK.runAfterTutorialIdle(() => {
+                FrameSDK._checkPopUpImpl(levelPassed, callback);
+            });
         });
     }
 
@@ -1178,6 +1314,12 @@ export class FrameSDK {
      * @param callback 回调（关卡在回调后才开始游戏）
      */
     static beforeGameLevelStart(levelA: number, levelB?: number, levelC?: any, callback?: () => any): void {
+        FrameSDK.runAfterTutorialIdle(() => {
+            FrameSDK._beforeGameLevelStartImpl(levelA, levelB, levelC, callback);
+        });
+    }
+
+    private static _beforeGameLevelStartImpl(levelA: number, levelB?: number, levelC?: any, callback?: () => any): void {
         const levels: number[] = [levelA <=1?1:levelA-1];
         if (levelB !== null && levelB !== undefined) {
             levels.push(levelB);

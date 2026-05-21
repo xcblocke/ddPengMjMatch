@@ -78,17 +78,21 @@ export default class CashFishCredit extends cc.Component {
             return;
         }
         if (this.typs == "yellowCoin") {
-            FrameSDK.openPanel_Yellow();
             if (FrameData.saveData.guideInedx == 0) {
                 FrameData.saveData.guideInedx++;
                 Frame.ins.setGuideShow(false);
+            } else {
+                FrameSDK.notifyTutorialStateChanged();
             }
+            FrameSDK.openPanel_Yellow();
         } else {
-            FrameSDK.openPanel_Charity();
             if (FrameData.saveData.charityGuideIndex == 0) {
                 FrameData.saveData.charityGuideIndex++;
                 Frame.ins.setGuide2Show(false);
+            } else {
+                FrameSDK.notifyTutorialStateChanged();
             }
+            FrameSDK.openPanel_Charity();
         }
     }
 

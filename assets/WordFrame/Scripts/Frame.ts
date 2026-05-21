@@ -118,6 +118,8 @@ export default class Frame extends cc.Component {
                 object_action: "show",
                 object_name: "new_6"
             }, true);
+        } else {
+            FrameSDK.notifyTutorialStateChanged();
         }
     }
 
@@ -125,6 +127,8 @@ export default class Frame extends cc.Component {
         this.guide2.active = this.hand2.active = isShow;
         if (isShow) {
             cc.director.emit("UNLOCK_CHARITY");
+        } else {
+            FrameSDK.notifyTutorialStateChanged();
         }
     }
 

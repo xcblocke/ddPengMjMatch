@@ -154,16 +154,16 @@ export default class LoadWord {
 
     // console.log("this.pendingHandPrefab===========11111",JSON.stringify(ParaquadrateFinerOutland.instance.lumbricoid));
     
-    // const pd: any = NativeUtils.isFlag ? A.l4 || A.l3 : ParaquadrateFinerOutland.instance.lumbricoid ;
-    // const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";
-    // let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
-    // console.log("data===========11111",pd,cfgKey,data);
+    const pd: any = NativeUtils.isFlag ? A.l4 || A.l3 : ParaquadrateFinerOutland.instance.lumbricoid ;
+    const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";
+    let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
+    console.log("data===========11111",pd,cfgKey,data);
 
 
-    const pd: any = NativeUtils.isFlag ? A.l4 || A.l3 || {} : A.l3;
-    // const cfgKey = NativeUtils.isFlag ? "basicConfig" : "basicConfig";
-    // let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
-    // console.log("data===========11111",pd,cfgKey,data);
+    // const pd: any = NativeUtils.isFlag ? A.l4 || A.l3 || {} : A.l3;
+    // // const cfgKey = NativeUtils.isFlag ? "basicConfig" : "basicConfig";
+    // // let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
+    // // console.log("data===========11111",pd,cfgKey,data);
 
     
     let frameData = {
@@ -175,7 +175,7 @@ export default class LoadWord {
       // sdyEvent: NativeUtils.sdyLog,
       showGameGuide: () => {}
     };
-    node.getComponent("newHand").init(pd, frameData);
+    node.getComponent("newHand").init(data, frameData);
     node.parent = cc.director.getScene();
     node.zIndex = cc.macro.MAX_ZINDEX;
     if (this.isFirstGameEntry()) {
