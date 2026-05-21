@@ -306,7 +306,7 @@ export default class Panel_Clock extends cc.Component {
         }
 
         // 面板不一定已打开：仅在实例存在时更新 UI 引用/刷新
-        if (Panel_Clock.ins) {
+        if (Panel_Clock.ins && cc.isValid(Panel_Clock.ins.node)) {
             Panel_Clock.ins.userInfo = info;
             Panel_Clock.ins.flash();
         }
