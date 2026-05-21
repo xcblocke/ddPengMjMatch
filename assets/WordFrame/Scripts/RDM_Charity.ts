@@ -90,6 +90,7 @@ export default class RDM_Charity extends cc.Component {
     }
     protected onDestroy(): void {
         cc.director.removeAll(this);
+        FrameSDK.notifyTutorialStateChanged();
     }
 
     updateUI() {

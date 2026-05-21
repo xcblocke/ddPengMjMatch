@@ -135,7 +135,14 @@ export default class Frame extends cc.Component {
     @CLICKLOCK()
     onBtnEvent(target, data: string) {
         if (data == "1") {
-            FrameSDK.openPanel_Yellow();
+            // charity 引导手势点击后，需要先关闭引导，再弹 RDM_Charity；
+            // 常规点击该区域仍然打开 RDM_Level（提现页）。
+            if (this.guide2.active || this.hand2.active) {
+                this.setGuide2Show(false);
+                FrameSDK.openPanel_Charity();
+            } else {
+                FrameSDK.openPanel_Yellow();
+            }
         }
     }
 

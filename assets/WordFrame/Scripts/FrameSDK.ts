@@ -71,6 +71,8 @@ export class FrameSDK {
         "Panel_Guide",
         "Panel_Award_New2",
         "Panel_Award_New",
+        "Panel_Account",
+        "Panel_Tips",
     ]);
 
     static init(frameData, configs) {
@@ -1058,16 +1060,10 @@ export class FrameSDK {
                 return true;
             }
             if (child.name === "RDM_Level") {
-                const comp: any = child.getComponent("RDM_Level");
-                if (comp && comp.guide && comp.guide.active) {
-                    return true;
-                }
+                return true;
             }
             if (child.name === "RDM_Charity") {
-                const comp: any = child.getComponent("RDM_Charity");
-                if (comp && comp.guide && comp.guide.active) {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
