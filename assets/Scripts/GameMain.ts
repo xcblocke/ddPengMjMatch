@@ -1087,10 +1087,16 @@ export default class GameMain extends cc.Component {
 
   /** Panel_Award_6 领奖/飞币结束后：解锁弹窗链 → 下一关 Level 横幅 → 开局 */
   onPassSettlementComplete() {
+    const sdk = LoadWord.FrameSDK;
+    if (sdk && typeof sdk.runAfterSettlementCoinFly === "function" && sdk.isSettlementCoinFlyPending()) {
+      sdk.runAfterSettlementCoinFly(() => this.onPassSettlementComplete());
+      return;
+    }
     let done = false;
     const finish = () => {
       if (done) return;
       done = true;
+      sdk && sdk.setSettlementPhase(false);
       gameData.skipNextPreLevelPopups = true;
       EventMgr.trigger(GameEventType.START_GAME);
     };
@@ -1113,6 +1119,11 @@ export default class GameMain extends cc.Component {
     // }, 2);
     await EngineUtil.sleep(500);
     this.prepareMahjongPassSettlement();
+    const sdk = LoadWord.FrameSDK;
+    if (sdk) {
+      sdk.setSettlementPhase(true);
+      sdk.dismissSettlementBlockingPopups();
+    }
     const rawCb = e && e.cb;
     LoadWord.FrameSDK.openWindow("Panel_Award_6", {
       closeCB: () => {

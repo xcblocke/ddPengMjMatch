@@ -57,6 +57,10 @@ export class FrameSDK {
     private static soundList: cc.AudioClip[] = [];
     private static _lastVideoEndTime: number = 0;
     private static bundleName = "WordFrame";
+    /** 结算领奖飞币进行中（>0 时延迟主动弹窗链） */
+    private static _settlementCoinFlyPending = 0;
+    private static _afterSettlementCoinFlyQueue: Array<() => void> = [];
+    private static _settlementPhase = false;
 
     static init(frameData, configs) {
         console.log("init=========== 11111", JSON.stringify(frameData));
@@ -850,17 +854,24 @@ export class FrameSDK {
     }
 
     static openPanel_Yellow(call?: Function, autoChain = false) {
-        FrameSDK.loadPrefab("RDM_Level", prefab => {
-            let node: cc.Node = cc.instantiate(prefab);
-            node.parent = FrameSDK.Panel;
-            const vd: FramePopupViewData = {
-                closeCB: () => {
-                    call && call();
-                },
-                autoChain: autoChain && !!call
-            };
-            node.getComponent(RDM_Level).viewData = vd;
-        });
+        const open = () => {
+            FrameSDK.loadPrefab("RDM_Level", prefab => {
+                let node: cc.Node = cc.instantiate(prefab);
+                node.parent = FrameSDK.Panel;
+                const vd: FramePopupViewData = {
+                    closeCB: () => {
+                        call && call();
+                    },
+                    autoChain: autoChain && !!call
+                };
+                node.getComponent(RDM_Level).viewData = vd;
+            });
+        };
+        if (autoChain && FrameSDK.isSettlementCoinFlyPending()) {
+            FrameSDK.runAfterSettlementCoinFly(open);
+            return;
+        }
+        open();
     }
 
     static openPanel_Charity() {
@@ -937,6 +948,63 @@ export class FrameSDK {
         return { closeCB, autoChain: true };
     }
 
+    static isSettlementPhase(): boolean {
+        return FrameSDK._settlementPhase;
+    }
+
+    static isSettlementCoinFlyPending(): boolean {
+        return FrameSDK._settlementCoinFlyPending > 0;
+    }
+
+    static setSettlementPhase(active: boolean): void {
+        FrameSDK._settlementPhase = active;
+        if (active && Frame.ins) {
+            Frame.ins.setGuideShow(false);
+        }
+    }
+
+    static notifySettlementCoinFlyStart(): void {
+        FrameSDK._settlementCoinFlyPending++;
+    }
+
+    static notifySettlementCoinFlyEnd(): void {
+        FrameSDK._settlementCoinFlyPending = Math.max(0, FrameSDK._settlementCoinFlyPending - 1);
+        if (FrameSDK._settlementCoinFlyPending === 0) {
+            const queue = FrameSDK._afterSettlementCoinFlyQueue.splice(0);
+            queue.forEach((fn) => fn());
+        }
+    }
+
+    /** 结算飞币结束后再执行（主动弹窗链、autoChain 提现页等） */
+    static runAfterSettlementCoinFly(fn: () => void): void {
+        if (FrameSDK._settlementCoinFlyPending > 0) {
+            FrameSDK._afterSettlementCoinFlyQueue.push(fn);
+            return;
+        }
+        fn();
+    }
+
+    /** 打开结算面板前关闭会与 CONGRATES/飞币 叠层的弹窗 */
+    static dismissSettlementBlockingPopups(): void {
+        if (!FrameSDK.Panel || !cc.isValid(FrameSDK.Panel)) {
+            return;
+        }
+        const blockNames = new Set([
+            "RDM_Level",
+            "Panel_CoinTips",
+            "Panel_Activity",
+            "Panel_PreRdm",
+            "Panel_Task",
+            "Panel_DailyClearanceReward",
+        ]);
+        const children = FrameSDK.Panel.children.slice();
+        children.forEach((child) => {
+            if (child && cc.isValid(child) && blockNames.has(child.name)) {
+                child.destroy();
+            }
+        });
+    }
+
     /**
      * 配置「第 N 关解锁」：通关第 N 关后触发（结算时 gameLevel=N，passLevel=N-1）。
      * 统一用 passLevel+1 >= N，勿单独用 passLevel >= N（会晚一关）。
@@ -987,8 +1055,14 @@ export class FrameSDK {
             callback?.();
         }
     }
-    /**通关后调用 关卡数值增加后*/
+    /**通关后调用 关卡数值增加后（须在结算飞币结束后）*/
     static checkPopUp(levelPassed: boolean, callback?: () => any): void {
+        FrameSDK.runAfterSettlementCoinFly(() => {
+            FrameSDK._checkPopUpImpl(levelPassed, callback);
+        });
+    }
+
+    private static _checkPopUpImpl(levelPassed: boolean, callback?: () => any): void {
         new Promise<void>(resolve => {
             if (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.charityLevel) && FrameData.saveData.charityGuideIndex <= 0) {
                 Frame.ins.setGuide2Show(true);
@@ -1047,6 +1121,21 @@ export class FrameSDK {
                 } else {
                     resolve();
                 }
+            }))
+            .then(() => new Promise<void>(resolve => {
+                const onceKey = "partyplay_first_rdm_after_lv1";
+                const once = FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord[onceKey];
+                if (
+                    levelPassed &&
+                    !FrameSDK.frameData.gameData.isFlag &&
+                    FrameSDK.frameData.gameData.passLevel === 0 &&
+                    !once
+                ) {
+                    FrameData.saveData.onceEventRecord[onceKey] = true;
+                    FrameSDK.openPanel_Yellow(resolve, true);
+                    return;
+                }
+                resolve();
             }))
             .then(() => callback?.());
     }
@@ -1269,7 +1358,13 @@ export class FrameSDK {
         // FrameSDK.frameData.sdkFuc.logCommonEvent(eventName, storeData);
     }
 
-    static addCoin(num: number, charityNum: number, donateTime: number, call?: () => void,opts?: { excludePiggy?: boolean }) {
+    static addCoin(
+        num: number,
+        charityNum: number,
+        donateTime: number,
+        call?: () => void,
+        opts?: { excludePiggy?: boolean; fromSettlement?: boolean; skipCoinTipsPanel?: boolean }
+    ) {
         cc.director.emit("yellowCoin", num, charityNum, donateTime, call, opts);
     }
 

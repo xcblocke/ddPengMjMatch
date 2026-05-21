@@ -44,7 +44,7 @@ export default class Panel_Award_6 extends cc.Component {
     @property(cc.Node)
     lv_proNode: cc.Node = null;
 
-    viewData: { closeCB: () => void, noInters: boolean } = null;
+    viewData: { closeCB: () => void, noInters?: boolean, mahjongSettlement?: boolean } = null;
 
     adData: {  num: number[]; reward: number;  } = null;
 
@@ -151,7 +151,7 @@ export default class Panel_Award_6 extends cc.Component {
             .call(() => {
                 FrameSDK.addCoin(this.adData.reward, 0, 0, () => {
                     FrameSDK.openRating(doneCb);
-                });
+                }, { fromSettlement: true });
                 FrameSDK.frameData.sdkFuc.ppEvent("freeCollected");
                 this["noTouch"].node.active = false;
                 this.close();
@@ -178,7 +178,7 @@ export default class Panel_Award_6 extends cc.Component {
         const doneCb = this.viewData?.closeCB;
         FrameSDK.addCoin(FrameData.getCoinOutNum("free"), 0, 0, () => {
             FrameSDK.openRating(doneCb);
-        });
+        }, { fromSettlement: true });
         this["noTouch"].node.active = false;
         this.close();
     }

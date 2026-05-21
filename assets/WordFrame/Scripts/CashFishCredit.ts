@@ -74,6 +74,9 @@ export default class CashFishCredit extends cc.Component {
 
     openRedeem() {
         if(!this.isClick)return;
+        if (FrameSDK.isSettlementPhase() || FrameSDK.isSettlementCoinFlyPending()) {
+            return;
+        }
         if (this.typs == "yellowCoin") {
             FrameSDK.openPanel_Yellow();
             if (FrameData.saveData.guideInedx == 0) {
