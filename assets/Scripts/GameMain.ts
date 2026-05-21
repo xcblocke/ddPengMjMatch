@@ -703,7 +703,6 @@ export default class GameMain extends cc.Component {
       var v = function v(e) {
         if (e.is_tg) {
           gameData.gameState = GameState.gameResult;
-          t.startGame(false);
         }
         if (gameData.gameLevel > 2 && !PlayerDataSys.isOppoReviewer() && !gameData.isOpenDemo) {
           gameData.linkTimes++;
@@ -894,10 +893,7 @@ export default class GameMain extends cc.Component {
       var n = {
         type: VideoType.Pass,
         is_force: o,
-        cb: function () {
-          gameData.skipNextPreLevelPopups = true;
-          EventMgr.trigger(GameEventType.START_GAME);
-        }
+        cb: null
       };
       if (gameData.isOpenDemo) EventMgr.trigger(GameEventType.START_GAME);else {
         EventMgr.trigger(GameEventType.PASS_LEVEL_EFFECT);
@@ -1085,10 +1081,29 @@ export default class GameMain extends cc.Component {
         novice_status: 4
       });
     }
-    GameUtils.checkPopUp(true, () => {});
     AudioManager.getInstance().playMusic("level_pass");
     AudioManager.getInstance().playMusic("yanhua");
   }
+
+  /** Panel_Award_6 领奖/飞币结束后：解锁弹窗链 → 下一关 Level 横幅 → 开局 */
+  onPassSettlementComplete() {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      gameData.skipNextPreLevelPopups = true;
+      EventMgr.trigger(GameEventType.START_GAME);
+    };
+    const timer = setTimeout(() => {
+      console.warn("[GameMain] checkPopUp timeout after settlement, force start next level");
+      finish();
+    }, 12000);
+    GameUtils.checkPopUp(true, () => {
+      clearTimeout(timer);
+      finish();
+    });
+  }
+
   async showSettlementPage(e) {
     // var t;
     // (t = cc.instantiate(this.passLevelEffectPrefab)).parent = this.node;
@@ -1098,8 +1113,12 @@ export default class GameMain extends cc.Component {
     // }, 2);
     await EngineUtil.sleep(500);
     this.prepareMahjongPassSettlement();
+    const rawCb = e && e.cb;
     LoadWord.FrameSDK.openWindow("Panel_Award_6", {
-      closeCB: e.cb,
+      closeCB: () => {
+        rawCb && rawCb();
+        this.onPassSettlementComplete();
+      },
       mahjongSettlement: true
     });
     return;

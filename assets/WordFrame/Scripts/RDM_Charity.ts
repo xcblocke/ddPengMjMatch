@@ -52,7 +52,7 @@ export default class RDM_Charity extends cc.Component {
             FrameData.saveData.charityGuideIndex = 2;
             this.scheduleOnce(() => {
                 this.openGuide();
-            },0.15);
+            },0);
         }
 
         this.scheduleOnce(() => {

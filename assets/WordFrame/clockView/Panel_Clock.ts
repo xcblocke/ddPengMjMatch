@@ -133,20 +133,28 @@ export default class Panel_Clock extends cc.Component {
 
     static ins: Panel_Clock = null;
     static coinTarget: cc.Node = null;
-    viewData: { closeCB: () => void } = null;
+    viewData: { closeCB?: () => void, autoChain?: boolean } = null;
     private _close_target: cc.Node = null;
 
 
-    static openClock(closeCB?: () => void) {
-        if (FrameSDK.frameData.gameData.passLevel >= FrameData.FRAME_CONF.ClockLevel) {
-            Panel_Clock.startPhone(closeCB);
+    static openClock(closeCB?: () => void, autoChain = false) {
+        const passLevel = FrameSDK.frameData.gameData.passLevel;
+        const clockLv = FrameData.FRAME_CONF.ClockLevel;
+        // 与 checkPopUp 一致：刚通关解锁用 passLevel+1，已解锁后用 passLevel
+        const shouldOpen = passLevel + 1 >= clockLv || passLevel >= clockLv;
+        if (shouldOpen) {
+            Panel_Clock.startPhone(closeCB, autoChain);
+        } else {
+            closeCB?.();
         }
-
     }
 
-    static startPhone(closeCB?: () => void) {
+    static startPhone(closeCB?: () => void, autoChain = false) {
+        const vd = closeCB
+            ? { closeCB, autoChain: autoChain && !!closeCB }
+            : { autoChain: false };
         if (FrameData.saveData.ClockUserInfo) {
-            FrameSDK.openWindow("Panel_Clock", { closeCB: closeCB });
+            FrameSDK.openWindow("Panel_Clock", vd);
         } else {
             Panel_Clock.bulidUserData();
             // FrameSDK.openWindow("Panel_ActivityGuide", {
@@ -158,7 +166,7 @@ export default class Panel_Clock extends cc.Component {
             //         FrameSDK.openWindow("Panel_Clock", { closeCB: closeCB });
             //     }
             // });
-            FrameSDK.openWindow("Panel_Clock", { closeCB: closeCB });
+            FrameSDK.openWindow("Panel_Clock", vd);
         }
         cc.director.emit("UPDATA_CLOCK");
     }
@@ -622,7 +630,7 @@ export default class Panel_Clock extends cc.Component {
 
     onTouchClo() {
         this.blockView.active = true;
-        FrameSDK.closeEffect(this, this.viewData.closeCB)
+        FrameSDK.closeEffect(this, () => FrameSDK.invokeAutoChainClose(this.viewData));
     }
 
     /**根据当前的配置信息判定状态 */

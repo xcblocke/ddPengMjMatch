@@ -140,29 +140,23 @@ export default class Panel_Award_6 extends cc.Component {
         // });
 
         FrameSDK.frameData.sdkFuc.ppEvent("freeClaim");
-        let callBack = () => {
-            cc.tween(this.node)
-                .delay(0.2)
-                .call(() => {
-                    // this.ribbonSkeleton.enabled = true;
-                    // this.ribbonSkeleton.setAnimation(0, "caidai", false);
-                    FrameSDK.playEffect("pool_cashdone");
-                })
-                .delay(1)
-                .call(() => {
-                    FrameSDK.addCoin(this.adData.reward, 0,0, ()=>{
-                        FrameSDK.openRating(this.viewData?.closeCB)
-                    });
-                    FrameSDK.frameData.sdkFuc.ppEvent("freeCollected");
-                    this["noTouch"].node.active = false;
-                    this.close();
-                })
-                .start();
-        };
-
+        const doneCb = this.viewData?.closeCB;
         this["noTouch"].node.active = true;
-
-        callBack();
+        cc.tween(this.node)
+            .delay(0.2)
+            .call(() => {
+                FrameSDK.playEffect("pool_cashdone");
+            })
+            .delay(1)
+            .call(() => {
+                FrameSDK.addCoin(this.adData.reward, 0, 0, () => {
+                    FrameSDK.openRating(doneCb);
+                });
+                FrameSDK.frameData.sdkFuc.ppEvent("freeCollected");
+                this["noTouch"].node.active = false;
+                this.close();
+            })
+            .start();
 
     }
 
@@ -181,17 +175,12 @@ export default class Panel_Award_6 extends cc.Component {
         });
         
 
-        // FrameSDK.frameData.sdkFuc.ppEvent(isInters ? "claim" : "freeClaim");
-        let callBack = () => {
-            FrameSDK.addCoin(FrameData.getCoinOutNum("free"), 0, 0, ()=>{
-                FrameSDK.openRating(this.viewData?.closeCB)
-            });
-            // FrameSDK.frameData.sdkFuc.ppEvent(isInters ? "collected" : "freeCollected");
-            this["noTouch"].node.active = false;
-            this.close();
-        };
-
-        callBack();
+        const doneCb = this.viewData?.closeCB;
+        FrameSDK.addCoin(FrameData.getCoinOutNum("free"), 0, 0, () => {
+            FrameSDK.openRating(doneCb);
+        });
+        this["noTouch"].node.active = false;
+        this.close();
     }
 
 

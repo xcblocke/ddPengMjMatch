@@ -56,9 +56,12 @@ export default class Panel_Activity extends cc.Component {
     static coinTarget: cc.Node = null;
     private _close_target: cc.Node = null;
 
-    static startActivity(closeCB?: () => void) {
+    static startActivity(closeCB?: () => void, autoChain = false) {
+        const vd = closeCB
+            ? { closeCB, autoChain: autoChain && !!closeCB }
+            : { autoChain: false };
         if (FrameData.saveData.activity) {
-            FrameSDK.openWindow("Panel_Activity", { closeCB: closeCB });
+            FrameSDK.openWindow("Panel_Activity", vd);
         } else if (FrameSDK.frameData.gameData.passLevel >= FrameData.FRAME_CONF.bankLevel) {
             // FrameSDK.openWindow("Panel_ActivityGuide", {
             //     type: 1,
@@ -69,9 +72,11 @@ export default class Panel_Activity extends cc.Component {
             //         FrameSDK.openWindow("Panel_Activity", { closeCB: closeCB });
             //     }
             // });
-            FrameSDK.openWindow("Panel_Activity", { closeCB: closeCB });
+            FrameSDK.openWindow("Panel_Activity", vd);
         } else {
-            closeCB?.();
+            if (autoChain && closeCB) {
+                closeCB();
+            }
         }
     }
 
@@ -157,8 +162,7 @@ export default class Panel_Activity extends cc.Component {
 
     onDisable() {
         cc.director.emit("UPDATA_ACTIVITY");
-        var e, t;
-        null === (t = (e = this.viewData).closeCB) || void 0 === t || t.call(e);
+        FrameSDK.invokeAutoChainClose(this.viewData);
     }
 
     updateUi() {

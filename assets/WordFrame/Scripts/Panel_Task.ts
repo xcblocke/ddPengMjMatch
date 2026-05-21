@@ -35,7 +35,7 @@ export default class Panel_Task extends cc.Component {
         closeCB?.();
     }
 
-    static startTask(closeCB?: () => void) {
+    static startTask(closeCB?: () => void, autoChain = false) {
         // if (FrameData.saveData.lvAwardinfo) {
         //     FrameSDK.openWindow("Panel_Task", {closeCB: closeCB});
         // } else if (FrameSDK.frameData.gameData.passLevel-1 >= FrameData.FRAME_CONF.taskLevel) {
@@ -59,7 +59,9 @@ export default class Panel_Task extends cc.Component {
         //         }
         //     });
         // }else {
-            closeCB?.();
+            if (autoChain && closeCB) {
+                closeCB();
+            }
         // }
     }
 
@@ -180,8 +182,7 @@ export default class Panel_Task extends cc.Component {
         this.node_content.children.forEach(element => {
             element.active = false;
         });
-        var e, t;
-        null === (t = (e = this.viewData).closeCB) || void 0 === t || t.call(e);
+        FrameSDK.invokeAutoChainClose(this.viewData);
     }
 
 

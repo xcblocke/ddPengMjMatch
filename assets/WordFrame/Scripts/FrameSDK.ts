@@ -22,6 +22,13 @@ type GoodsList = {
     sdk_params: { field: string, name: string, comment?: string }[]
 }
 
+/** WordFrame 弹窗 viewData：autoChain 仅通关结算后自动串联时为 true */
+export type FramePopupViewData = {
+    closeCB?: () => void;
+    autoChain?: boolean;
+    [key: string]: any;
+};
+
 interface IEventLike {
     object_action: string,
     object_name?: string,
@@ -842,15 +849,17 @@ export class FrameSDK {
         }
     }
 
-    static openPanel_Yellow(call?: Function) {
+    static openPanel_Yellow(call?: Function, autoChain = false) {
         FrameSDK.loadPrefab("RDM_Level", prefab => {
             let node: cc.Node = cc.instantiate(prefab);
             node.parent = FrameSDK.Panel;
-            node.getComponent(RDM_Level).viewData = {
+            const vd: FramePopupViewData = {
                 closeCB: () => {
                     call && call();
-                }
+                },
+                autoChain: autoChain && !!call
             };
+            node.getComponent(RDM_Level).viewData = vd;
         });
     }
 
@@ -910,6 +919,24 @@ export class FrameSDK {
         });
     }
 
+    /** 仅 autoChain 为 true 时执行 closeCB（手动按钮打开的弹窗勿设 autoChain） */
+    static invokeAutoChainClose(viewData: FramePopupViewData | null | undefined): void {
+        if (!viewData || !viewData.autoChain || !viewData.closeCB) {
+            return;
+        }
+        const cb = viewData.closeCB;
+        viewData.closeCB = undefined;
+        viewData.autoChain = false;
+        cb();
+    }
+
+    static chainPopupViewData(closeCB?: () => void): FramePopupViewData {
+        if (!closeCB) {
+            return { autoChain: false };
+        }
+        return { closeCB, autoChain: true };
+    }
+
     /** 关卡开始横幅（Panel_ShowLevel 预制体） */
     static showLevelStartBanner(callback?: () => void, level?: number): void {
         const lv = level != null && !isNaN(Number(level))
@@ -954,23 +981,25 @@ export class FrameSDK {
     static checkPopUp(levelPassed: boolean, callback?: () => any): void {
         new Promise<void>(resolve => {
             if (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.frameData.gameData.passLevel + 1 >= FrameData.FRAME_CONF.charityLevel && FrameData.saveData.charityGuideIndex <= 0) {
-                cc.director.once("CHARITY_GUIDE_FINISH", () => resolve());
-                // this.openWindow("Panel_GuideTips", { type: "charity", closeCB: () => Frame.ins.setGuide2Show(true) });
-                Frame.ins.setGuide2Show(true)
+                Frame.ins.setGuide2Show(true);
+                if (FrameData.saveData.charityGuideIndex <= 0) {
+                    FrameData.saveData.charityGuideIndex = 1;
+                }
+                resolve();
             } else {
                 resolve();
             }
         })
             .then(() => new Promise<void>(resolve => {
                 if (FrameData.saveData.activity === null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.bankLevel) {
-                    Panel_Activity.startActivity(resolve);
+                    Panel_Activity.startActivity(resolve, true);
                 } else {
                     resolve();
                 }
             }))
             .then(() => new Promise<void>(resolve => {
                 if (FrameData.saveData.lvAwardinfo == null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.taskLevel) {
-                    Panel_Task.startTask(resolve);
+                    Panel_Task.startTask(resolve, true);
                 } else {
                     resolve();
                 }
@@ -982,7 +1011,7 @@ export class FrameSDK {
                     const once = FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["daily_clearance_unlock"];
                     if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
                         FrameData.saveData.onceEventRecord["daily_clearance_unlock"] = true;
-                        Panel_DailyClearanceReward.start(resolve);
+                        Panel_DailyClearanceReward.start(resolve, true);
                         return;
                     }
                 resolve();
@@ -994,20 +1023,17 @@ export class FrameSDK {
                     const once = FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["pre_rdm_unlock"];
                     if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
                         FrameData.saveData.onceEventRecord["pre_rdm_unlock"] = true;
-                        FrameSDK.openPanel_Yellow(resolve);
-                        // 按 Panel_PreRdm 的 viewData 结构传参
-                        FrameSDK.openWindow("Panel_PreRdm", {
+                        FrameSDK.openPanel_Yellow(resolve, true);
+                        FrameSDK.openWindow("Panel_PreRdm", Object.assign(FrameSDK.chainPopupViewData(resolve), {
                             numStr: FrameSDK.convertCoinToStr(FrameData.credit, true),
-                            closeCB: ()=>{},
-                        });
+                        }));
                         return;
                     }
                 resolve();
             }))
             .then(() => new Promise<void>(resolve => {
-                console.log("FrameSDK.frameData.gameData===========33333",FrameData.FRAME_CONF.ClockLevel,FrameData.FRAME_CONF.bankLevel,FrameData.FRAME_CONF.charityLevel);
                 if (FrameSDK.frameData.gameData.isFlag && FrameData.saveData.ClockUserInfo == null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.ClockLevel) {
-                    Panel_Clock.openClock(resolve);
+                    Panel_Clock.openClock(resolve, true);
                 } else {
                     resolve();
                 }
