@@ -34,6 +34,7 @@ export default class Frame extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
     static ins: Frame = null;
+    private _lastVideoSucTs: number = 0;
 
 
 
@@ -55,6 +56,11 @@ export default class Frame extends cc.Component {
             this.sendLevelMD();
         }, 1000);
         cc.director.on(FrameSDK.frameData.ListenKeys.VIDEO_SUC, () => {
+            const now = Date.now();
+            if (now - this._lastVideoSucTs < 500) {
+                return;
+            }
+            this._lastVideoSucTs = now;
             FrameData.saveData.skipADCount = 0;
             FrameData.saveData.CashVideoCount++;
             FrameSDK.updataVideoQueueUp();

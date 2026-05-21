@@ -224,6 +224,20 @@ export default class Panel_Clock extends cc.Component {
         this.schedule(this.flash, 1);
     }
 
+    /** 同步「今日过关数」：优先用 passLevel - startLevel 实时推导，避免事件漏发导致进度不增长。 */
+    private syncDayLevelTimeByPassLevel() {
+        if (!this.userInfo) { return; }
+        const passLevelRaw = FrameSDK.frameData && FrameSDK.frameData.gameData
+            ? FrameSDK.frameData.gameData.passLevel
+            : 0;
+        const passLevel = Math.max(0, Math.floor(Number(passLevelRaw) || 0));
+        const startLevel = Math.max(0, Math.floor(Number(this.userInfo.startLevel) || 0));
+        const derived = Math.max(0, passLevel - startLevel);
+        if (!Number.isFinite(this.userInfo.dayLevelTime) || this.userInfo.dayLevelTime < derived) {
+            this.userInfo.dayLevelTime = derived;
+        }
+    }
+
     static bulidUserData() {
         if (FrameData.saveData.ClockUserInfo == null) {
             FrameData.saveData.ClockUserInfo = {
@@ -282,9 +296,10 @@ export default class Panel_Clock extends cc.Component {
         if (!FrameData.saveData.ClockUserInfo) { return }
         let info: ClockUserInfo = FrameData.saveData.ClockUserInfo;
         let config: ClockConfig = FrameData.FRAME_CONF.ClockConfig;
+        info.dayVideoTime = Math.max(0, Math.floor(Number(info.dayVideoTime) || 0)) + 1;
         let state = Panel_Clock.calcState();
         if (state == "s1" && Panel_Clock.getSignIndexByInfo(info, config) == 0) {
-            // info.dayVideoTime++;
+            // 预留：如后续第一档改为广告任务，可直接用 dayVideoTime 判定。
         }
         if (state == "s3") {
             info.SendVideoCount++;
@@ -338,6 +353,7 @@ export default class Panel_Clock extends cc.Component {
         if (this.isBlockKey == true) {
             return;
         }
+        this.syncDayLevelTimeByPassLevel();
 
         let type = Panel_Clock.calcState();
 
@@ -379,7 +395,8 @@ export default class Panel_Clock extends cc.Component {
                         // this.s1Rich.getComponent(cc.RichText).string = `clok_036??&value1==<color=#86FF04><b>${Math.round(this.config.task[this.userInfo.signCount]/60)}</b></c>`;
                         // this.s1taskIcon.spriteFrame = this.taskIcon[0];
                         // curNum = this.userInfo.HuoYueTime;
-                        this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime}</b></c>`;
+                        let num = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0; 
+                        this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${num}</b></c>`;
                         this.s1taskIcon.spriteFrame = this.taskIcon[1];
                         curNum = this.userInfo.dayLevelTime;
                         totalNum = this.config.task[0];
@@ -390,16 +407,19 @@ export default class Panel_Clock extends cc.Component {
                         totalNum = this.config.task[0]
                     }
                 } else if (index == 1) {
-                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime}</b></c>`;
+                    let num = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0;
+                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${num}</b></c>`;
                     this.s1taskIcon.spriteFrame = this.taskIcon[1];
                     curNum = this.userInfo.dayLevelTime //= FrameSDK.frameData.gameData.passLevel - this.userInfo.startLevel;
                 } else if (index == 2) {
-                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime}</b></c>`;
+                    let num = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0;
+                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${num}</b></c>`;
                     this.s1taskIcon.spriteFrame = this.taskIcon[1];
                     curNum = this.userInfo.dayLevelTime //= FrameSDK.frameData.gameData.passLevel - this.userInfo.startLevel;
                 }
                 if (curNum > totalNum) { curNum = totalNum }
 
+                console.log("curNum===========33333",curNum,totalNum);
 
 
                 this.s1Process.getComponent(cc.Sprite).fillRange = curNum / totalNum;
