@@ -62,7 +62,7 @@ export default class Panel_Activity extends cc.Component {
             : { autoChain: false };
         if (FrameData.saveData.activity) {
             FrameSDK.openWindow("Panel_Activity", vd);
-        } else if (FrameSDK.frameData.gameData.passLevel >= FrameData.FRAME_CONF.bankLevel) {
+        } else if (FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.bankLevel)) {
             // FrameSDK.openWindow("Panel_ActivityGuide", {
             //     type: 1,
             //     logoType: 'bank',

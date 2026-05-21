@@ -138,10 +138,7 @@ export default class Panel_Clock extends cc.Component {
 
 
     static openClock(closeCB?: () => void, autoChain = false) {
-        const passLevel = FrameSDK.frameData.gameData.passLevel;
-        const clockLv = FrameData.FRAME_CONF.ClockLevel;
-        // 与 checkPopUp 一致：刚通关解锁用 passLevel+1，已解锁后用 passLevel
-        const shouldOpen = passLevel + 1 >= clockLv || passLevel >= clockLv;
+        const shouldOpen = FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.ClockLevel);
         if (shouldOpen) {
             Panel_Clock.startPhone(closeCB, autoChain);
         } else {
