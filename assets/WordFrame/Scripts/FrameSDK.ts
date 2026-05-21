@@ -884,7 +884,12 @@ export class FrameSDK {
     static currLevel: number = 0;
 
     static openABAward(call?: Function) {
+        if (FrameSDK.isSettlementPhase()) {
+            call && call();
+            return;
+        }
         if (FrameSDK.frameData.gameData.passLevel + 1 < FrameData.FRAME_CONF.AbPop) {
+            call && call();
             return;
         }
         FrameData.saveData.preAwardType = (FrameData.saveData.preAwardType + 1) % 2;
@@ -996,6 +1001,8 @@ export class FrameSDK {
             "Panel_PreRdm",
             "Panel_Task",
             "Panel_DailyClearanceReward",
+            "Panel_Award_1",
+            "Panel_Award_3",
         ]);
         const children = FrameSDK.Panel.children.slice();
         children.forEach((child) => {

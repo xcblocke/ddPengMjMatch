@@ -623,11 +623,24 @@ export default class GameMain extends cc.Component {
     this.rewaedAbMergeThreshold = RandomUtil.rangeInt(timeConf[0], timeConf[1]);
     CC_DEBUG && console.log("[rewardAB] merge count reset");
   }
+  /** 牌面已空 / 已进入结算：不弹产出（截图1），只走通关结算（截图2） */
+  shouldSkipRewardAbForPass() {
+    if (gameData.gameState === GameState.gameResult) {
+      return true;
+    }
+    const sdk = LoadWord.FrameSDK;
+    if (sdk && typeof sdk.isSettlementPhase === "function" && sdk.isSettlementPhase()) {
+      return true;
+    }
+    return this.isTg();
+  }
   _onRewardAbMergePopup() {
+    this._rewardAbPopupPending = false;
     if (!cc.isValid(this.node)) {
       return;
     }
-    if (gameData.gameState === GameState.gameResult) {
+    if (this.shouldSkipRewardAbForPass()) {
+      CC_DEBUG && console.log("[rewardAB] skip popup: level clear / settlement");
       this.resetRewardAbMergeCount();
       return;
     }
@@ -636,8 +649,12 @@ export default class GameMain extends cc.Component {
     });
   }
   /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
-  dealMergeReward(levelCleared = false) {
+  dealMergeReward() {
     if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
+      return;
+    }
+    if (this.shouldSkipRewardAbForPass()) {
+      this.resetRewardAbMergeCount();
       return;
     }
     if (this._rewardAbPopupPending) {
@@ -647,12 +664,13 @@ export default class GameMain extends cc.Component {
     if (this.rewardAbMergeCount <= this.rewaedAbMergeThreshold) {
       return;
     }
-    if (levelCleared) {
-      this.rewardAbMergeCount = 0;
+    if (this.shouldSkipRewardAbForPass()) {
+      this.resetRewardAbMergeCount();
       return;
     }
     this._rewardAbPopupPending = true;
-    this.scheduleOnce(this._onRewardAbMergePopup, 1);
+    this.rewardAbMergeCount = 0;
+    this.scheduleOnce(this._onRewardAbMergePopup, 0.5);
   }
 
   submitOperateInfo(e) {
@@ -664,7 +682,13 @@ export default class GameMain extends cc.Component {
       i = e.type,
       r = this.node.convertToWorldSpaceAR(cc.Vec2.ZERO);
     if (1 === i) {
-      this.dealMergeReward(n);
+      if (n) {
+        this.resetRewardAbMergeCount();
+        const sdk = LoadWord.FrameSDK;
+        sdk && typeof sdk.setSettlementPhase === "function" && sdk.setSettlementPhase(true);
+      } else {
+        this.dealMergeReward();
+      }
     }
     if (gameData.gameState == GameState.gameing) {
       this.isGameing = true;
@@ -708,6 +732,9 @@ export default class GameMain extends cc.Component {
       var v = function v(e) {
         if (e.is_tg) {
           gameData.gameState = GameState.gameResult;
+          t.resetRewardAbMergeCount();
+          const sdk = LoadWord.FrameSDK;
+          sdk && typeof sdk.setSettlementPhase === "function" && sdk.setSettlementPhase(true);
         }
         if (gameData.gameLevel > 2 && !PlayerDataSys.isOppoReviewer() && !gameData.isOpenDemo) {
           gameData.linkTimes++;
@@ -1122,6 +1149,12 @@ export default class GameMain extends cc.Component {
     // this.scheduleOnce(function () {
     //   t.removeFromParent(true);
     // }, 2);
+    this.resetRewardAbMergeCount();
+    const sdk0 = LoadWord.FrameSDK;
+    if (sdk0) {
+      sdk0.setSettlementPhase(true);
+      sdk0.dismissSettlementBlockingPopups();
+    }
     await EngineUtil.sleep(500);
     this.prepareMahjongPassSettlement();
     const sdk = LoadWord.FrameSDK;

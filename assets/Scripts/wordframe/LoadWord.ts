@@ -1,6 +1,7 @@
 import GameUtils from "./GameUtils";
 import { NativeUtils } from "./NativeUtils";
-import { gameData } from "../data/GameData";
+import { gameData, GameState } from "../data/GameData";
+import GlobalApp from "../common/GlobalApp";
 import AudioManager from "../framework/controller/AudioManager";
 import { A } from "../center/api";
 import { ParaquadrateFinerOutland } from "../center/l/ParaquadrateFinerOutland";
@@ -343,6 +344,20 @@ export default class LoadWord {
 
     let rewardAB = GameUtils.rewardAB;
     GameUtils.rewardAB = function (cb) {
+      const sdk = LoadWord.FrameSDK;
+      const gm = GlobalApp.GameMain;
+      if (gameData.gameState === GameState.gameResult) {
+        cb && cb();
+        return;
+      }
+      if (sdk && typeof sdk.isSettlementPhase === "function" && sdk.isSettlementPhase()) {
+        cb && cb();
+        return;
+      }
+      if (gm && typeof gm.shouldSkipRewardAbForPass === "function" && gm.shouldSkipRewardAbForPass()) {
+        cb && cb();
+        return;
+      }
       LoadWord.FrameSDK.openABAward(cb);
     };
 
