@@ -868,7 +868,7 @@ export class FrameSDK {
             return;
         }
         FrameData.saveData.preAwardType = (FrameData.saveData.preAwardType + 1) % 2;
-        FrameSDK.openWindow("Panel_Award_" + (FrameData.saveData.preAwardType === 1 ? "3" : "3"), {
+        FrameSDK.openWindow("Panel_Award_" + (FrameData.saveData.preAwardType === 1 ? "3" : "1"), {
             closeCB: () => {
                 call && call();
             }

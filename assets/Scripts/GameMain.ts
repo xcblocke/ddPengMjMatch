@@ -618,18 +618,70 @@ export default class GameMain extends cc.Component {
     this.rewaedAbMergeThreshold = RandomUtil.rangeInt(timeConf[0], timeConf[1]);
     CC_DEBUG && console.log("[rewardAB] merge count reset");
   }
+
+  /** 与 FrameSDK.openABAward 一致：当前关卡 >= AbPop 才弹产出（Panel_Award_3） */
+  isRewardAbPopupUnlocked(): boolean {
+    const passLevel = GameUtils.getPassLevel();
+    let abPop = 3;
+    const conf = this.getFrameConf() as any;
+    if (conf) {
+      const v = conf.AbPop ?? conf.basicConfig?.FRAME_CONF?.AbPop ?? conf.shadow?.FRAME_CONF?.AbPop;
+      if (v != null) {
+        abPop = Math.floor(Number(v)) || abPop;
+      }
+    }
+    try {
+      const FrameDataCls = cc.js.getClassByName("FrameData") as any;
+      if (FrameDataCls?.FRAME_CONF?.AbPop != null) {
+        abPop = Math.floor(Number(FrameDataCls.FRAME_CONF.AbPop)) || abPop;
+      }
+    } catch (_) {}
+    return passLevel + 1 >= Math.max(1, abPop);
+  }
+
+  /**
+   * 是否应在本次消除后弹产出窗：牌面未清空、未进入结算，且产出窗已解锁。
+   * levelCleared 为 isTg() 快照；gameState 可能尚未切到 gameResult，需双重判断。
+   */
+  shouldShowRewardAbMergePopup(levelCleared: boolean): boolean {
+    if (levelCleared || this.isTg()) {
+      return false;
+    }
+    if (gameData.gameState !== GameState.gameing) {
+      return false;
+    }
+    return this.isRewardAbPopupUnlocked();
+  }
+
   _onRewardAbMergePopup() {
     if (!cc.isValid(this.node)) {
       return;
     }
-    if (gameData.gameState === GameState.gameResult) {
+    if (gameData.gameState === GameState.gameResult || this.isTg()) {
+      this._rewardAbPopupPending = false;
       this.resetRewardAbMergeCount();
+      if (gameData.gameState === GameState.gameing) {
+        gameData.globalCanClick = true;
+      }
       return;
     }
+    if (!this.isRewardAbPopupUnlocked()) {
+      this._rewardAbPopupPending = false;
+      if (gameData.gameState === GameState.gameing) {
+        gameData.globalCanClick = true;
+      }
+      return;
+    }
+    gameData.globalCanClick = false;
     GameUtils.rewardAB(() => {
+      this._rewardAbPopupPending = false;
       this.resetRewardAbMergeCount();
+      if (gameData.gameState === GameState.gameing) {
+        gameData.globalCanClick = true;
+      }
     });
   }
+
   /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
   dealMergeReward(levelCleared = false) {
     if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
@@ -642,12 +694,16 @@ export default class GameMain extends cc.Component {
     if (this.rewardAbMergeCount <= this.rewaedAbMergeThreshold) {
       return;
     }
-    if (levelCleared) {
-      this.rewardAbMergeCount = 0;
+    if (!this.shouldShowRewardAbMergePopup(levelCleared)) {
+      if (levelCleared || this.isTg() || gameData.gameState !== GameState.gameing) {
+        this.rewardAbMergeCount = 0;
+      }
       return;
     }
     this._rewardAbPopupPending = true;
-    this.scheduleOnce(this._onRewardAbMergePopup, 1);
+    this.unschedule(this._onRewardAbMergePopup);
+    gameData.globalCanClick = false;
+    this._onRewardAbMergePopup();
   }
 
   submitOperateInfo(e) {
