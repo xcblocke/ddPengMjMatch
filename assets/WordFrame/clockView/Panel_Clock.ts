@@ -138,7 +138,7 @@ export default class Panel_Clock extends cc.Component {
 
 
     static openClock(closeCB?: () => void) {
-        if (FrameSDK.frameData.gameData.passLevel >= FrameData.FRAME_CONF.ClockLevel) {
+        if (FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.ClockLevel)) {
             Panel_Clock.startPhone(closeCB);
         }
 

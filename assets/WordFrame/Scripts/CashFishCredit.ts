@@ -53,7 +53,7 @@ export default class CashFishCredit extends cc.Component {
         if (type === 'yellowCoin') {
             return true;
         } else if (type === 'greenCoin') {
-            return !FrameSDK.frameData.gameData.noProfitAd && FrameSDK.frameData.gameData.passLevel >= FrameData.FRAME_CONF.charityLevel && FrameData.saveData.charityGuideIndex > 0;
+            return !FrameSDK.frameData.gameData.noProfitAd && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.charityLevel) && FrameData.saveData.charityGuideIndex > 0;
         }
     }
 

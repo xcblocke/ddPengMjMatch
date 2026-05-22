@@ -37,8 +37,7 @@ export default class FlyingBonus extends cc.Component {
         }
 
         this.FlySp.setAnimation(0,FrameData.saveData.fly_free <= 0?"ad":"free",true);
-        const passLevel = FrameSDK.frameData.gameData.passLevel;
-        if (passLevel < FrameData.FRAME_CONF.flyingBonusLevel) {
+        if (!FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.flyingBonusLevel)) {
             return;
         }
 

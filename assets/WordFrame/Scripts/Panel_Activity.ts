@@ -59,7 +59,7 @@ export default class Panel_Activity extends cc.Component {
     static startActivity(closeCB?: () => void) {
         if (FrameData.saveData.activity) {
             FrameSDK.openWindow("Panel_Activity", { closeCB: closeCB });
-        } else if (FrameSDK.frameData.gameData.passLevel >= FrameData.FRAME_CONF.bankLevel) {
+        } else if (FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.bankLevel)) {
             // FrameSDK.openWindow("Panel_ActivityGuide", {
             //     type: 1,
             //     logoType: 'bank',

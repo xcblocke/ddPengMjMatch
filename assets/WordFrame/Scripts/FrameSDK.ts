@@ -923,6 +923,15 @@ export class FrameSDK {
 
     static openGradeNum: number = 0;
 
+    /**
+     * 配置为「第 N 关通关后解锁」时使用。
+     * passLevel 为已通关数（gameLevel - 1），刚通关第 N 关时 passLevel = N - 1。
+     */
+    static hasPassedConfigLevel(configLevel: number): boolean {
+        const lv = Math.max(1, Math.floor(Number(configLevel) || 0));
+        return FrameSDK.frameData.gameData.passLevel + 1 >= lv;
+    }
+
     static openRating(callback?: () => any) {
         if (false == FrameData.saveData.isRating && FrameSDK.frameData.gameData.passLevel+1  <= FrameData.FRAME_CONF.ratingLevel2) {
             if (FrameData.SDK_CONF.GradeState == 0 || FrameData.saveData.openRatingInedx > 3) {
@@ -953,23 +962,21 @@ export class FrameSDK {
     /**通关后调用 关卡数值增加后*/
     static checkPopUp(levelPassed: boolean, callback?: () => any): void {
         new Promise<void>(resolve => {
-            if (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.frameData.gameData.passLevel + 1 >= FrameData.FRAME_CONF.charityLevel && FrameData.saveData.charityGuideIndex <= 0) {
-                cc.director.once("CHARITY_GUIDE_FINISH", () => resolve());
-                // this.openWindow("Panel_GuideTips", { type: "charity", closeCB: () => Frame.ins.setGuide2Show(true) });
-                Frame.ins.setGuide2Show(true)
-            } else {
-                resolve();
+            if (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.charityLevel) && FrameData.saveData.charityGuideIndex <= 0) {
+                // 仅展示主界面公益币引导手指，不阻塞后续通关弹窗链（CHARITY_GUIDE_FINISH 在 RDM_Charity 内引导结束时才触发）
+                Frame.ins.setGuide2Show(true);
             }
+            resolve();
         })
             .then(() => new Promise<void>(resolve => {
-                if (FrameData.saveData.activity === null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.bankLevel) {
+                if (FrameData.saveData.activity === null && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.bankLevel)) {
                     Panel_Activity.startActivity(resolve);
                 } else {
                     resolve();
                 }
             }))
             .then(() => new Promise<void>(resolve => {
-                if (FrameData.saveData.lvAwardinfo == null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.taskLevel) {
+                if (FrameData.saveData.lvAwardinfo == null && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.taskLevel)) {
                     Panel_Task.startTask(resolve);
                 } else {
                     resolve();
@@ -978,7 +985,7 @@ export class FrameSDK {
             .then(() => new Promise<void>(resolve => {
                 // 每日通关奖励：第二关通关后解锁（仅展示一次）
                     const unlockLv = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.dailyClearanceUnlockLevel) || 2));
-                    const unlocked = FrameSDK.frameData.gameData.passLevel+ 1 >= unlockLv;
+                    const unlocked = FrameSDK.hasPassedConfigLevel(unlockLv);
                     const once = FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["daily_clearance_unlock"];
                     if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
                         FrameData.saveData.onceEventRecord["daily_clearance_unlock"] = true;
@@ -990,7 +997,7 @@ export class FrameSDK {
             .then(() => new Promise<void>(resolve => {
                 // 预绑定提现/账号页：第 10 关解锁（仅展示一次）
                     const unlockLv = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.preRdmUnlockLevel) || 10));
-                    const unlocked = FrameSDK.frameData.gameData.passLevel+ 1 >= unlockLv;
+                    const unlocked = FrameSDK.hasPassedConfigLevel(unlockLv);
                     const once = FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["pre_rdm_unlock"];
                     if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
                         FrameData.saveData.onceEventRecord["pre_rdm_unlock"] = true;
@@ -1006,7 +1013,7 @@ export class FrameSDK {
             }))
             .then(() => new Promise<void>(resolve => {
                 console.log("FrameSDK.frameData.gameData===========33333",FrameData.FRAME_CONF.ClockLevel,FrameData.FRAME_CONF.bankLevel,FrameData.FRAME_CONF.charityLevel);
-                if (FrameSDK.frameData.gameData.isFlag && FrameData.saveData.ClockUserInfo == null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.ClockLevel) {
+                if (FrameSDK.frameData.gameData.isFlag && FrameData.saveData.ClockUserInfo == null && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.ClockLevel)) {
                     Panel_Clock.openClock(resolve);
                 } else {
                     resolve();
@@ -1018,11 +1025,12 @@ export class FrameSDK {
     static hasPopUp(): boolean {
         const dailyUnlockLv = Math.max(1, Math.floor(Number((FrameData.FRAME_CONF as any).dailyClearanceUnlockLevel) || 2));
         const preRdmUnlockLv = Math.max(1, Math.floor(Number((FrameData.FRAME_CONF as any).preRdmUnlockLevel) || 10));
-        return (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.frameData.gameData.passLevel + 1>= FrameData.FRAME_CONF.charityLevel && FrameData.saveData.charityGuideIndex <= 0)
-            || (FrameData.saveData.activity === null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.bankLevel)
-            || (FrameData.saveData.lvAwardinfo == null && FrameSDK.frameData.gameData.passLevel + 1>= FrameData.FRAME_CONF.taskLevel)
-            || (FrameSDK.frameData.gameData.isFlag && FrameSDK.frameData.gameData.passLevel + 1>= dailyUnlockLv && !(FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["daily_clearance_unlock"]))
-            || (FrameSDK.frameData.gameData.isFlag && FrameSDK.frameData.gameData.passLevel + 1>= preRdmUnlockLv && !(FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["pre_rdm_unlock"]));
+        return (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.charityLevel) && FrameData.saveData.charityGuideIndex <= 0)
+            || (FrameData.saveData.activity === null && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.bankLevel))
+            || (FrameData.saveData.lvAwardinfo == null && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.taskLevel))
+            || (FrameSDK.frameData.gameData.isFlag && FrameSDK.hasPassedConfigLevel(dailyUnlockLv) && !(FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["daily_clearance_unlock"]))
+            || (FrameSDK.frameData.gameData.isFlag && FrameSDK.hasPassedConfigLevel(preRdmUnlockLv) && !(FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["pre_rdm_unlock"]))
+            || (FrameSDK.frameData.gameData.isFlag && FrameData.saveData.ClockUserInfo == null && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.ClockLevel));
     }
 
     static todayFirst = true
