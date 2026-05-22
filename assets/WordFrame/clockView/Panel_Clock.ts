@@ -273,20 +273,32 @@ export default class Panel_Clock extends cc.Component {
         FrameData.saveData.ClockUserInfo.HuoYueTime++;
     }
 
+    /** 过关后累加当日关卡数并刷新面板 */
+    static levelCallBack() {
+        if (!FrameData.saveData.ClockUserInfo) { return }
+        const info: ClockUserInfo = FrameData.saveData.ClockUserInfo;
+        info.dayLevelTime = Math.max(0, Math.floor(Number(info.dayLevelTime) || 0)) + 1;
+        Panel_Clock.refreshPanelIfOpen(info);
+    }
+
     static videoCallBack() {
         if (!FrameData.saveData.ClockUserInfo) { return }
         let info: ClockUserInfo = FrameData.saveData.ClockUserInfo;
         let config: ClockConfig = FrameData.FRAME_CONF.ClockConfig;
+        info.dayVideoTime = Math.max(0, Math.floor(Number(info.dayVideoTime) || 0)) + 1;
         let state = Panel_Clock.calcState();
         if (state == "s1" && Panel_Clock.getSignIndexByInfo(info, config) == 0) {
-            // info.dayVideoTime++;
+            // 预留：如后续第一档改为广告任务，可直接用 dayVideoTime 判定。
         }
         if (state == "s3") {
             info.SendVideoCount++;
         }
 
-        // 面板不一定已打开：仅在实例存在时更新 UI 引用/刷新
-        if (Panel_Clock.ins) {
+        Panel_Clock.refreshPanelIfOpen(info);
+    }
+
+    private static refreshPanelIfOpen(info: ClockUserInfo) {
+        if (Panel_Clock.ins && cc.isValid(Panel_Clock.ins.node)) {
             Panel_Clock.ins.userInfo = info;
             Panel_Clock.ins.flash();
         }
@@ -374,7 +386,8 @@ export default class Panel_Clock extends cc.Component {
                         // this.s1Rich.getComponent(cc.RichText).string = `clok_036??&value1==<color=#86FF04><b>${Math.round(this.config.task[this.userInfo.signCount]/60)}</b></c>`;
                         // this.s1taskIcon.spriteFrame = this.taskIcon[0];
                         // curNum = this.userInfo.HuoYueTime;
-                        this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime}</b></c>`;
+                        let needNum = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0;
+                        this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${needNum}</b></c>`;
                         this.s1taskIcon.spriteFrame = this.taskIcon[1];
                         curNum = this.userInfo.dayLevelTime;
                         totalNum = this.config.task[0];
@@ -385,11 +398,13 @@ export default class Panel_Clock extends cc.Component {
                         totalNum = this.config.task[0]
                     }
                 } else if (index == 1) {
-                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime}</b></c>`;
+                    let needNum = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0;
+                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${ needNum}</b></c>`;
                     this.s1taskIcon.spriteFrame = this.taskIcon[1];
                     curNum = this.userInfo.dayLevelTime //= FrameSDK.frameData.gameData.passLevel - this.userInfo.startLevel;
                 } else if (index == 2) {
-                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime}</b></c>`;
+                    let needNum = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0;
+                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${ needNum}</b></c>`;
                     this.s1taskIcon.spriteFrame = this.taskIcon[1];
                     curNum = this.userInfo.dayLevelTime //= FrameSDK.frameData.gameData.passLevel - this.userInfo.startLevel;
                 }

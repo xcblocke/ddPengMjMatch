@@ -174,6 +174,7 @@ export default class LoadWord {
       A.v2(tag, {
         onResult: (result) => {
           if (result === 1) {
+            cc.director.emit("AD_SUC");
             successCallback && successCallback();
           } else if (result === -1) {
             failedCallback && failedCallback();

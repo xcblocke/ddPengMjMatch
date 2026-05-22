@@ -98,6 +98,7 @@ export default class Frame extends cc.Component {
         if (this.passLevel != FrameSDK.frameData.gameData.passLevel) {
             if (this.passLevel != -1) {
                 // FrameSDK.gameMDEvent(4, "lv_end", this.passLevel.toString());
+                Panel_Clock.levelCallBack();
             }
             this.passLevel = FrameSDK.frameData.gameData.passLevel;
             // FrameSDK.gameMDEvent(4, "lv_start", FrameSDK.frameData.gameData.passLevel.toString());
