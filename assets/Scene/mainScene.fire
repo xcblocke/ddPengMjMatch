@@ -14154,15 +14154,15 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
+      "r": 56,
+      "g": 70,
+      "b": 99,
       "a": 255
     },
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 500,
-      "height": 63
+      "height": 50.4
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
