@@ -932,6 +932,89 @@ export class FrameSDK {
         return FrameSDK.frameData.gameData.passLevel + 1 >= lv;
     }
 
+    /** 通关结算面板（Panel_Award_6 + 飞币）进行中，此期间不跑解锁弹窗链 */
+    static postLevelSettlementActive = false;
+    /** 通关后解锁弹窗链执行中，避免与其它主动弹窗重叠 */
+    static postLevelUnlockChainActive = false;
+
+    static setPostLevelSettlementActive(active: boolean): void {
+        FrameSDK.postLevelSettlementActive = active;
+    }
+
+    static isPopUpLayerBusy(): boolean {
+        return !!(FrameSDK.Panel && cc.isValid(FrameSDK.Panel) && FrameSDK.Panel.childrenCount > 0);
+    }
+
+    /** 等待 popUpNode 上所有弹窗关闭后再继续解锁链，避免叠窗 */
+    static waitForPopUpLayerIdle(timeoutMs = 120000): Promise<void> {
+        return new Promise<void>(resolve => {
+            const start = Date.now();
+            const tick = () => {
+                if (!FrameSDK.isPopUpLayerBusy()) {
+                    resolve();
+                    return;
+                }
+                if (Date.now() - start > timeoutMs) {
+                    console.warn("[FrameSDK] waitForPopUpLayerIdle timeout");
+                    resolve();
+                    return;
+                }
+                setTimeout(tick, 50);
+            };
+            tick();
+        });
+    }
+
+    /**
+     * 解锁链单步：执行 open(done)，done 表示本步 UI 已关闭，并等待 popUpNode 清空。
+     */
+    static runUnlockPopUpStep(run: (done: () => void) => void): Promise<void> {
+        return new Promise<void>(resolve => {
+            let doneCalled = false;
+            const done = () => {
+                if (doneCalled) {
+                    return;
+                }
+                doneCalled = true;
+                FrameSDK.waitForPopUpLayerIdle().then(resolve);
+            };
+            try {
+                run(done);
+            } catch (err) {
+                console.error("[FrameSDK] runUnlockPopUpStep error", err);
+                done();
+            }
+        });
+    }
+
+    /** 公益币主界面手指引导：须完成 RDM_Charity 内教程后才进入下一项弹窗 */
+    static waitForCharityFingerGuide(): Promise<void> {
+        return new Promise<void>(resolve => {
+            const needFinger =
+                !FrameSDK.frameData.gameData.noProfitAd &&
+                FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.charityLevel) &&
+                FrameData.saveData.charityGuideIndex <= 0;
+            if (!needFinger || !Frame.ins) {
+                resolve();
+                return;
+            }
+            Frame.ins.setGuide2Show(true);
+            let settled = false;
+            const done = () => {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                cc.director.off("CHARITY_GUIDE_FINISH", done, FrameSDK);
+                if (Frame.ins) {
+                    Frame.ins.setGuide2Show(false);
+                }
+                resolve();
+            };
+            cc.director.on("CHARITY_GUIDE_FINISH", done, FrameSDK);
+        });
+    }
+
     static openRating(callback?: () => any) {
         if (false == FrameData.saveData.isRating && FrameSDK.frameData.gameData.passLevel+1  <= FrameData.FRAME_CONF.ratingLevel2) {
             if (FrameData.SDK_CONF.GradeState == 0 || FrameData.saveData.openRatingInedx > 3) {
@@ -959,67 +1042,94 @@ export class FrameSDK {
             callback?.();
         }
     }
-    /**通关后调用 关卡数值增加后*/
+    /**
+     * 通关结算动画全部结束后调用：串行弹出解锁/教程弹窗，全部关闭后再 callback（如 START_GAME）。
+     * 须与 Panel_Award_6 领取+飞币流程解耦，不要在 prepareMahjongPassSettlement 里提前调用。
+     */
     static checkPopUp(levelPassed: boolean, callback?: () => any): void {
-        new Promise<void>(resolve => {
-            if (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.charityLevel) && FrameData.saveData.charityGuideIndex <= 0) {
-                // 仅展示主界面公益币引导手指，不阻塞后续通关弹窗链（CHARITY_GUIDE_FINISH 在 RDM_Charity 内引导结束时才触发）
-                Frame.ins.setGuide2Show(true);
-            }
-            resolve();
-        })
-            .then(() => new Promise<void>(resolve => {
+        if (FrameSDK.postLevelSettlementActive) {
+            console.warn("[FrameSDK] checkPopUp skipped: settlement still active");
+            return;
+        }
+        if (FrameSDK.postLevelUnlockChainActive) {
+            console.warn("[FrameSDK] checkPopUp skipped: unlock chain already running");
+            return;
+        }
+        FrameSDK.postLevelUnlockChainActive = true;
+
+        const finishChain = () => {
+            FrameSDK.postLevelUnlockChainActive = false;
+            callback?.();
+        };
+
+        FrameSDK.waitForCharityFingerGuide()
+            .then(() => FrameSDK.waitForPopUpLayerIdle())
+            // 1. 存钱罐 Panel_Activity（bankLevel 解锁）
+            .then(() => FrameSDK.runUnlockPopUpStep((done) => {
                 if (FrameData.saveData.activity === null && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.bankLevel)) {
-                    Panel_Activity.startActivity(resolve);
+                    Panel_Activity.startActivity(done);
                 } else {
-                    resolve();
+                    done();
                 }
             }))
-            .then(() => new Promise<void>(resolve => {
+            // 2. 关卡任务 Panel_Task（taskLevel 解锁）
+            .then(() => FrameSDK.runUnlockPopUpStep((done) => {
                 if (FrameData.saveData.lvAwardinfo == null && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.taskLevel)) {
-                    Panel_Task.startTask(resolve);
+                    Panel_Task.startTask(done);
                 } else {
-                    resolve();
+                    done();
                 }
             }))
-            .then(() => new Promise<void>(resolve => {
-                // 每日通关奖励：第二关通关后解锁（仅展示一次）
-                    const unlockLv = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.dailyClearanceUnlockLevel) || 2));
-                    const unlocked = FrameSDK.hasPassedConfigLevel(unlockLv);
-                    const once = FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["daily_clearance_unlock"];
-                    if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
-                        FrameData.saveData.onceEventRecord["daily_clearance_unlock"] = true;
-                        Panel_DailyClearanceReward.start(resolve);
-                        return;
-                    }
-                resolve();
+            // 3. 每日通关奖励 Panel_DailyClearanceReward（仅一次）
+            .then(() => FrameSDK.runUnlockPopUpStep((done) => {
+                const unlockLv = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.dailyClearanceUnlockLevel) || 2));
+                const unlocked = FrameSDK.hasPassedConfigLevel(unlockLv);
+                if (!FrameData.saveData.onceEventRecord) {
+                    FrameData.saveData.onceEventRecord = {};
+                }
+                const once = FrameData.saveData.onceEventRecord["daily_clearance_unlock"];
+                if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
+                    FrameData.saveData.onceEventRecord["daily_clearance_unlock"] = true;
+                    Panel_DailyClearanceReward.start(done);
+                    return;
+                }
+                done();
             }))
-            .then(() => new Promise<void>(resolve => {
-                // 预绑定提现/账号页：第 10 关解锁（仅展示一次）
-                    const unlockLv = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.preRdmUnlockLevel) || 10));
-                    const unlocked = FrameSDK.hasPassedConfigLevel(unlockLv);
-                    const once = FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["pre_rdm_unlock"];
-                    if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
-                        FrameData.saveData.onceEventRecord["pre_rdm_unlock"] = true;
-                        FrameSDK.openPanel_Yellow(resolve);
-                        // 按 Panel_PreRdm 的 viewData 结构传参
-                        FrameSDK.openWindow("Panel_PreRdm", {
-                            numStr: FrameSDK.convertCoinToStr(FrameData.credit, true),
-                            closeCB: ()=>{},
+            // 4. 预绑定：先 RDM_Level 黄板，关后再 Panel_PreRdm（仅一次）
+            .then(() => FrameSDK.runUnlockPopUpStep((done) => {
+                const unlockLv = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.preRdmUnlockLevel) || 10));
+                const unlocked = FrameSDK.hasPassedConfigLevel(unlockLv);
+                if (!FrameData.saveData.onceEventRecord) {
+                    FrameData.saveData.onceEventRecord = {};
+                }
+                const once = FrameData.saveData.onceEventRecord["pre_rdm_unlock"];
+                if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
+                    FrameData.saveData.onceEventRecord["pre_rdm_unlock"] = true;
+                    FrameSDK.openPanel_Yellow(() => {
+                        FrameSDK.waitForPopUpLayerIdle().then(() => {
+                            FrameSDK.openWindow("Panel_PreRdm", {
+                                numStr: FrameSDK.convertCoinToStr(FrameData.credit, true),
+                                closeCB: done,
+                            });
                         });
-                        return;
-                    }
-                resolve();
+                    });
+                    return;
+                }
+                done();
             }))
-            .then(() => new Promise<void>(resolve => {
-                console.log("FrameSDK.frameData.gameData===========33333",FrameData.FRAME_CONF.ClockLevel,FrameData.FRAME_CONF.bankLevel,FrameData.FRAME_CONF.charityLevel);
+            // 5. 签到 Panel_Clock（ClockLevel 解锁）
+            .then(() => FrameSDK.runUnlockPopUpStep((done) => {
                 if (FrameSDK.frameData.gameData.isFlag && FrameData.saveData.ClockUserInfo == null && FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.ClockLevel)) {
-                    Panel_Clock.openClock(resolve);
+                    Panel_Clock.openClock(done);
                 } else {
-                    resolve();
+                    done();
                 }
             }))
-            .then(() => callback?.());
+            .then(() => finishChain())
+            .catch((err) => {
+                console.error("[FrameSDK] checkPopUp chain error", err);
+                finishChain();
+            });
     }
 
     static hasPopUp(): boolean {

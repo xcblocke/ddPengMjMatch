@@ -55,6 +55,22 @@ export default class Panel_Activity extends cc.Component {
 
     static coinTarget: cc.Node = null;
     private _close_target: cc.Node = null;
+    private _chainCloseDone = false;
+
+    private _invokeChainCloseCB() {
+        if (this._chainCloseDone) {
+            return;
+        }
+        const cb = this.viewData?.closeCB;
+        if (!cb) {
+            return;
+        }
+        this._chainCloseDone = true;
+        if (this.viewData) {
+            this.viewData.closeCB = null;
+        }
+        cb();
+    }
 
     static startActivity(closeCB?: () => void) {
         if (FrameData.saveData.activity) {
@@ -157,8 +173,7 @@ export default class Panel_Activity extends cc.Component {
 
     onDisable() {
         cc.director.emit("UPDATA_ACTIVITY");
-        var e, t;
-        null === (t = (e = this.viewData).closeCB) || void 0 === t || t.call(e);
+        this._invokeChainCloseCB();
     }
 
     updateUi() {
@@ -279,7 +294,7 @@ export default class Panel_Activity extends cc.Component {
             console.log("wait!!!，return");
         } else {
             this.hideTime = Date.now();
-            FrameSDK.closeEffect(this, null);
+            FrameSDK.closeEffect(this, () => this._invokeChainCloseCB());
         }
     }
 

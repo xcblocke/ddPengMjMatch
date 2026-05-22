@@ -1141,7 +1141,6 @@ export default class GameMain extends cc.Component {
         novice_status: 4
       });
     }
-    GameUtils.checkPopUp(true, () => {});
     AudioManager.getInstance().playMusic("level_pass");
     AudioManager.getInstance().playMusic("yanhua");
   }
@@ -1154,8 +1153,19 @@ export default class GameMain extends cc.Component {
     // }, 2);
     await EngineUtil.sleep(500);
     this.prepareMahjongPassSettlement();
-    LoadWord.FrameSDK.openWindow("Panel_Award_6", {
-      closeCB: e.cb,
+    const sdk = LoadWord.FrameSDK;
+    if (sdk && typeof sdk.setPostLevelSettlementActive === "function") {
+      sdk.setPostLevelSettlementActive(true);
+    }
+    sdk.openWindow("Panel_Award_6", {
+      closeCB: () => {
+        if (sdk && typeof sdk.setPostLevelSettlementActive === "function") {
+          sdk.setPostLevelSettlementActive(false);
+        }
+        GameUtils.checkPopUp(true, () => {
+          e.cb && e.cb();
+        });
+      },
       mahjongSettlement: true
     });
     return;

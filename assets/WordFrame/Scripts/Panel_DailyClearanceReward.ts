@@ -96,6 +96,22 @@ export default class Panel_DailyClearanceReward extends cc.Component {
     viewData: { closeCB?: () => void } = null;
 
     private _close_target: cc.Node = null;
+    private _chainCloseDone = false;
+
+    private _invokeChainCloseCB() {
+        if (this._chainCloseDone) {
+            return;
+        }
+        const cb = this.viewData?.closeCB;
+        if (!cb) {
+            return;
+        }
+        this._chainCloseDone = true;
+        if (this.viewData) {
+            this.viewData.closeCB = null;
+        }
+        cb();
+    }
     static coinTarget: cc.Node = null; // 可选：用于 closeEffect 的飞向目标
 
     protected onLoad(): void {
@@ -224,12 +240,15 @@ export default class Panel_DailyClearanceReward extends cc.Component {
     }
 
     onTouchClose(): void {
-        FrameSDK.closeEffect(this, () => this.viewData?.closeCB?.());
+        FrameSDK.closeEffect(this, () => this._invokeChainCloseCB());
+    }
+
+    onDisable(): void {
+        this._invokeChainCloseCB();
     }
 
     static start(closeCB?: () => void): void {
-        // FrameSDK.openWindow("Panel_DailyClearanceReward", { closeCB });
-        closeCB?.();
+        FrameSDK.openWindow("Panel_DailyClearanceReward", { closeCB });
     }
 }
 

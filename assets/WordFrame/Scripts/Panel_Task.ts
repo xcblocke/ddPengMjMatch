@@ -27,40 +27,33 @@ export default class Panel_Task extends cc.Component {
     viewData: { closeCB: () => void } = null;
 
     static coinTarget: cc.Node = null;
+    private _chainCloseDone = false;
+
+    private _invokeChainCloseCB() {
+        if (this._chainCloseDone) {
+            return;
+        }
+        const cb = this.viewData?.closeCB;
+        if (!cb) {
+            return;
+        }
+        this._chainCloseDone = true;
+        if (this.viewData) {
+            this.viewData.closeCB = null;
+        }
+        cb();
+    }
 
     static openTask(closeCB) {
-        // if (FrameData.saveData.lvAwardinfo == null && FrameSDK.frameData.gameData.passLevel-1 >= FrameData.FRAME_CONF.taskLevel) {
-        //     Panel_Task.startTask(closeCB);
-        // }
-        closeCB?.();
+        Panel_Task.startTask(closeCB);
     }
 
     static startTask(closeCB?: () => void) {
-        // if (FrameData.saveData.lvAwardinfo) {
-        //     FrameSDK.openWindow("Panel_Task", {closeCB: closeCB});
-        // } else if (FrameSDK.frameData.gameData.passLevel-1 >= FrameData.FRAME_CONF.taskLevel) {
-        //     FrameSDK.openWindow("Panel_ActivityGuide", {
-        //         type: 1,
-        //         logoType: 'levelReward',
-        //         dtime: 2.5,
-        //         text: `skey_072`,
-        //         closeCB: () => {
-        //             FrameSDK.openWindow("Panel_Task", {closeCB: closeCB});
-        //         }
-        //     });
-        // } else if(!FrameSDK.frameData.gameData.isFlag){
-        //     FrameSDK.openWindow("Panel_ActivityGuide", {
-        //         type: 1,
-        //         logoType: 'levelReward',
-        //         dtime: 2.5,
-        //         text: `skey_072`,
-        //         closeCB: () => {
-        //             FrameSDK.openWindow("Panel_Task", {closeCB: closeCB});
-        //         }
-        //     });
-        // }else {
+        if (!FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.taskLevel)) {
             closeCB?.();
-        // }
+            return;
+        }
+        FrameSDK.openWindow("Panel_Task", { closeCB: closeCB });
     }
 
     static isTaskFinish() {
@@ -180,8 +173,7 @@ export default class Panel_Task extends cc.Component {
         this.node_content.children.forEach(element => {
             element.active = false;
         });
-        var e, t;
-        null === (t = (e = this.viewData).closeCB) || void 0 === t || t.call(e);
+        this._invokeChainCloseCB();
     }
 
 
@@ -209,7 +201,7 @@ export default class Panel_Task extends cc.Component {
 
     onTouchClose() {
         cc.director.emit("UPDATA_TASK");
-        FrameSDK.closeEffect(this, null);
+        FrameSDK.closeEffect(this, () => this._invokeChainCloseCB());
     }
 
 }

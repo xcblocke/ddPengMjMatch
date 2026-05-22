@@ -48,6 +48,46 @@ export default class Panel_Award_6 extends cc.Component {
 
     adData: {  num: number[]; reward: number;  } = null;
 
+    private _rewardClaimed = false;
+
+    /**
+     * 领取奖励：先关闭本面板 → 再恭喜弹窗(若有) → 飞币 → 评星 → 解锁弹窗链。
+     * viewData.closeCB 仅在整条奖励链路结束后调用，不在此处随面板关闭触发。
+     */
+    private settleRewardThenExit(coinAmount: number, playPoolFx = false) {
+        if (this._rewardClaimed) {
+            return;
+        }
+        this._rewardClaimed = true;
+        this["noTouch"].node.active = true;
+
+        const settlementCloseCB = this.viewData?.closeCB;
+
+        const afterAward6Closed = () => {
+            FrameSDK.addCoin(coinAmount, 0, 0, () => {
+                FrameSDK.openRating(() => {
+                    settlementCloseCB?.();
+                });
+            });
+        };
+
+        const closeAward6ThenContinue = () => {
+            this.close(afterAward6Closed);
+        };
+
+        if (playPoolFx) {
+            cc.tween(this.node)
+                .delay(0.2)
+                .call(() => {
+                    FrameSDK.playEffect("pool_cashdone");
+                })
+                .delay(1)
+                .call(closeAward6ThenContinue)
+                .start();
+        } else {
+            closeAward6ThenContinue();
+        }
+    }
 
     onLoad() {
         var e = this;
@@ -140,30 +180,8 @@ export default class Panel_Award_6 extends cc.Component {
         // });
 
         FrameSDK.frameData.sdkFuc.ppEvent("freeClaim");
-        let callBack = () => {
-            cc.tween(this.node)
-                .delay(0.2)
-                .call(() => {
-                    // this.ribbonSkeleton.enabled = true;
-                    // this.ribbonSkeleton.setAnimation(0, "caidai", false);
-                    FrameSDK.playEffect("pool_cashdone");
-                })
-                .delay(1)
-                .call(() => {
-                    FrameSDK.addCoin(this.adData.reward, 0,0, ()=>{
-                        FrameSDK.openRating(this.viewData?.closeCB)
-                    });
-                    FrameSDK.frameData.sdkFuc.ppEvent("freeCollected");
-                    this["noTouch"].node.active = false;
-                    this.close();
-                })
-                .start();
-        };
-
-        this["noTouch"].node.active = true;
-
-        callBack();
-
+        FrameSDK.frameData.sdkFuc.ppEvent("freeCollected");
+        this.settleRewardThenExit(this.adData.reward, true);
     }
 
     @CLICKLOCK()
@@ -181,17 +199,7 @@ export default class Panel_Award_6 extends cc.Component {
         });
         
 
-        // FrameSDK.frameData.sdkFuc.ppEvent(isInters ? "claim" : "freeClaim");
-        let callBack = () => {
-            FrameSDK.addCoin(FrameData.getCoinOutNum("free"), 0, 0, ()=>{
-                FrameSDK.openRating(this.viewData?.closeCB)
-            });
-            // FrameSDK.frameData.sdkFuc.ppEvent(isInters ? "collected" : "freeCollected");
-            this["noTouch"].node.active = false;
-            this.close();
-        };
-
-        callBack();
+        this.settleRewardThenExit(FrameData.getCoinOutNum("free"), false);
     }
 
 

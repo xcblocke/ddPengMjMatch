@@ -34,6 +34,22 @@ export default class Panel_PreRdm extends cc.Component {
     viewData: { numStr: string, closeCB: () => void } = null;
 
     private _paymentIDs: number[] = [];
+    private _chainCloseDone = false;
+
+    private _invokeChainCloseCB() {
+        if (this._chainCloseDone) {
+            return;
+        }
+        const cb = this.viewData?.closeCB;
+        if (!cb) {
+            return;
+        }
+        this._chainCloseDone = true;
+        if (this.viewData) {
+            this.viewData.closeCB = null;
+        }
+        cb();
+    }
 
     private static formatTimestampToYMD(tsMs: number): string {
         const t = Math.max(0, Math.floor(Number(tsMs) || 0));
@@ -81,7 +97,7 @@ export default class Panel_PreRdm extends cc.Component {
                 
 
                 cc.director.emit("REFRESH_INFO");
-                this.viewData.closeCB?.();
+                this._invokeChainCloseCB();
             } else {
                 FrameSDK.showToast("skey_024");
                 return;
@@ -101,8 +117,14 @@ export default class Panel_PreRdm extends cc.Component {
             console.log("wait!!!，return");
         } else {
             this.hideTime = Date.now();
-            FrameSDK.closeEffect(this, null);
-            cc.director.emit("showBackHand");
+            FrameSDK.closeEffect(this, () => {
+                this._invokeChainCloseCB();
+                cc.director.emit("showBackHand");
+            });
         }
+    }
+
+    onDisable(): void {
+        this._invokeChainCloseCB();
     }
 }
