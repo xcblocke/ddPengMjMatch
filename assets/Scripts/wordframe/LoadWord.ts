@@ -27,6 +27,8 @@ export default class LoadWord {
   private pendingHandSceneListener = false;
   private handNode: cc.Node = null;
   private pendingStartGameCb: () => void = null;
+  /** 首次补贴页结束后，等关卡棋盘起来再显示 Frame 提现引导 */
+  private pendingWithdrawGuide = false;
 
   /** isFlag 且本地无 newHand = 首次进游戏（补贴页飞币结束前不 startGame） */
   isFirstGameEntry(): boolean {
@@ -41,9 +43,43 @@ export default class LoadWord {
     this.pendingStartGameCb = cb;
   }
 
+  markPendingWithdrawGuide() {
+    this.pendingWithdrawGuide = true;
+  }
+
+  /** 首关棋盘就绪后再显示提现引导，避免与 runAfterTutorialIdle 互斥卡死 */
+  showPendingWithdrawGuideIfNeeded() {
+    if (!this.pendingWithdrawGuide) {
+      return;
+    }
+    this.pendingWithdrawGuide = false;
+    try {
+      const frameCls: any = cc.js.getClassByName("Frame");
+      const ins = frameCls && frameCls.ins;
+      if (ins && typeof ins.setGuideShow === "function") {
+        ins.setGuideShow(true);
+      }
+    } catch (_e) {}
+  }
+
+  private dismissFrameGuideForLevelStart() {
+    try {
+      const frameCls: any = cc.js.getClassByName("Frame");
+      const ins = frameCls && frameCls.ins;
+      if (ins && typeof ins.setGuideShow === "function") {
+        ins.setGuideShow(false);
+      }
+      const sdk = LoadWord.FrameSDK;
+      if (sdk && typeof sdk.notifyTutorialStateChanged === "function") {
+        sdk.notifyTutorialStateChanged();
+      }
+    } catch (_e) {}
+  }
+
   /** Panel_Award_New2 飞币结束后调用，再走进关弹窗链 */
   completeFirstEntryAndStartGame() {
     cc.sys.localStorage.setItem("newHand", "1");
+    this.dismissFrameGuideForLevelStart();
     const cb = this.pendingStartGameCb;
     this.pendingStartGameCb = null;
     cb && cb();
@@ -154,16 +190,16 @@ export default class LoadWord {
 
     // console.log("this.pendingHandPrefab===========11111",JSON.stringify(ParaquadrateFinerOutland.instance.lumbricoid));
     
-    const pd: any = NativeUtils.isFlag ? A.l4 || A.l3 : ParaquadrateFinerOutland.instance.lumbricoid ;
-    const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";
-    let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
-    console.log("data===========11111",pd,cfgKey,data);
+    // const pd: any = NativeUtils.isFlag ? A.l4 || A.l3 : ParaquadrateFinerOutland.instance.lumbricoid ;
+    // const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";
+    // let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
+    // console.log("data===========11111",pd,cfgKey,data);
 
 
-    // const pd: any = NativeUtils.isFlag ? A.l4 || A.l3 || {} : A.l3;
-    // // const cfgKey = NativeUtils.isFlag ? "basicConfig" : "basicConfig";
-    // // let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
-    // // console.log("data===========11111",pd,cfgKey,data);
+    const pd: any = NativeUtils.isFlag ? A.l4 || A.l3 || {} : A.l3;
+    // const cfgKey = NativeUtils.isFlag ? "basicConfig" : "basicConfig";
+    // let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
+    // console.log("data===========11111",pd,cfgKey,data);
 
     
     let frameData = {
@@ -175,7 +211,7 @@ export default class LoadWord {
       // sdyEvent: NativeUtils.sdyLog,
       showGameGuide: () => {}
     };
-    node.getComponent("newHand").init(data, frameData);
+    node.getComponent("newHand").init(pd, frameData);
     node.parent = cc.director.getScene();
     node.zIndex = cc.macro.MAX_ZINDEX;
     if (this.isFirstGameEntry()) {

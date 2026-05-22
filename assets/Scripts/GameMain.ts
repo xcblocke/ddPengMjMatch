@@ -477,6 +477,7 @@ export default class GameMain extends cc.Component {
     this.updateBackStepBtnState();
     await this.gameInitGuide();
     cc.director.emit("resfLv");
+    LoadWord.instance.showPendingWithdrawGuideIfNeeded();
     return;
   }
   createMahjong() {

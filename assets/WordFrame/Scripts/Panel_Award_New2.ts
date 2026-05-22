@@ -81,8 +81,14 @@ export default class Panel_Award_New2 extends cc.Component {
 
         const runCongratsThenFly = () => {
             FrameSDK.addCoin(coinNum, 0, 0, () => {
-                Frame.ins.setGuideShow(true);
-                flowDoneCB && flowDoneCB();
+                if (flowDoneCB) {
+                    // 首次进游戏：先 startGame，勿在此刻 setGuideShow(true)，否则会阻塞 runAfterTutorialIdle 导致关卡/initGameData 不执行
+                    const LoadWordCls: any = cc.js.getClassByName("LoadWord");
+                    LoadWordCls?.instance?.markPendingWithdrawGuide?.();
+                    flowDoneCB();
+                } else {
+                    Frame.ins.setGuideShow(true);
+                }
             });
         };
 
