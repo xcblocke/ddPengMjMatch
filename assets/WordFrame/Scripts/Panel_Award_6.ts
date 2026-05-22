@@ -44,7 +44,7 @@ export default class Panel_Award_6 extends cc.Component {
     @property(cc.Node)
     lv_proNode: cc.Node = null;
 
-    viewData: { closeCB: () => void, noInters?: boolean, mahjongSettlement?: boolean } = null;
+    viewData: { closeCB: () => void, noInters: boolean } = null;
 
     adData: {  num: number[]; reward: number;  } = null;
 
@@ -140,23 +140,29 @@ export default class Panel_Award_6 extends cc.Component {
         // });
 
         FrameSDK.frameData.sdkFuc.ppEvent("freeClaim");
-        const doneCb = this.viewData?.closeCB;
+        let callBack = () => {
+            cc.tween(this.node)
+                .delay(0.2)
+                .call(() => {
+                    // this.ribbonSkeleton.enabled = true;
+                    // this.ribbonSkeleton.setAnimation(0, "caidai", false);
+                    FrameSDK.playEffect("pool_cashdone");
+                })
+                .delay(1)
+                .call(() => {
+                    FrameSDK.addCoin(this.adData.reward, 0,0, ()=>{
+                        FrameSDK.openRating(this.viewData?.closeCB)
+                    });
+                    FrameSDK.frameData.sdkFuc.ppEvent("freeCollected");
+                    this["noTouch"].node.active = false;
+                    this.close();
+                })
+                .start();
+        };
+
         this["noTouch"].node.active = true;
-        cc.tween(this.node)
-            .delay(0.2)
-            .call(() => {
-                FrameSDK.playEffect("pool_cashdone");
-            })
-            .delay(1)
-            .call(() => {
-                FrameSDK.addCoin(this.adData.reward, 0, 0, () => {
-                    FrameSDK.openRating(doneCb);
-                }, { fromSettlement: true });
-                FrameSDK.frameData.sdkFuc.ppEvent("freeCollected");
-                this["noTouch"].node.active = false;
-                this.close();
-            })
-            .start();
+
+        callBack();
 
     }
 
@@ -175,12 +181,17 @@ export default class Panel_Award_6 extends cc.Component {
         });
         
 
-        const doneCb = this.viewData?.closeCB;
-        FrameSDK.addCoin(FrameData.getCoinOutNum("free"), 0, 0, () => {
-            FrameSDK.openRating(doneCb);
-        }, { fromSettlement: true });
-        this["noTouch"].node.active = false;
-        this.close();
+        // FrameSDK.frameData.sdkFuc.ppEvent(isInters ? "claim" : "freeClaim");
+        let callBack = () => {
+            FrameSDK.addCoin(FrameData.getCoinOutNum("free"), 0, 0, ()=>{
+                FrameSDK.openRating(this.viewData?.closeCB)
+            });
+            // FrameSDK.frameData.sdkFuc.ppEvent(isInters ? "collected" : "freeCollected");
+            this["noTouch"].node.active = false;
+            this.close();
+        };
+
+        callBack();
     }
 
 

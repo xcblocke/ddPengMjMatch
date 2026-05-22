@@ -101,7 +101,7 @@ export default class Button_DailyClearanceReward extends cc.Component {
         // 解锁条件：第二关通关后（与 FrameSDK.checkPopUp 一致）
         const gd = FrameSDK.frameData && FrameSDK.frameData.gameData ? FrameSDK.frameData.gameData : null;
         const unlockLv = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.dailyClearanceUnlockLevel) || 2));
-        const unlocked = !!(gd && gd.isFlag && FrameSDK.isUnlockLevelReached(unlockLv));
+        const unlocked = !!(gd && gd.isFlag && Math.max(0, Math.floor(Number(gd.passLevel) || 0)) >= unlockLv);
 
         // 未解锁：只隐藏 but 节点，脚本仍保持运行
         if (!unlocked) {

@@ -14,11 +14,9 @@ export default class Panel_ShowLevel extends cc.Component {
     bgNode: cc.Node = null;
 
 
-
     viewData: { level?: number, closeCB?: () => void } = null;
     black_sprite: cc.Sprite = null;
     private _closed = false;
-
 
     private finishClose() {
         if (this._closed) return;
@@ -30,7 +28,7 @@ export default class Panel_ShowLevel extends cc.Component {
 
     protected onLoad(): void {
         let x = cc.winSize.width * 0.5 + this.bgNode.width * 0.5;
-        this.bgNode.x = x + 300;
+        this.bgNode.x = x;
 
         const level = this.viewData?.level != null
             ? Math.floor(Number(this.viewData.level))
@@ -52,9 +50,9 @@ export default class Panel_ShowLevel extends cc.Component {
 
         FrameSDK.playEffect("rewardshow");
 
-        cc.tween(this.bgNode).to(0.8, {x: 0}, {
+        cc.tween(this.bgNode).to(0.7, {x: 0}, {
             easing: "backOut"
-        }).delay(1).to(0.8, {x: -x - 300}, {
+        }).delay(1).to(0.7, {x: -x}, {
             easing: "backIn"
         }).call(() => {
             this.dismissPanel();

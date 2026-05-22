@@ -1,10 +1,8 @@
 import GameUtils from "./GameUtils";
 import { NativeUtils } from "./NativeUtils";
-import { gameData, GameState } from "../data/GameData";
-import GlobalApp from "../common/GlobalApp";
+import { gameData } from "../data/GameData";
 import AudioManager from "../framework/controller/AudioManager";
 import { A } from "../center/api";
-import { ParaquadrateFinerOutland } from "../center/l/ParaquadrateFinerOutland";
 
 /** 与 assets/view/loading.ts 中加载的主场景名一致 */
 const MAIN_SCENE = "mainScene";
@@ -26,70 +24,6 @@ export default class LoadWord {
   private pendingHandPrefab: cc.Prefab = null;
   private pendingHandSceneListener = false;
   private handNode: cc.Node = null;
-  private pendingStartGameCb: () => void = null;
-  /** 首次补贴页结束后，等关卡棋盘起来再显示 Frame 提现引导 */
-  private pendingWithdrawGuide = false;
-
-  /** isFlag 且本地无 newHand = 首次进游戏（补贴页飞币结束前不 startGame） */
-  isFirstGameEntry(): boolean {
-    return NativeUtils.isFlag && null == cc.sys.localStorage.getItem("newHand");
-  }
-
-  shouldDelayStartGameForFirstEntry(): boolean {
-    return this.isFirstGameEntry();
-  }
-
-  setPendingStartGame(cb: () => void) {
-    this.pendingStartGameCb = cb;
-  }
-
-  markPendingWithdrawGuide() {
-    this.pendingWithdrawGuide = true;
-  }
-
-  /** 首关棋盘就绪后再显示提现引导，避免与 runAfterTutorialIdle 互斥卡死 */
-  showPendingWithdrawGuideIfNeeded() {
-    if (!this.pendingWithdrawGuide) {
-      return;
-    }
-    this.pendingWithdrawGuide = false;
-    try {
-      const frameCls: any = cc.js.getClassByName("Frame");
-      const ins = frameCls && frameCls.ins;
-      if (ins && typeof ins.setGuideShow === "function") {
-        ins.setGuideShow(true);
-      }
-    } catch (_e) {}
-  }
-
-  private dismissFrameGuideForLevelStart() {
-    try {
-      const frameCls: any = cc.js.getClassByName("Frame");
-      const ins = frameCls && frameCls.ins;
-      if (ins && typeof ins.setGuideShow === "function") {
-        ins.setGuideShow(false);
-      }
-      const sdk = LoadWord.FrameSDK;
-      if (sdk && typeof sdk.notifyTutorialStateChanged === "function") {
-        sdk.notifyTutorialStateChanged();
-      }
-    } catch (_e) {}
-  }
-
-  /** Panel_Award_New2 飞币结束后调用，再走进关弹窗链 */
-  completeFirstEntryAndStartGame() {
-    cc.sys.localStorage.setItem("newHand", "1");
-    this.dismissFrameGuideForLevelStart();
-    const cb = this.pendingStartGameCb;
-    this.pendingStartGameCb = null;
-    cb && cb();
-  }
-
-  showFirstEntryHand() {
-    if (this.handNode && cc.isValid(this.handNode)) {
-      this.handNode.active = true;
-    }
-  }
 
   private isFrameSdkReadyForGameEvent(): boolean {
     try {
@@ -187,21 +121,10 @@ export default class LoadWord {
     }
 
     var node = cc.instantiate(this.pendingHandPrefab);
-
-    // console.log("this.pendingHandPrefab===========11111",JSON.stringify(ParaquadrateFinerOutland.instance.lumbricoid));
-    
-    const pd: any = NativeUtils.isFlag ? A.l4 || A.l3 : ParaquadrateFinerOutland.instance.lumbricoid ;
-    const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";
+    const pd = A.l3 || A.l4  || {}; //Matriarchalism.instance.pandemonian as any;
+    const cfgKey = NativeUtils.isFlag ? "FRAME_CONF" : "FRAME_CONF";  //"basicConfig" : "shadow";
     let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
     console.log("data===========11111",pd,cfgKey,data);
-
-
-    // const pd: any = NativeUtils.isFlag ? A.l4 || A.l3 || {} : A.l3;
-    // const cfgKey = NativeUtils.isFlag ? "basicConfig" : "basicConfig";
-    // let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
-    // console.log("data===========11111",pd,cfgKey,data);
-
-    
     let frameData = {
       gameName: NativeUtils.gameName,
       reportEventCall: A.t,
@@ -214,9 +137,6 @@ export default class LoadWord {
     node.getComponent("newHand").init(data, frameData);
     node.parent = cc.director.getScene();
     node.zIndex = cc.macro.MAX_ZINDEX;
-    if (this.isFirstGameEntry()) {
-      node.active = !!this.pendingStartGameCb;
-    }
     cc.game.addPersistRootNode(node);
     this.handNode = node;
     this.pendingHandPrefab = null;
@@ -254,7 +174,6 @@ export default class LoadWord {
       A.v2(tag, {
         onResult: (result) => {
           if (result === 1) {
-            cc.director.emit("AD_SUC");
             successCallback && successCallback();
           } else if (result === -1) {
             failedCallback && failedCallback();
@@ -359,8 +278,15 @@ export default class LoadWord {
     };
 
   
-
-    LoadWord.FrameSDK.init(fdata, ParaquadrateFinerOutland.instance.lumbricoid);
+    let pm = NativeUtils.isFlag ? A.l4 : A.l3;
+    // /mount 失败时 pandemonian 为空；传带空 SDK_CONF/FRAME_CONF 的对象，避免 FrameSDK.initSettings 里 for..in undefined 崩溃
+    const confForFrame =
+      pm ||
+      ({
+        basicConfig: { SDK_CONF: {}, FRAME_CONF: {} },
+        shadow: { SDK_CONF: {}, FRAME_CONF: {} }
+      } as any);
+    LoadWord.FrameSDK.init(fdata, confForFrame);
 
     
 
@@ -381,20 +307,6 @@ export default class LoadWord {
 
     let rewardAB = GameUtils.rewardAB;
     GameUtils.rewardAB = function (cb) {
-      const sdk = LoadWord.FrameSDK;
-      const gm = GlobalApp.GameMain;
-      if (gameData.gameState === GameState.gameResult) {
-        cb && cb();
-        return;
-      }
-      if (sdk && typeof sdk.isSettlementPhase === "function" && sdk.isSettlementPhase()) {
-        cb && cb();
-        return;
-      }
-      if (gm && typeof gm.shouldSkipRewardAbForPass === "function" && gm.shouldSkipRewardAbForPass()) {
-        cb && cb();
-        return;
-      }
       LoadWord.FrameSDK.openABAward(cb);
     };
 

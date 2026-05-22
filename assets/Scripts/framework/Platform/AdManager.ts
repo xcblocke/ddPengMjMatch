@@ -143,10 +143,7 @@ export default class AdManager {
     i < this.lastTouchDate && (this.lastTouchDate = i);
     if (!(this.lastTouchDate && i - this.lastTouchDate < this.interval)) {
       this.lastTouchDate = i;
-      if (cc.sys.isBrowser || !cc.sys.isNative || this.noAdTest) {
-        cc.director.emit("AD_SUC");
-        e && e();
-      } else {
+      if (cc.sys.isBrowser || !cc.sys.isNative || this.noAdTest) e && e();else {
         this.adBack = true;
         this.videoSuccessFun = e;
         this.videoFailFun = t;
@@ -175,7 +172,6 @@ export default class AdManager {
     console.log("onVideoClose", e, JSON.stringify(e), o);
     GlobalApp.AdSchedule.stopSchedule();
     if (o) {
-      cc.director.emit("AD_SUC");
       setTimeout(function () {
         if (t.videoSuccessFun) {
           t.videoSuccessFun(e);

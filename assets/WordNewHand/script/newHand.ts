@@ -95,7 +95,7 @@ export default class newHand extends cc.Component {
         this.root2.active = true;
         this.closeEffect(this.root1);
         this.openEffect(this.root2);
-        let FRAME_CONF = this.config.FRAME_CONF;
+        let FRAME_CONF = this.config;
         cc.find("label_1", this.root2).getComponent(cc.Label).string = `nkey_005??&value1==${20}`//${FRAME_CONF.CoinConf[0].rdm_1}`;
         cc.find("label_2", this.root2).getComponent(cc.Label).string = this.formatNumber(FRAME_CONF.newHand.max);
         cc.find("richtext_1", this.root2).getComponent(cc.RichText).string = `<outline color=#0C2B3C width=2><b>nkey_009</b></outline>??&value1==<size=26><color= #FFF95C>86%</c></size>&value2==<size=26><color= #FFF95C>30</c></size>`;
@@ -155,23 +155,17 @@ export default class newHand extends cc.Component {
     }
 
     onTouchGo() {
+        // this.frameData.logLiftEvent(`game_life_key_node`, { "step": 'guide_end' });
+        // this.frameData.sdyEvent(345, "1");
+        
+        // this.frameData.earlierStageEvent("guide_reward", "guide_button");
+
         this.frameData.reportEventCall('n3');
         this.frameData.reportEventCall('n4');
-
+        cc.sys.localStorage.setItem("newHand", "1");
+       
         let FrameSDK = (<any>cc.js.getClassByName("FrameSDK"));
-        const LoadWordCls = (<any>cc.js.getClassByName("LoadWord"));
-        const isFirstEntry =
-            !cc.sys.localStorage.getItem("newHand") &&
-            FrameSDK?.frameData?.gameData?.isFlag;
-
-        if (isFirstEntry && LoadWordCls?.instance) {
-            FrameSDK?.openWindow("Panel_Award_New2", {
-                closeCB: () => LoadWordCls.instance.completeFirstEntryAndStartGame()
-            });
-        } else {
-            cc.sys.localStorage.setItem("newHand", "1");
-            FrameSDK?.openWindow("Panel_Award_New2");
-        }
+        FrameSDK?.openWindow("Panel_Award_New2");
         this.closeEffect(this.root2, () => {
             this.frameData.showGameGuide();
             this.node.destroy();

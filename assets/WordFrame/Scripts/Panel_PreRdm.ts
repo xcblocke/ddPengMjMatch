@@ -31,7 +31,7 @@ export default class Panel_PreRdm extends cc.Component {
     editbox: cc.EditBox = null;
 
     // LIFE-CYCLE CALLBACKS:
-    viewData: { numStr: string, closeCB?: () => void, autoChain?: boolean } = null;
+    viewData: { numStr: string, closeCB: () => void } = null;
 
     private _paymentIDs: number[] = [];
 
@@ -81,7 +81,7 @@ export default class Panel_PreRdm extends cc.Component {
                 
 
                 cc.director.emit("REFRESH_INFO");
-                FrameSDK.invokeAutoChainClose(this.viewData);
+                this.viewData.closeCB?.();
             } else {
                 FrameSDK.showToast("skey_024");
                 return;

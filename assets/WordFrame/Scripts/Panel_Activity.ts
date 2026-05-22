@@ -56,13 +56,10 @@ export default class Panel_Activity extends cc.Component {
     static coinTarget: cc.Node = null;
     private _close_target: cc.Node = null;
 
-    static startActivity(closeCB?: () => void, autoChain = false) {
-        const vd = closeCB
-            ? { closeCB, autoChain: autoChain && !!closeCB }
-            : { autoChain: false };
+    static startActivity(closeCB?: () => void) {
         if (FrameData.saveData.activity) {
-            FrameSDK.openWindow("Panel_Activity", vd);
-        } else if (FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.bankLevel)) {
+            FrameSDK.openWindow("Panel_Activity", { closeCB: closeCB });
+        } else if (FrameSDK.frameData.gameData.passLevel >= FrameData.FRAME_CONF.bankLevel) {
             // FrameSDK.openWindow("Panel_ActivityGuide", {
             //     type: 1,
             //     logoType: 'bank',
@@ -72,11 +69,9 @@ export default class Panel_Activity extends cc.Component {
             //         FrameSDK.openWindow("Panel_Activity", { closeCB: closeCB });
             //     }
             // });
-            FrameSDK.openWindow("Panel_Activity", vd);
+            FrameSDK.openWindow("Panel_Activity", { closeCB: closeCB });
         } else {
-            if (autoChain && closeCB) {
-                closeCB();
-            }
+            closeCB?.();
         }
     }
 
@@ -162,7 +157,8 @@ export default class Panel_Activity extends cc.Component {
 
     onDisable() {
         cc.director.emit("UPDATA_ACTIVITY");
-        FrameSDK.invokeAutoChainClose(this.viewData);
+        var e, t;
+        null === (t = (e = this.viewData).closeCB) || void 0 === t || t.call(e);
     }
 
     updateUi() {

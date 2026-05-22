@@ -190,12 +190,7 @@ export default class GameMain extends cc.Component {
         // this.startGame(false, true);
       } else if (event.animation.name === "kai") {
         this.ruchangAni.node.active = false;
-        if (LoadWord.instance.shouldDelayStartGameForFirstEntry()) {
-          LoadWord.instance.setPendingStartGame(() => this.startGame(false, true));
-          LoadWord.instance.showFirstEntryHand();
-        } else {
-          this.startGame(false, true);
-        }
+        this.startGame(false, true);
       } 
     });
   }
@@ -477,7 +472,6 @@ export default class GameMain extends cc.Component {
     this.updateBackStepBtnState();
     await this.gameInitGuide();
     cc.director.emit("resfLv");
-    LoadWord.instance.showPendingWithdrawGuideIfNeeded();
     return;
   }
   createMahjong() {
@@ -624,24 +618,11 @@ export default class GameMain extends cc.Component {
     this.rewaedAbMergeThreshold = RandomUtil.rangeInt(timeConf[0], timeConf[1]);
     CC_DEBUG && console.log("[rewardAB] merge count reset");
   }
-  /** 牌面已空 / 已进入结算：不弹产出（截图1），只走通关结算（截图2） */
-  shouldSkipRewardAbForPass() {
-    if (gameData.gameState === GameState.gameResult) {
-      return true;
-    }
-    const sdk = LoadWord.FrameSDK;
-    if (sdk && typeof sdk.isSettlementPhase === "function" && sdk.isSettlementPhase()) {
-      return true;
-    }
-    return this.isTg();
-  }
   _onRewardAbMergePopup() {
-    this._rewardAbPopupPending = false;
     if (!cc.isValid(this.node)) {
       return;
     }
-    if (this.shouldSkipRewardAbForPass()) {
-      CC_DEBUG && console.log("[rewardAB] skip popup: level clear / settlement");
+    if (gameData.gameState === GameState.gameResult) {
       this.resetRewardAbMergeCount();
       return;
     }
@@ -650,12 +631,8 @@ export default class GameMain extends cc.Component {
     });
   }
   /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
-  dealMergeReward() {
+  dealMergeReward(levelCleared = false) {
     if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
-      return;
-    }
-    if (this.shouldSkipRewardAbForPass()) {
-      this.resetRewardAbMergeCount();
       return;
     }
     if (this._rewardAbPopupPending) {
@@ -665,13 +642,12 @@ export default class GameMain extends cc.Component {
     if (this.rewardAbMergeCount <= this.rewaedAbMergeThreshold) {
       return;
     }
-    if (this.shouldSkipRewardAbForPass()) {
-      this.resetRewardAbMergeCount();
+    if (levelCleared) {
+      this.rewardAbMergeCount = 0;
       return;
     }
     this._rewardAbPopupPending = true;
-    this.rewardAbMergeCount = 0;
-    this.scheduleOnce(this._onRewardAbMergePopup, 1.1);
+    this.scheduleOnce(this._onRewardAbMergePopup, 1);
   }
 
   submitOperateInfo(e) {
@@ -683,13 +659,7 @@ export default class GameMain extends cc.Component {
       i = e.type,
       r = this.node.convertToWorldSpaceAR(cc.Vec2.ZERO);
     if (1 === i) {
-      if (n) {
-        this.resetRewardAbMergeCount();
-        const sdk = LoadWord.FrameSDK;
-        sdk && typeof sdk.setSettlementPhase === "function" && sdk.setSettlementPhase(true);
-      } else {
-        this.dealMergeReward();
-      }
+      this.dealMergeReward(n);
     }
     if (gameData.gameState == GameState.gameing) {
       this.isGameing = true;
@@ -733,9 +703,7 @@ export default class GameMain extends cc.Component {
       var v = function v(e) {
         if (e.is_tg) {
           gameData.gameState = GameState.gameResult;
-          t.resetRewardAbMergeCount();
-          const sdk = LoadWord.FrameSDK;
-          sdk && typeof sdk.setSettlementPhase === "function" && sdk.setSettlementPhase(true);
+          t.startGame(false);
         }
         if (gameData.gameLevel > 2 && !PlayerDataSys.isOppoReviewer() && !gameData.isOpenDemo) {
           gameData.linkTimes++;
@@ -926,7 +894,10 @@ export default class GameMain extends cc.Component {
       var n = {
         type: VideoType.Pass,
         is_force: o,
-        cb: null
+        cb: function () {
+          gameData.skipNextPreLevelPopups = true;
+          EventMgr.trigger(GameEventType.START_GAME);
+        }
       };
       if (gameData.isOpenDemo) EventMgr.trigger(GameEventType.START_GAME);else {
         EventMgr.trigger(GameEventType.PASS_LEVEL_EFFECT);
@@ -1073,8 +1044,6 @@ export default class GameMain extends cc.Component {
   }
   hideTeachingGuide() {
     this.teachGuideNode.active = false;
-    const sdk = LoadWord.FrameSDK;
-    sdk && typeof sdk.notifyTutorialStateChanged === "function" && sdk.notifyTutorialStateChanged();
   }
   showFreezeTip() {
     var e = this,
@@ -1116,35 +1085,10 @@ export default class GameMain extends cc.Component {
         novice_status: 4
       });
     }
+    GameUtils.checkPopUp(true, () => {});
     AudioManager.getInstance().playMusic("level_pass");
     AudioManager.getInstance().playMusic("yanhua");
   }
-
-  /** Panel_Award_6 领奖/飞币结束后：解锁弹窗链 → 下一关 Level 横幅 → 开局 */
-  onPassSettlementComplete() {
-    const sdk = LoadWord.FrameSDK;
-    if (sdk && typeof sdk.runAfterSettlementCoinFly === "function" && sdk.isSettlementCoinFlyPending()) {
-      sdk.runAfterSettlementCoinFly(() => this.onPassSettlementComplete());
-      return;
-    }
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
-      sdk && sdk.setSettlementPhase(false);
-      gameData.skipNextPreLevelPopups = true;
-      EventMgr.trigger(GameEventType.START_GAME);
-    };
-    const timer = setTimeout(() => {
-      console.warn("[GameMain] checkPopUp timeout after settlement, force start next level");
-      finish();
-    }, 12000);
-    GameUtils.checkPopUp(true, () => {
-      clearTimeout(timer);
-      finish();
-    });
-  }
-
   async showSettlementPage(e) {
     // var t;
     // (t = cc.instantiate(this.passLevelEffectPrefab)).parent = this.node;
@@ -1152,25 +1096,10 @@ export default class GameMain extends cc.Component {
     // this.scheduleOnce(function () {
     //   t.removeFromParent(true);
     // }, 2);
-    this.resetRewardAbMergeCount();
-    const sdk0 = LoadWord.FrameSDK;
-    if (sdk0) {
-      sdk0.setSettlementPhase(true);
-      sdk0.dismissSettlementBlockingPopups();
-    }
     await EngineUtil.sleep(500);
     this.prepareMahjongPassSettlement();
-    const sdk = LoadWord.FrameSDK;
-    if (sdk) {
-      sdk.setSettlementPhase(true);
-      sdk.dismissSettlementBlockingPopups();
-    }
-    const rawCb = e && e.cb;
     LoadWord.FrameSDK.openWindow("Panel_Award_6", {
-      closeCB: () => {
-        rawCb && rawCb();
-        this.onPassSettlementComplete();
-      },
+      closeCB: e.cb,
       mahjongSettlement: true
     });
     return;

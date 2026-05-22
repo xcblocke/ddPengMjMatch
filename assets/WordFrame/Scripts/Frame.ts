@@ -34,14 +34,6 @@ export default class Frame extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
     static ins: Frame = null;
-    private _lastVideoSucTs: number = 0;
-    private _onGuide2Tap = () => {
-        if (!(this.guide2?.active || this.hand2?.active)) {
-            return;
-        }
-        this.setGuide2Show(false);
-        FrameSDK.openPanel_Charity();
-    };
 
 
 
@@ -63,11 +55,6 @@ export default class Frame extends cc.Component {
             this.sendLevelMD();
         }, 1000);
         cc.director.on(FrameSDK.frameData.ListenKeys.VIDEO_SUC, () => {
-            const now = Date.now();
-            if (now - this._lastVideoSucTs < 500) {
-                return;
-            }
-            this._lastVideoSucTs = now;
             FrameData.saveData.skipADCount = 0;
             FrameData.saveData.CashVideoCount++;
             FrameSDK.updataVideoQueueUp();
@@ -76,9 +63,6 @@ export default class Frame extends cc.Component {
 
         this.setGuideShow(false);
         this.setGuide2Show(false);
-        // guide2 覆盖层会拦截底层按钮点击，这里直接监听引导层点击来触发 Charity 弹窗
-        this.guide2 && this.guide2.on(cc.Node.EventType.TOUCH_END, this._onGuide2Tap, this);
-        this.hand2 && this.hand2.on(cc.Node.EventType.TOUCH_END, this._onGuide2Tap, this);
         FrameSDK.currLevel = FrameSDK.frameData.gameData.passLevel + 1;
 
         FrameSDK.addFlagListen(()=>{
@@ -89,8 +73,6 @@ export default class Frame extends cc.Component {
     }
 
     onDestroy() {
-        this.guide2 && this.guide2.off(cc.Node.EventType.TOUCH_END, this._onGuide2Tap, this);
-        this.hand2 && this.hand2.off(cc.Node.EventType.TOUCH_END, this._onGuide2Tap, this);
         cc.director.removeAll(this);
         Frame.ins = null;
     }
@@ -130,8 +112,6 @@ export default class Frame extends cc.Component {
                 object_action: "show",
                 object_name: "new_6"
             }, true);
-        } else {
-            FrameSDK.notifyTutorialStateChanged();
         }
     }
 
@@ -139,18 +119,12 @@ export default class Frame extends cc.Component {
         this.guide2.active = this.hand2.active = isShow;
         if (isShow) {
             cc.director.emit("UNLOCK_CHARITY");
-        } else {
-            FrameSDK.notifyTutorialStateChanged();
         }
     }
 
     @CLICKLOCK()
     onBtnEvent(target, data: string) {
         if (data == "1") {
-            // guide2 教程态由 guide2/hand2 覆盖层点击统一处理，避免与按钮事件双触发导致重复弹窗。
-            if (this.guide2.active || this.hand2.active) {
-                return;
-            }
             FrameSDK.openPanel_Yellow();
         }
     }

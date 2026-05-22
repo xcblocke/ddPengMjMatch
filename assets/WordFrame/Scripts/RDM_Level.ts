@@ -42,7 +42,7 @@ export default class RDM_Level extends cc.Component {
     private ka3Value = RDM_Level.DEFAULT_KA3_VALUE;
     private dibuRollTargets: any[] = [];
 
-    viewData: { closeCB?: () => void, autoChain?: boolean } = null;
+    viewData:{closeCB?: Function} = null;
 
 
     protected onLoad(): void {
@@ -56,7 +56,7 @@ export default class RDM_Level extends cc.Component {
             FrameData.saveData.guideInedx = 2;
             this.scheduleOnce(() => {
                 this.openGuide();
-            }, 0);
+            }, 0.15);
             
         }
         this.scheduleOnce(() => {
@@ -95,7 +95,6 @@ export default class RDM_Level extends cc.Component {
         this.unscheduleAllCallbacks();
         this.clearDibuRollTweens();
         cc.director.removeAll(this);
-        FrameSDK.notifyTutorialStateChanged();
     }
 
     updateUI() {
@@ -182,7 +181,7 @@ export default class RDM_Level extends cc.Component {
 
     onBtnEvent(target, data: string) {
         if (data == "0") {
-            FrameSDK.invokeAutoChainClose(this.viewData);
+            this.viewData?.closeCB?.();
             this.node.destroy();
         } else if (data == "3") {
             this.guideInedx++;

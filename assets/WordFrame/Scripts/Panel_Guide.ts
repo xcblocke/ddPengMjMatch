@@ -39,7 +39,6 @@ export default class Panel_Guide extends cc.Component {
         if (this.type == 0) {
             this.node.active = false;
             Frame.ins.setGuideShow(false);
-            FrameSDK.notifyTutorialStateChanged();
             FrameSDK.openPanel_Yellow();
         } else {
             this.updataUi();

@@ -65,7 +65,7 @@ export default class buttonMgr extends cc.Component {
         is_force: t,
         background_info: e.background_info,
         cb: function () {
-          GlobalApp.GameMain.onPassSettlementComplete();
+          EventMgr.trigger(GameEventType.START_GAME);
         },
         tg_progress_info: e.tg_progress_info
       };
@@ -226,7 +226,6 @@ export default class buttonMgr extends cc.Component {
       onResult: function (a) {
         t.isWatchingPropVideo = false;
         if (1 === a) {
-          cc.director.emit("AD_SUC");
           t.claimPropByVideo(e, o, true);
         } else if (-1 === a) {
           SdkHelper.showForceToast(`gkey_314`);

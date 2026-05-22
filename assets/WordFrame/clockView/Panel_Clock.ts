@@ -133,25 +133,20 @@ export default class Panel_Clock extends cc.Component {
 
     static ins: Panel_Clock = null;
     static coinTarget: cc.Node = null;
-    viewData: { closeCB?: () => void, autoChain?: boolean } = null;
+    viewData: { closeCB: () => void } = null;
     private _close_target: cc.Node = null;
 
 
-    static openClock(closeCB?: () => void, autoChain = false) {
-        const shouldOpen = FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.ClockLevel);
-        if (shouldOpen) {
-            Panel_Clock.startPhone(closeCB, autoChain);
-        } else {
-            closeCB?.();
+    static openClock(closeCB?: () => void) {
+        if (FrameSDK.frameData.gameData.passLevel >= FrameData.FRAME_CONF.ClockLevel) {
+            Panel_Clock.startPhone(closeCB);
         }
+
     }
 
-    static startPhone(closeCB?: () => void, autoChain = false) {
-        const vd = closeCB
-            ? { closeCB, autoChain: autoChain && !!closeCB }
-            : { autoChain: false };
+    static startPhone(closeCB?: () => void) {
         if (FrameData.saveData.ClockUserInfo) {
-            FrameSDK.openWindow("Panel_Clock", vd);
+            FrameSDK.openWindow("Panel_Clock", { closeCB: closeCB });
         } else {
             Panel_Clock.bulidUserData();
             // FrameSDK.openWindow("Panel_ActivityGuide", {
@@ -163,7 +158,7 @@ export default class Panel_Clock extends cc.Component {
             //         FrameSDK.openWindow("Panel_Clock", { closeCB: closeCB });
             //     }
             // });
-            FrameSDK.openWindow("Panel_Clock", vd);
+            FrameSDK.openWindow("Panel_Clock", { closeCB: closeCB });
         }
         cc.director.emit("UPDATA_CLOCK");
     }
@@ -224,20 +219,6 @@ export default class Panel_Clock extends cc.Component {
         this.schedule(this.flash, 1);
     }
 
-    /** 同步「今日过关数」：优先用 passLevel - startLevel 实时推导，避免事件漏发导致进度不增长。 */
-    private syncDayLevelTimeByPassLevel() {
-        if (!this.userInfo) { return; }
-        const passLevelRaw = FrameSDK.frameData && FrameSDK.frameData.gameData
-            ? FrameSDK.frameData.gameData.passLevel
-            : 0;
-        const passLevel = Math.max(0, Math.floor(Number(passLevelRaw) || 0));
-        const startLevel = Math.max(0, Math.floor(Number(this.userInfo.startLevel) || 0));
-        const derived = Math.max(0, passLevel - startLevel);
-        if (!Number.isFinite(this.userInfo.dayLevelTime) || this.userInfo.dayLevelTime < derived) {
-            this.userInfo.dayLevelTime = derived;
-        }
-    }
-
     static bulidUserData() {
         if (FrameData.saveData.ClockUserInfo == null) {
             FrameData.saveData.ClockUserInfo = {
@@ -296,17 +277,16 @@ export default class Panel_Clock extends cc.Component {
         if (!FrameData.saveData.ClockUserInfo) { return }
         let info: ClockUserInfo = FrameData.saveData.ClockUserInfo;
         let config: ClockConfig = FrameData.FRAME_CONF.ClockConfig;
-        info.dayVideoTime = Math.max(0, Math.floor(Number(info.dayVideoTime) || 0)) + 1;
         let state = Panel_Clock.calcState();
         if (state == "s1" && Panel_Clock.getSignIndexByInfo(info, config) == 0) {
-            // 预留：如后续第一档改为广告任务，可直接用 dayVideoTime 判定。
+            // info.dayVideoTime++;
         }
         if (state == "s3") {
             info.SendVideoCount++;
         }
 
         // 面板不一定已打开：仅在实例存在时更新 UI 引用/刷新
-        if (Panel_Clock.ins && cc.isValid(Panel_Clock.ins.node)) {
+        if (Panel_Clock.ins) {
             Panel_Clock.ins.userInfo = info;
             Panel_Clock.ins.flash();
         }
@@ -353,7 +333,6 @@ export default class Panel_Clock extends cc.Component {
         if (this.isBlockKey == true) {
             return;
         }
-        this.syncDayLevelTimeByPassLevel();
 
         let type = Panel_Clock.calcState();
 
@@ -395,8 +374,7 @@ export default class Panel_Clock extends cc.Component {
                         // this.s1Rich.getComponent(cc.RichText).string = `clok_036??&value1==<color=#86FF04><b>${Math.round(this.config.task[this.userInfo.signCount]/60)}</b></c>`;
                         // this.s1taskIcon.spriteFrame = this.taskIcon[0];
                         // curNum = this.userInfo.HuoYueTime;
-                        let num = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0; 
-                        this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${num}</b></c>`;
+                        this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime}</b></c>`;
                         this.s1taskIcon.spriteFrame = this.taskIcon[1];
                         curNum = this.userInfo.dayLevelTime;
                         totalNum = this.config.task[0];
@@ -407,19 +385,16 @@ export default class Panel_Clock extends cc.Component {
                         totalNum = this.config.task[0]
                     }
                 } else if (index == 1) {
-                    let num = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0;
-                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${num}</b></c>`;
+                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime}</b></c>`;
                     this.s1taskIcon.spriteFrame = this.taskIcon[1];
                     curNum = this.userInfo.dayLevelTime //= FrameSDK.frameData.gameData.passLevel - this.userInfo.startLevel;
                 } else if (index == 2) {
-                    let num = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0;
-                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${num}</b></c>`;
+                    this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime}</b></c>`;
                     this.s1taskIcon.spriteFrame = this.taskIcon[1];
                     curNum = this.userInfo.dayLevelTime //= FrameSDK.frameData.gameData.passLevel - this.userInfo.startLevel;
                 }
                 if (curNum > totalNum) { curNum = totalNum }
 
-                console.log("curNum===========33333",curNum,totalNum);
 
 
                 this.s1Process.getComponent(cc.Sprite).fillRange = curNum / totalNum;
@@ -647,7 +622,7 @@ export default class Panel_Clock extends cc.Component {
 
     onTouchClo() {
         this.blockView.active = true;
-        FrameSDK.closeEffect(this, () => FrameSDK.invokeAutoChainClose(this.viewData));
+        FrameSDK.closeEffect(this, this.viewData.closeCB)
     }
 
     /**根据当前的配置信息判定状态 */

@@ -44,7 +44,7 @@ export default class effectsLayout extends cc.Component {
         cc.director.removeAll(this);
     }
 
-    piaoCoin(num: number, charityNum: number, donateTime: number, callback?: () => any, opts?: { excludePiggy?: boolean; fromSettlement?: boolean; skipCoinTipsPanel?: boolean }) {
+    piaoCoin(num: number, charityNum: number, donateTime: number, callback?: () => any, opts?: { excludePiggy?: boolean }) {
         if (!CashFishCredit.isUnlocked('yellowCoin')) {
             num = 0;
         }
@@ -54,24 +54,14 @@ export default class effectsLayout extends cc.Component {
 
         const playCoinAnimation = num !== 0;
         const playCharityAnimation = charityNum !== 0 && !FrameSDK.frameData.gameData.noProfitAd;
-        const finishCallback = () => {
-            if (opts?.fromSettlement) {
-                FrameSDK.notifySettlementCoinFlyEnd();
-            }
-            callback?.();
-        };
 
         if (!playCoinAnimation && !playCharityAnimation) {
-            finishCallback();
+            callback?.();
             return;
         }
 
-        if (opts?.fromSettlement) {
-            FrameSDK.notifySettlementCoinFlyStart();
-        }
-
         new Promise<boolean>(resolve => {
-            if (opts?.skipCoinTipsPanel || num <= 100) {
+            if (num <= 100) {
                 resolve(false);
                 return;
             }
@@ -177,7 +167,7 @@ export default class effectsLayout extends cc.Component {
                         if (charityAnimationEnded && !callbackDone) {
                             callbackDone = true;
                             this.inputBlocker.enabled = false;
-                            finishCallback();
+                            callback?.();
                         }
                     }, false);
                 } else {
@@ -233,7 +223,7 @@ export default class effectsLayout extends cc.Component {
                         if (coinAnimationEnded && !callbackDone) {
                             this.inputBlocker.enabled = false;
                             callbackDone = true;
-                            finishCallback();
+                            callback?.();
                         }
                     };
 
@@ -264,7 +254,7 @@ export default class effectsLayout extends cc.Component {
                 if (coinAnimationEnded && charityAnimationEnded && !callbackDone) {
                     this.inputBlocker.enabled = false;
                     callbackDone = true;
-                    finishCallback();
+                    callback?.();
                 }
             });
     }

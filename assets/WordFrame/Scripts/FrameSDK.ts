@@ -1,5 +1,4 @@
 import { logAd } from "../../Scripts/common/AdLog";
-import GlobalApp from "../../Scripts/common/GlobalApp";
 import Panel_Clock from "../clockView/Panel_Clock";
 import Frame from "./Frame";
 import { FrameData } from "./FrameData";
@@ -22,13 +21,6 @@ type GoodsList = {
     pay_methods: [],
     sdk_params: { field: string, name: string, comment?: string }[]
 }
-
-/** WordFrame 弹窗 viewData：autoChain 仅通关结算后自动串联时为 true */
-export type FramePopupViewData = {
-    closeCB?: () => void;
-    autoChain?: boolean;
-    [key: string]: any;
-};
 
 interface IEventLike {
     object_action: string,
@@ -58,31 +50,6 @@ export class FrameSDK {
     private static soundList: cc.AudioClip[] = [];
     private static _lastVideoEndTime: number = 0;
     private static bundleName = "WordFrame";
-    /** 结算领奖飞币进行中（>0 时延迟主动弹窗链） */
-    private static _settlementCoinFlyPending = 0;
-    private static _afterSettlementCoinFlyQueue: Array<() => void> = [];
-    private static _settlementPhase = false;
-    /** 弹窗异步加载中的互斥锁，防止同一弹窗被连续点开两次 */
-    private static _popupOpeningFlags = new Set<string>();
-    /** 教程进行中延迟的弹窗任务 */
-    private static _afterTutorialIdleQueue: Array<() => void> = [];
-    private static _tutorialFlushTimer: any = null;
-    private static _tutorialFlushing = false;
-    /** 教程期间点击过多时，只保留一次 Charity 打开请求 */
-    private static _pendingOpenCharityAfterTutorial = false;
-    /** 教程期间点击过多时，只保留一次 Yellow 打开请求 */
-    private static _pendingOpenYellowAfterTutorial = false;
-    /** 手动点击防重：对应弹窗关闭前只允许触发一次 */
-    private static _manualYellowOpenLocked = false;
-    private static _manualCharityOpenLocked = false;
-    /** 教程进行中也允许打开的弹窗（新手补贴页等） */
-    private static readonly TUTORIAL_EXEMPT_WINDOWS = new Set([
-        "Panel_Guide",
-        "Panel_Award_New2",
-        "Panel_Award_New",
-        "Panel_Account",
-        "Panel_Tips",
-    ]);
 
     static init(frameData, configs) {
         console.log("init=========== 11111", JSON.stringify(frameData));
@@ -102,9 +69,7 @@ export class FrameSDK {
         FrameSDK.onlineTimeUpdate();
         FrameSDK.resetNextData();
         FrameSDK.updataTimeQueueUp();
-        cc.director.on("addCoin_A", FrameSDK.addCoin_A, FrameSDK);
-        cc.director.on("NEW_HAND_FINISH", FrameSDK.notifyTutorialStateChanged, FrameSDK);
-        cc.director.on("CHARITY_GUIDE_FINISH", FrameSDK.notifyTutorialStateChanged, FrameSDK);
+        cc.director.on("addCoin_A", FrameSDK.addCoin_A, FrameSDK)
 
     }
 
@@ -177,7 +142,7 @@ export class FrameSDK {
         FrameData.configs = data;
         console.log("data。。。。。。。。...........", data);
         console.log("data。。。。。。。。...........112", !FrameSDK.frameData.gameData.noProfitAd);
-        let confName = !FrameSDK.frameData.gameData.noProfitAd ? "basicConfig" : "partyplay"
+        let confName = !FrameSDK.frameData.gameData.noProfitAd ? "basicConfig" : "shadow"
         let LINK_CONF = data?.[confName] || {};
 
         for (let key in LINK_CONF.SDK_CONF) {
@@ -877,119 +842,37 @@ export class FrameSDK {
         }
     }
 
-    static openPanel_Yellow(call?: Function, autoChain = false) {
-        const isManual = !autoChain && !call;
-        if (isManual && FrameSDK._manualYellowOpenLocked) {
-            return;
-        }
-        if (isManual) {
-            FrameSDK._manualYellowOpenLocked = true;
-        }
-        if (FrameSDK.isTutorialActive()) {
-            if (FrameSDK._pendingOpenYellowAfterTutorial) {
-                return;
-            }
-            FrameSDK._pendingOpenYellowAfterTutorial = true;
-            FrameSDK.runAfterTutorialIdle(() => {
-                FrameSDK._pendingOpenYellowAfterTutorial = false;
-                FrameSDK.openPanel_Yellow(call, autoChain);
-            });
-            return;
-        }
-        const open = () => {
-            if (FrameSDK._popupOpeningFlags.has("RDM_Level") || FrameSDK._popupOpeningFlags.has("RDM_Charity")) {
-                if (autoChain && call) {
-                    FrameSDK.runAfterTutorialIdle(() => FrameSDK.openPanel_Yellow(call, autoChain));
+    static openPanel_Yellow(call?: Function) {
+        FrameSDK.loadPrefab("RDM_Level", prefab => {
+            let node: cc.Node = cc.instantiate(prefab);
+            node.parent = FrameSDK.Panel;
+            node.getComponent(RDM_Level).viewData = {
+                closeCB: () => {
+                    call && call();
                 }
-                return;
-            }
-            if (FrameSDK.Panel && cc.isValid(FrameSDK.Panel)) {
-                const existed = FrameSDK.Panel.children.some((child) => child && cc.isValid(child) && child.name === "RDM_Level");
-                if (existed) {
-                    if (autoChain && call) {
-                        FrameSDK.runAfterTutorialIdle(() => FrameSDK.openPanel_Yellow(call, autoChain));
-                    }
-                    return;
-                }
-            }
-            FrameSDK._popupOpeningFlags.add("RDM_Level");
-            FrameSDK.loadPrefab("RDM_Level", prefab => {
-                let node: cc.Node = cc.instantiate(prefab);
-                node.parent = FrameSDK.Panel;
-                const vd: FramePopupViewData = {
-                    closeCB: () => {
-                        call && call();
-                    },
-                    autoChain: autoChain && !!call
-                };
-                node.getComponent(RDM_Level).viewData = vd;
-                FrameSDK._popupOpeningFlags.delete("RDM_Level");
-            });
-        };
-        const run = () => {
-            if (autoChain && FrameSDK.isSettlementCoinFlyPending()) {
-                FrameSDK.runAfterSettlementCoinFly(open);
-                return;
-            }
-            open();
-        };
-        FrameSDK.runAfterTutorialIdle(run);
+            };
+        });
     }
 
     static openPanel_Charity() {
-        const isManual = true;
-        if (isManual && FrameSDK._manualCharityOpenLocked) {
-            return;
-        }
-        FrameSDK._manualCharityOpenLocked = true;
-        if (FrameSDK.isTutorialActive()) {
-            if (FrameSDK._pendingOpenCharityAfterTutorial) {
-                return;
-            }
-            FrameSDK._pendingOpenCharityAfterTutorial = true;
-            FrameSDK.runAfterTutorialIdle(() => {
-                FrameSDK._pendingOpenCharityAfterTutorial = false;
-                FrameSDK.openPanel_Charity();
-            });
-            return;
-        }
-        if (FrameSDK._popupOpeningFlags.has("RDM_Charity") || FrameSDK._popupOpeningFlags.has("RDM_Level")) {
-            return;
-        }
-        if (FrameSDK.Panel && cc.isValid(FrameSDK.Panel)) {
-            const existed = FrameSDK.Panel.children.some((child) => child && cc.isValid(child) && child.name === "RDM_Charity");
-            if (existed) {
-                return;
-            }
-        }
-        FrameSDK._popupOpeningFlags.add("RDM_Charity");
         FrameSDK.loadPrefab("RDM_Charity", prefab => {
             let node: cc.Node = cc.instantiate(prefab);
             node.parent = FrameSDK.Panel;
-            FrameSDK._popupOpeningFlags.delete("RDM_Charity");
         });
     }
 
     static currLevel: number = 0;
 
     static openABAward(call?: Function) {
-        const run = () => {
-            if (FrameSDK.isSettlementPhase()) {
+        if (FrameSDK.frameData.gameData.passLevel + 1 < FrameData.FRAME_CONF.AbPop) {
+            return;
+        }
+        FrameData.saveData.preAwardType = (FrameData.saveData.preAwardType + 1) % 2;
+        FrameSDK.openWindow("Panel_Award_" + (FrameData.saveData.preAwardType === 1 ? "3" : "3"), {
+            closeCB: () => {
                 call && call();
-                return;
             }
-            if (FrameSDK.frameData.gameData.passLevel + 1 < FrameData.FRAME_CONF.AbPop) {
-                call && call();
-                return;
-            }
-            FrameData.saveData.preAwardType = (FrameData.saveData.preAwardType + 1) % 2;
-            FrameSDK.openWindow("Panel_Award_" + (FrameData.saveData.preAwardType === 1 ? "3" : "1"), {
-                closeCB: () => {
-                    call && call();
-                }
-            });
-        };
-        FrameSDK.runAfterTutorialIdle(run);
+        });
     }
 
     static openLevelAward(externalNode?: cc.Node, unlockCountUpdateFunc?: (unlockCount: number) => any, superExternalNode?: cc.Node, param?: any, callback?: (type: "home" | "continue") => any): void {
@@ -1020,238 +903,22 @@ export class FrameSDK {
     }
 
     static openWindow(name: string, data: any = {}, parent?: cc.Node) {
-        const open = () => {
-            FrameSDK.loadPrefab(name, (prefab) => {
-                let node: cc.Node = cc.instantiate(prefab);
-                node.getComponent(name).viewData = data;
-                node.parent = parent || FrameSDK.Panel;
-            });
-        };
-        if (!FrameSDK.isTutorialExemptWindow(name) && FrameSDK.isTutorialActive()) {
-            FrameSDK.runAfterTutorialIdle(open);
-            return;
-        }
-        open();
-    }
-
-    /** 仅 autoChain 为 true 时执行 closeCB（手动按钮打开的弹窗勿设 autoChain） */
-    static invokeAutoChainClose(viewData: FramePopupViewData | null | undefined): void {
-        if (!viewData || !viewData.autoChain || !viewData.closeCB) {
-            return;
-        }
-        const cb = viewData.closeCB;
-        viewData.closeCB = undefined;
-        viewData.autoChain = false;
-        cb();
-    }
-
-    static chainPopupViewData(closeCB?: () => void): FramePopupViewData {
-        if (!closeCB) {
-            return { autoChain: false };
-        }
-        return { closeCB, autoChain: true };
-    }
-
-    static isSettlementPhase(): boolean {
-        return FrameSDK._settlementPhase;
-    }
-
-    static isSettlementCoinFlyPending(): boolean {
-        return FrameSDK._settlementCoinFlyPending > 0;
-    }
-
-    static setSettlementPhase(active: boolean): void {
-        FrameSDK._settlementPhase = active;
-        if (active && Frame.ins) {
-            Frame.ins.setGuideShow(false);
-        }
-    }
-
-    static notifySettlementCoinFlyStart(): void {
-        FrameSDK._settlementCoinFlyPending++;
-    }
-
-    static notifySettlementCoinFlyEnd(): void {
-        FrameSDK._settlementCoinFlyPending = Math.max(0, FrameSDK._settlementCoinFlyPending - 1);
-        if (FrameSDK._settlementCoinFlyPending === 0) {
-            const queue = FrameSDK._afterSettlementCoinFlyQueue.splice(0);
-            queue.forEach((fn) => fn());
-        }
-    }
-
-    /** 结算飞币结束后再执行（主动弹窗链、autoChain 提现页等） */
-    static runAfterSettlementCoinFly(fn: () => void): void {
-        if (FrameSDK._settlementCoinFlyPending > 0) {
-            FrameSDK._afterSettlementCoinFlyQueue.push(fn);
-            return;
-        }
-        fn();
-    }
-
-    static isTutorialExemptWindow(name: string): boolean {
-        return FrameSDK.TUTORIAL_EXEMPT_WINDOWS.has(name);
-    }
-
-    /** Frame 提现引导 / RDM 内引导 / 局内教学 / 新手补贴页 等是否进行中 */
-    static isTutorialActive(): boolean {
-        if (FrameSDK._popupOpeningFlags.has("RDM_Level") || FrameSDK._popupOpeningFlags.has("RDM_Charity")) {
-            return true;
-        }
-        if (Frame.ins) {
-            if (Frame.ins.guide && Frame.ins.guide.active) {
-                return true;
-            }
-            if (Frame.ins.hand && Frame.ins.hand.active) {
-                return true;
-            }
-            if (Frame.ins.guide2 && Frame.ins.guide2.active) {
-                return true;
-            }
-            if (Frame.ins.hand2 && Frame.ins.hand2.active) {
-                return true;
-            }
-        }
-        const LW: any = cc.js.getClassByName("LoadWord");
-        const handNode = LW && LW.instance && LW.instance.handNode;
-        if (handNode && cc.isValid(handNode) && handNode.activeInHierarchy) {
-            return true;
-        }
-        const gm = GlobalApp && GlobalApp.GameMain;
-        if (gm && gm.teachGuideNode && cc.isValid(gm.teachGuideNode) && gm.teachGuideNode.active) {
-            return true;
-        }
-        if (!FrameSDK.Panel || !cc.isValid(FrameSDK.Panel)) {
-            return false;
-        }
-        for (let i = 0; i < FrameSDK.Panel.children.length; i++) {
-            const child = FrameSDK.Panel.children[i];
-            if (!child || !cc.isValid(child) || !child.activeInHierarchy) {
-                continue;
-            }
-            if (child.name === "Panel_Guide") {
-                return true;
-            }
-            if (child.name === "RDM_Level") {
-                return true;
-            }
-            if (child.name === "RDM_Charity") {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /** 教程结束后再执行弹窗逻辑（与结算飞币队列独立） */
-    static runAfterTutorialIdle(fn: () => void): void {
-        if (!fn) {
-            return;
-        }
-        if (!FrameSDK.isTutorialActive()) {
-            fn();
-            return;
-        }
-        FrameSDK._afterTutorialIdleQueue.push(fn);
-        FrameSDK._scheduleTutorialFlush();
-    }
-
-    static notifyTutorialStateChanged(): void {
-        const hasLevel = !!(FrameSDK.Panel && cc.isValid(FrameSDK.Panel) && FrameSDK.Panel.children.some((child) => child && cc.isValid(child) && child.name === "RDM_Level"));
-        const hasCharity = !!(FrameSDK.Panel && cc.isValid(FrameSDK.Panel) && FrameSDK.Panel.children.some((child) => child && cc.isValid(child) && child.name === "RDM_Charity"));
-        if (!hasLevel && !FrameSDK._popupOpeningFlags.has("RDM_Level")) {
-            FrameSDK._manualYellowOpenLocked = false;
-        }
-        if (!hasCharity && !FrameSDK._popupOpeningFlags.has("RDM_Charity")) {
-            FrameSDK._manualCharityOpenLocked = false;
-        }
-        FrameSDK._scheduleTutorialFlush();
-    }
-
-    private static _scheduleTutorialFlush(): void {
-        if (FrameSDK._tutorialFlushTimer != null) {
-            return;
-        }
-        FrameSDK._tutorialFlushTimer = setTimeout(() => {
-            FrameSDK._tutorialFlushTimer = null;
-            FrameSDK._flushTutorialQueue();
-        }, 0);
-    }
-
-    private static _flushTutorialQueue(): void {
-        if (FrameSDK.isTutorialActive()) {
-            return;
-        }
-        if (FrameSDK._tutorialFlushing || FrameSDK._afterTutorialIdleQueue.length === 0) {
-            return;
-        }
-        FrameSDK._tutorialFlushing = true;
-        const fn = FrameSDK._afterTutorialIdleQueue.shift();
-        try {
-            fn && fn();
-        } finally {
-            FrameSDK._tutorialFlushing = false;
-            if (FrameSDK._afterTutorialIdleQueue.length > 0) {
-                FrameSDK._scheduleTutorialFlush();
-            }
-        }
-    }
-
-    /** 打开结算面板前关闭会与 CONGRATES/飞币 叠层的弹窗 */
-    static dismissSettlementBlockingPopups(): void {
-        if (!FrameSDK.Panel || !cc.isValid(FrameSDK.Panel)) {
-            return;
-        }
-        const blockNames = new Set([
-            "RDM_Level",
-            "Panel_CoinTips",
-            "Panel_Activity",
-            "Panel_PreRdm",
-            "Panel_Task",
-            "Panel_DailyClearanceReward",
-            "Panel_Award_1",
-            "Panel_Award_3",
-        ]);
-        const children = FrameSDK.Panel.children.slice();
-        children.forEach((child) => {
-            if (child && cc.isValid(child) && blockNames.has(child.name)) {
-                child.destroy();
-            }
+        FrameSDK.loadPrefab(name, (prefab) => {
+            let node: cc.Node = cc.instantiate(prefab);
+            node.getComponent(name).viewData = data;
+            node.parent = parent || FrameSDK.Panel;
         });
     }
 
-    /**
-     * 配置「第 N 关解锁」：通关第 N 关后触发（结算时 gameLevel=N，passLevel=N-1）。
-     * 统一用 passLevel+1 >= N，勿单独用 passLevel >= N（会晚一关）。
-     */
-    static isUnlockLevelReached(configLevel: number): boolean {
-        const need = Math.max(1, Math.floor(Number(configLevel) || 1));
-        const passLevel = Math.max(0, Math.floor(Number(FrameSDK.frameData.gameData.passLevel) || 0));
-        return passLevel + 1 >= need;
-    }
-
-    /** 关卡横幅弹出前等待，避免与上一弹窗/飞币动画衔接太紧 */
-    static LEVEL_BANNER_OPEN_DELAY_MS = 200;
-
     /** 关卡开始横幅（Panel_ShowLevel 预制体） */
     static showLevelStartBanner(callback?: () => void, level?: number): void {
-        FrameSDK.runAfterTutorialIdle(() => FrameSDK._showLevelStartBannerImpl(callback, level));
-    }
-
-    private static _showLevelStartBannerImpl(callback?: () => void, level?: number): void {
         const lv = level != null && !isNaN(Number(level))
             ? Math.floor(Number(level))
             : FrameSDK.frameData.gameData.passLevel + 1;
-        const open = () => {
-            FrameSDK.openWindow("Panel_ShowLevel", {
-                level: lv,
-                closeCB: callback
-            });
-        };
-        const delay = FrameSDK.LEVEL_BANNER_OPEN_DELAY_MS;
-        if (delay > 0) {
-            setTimeout(open, delay);
-        } else {
-            open();
-        }
+        FrameSDK.openWindow("Panel_ShowLevel", {
+            level: lv,
+            closeCB: callback
+        });
     }
 
     static openGradeNum: number = 0;
@@ -1283,37 +950,27 @@ export class FrameSDK {
             callback?.();
         }
     }
-    /**通关后调用 关卡数值增加后（须在结算飞币结束后）*/
+    /**通关后调用 关卡数值增加后*/
     static checkPopUp(levelPassed: boolean, callback?: () => any): void {
-        FrameSDK.runAfterSettlementCoinFly(() => {
-            FrameSDK.runAfterTutorialIdle(() => {
-                FrameSDK._checkPopUpImpl(levelPassed, callback);
-            });
-        });
-    }
-
-    private static _checkPopUpImpl(levelPassed: boolean, callback?: () => any): void {
         new Promise<void>(resolve => {
-            if (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.charityLevel) && FrameData.saveData.charityGuideIndex <= 0) {
-                Frame.ins.setGuide2Show(true);
-                if (FrameData.saveData.charityGuideIndex <= 0) {
-                    FrameData.saveData.charityGuideIndex = 1;
-                }
-                resolve();
+            if (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.frameData.gameData.passLevel + 1 >= FrameData.FRAME_CONF.charityLevel && FrameData.saveData.charityGuideIndex <= 0) {
+                cc.director.once("CHARITY_GUIDE_FINISH", () => resolve());
+                // this.openWindow("Panel_GuideTips", { type: "charity", closeCB: () => Frame.ins.setGuide2Show(true) });
+                Frame.ins.setGuide2Show(true)
             } else {
                 resolve();
             }
         })
             .then(() => new Promise<void>(resolve => {
-                if (FrameData.saveData.activity === null && FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.bankLevel)) {
-                    Panel_Activity.startActivity(resolve, true);
+                if (FrameData.saveData.activity === null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.bankLevel) {
+                    Panel_Activity.startActivity(resolve);
                 } else {
                     resolve();
                 }
             }))
             .then(() => new Promise<void>(resolve => {
-                if (FrameData.saveData.lvAwardinfo == null && FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.taskLevel)) {
-                    Panel_Task.startTask(resolve, true);
+                if (FrameData.saveData.lvAwardinfo == null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.taskLevel) {
+                    Panel_Task.startTask(resolve);
                 } else {
                     resolve();
                 }
@@ -1321,11 +978,11 @@ export class FrameSDK {
             .then(() => new Promise<void>(resolve => {
                 // 每日通关奖励：第二关通关后解锁（仅展示一次）
                     const unlockLv = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.dailyClearanceUnlockLevel) || 2));
-                    const unlocked = FrameSDK.isUnlockLevelReached(unlockLv);
+                    const unlocked = FrameSDK.frameData.gameData.passLevel+ 1 >= unlockLv;
                     const once = FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["daily_clearance_unlock"];
                     if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
                         FrameData.saveData.onceEventRecord["daily_clearance_unlock"] = true;
-                        Panel_DailyClearanceReward.start(resolve, true);
+                        Panel_DailyClearanceReward.start(resolve);
                         return;
                     }
                 resolve();
@@ -1333,39 +990,27 @@ export class FrameSDK {
             .then(() => new Promise<void>(resolve => {
                 // 预绑定提现/账号页：第 10 关解锁（仅展示一次）
                     const unlockLv = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.preRdmUnlockLevel) || 10));
-                    const unlocked = FrameSDK.isUnlockLevelReached(unlockLv);
+                    const unlocked = FrameSDK.frameData.gameData.passLevel+ 1 >= unlockLv;
                     const once = FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["pre_rdm_unlock"];
                     if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
                         FrameData.saveData.onceEventRecord["pre_rdm_unlock"] = true;
-                        FrameSDK.openPanel_Yellow(resolve, true);
-                        FrameSDK.openWindow("Panel_PreRdm", Object.assign(FrameSDK.chainPopupViewData(resolve), {
+                        FrameSDK.openPanel_Yellow(resolve);
+                        // 按 Panel_PreRdm 的 viewData 结构传参
+                        FrameSDK.openWindow("Panel_PreRdm", {
                             numStr: FrameSDK.convertCoinToStr(FrameData.credit, true),
-                        }));
+                            closeCB: ()=>{},
+                        });
                         return;
                     }
                 resolve();
             }))
             .then(() => new Promise<void>(resolve => {
-                if (FrameSDK.frameData.gameData.isFlag && FrameData.saveData.ClockUserInfo == null && FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.ClockLevel)) {
-                    Panel_Clock.openClock(resolve, true);
+                console.log("FrameSDK.frameData.gameData===========33333",FrameData.FRAME_CONF.ClockLevel,FrameData.FRAME_CONF.bankLevel,FrameData.FRAME_CONF.charityLevel);
+                if (FrameSDK.frameData.gameData.isFlag && FrameData.saveData.ClockUserInfo == null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.ClockLevel) {
+                    Panel_Clock.openClock(resolve);
                 } else {
                     resolve();
                 }
-            }))
-            .then(() => new Promise<void>(resolve => {
-                const onceKey = "partyplay_first_rdm_after_lv1";
-                const once = FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord[onceKey];
-                if (
-                    levelPassed &&
-                    !FrameSDK.frameData.gameData.isFlag &&
-                    FrameSDK.frameData.gameData.passLevel === 0 &&
-                    !once
-                ) {
-                    FrameData.saveData.onceEventRecord[onceKey] = true;
-                    FrameSDK.openPanel_Yellow(resolve, true);
-                    return;
-                }
-                resolve();
             }))
             .then(() => callback?.());
     }
@@ -1373,11 +1018,11 @@ export class FrameSDK {
     static hasPopUp(): boolean {
         const dailyUnlockLv = Math.max(1, Math.floor(Number((FrameData.FRAME_CONF as any).dailyClearanceUnlockLevel) || 2));
         const preRdmUnlockLv = Math.max(1, Math.floor(Number((FrameData.FRAME_CONF as any).preRdmUnlockLevel) || 10));
-        return (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.charityLevel) && FrameData.saveData.charityGuideIndex <= 0)
-            || (FrameData.saveData.activity === null && FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.bankLevel))
-            || (FrameData.saveData.lvAwardinfo == null && FrameSDK.isUnlockLevelReached(FrameData.FRAME_CONF.taskLevel))
-            || (FrameSDK.frameData.gameData.isFlag && FrameSDK.isUnlockLevelReached(dailyUnlockLv) && !(FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["daily_clearance_unlock"]))
-            || (FrameSDK.frameData.gameData.isFlag && FrameSDK.isUnlockLevelReached(preRdmUnlockLv) && !(FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["pre_rdm_unlock"]));
+        return (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.frameData.gameData.passLevel + 1>= FrameData.FRAME_CONF.charityLevel && FrameData.saveData.charityGuideIndex <= 0)
+            || (FrameData.saveData.activity === null && FrameSDK.frameData.gameData.passLevel+ 1 >= FrameData.FRAME_CONF.bankLevel)
+            || (FrameData.saveData.lvAwardinfo == null && FrameSDK.frameData.gameData.passLevel + 1>= FrameData.FRAME_CONF.taskLevel)
+            || (FrameSDK.frameData.gameData.isFlag && FrameSDK.frameData.gameData.passLevel + 1>= dailyUnlockLv && !(FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["daily_clearance_unlock"]))
+            || (FrameSDK.frameData.gameData.isFlag && FrameSDK.frameData.gameData.passLevel + 1>= preRdmUnlockLv && !(FrameData.saveData.onceEventRecord && FrameData.saveData.onceEventRecord["pre_rdm_unlock"]));
     }
 
     static todayFirst = true
@@ -1390,12 +1035,6 @@ export class FrameSDK {
      * @param callback 回调（关卡在回调后才开始游戏）
      */
     static beforeGameLevelStart(levelA: number, levelB?: number, levelC?: any, callback?: () => any): void {
-        FrameSDK.runAfterTutorialIdle(() => {
-            FrameSDK._beforeGameLevelStartImpl(levelA, levelB, levelC, callback);
-        });
-    }
-
-    private static _beforeGameLevelStartImpl(levelA: number, levelB?: number, levelC?: any, callback?: () => any): void {
         const levels: number[] = [levelA <=1?1:levelA-1];
         if (levelB !== null && levelB !== undefined) {
             levels.push(levelB);
@@ -1594,13 +1233,7 @@ export class FrameSDK {
         // FrameSDK.frameData.sdkFuc.logCommonEvent(eventName, storeData);
     }
 
-    static addCoin(
-        num: number,
-        charityNum: number,
-        donateTime: number,
-        call?: () => void,
-        opts?: { excludePiggy?: boolean; fromSettlement?: boolean; skipCoinTipsPanel?: boolean }
-    ) {
+    static addCoin(num: number, charityNum: number, donateTime: number, call?: () => void,opts?: { excludePiggy?: boolean }) {
         cc.director.emit("yellowCoin", num, charityNum, donateTime, call, opts);
     }
 

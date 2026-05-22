@@ -112,6 +112,7 @@ export default class settleMentPage extends BasePage {
     1 == gameData.gameLevel && GameSystem.updateGuideIno({
       novice_status: 4
     });
+    GameUtils.checkPopUp(true, () => {});
     // this.scheduleOnce(function () {
     //   t.playAnim();
     // }, 0.2);

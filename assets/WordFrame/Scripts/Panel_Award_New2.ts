@@ -68,35 +68,20 @@ export default class Panel_Award_New2 extends cc.Component {
     }
 
     playNewCoin() {
+        // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_reward", "guide_button");
+
+
         FrameSDK.logGameEvent('sdymjmatch_report_new', {
             object_action: 'show',
             object_name: 'new_5',
         }, true);
 
-        const coinNum = FrameData.FRAME_CONF.OutputConfig.new;
-        const flowDoneCB = this.viewData && this.viewData.closeCB;
-        if (this.viewData) {
-            this.viewData.closeCB = null;
-        }
+        FrameSDK.addCoin(FrameData.FRAME_CONF.OutputConfig.new, 0, 0, () => {
+            Frame.ins.setGuideShow(true);
+        });
 
-        const runCongratsThenFly = () => {
-            FrameSDK.addCoin(coinNum, 0, 0, () => {
-                if (flowDoneCB) {
-                    // 首次进游戏：先 startGame，勿在此刻 setGuideShow(true)，否则会阻塞 runAfterTutorialIdle 导致关卡/initGameData 不执行
-                    const LoadWordCls: any = cc.js.getClassByName("LoadWord");
-                    LoadWordCls?.instance?.markPendingWithdrawGuide?.();
-                    flowDoneCB();
-                } else {
-                    Frame.ins.setGuideShow(true);
-                }
-            });
-        };
+        this.onTouchCloseTips();
 
-        if (Date.now() - this.hideTime <= 300) {
-            return;
-        }
-        this.hideTime = Date.now();
-        FrameSDK.closeEffect(this, runCongratsThenFly);
     }
 
     hideTime = 0;
