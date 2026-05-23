@@ -188,6 +188,7 @@ export default class GameMain extends cc.Component {
         this.ruchangAni.setAnimation(0, "kai", false);
         // this.ruchangAni.node.active = false;
         // this.startGame(false, true);
+        LoadWord.instance.init();
       } else if (event.animation.name === "kai") {
         this.ruchangAni.node.active = false;
         this.startGame(false, true);
