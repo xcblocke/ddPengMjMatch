@@ -46,6 +46,10 @@ export default class RDM_Level extends cc.Component {
     viewData:{closeCB?: Function} = null;
 
 
+    protected onEnable(): void {
+        this.updateUI();
+    }
+
     protected onLoad(): void {
         
         this.loadDibuStats();
@@ -200,7 +204,7 @@ export default class RDM_Level extends cc.Component {
         if (data == "0") {
             this.viewData?.closeCB?.();
             this.emitNewHandRdmTutorialDone();
-            this.node.destroy();
+            FrameSDK.releasePanelNode(this.node);
         } else if (data == "3") {
             this.guideInedx++;
             this.openGuide();

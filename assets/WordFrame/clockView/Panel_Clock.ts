@@ -191,7 +191,14 @@ export default class Panel_Clock extends cc.Component {
         // edBox.editingDidEnded = [a];
     }
 
+    onDisable() {
+        if (Panel_Clock.ins === this) {
+            Panel_Clock.ins = null;
+        }
+    }
+
     onEnable() {
+        Panel_Clock.ins = this;
         this.isBlockKey = false;
 
         FrameSDK.playEffect("iPhone_open");

@@ -42,6 +42,10 @@ export default class RDM_Charity extends cc.Component {
     coin: string = "0";
     guideInedx: number = 0;
 
+    protected onEnable(): void {
+        this.updateUI();
+    }
+
     protected onLoad(): void {
         cc.director.on("REFRESH_INFO", this.updateUI, this);
 
@@ -137,7 +141,7 @@ export default class RDM_Charity extends cc.Component {
 
     onBtnEvent(target, data: string) {
         if (data == "0") {
-            this.node.destroy();
+            FrameSDK.releasePanelNode(this.node);
         } else if (data == "3") {
             this.guideInedx++;
             this.openGuide();
@@ -195,7 +199,7 @@ export default class RDM_Charity extends cc.Component {
             mask.node.position = cc.find("btn_close", this.node).position;
 
         } else if (this.guideInedx == 3) {
-            this.node.destroy();
+            FrameSDK.releasePanelNode(this.node);
             cc.director.emit("CHARITY_GUIDE_FINISH");
         }
     }

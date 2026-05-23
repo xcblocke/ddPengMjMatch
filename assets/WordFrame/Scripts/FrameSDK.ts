@@ -9,6 +9,7 @@ import RDM_Level from "./RDM_Level";
 import RDM_Toast from "./RDM_Toast";
 import i18 from "./i18";
 import GM from "./GM/GM";
+import PanelPool from "./PanelPool";
 
 type GoodsList = {
     id: number,
@@ -50,6 +51,7 @@ export class FrameSDK {
     private static soundList: cc.AudioClip[] = [];
     private static _lastVideoEndTime: number = 0;
     private static bundleName = "WordFrame";
+    private static _maskSpriteFrame: cc.SpriteFrame = null;
 
     static init(frameData, configs) {
         console.log("init=========== 11111", JSON.stringify(frameData));
@@ -59,6 +61,8 @@ export class FrameSDK {
         FrameSDK.initSettings(configs);
         // FrameSDK.correctConfigs();
         cc.assetManager.getBundle(FrameSDK.bundleName).preloadDir("Prefab");
+        FrameSDK.preloadOpenEffectMask();
+        PanelPool.startWarm(cc.sys.isNative ? 0.15 : 0.08);
 
         this.setLan(cc.sys.languageCode);
         if (FrameData.saveData.date_day == null) {
@@ -563,7 +567,32 @@ export class FrameSDK {
         }
     }
 
+    static preloadOpenEffectMask() {
+        if (FrameSDK._maskSpriteFrame) {
+            return;
+        }
+        const bundle = cc.assetManager.getBundle(FrameSDK.bundleName);
+        if (!bundle) {
+            return;
+        }
+        bundle.load("internal/image/default_editbox_bg", cc.SpriteFrame, (error, assets: cc.SpriteFrame) => {
+            if (!error && assets) {
+                FrameSDK._maskSpriteFrame = assets;
+            }
+        });
+    }
+
     static async loadPrefab(name: string, cb: (node: cc.Node) => void, isLoad = false, path = "Prefab/") {
+        if (PanelPool.isPooled(name)) {
+            isLoad && FrameSDK.frameData?.gameFuc?.openLoad();
+            PanelPool.acquire(name, (node) => {
+                isLoad && FrameSDK.frameData?.gameFuc?.closeLoad();
+                if (node) {
+                    cb(node);
+                }
+            });
+            return;
+        }
         isLoad && FrameSDK.frameData.gameFuc.openLoad();
         cc.assetManager.getBundle(FrameSDK.bundleName).load(path + name, cc.Prefab, (error, assets: cc.Prefab) => {
             isLoad && FrameSDK.frameData.gameFuc.closeLoad();
@@ -573,6 +602,43 @@ export class FrameSDK {
                 console.error(error);
             }
         });
+    }
+
+    /** 关闭或返回时回收池化弹窗；非池化节点则 destroy */
+    static releasePanelNode(node: cc.Node) {
+        if (!node || !cc.isValid(node)) {
+            return;
+        }
+        const poolName = PanelPool.getPoolName(node);
+        if (poolName && PanelPool.isPooled(poolName)) {
+            FrameSDK.clearPanelStaticRefs(node, poolName);
+            PanelPool.release(poolName, node);
+            return;
+        }
+        node.destroy();
+    }
+
+    private static clearPanelStaticRefs(node: cc.Node, poolName: string) {
+        if (poolName === "Panel_Clock") {
+            const comp = node.getComponent(Panel_Clock);
+            if (comp && Panel_Clock.ins === comp) {
+                Panel_Clock.ins = null;
+            }
+        }
+    }
+
+    private static finishClosePanel(target: any, call: () => void) {
+        call && call();
+        if (!target?.node || !cc.isValid(target.node)) {
+            return;
+        }
+        const poolName = PanelPool.getPoolName(target.node);
+        if (poolName && PanelPool.isPooled(poolName)) {
+            FrameSDK.clearPanelStaticRefs(target.node, poolName);
+            PanelPool.release(poolName, target.node);
+        } else {
+            target.node.destroy();
+        }
     }
 
     static playEffect(name: string) {
@@ -754,8 +820,7 @@ export class FrameSDK {
     }
 
     static showToast(msg: string) {
-        FrameSDK.loadPrefab("Panel_Toast", prefab => {
-            let node: cc.Node = cc.instantiate(prefab);
+        FrameSDK.loadPrefab("Panel_Toast", node => {
             let com = node.getComponent(RDM_Toast);
             com.text = msg;
             node.parent = FrameSDK.Panel;
@@ -770,11 +835,24 @@ export class FrameSDK {
             target.black_sprite.node.color = cc.Color.BLACK;
             target.black_sprite.node.zIndex = -1;
             target.node.addChild(target.black_sprite.node);
-            cc.assetManager.getBundle(FrameSDK.bundleName).load("internal/image/default_editbox_bg", cc.SpriteFrame, (error, assets: cc.SpriteFrame) => {
-                target.black_sprite.spriteFrame = assets;
+            const applyMaskFrame = (sf: cc.SpriteFrame) => {
+                if (!sf || !target.black_sprite || !cc.isValid(target.black_sprite.node)) {
+                    return;
+                }
+                target.black_sprite.spriteFrame = sf;
                 target.black_sprite.node.width = cc.winSize.width + 200;
                 target.black_sprite.node.height = cc.winSize.height + 200;
-            });
+            };
+            if (FrameSDK._maskSpriteFrame) {
+                applyMaskFrame(FrameSDK._maskSpriteFrame);
+            } else {
+                cc.assetManager.getBundle(FrameSDK.bundleName).load("internal/image/default_editbox_bg", cc.SpriteFrame, (error, assets: cc.SpriteFrame) => {
+                    if (!error && assets) {
+                        FrameSDK._maskSpriteFrame = assets;
+                    }
+                    applyMaskFrame(assets);
+                });
+            }
             target.noTouch = new cc.Node(target.node.name + "_noTouch").addComponent(cc.BlockInputEvents);
             target.noTouch.node.setContentSize(cc.winSize.width + 200, cc.winSize.height + 200);
             target.node.addChild(target.noTouch.node);
@@ -827,8 +905,7 @@ export class FrameSDK {
             }, {
                 easing: "backIn"
             }).tag(9029).call(() => {
-                call && call();
-                target.node.destroy();
+                FrameSDK.finishClosePanel(target, call);
             }).start();
         } else {
             if (!cc.isValid(target.node)) {
@@ -837,15 +914,15 @@ export class FrameSDK {
             }
             target.node.stopActionByTag(9029);
             cc.tween(target.node).tag(9029).call(() => {
-                call && call();
-            }).removeSelf().start();
+                FrameSDK.finishClosePanel(target, call);
+            }).start();
         }
     }
 
     static openPanel_Yellow(call?: Function) {
-        FrameSDK.loadPrefab("RDM_Level", prefab => {
-            let node: cc.Node = cc.instantiate(prefab);
+        FrameSDK.loadPrefab("RDM_Level", node => {
             node.parent = FrameSDK.Panel;
+            node.active = true;
             node.getComponent(RDM_Level).viewData = {
                 closeCB: () => {
                     call && call();
@@ -855,9 +932,9 @@ export class FrameSDK {
     }
 
     static openPanel_Charity() {
-        FrameSDK.loadPrefab("RDM_Charity", prefab => {
-            let node: cc.Node = cc.instantiate(prefab);
+        FrameSDK.loadPrefab("RDM_Charity", node => {
             node.parent = FrameSDK.Panel;
+            node.active = true;
         });
     }
 
@@ -903,10 +980,16 @@ export class FrameSDK {
     }
 
     static openWindow(name: string, data: any = {}, parent?: cc.Node) {
-        FrameSDK.loadPrefab(name, (prefab) => {
-            let node: cc.Node = cc.instantiate(prefab);
-            node.getComponent(name).viewData = data;
+        FrameSDK.loadPrefab(name, (node) => {
+            if (!node) {
+                return;
+            }
+            const comp = node.getComponent(name);
+            if (comp) {
+                comp.viewData = data;
+            }
             node.parent = parent || FrameSDK.Panel;
+            node.active = true;
         });
     }
 
