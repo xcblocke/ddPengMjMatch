@@ -45,11 +45,6 @@ export default class RDM_Level extends cc.Component {
 
     viewData:{closeCB?: Function} = null;
 
-
-    protected onEnable(): void {
-        this.updateUI();
-    }
-
     protected onLoad(): void {
         
         this.loadDibuStats();
@@ -67,12 +62,6 @@ export default class RDM_Level extends cc.Component {
         this.scheduleOnce(() => {
             this.scrollview.node.height = this.scrollview.node.convertToWorldSpaceAR(cc.v2()).y;
         });
-        // this.rtx_account.node.parent.on(cc.Node.EventType.TOUCH_END, () => {
-        //     FrameSDK.openWindow("Panel_Account");
-        // }, this);
-        // this.top.on(cc.Node.EventType.TOUCH_END, () => {
-        //     GM.open();
-        // }, this);
 
         FrameSDK.playEffect("show_rd")
         const paymentIDs = FrameData.CountryConf.cash_id.slice(0, 4);
@@ -204,7 +193,7 @@ export default class RDM_Level extends cc.Component {
         if (data == "0") {
             this.viewData?.closeCB?.();
             this.emitNewHandRdmTutorialDone();
-            FrameSDK.releasePanelNode(this.node);
+            this.node.destroy();
         } else if (data == "3") {
             this.guideInedx++;
             this.openGuide();
@@ -345,8 +334,6 @@ export default class RDM_Level extends cc.Component {
             }, true);
 
             cc.find("tips2", this.guide).active = true;
-            // mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("scrollview/view/content/item", this.node));
-
             mask.spriteFrame = this.stepNodes[1].getComponent(cc.Sprite).spriteFrame;//FrameSDK.getNodeTexture(cc.find("node_list2", this.node));
             mask.node.setContentSize(this.stepNodes[1].getContentSize())
             
@@ -367,14 +354,11 @@ export default class RDM_Level extends cc.Component {
                 data.total = 20
             }
             cc.find("tips3/label", this.guide).getComponent(cc.Label).string = `skey_040??&value1==${data.total - data.now}`;
-            // mask.node.position.y = this.safeAreaData.height;
             cc.tween(cc.find("tips3/hand", this.guide)).by(0.5, {x: 50, y: -50}).by(0.5, {
                 x: -50,
                 y: 50
             }).union().repeatForever().start();
             
-            // mask.spriteFrame = FrameSDK.getNodeTexture(cc.find("btn_close", this.node));
-
             mask.spriteFrame = this.stepNodes[2].getComponent(cc.Sprite).spriteFrame;//FrameSDK.getNodeTexture(cc.find("node_list2", this.node));
             mask.node.setContentSize(this.stepNodes[2].getContentSize())
 

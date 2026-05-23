@@ -44,6 +44,21 @@ export default class RDM_Charity extends cc.Component {
 
     protected onEnable(): void {
         this.updateUI();
+        this.guide.active = false;
+        if (FrameData.saveData.charityGuideIndex <= 1) {
+            FrameData.saveData.charityGuideIndex = 2;
+            this.guideInedx = 0;
+            this.scheduleOnce(() => {
+                this.openGuide();
+            }, 0);
+        }
+    }
+
+    protected onDisable(): void {
+        if (this.guide && cc.isValid(this.guide)) {
+            this.guide.active = false;
+        }
+        this.guideInedx = 0;
     }
 
     protected onLoad(): void {
@@ -52,12 +67,6 @@ export default class RDM_Charity extends cc.Component {
         this.updateUI();
 
         this.guide.active = false;
-        if (FrameData.saveData.charityGuideIndex <= 1) {
-            FrameData.saveData.charityGuideIndex = 2;
-            this.scheduleOnce(() => {
-                this.openGuide();
-            },0);
-        }
 
         this.scheduleOnce(() => {
             this.scrollview.node.height = this.scrollview.node.convertToWorldSpaceAR(cc.v2()).y;

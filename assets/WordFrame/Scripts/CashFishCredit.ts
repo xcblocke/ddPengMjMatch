@@ -28,6 +28,9 @@ export default class CashFishCredit extends cc.Component {
             return null;
         }
         const matchType = (node: cc.Node) => {
+            if (!node || !cc.isValid(node) || !node.activeInHierarchy) {
+                return false;
+            }
             const comp = node.getComponent(CashFishCredit);
             return comp && comp.typs === type;
         };
@@ -49,6 +52,19 @@ export default class CashFishCredit extends cc.Component {
         return null;
     }
 
+    private registerTarget() {
+        if (CashFishCredit._targets.indexOf(this.node) < 0) {
+            CashFishCredit._targets.push(this.node);
+        }
+    }
+
+    private unregisterTarget() {
+        const idx = CashFishCredit._targets.indexOf(this.node);
+        if (idx >= 0) {
+            CashFishCredit._targets.splice(idx, 1);
+        }
+    }
+
     static isUnlocked(type: string): boolean {
         if (type === 'yellowCoin') {
             return true;
@@ -67,9 +83,16 @@ export default class CashFishCredit extends cc.Component {
         this.updatecreditString();
         FrameSDK.addCreditListen(this.updatecredit, this);
         // cc.director.on("update_credit_" + this.typs, this.updatecredit, this);
-        CashFishCredit._targets.push(this.node);
         this.node.on(cc.Node.EventType.TOUCH_END, this.openRedeem, this);
         this.updateUI();
+    }
+
+    onEnable() {
+        this.registerTarget();
+    }
+
+    onDisable() {
+        this.unregisterTarget();
     }
 
     openRedeem() {
@@ -92,7 +115,7 @@ export default class CashFishCredit extends cc.Component {
 
     onDestroy() {
         cc.director.removeAll(this);
-        CashFishCredit._targets.splice(CashFishCredit._targets.indexOf(this.node), 1);
+        this.unregisterTarget();
     }
 
     updatecreditString(num?: number) {

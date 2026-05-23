@@ -124,6 +124,11 @@ export default class Panel_Award_6 extends cc.Component {
     }
 
     onEnable() {
+        this._rewardClaimed = false;
+        this.lv.string = "" + (FrameSDK.frameData.gameData.passLevel + 1);
+        this.lv_proNode.active = FrameSDK.frameData.gameData.isFlag;
+        this.playAnim();
+
         this.adData = FrameData.getCoinOutNum("box");
         const free = FrameData.getCoinOutNum("free");
 

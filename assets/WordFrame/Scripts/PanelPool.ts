@@ -1,6 +1,7 @@
 /**
  * 高频弹窗对象池：预热阶段完成 load + instantiate，打开时从池中取用。
  * 需要池化的面板名追加到 POOLED_PANELS 末尾即可。
+ * 注：RDM_Level 含新手教程与 onDestroy 事件，不参与池化。
  */
 export const POOLED_PANELS: string[] = [
     "Panel_Activity",
@@ -9,7 +10,6 @@ export const POOLED_PANELS: string[] = [
     "Panel_Award_6",
     "Panel_Clock",
     "RDM_Charity",
-    "RDM_Level",
 ];
 
 const POOLED_SET = new Set(POOLED_PANELS);
@@ -19,6 +19,20 @@ export default class PanelPool {
     private static prefabCache = new Map<string, cc.Prefab>();
     private static pools = new Map<string, cc.Node[]>();
     private static warming = false;
+    /** 预热/静默实例化时屏蔽面板 onEnable，避免误触发新手教程 */
+    private static suppressPanelLifecycle = false;
+
+    static isSuppressPanelLifecycle(): boolean {
+        return PanelPool.suppressPanelLifecycle;
+    }
+
+    private static instantiatePooled(name: string, prefab: cc.Prefab): cc.Node {
+        PanelPool.suppressPanelLifecycle = true;
+        const node = cc.instantiate(prefab);
+        PanelPool.suppressPanelLifecycle = false;
+        node["_poolPanelName"] = name;
+        return node;
+    }
 
     static isPooled(name: string): boolean {
         return POOLED_SET.has(name);
@@ -92,8 +106,7 @@ export default class PanelPool {
                 done();
                 return;
             }
-            const node = cc.instantiate(prefab);
-            node["_poolPanelName"] = name;
+            const node = PanelPool.instantiatePooled(name, prefab);
             PanelPool.prepareForPool(name, node);
             list.push(node);
             PanelPool.pools.set(name, list);
@@ -119,9 +132,7 @@ export default class PanelPool {
                 cb(null);
                 return;
             }
-            const node = cc.instantiate(prefab);
-            node["_poolPanelName"] = name;
-            cb(node);
+            cb(PanelPool.instantiatePooled(name, prefab));
         });
     }
 
@@ -147,6 +158,7 @@ export default class PanelPool {
                 cc.Tween.stopAllByTarget(comp.panel_window);
                 comp.panel_window.scale = 1;
                 comp.panel_window.opacity = 255;
+                comp.panel_window.setPosition(0, 0, 0);
             }
             if (comp.black_sprite && cc.isValid(comp.black_sprite.node)) {
                 comp.black_sprite.node.stopAllActions();
@@ -162,10 +174,32 @@ export default class PanelPool {
             if (typeof comp._rewardClaimed === "boolean") {
                 comp._rewardClaimed = false;
             }
+            PanelPool.resetPanelGuideState(name, comp, node);
         }
 
         node.removeFromParent(false);
         node.active = false;
         node.opacity = 255;
+    }
+
+    /** 回池时复位教程/手势等仅 onLoad 初始化、destroy 时才会清掉的状态 */
+    private static resetPanelGuideState(name: string, comp: any, node: cc.Node) {
+        if (name === "RDM_Charity") {
+            comp.guideInedx = 0;
+            if (comp.guide && cc.isValid(comp.guide)) {
+                comp.guide.active = false;
+                PanelPool.stopGuideHandTweens(comp.guide);
+            }
+        }
+    }
+
+    private static stopGuideHandTweens(guideNode: cc.Node) {
+        ["tips1/hand", "tips2/hand", "tips3/hand"].forEach((path) => {
+            const hand = cc.find(path, guideNode);
+            if (hand && cc.isValid(hand)) {
+                hand.stopAllActions();
+                cc.Tween.stopAllByTarget(hand);
+            }
+        });
     }
 }

@@ -1127,7 +1127,7 @@ export default class GameMain extends cc.Component {
     }
     for (let i = 0; i < panel.childrenCount; i++) {
       const child = panel.children[i];
-      if (child && cc.isValid(child) && child.getComponent("RDM_Level")) {
+      if (child && cc.isValid(child) && child.activeInHierarchy && child.getComponent("RDM_Level")) {
         return true;
       }
     }
@@ -1141,6 +1141,13 @@ export default class GameMain extends cc.Component {
       loadWord?.completeNewHandRewardFlow();
       return;
     }
+    const FrameDataCls: any = cc.js.getClassByName("FrameData");
+    const guideInedxDone = (FrameDataCls?.saveData?.guideInedx ?? 0) >= 3;
+    if (guideInedxDone) {
+      loadWord.completeNewHandRewardFlow();
+      return;
+    }
+
     this._awaitNewHandTutorialComplete = true;
     GameUtils.logLevelProgress("beginNewHandTutorialBeforeBanners");
 
@@ -1156,7 +1163,6 @@ export default class GameMain extends cc.Component {
     }
 
     const FrameCls: any = cc.js.getClassByName("Frame");
-    const FrameDataCls: any = cc.js.getClassByName("FrameData");
     const frameIns = FrameCls?.ins;
     const guideInedx = FrameDataCls?.saveData?.guideInedx ?? 0;
 
@@ -1179,6 +1185,10 @@ export default class GameMain extends cc.Component {
     }
     this._awaitNewHandTutorialComplete = false;
     GameUtils.logLevelProgress("finishNewHandTutorialBeforeBanners");
+    try {
+      const FrameCls: any = cc.js.getClassByName("Frame");
+      FrameCls?.ins?.setGuideShow(false);
+    } catch (_) {}
     LoadWord.instance?.completeNewHandRewardFlow();
   }
   showFreezeTip() {
