@@ -69,7 +69,11 @@ export default class Panel_ShowLevel extends cc.Component {
     }
 
     protected onEnable(): void {
-        FrameSDK.openEffect(this);
+        // FrameSDK.openEffect(this);
+        // 关卡横幅：不铺黑色遮罩，仅保留 bgNode 滑入滑出
+        if (this.black_sprite && this.black_sprite.node) {
+            this.black_sprite.node.active = false;
+        }
     }
 
     onDisable() {
