@@ -45,15 +45,17 @@ export default class Panel_Task extends cc.Component {
     }
 
     static openTask(closeCB) {
-        Panel_Task.startTask(closeCB);
+        // Panel_Task.startTask(closeCB);
+        closeCB?.();
     }
 
     static startTask(closeCB?: () => void) {
-        if (!FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.taskLevel)) {
-            closeCB?.();
-            return;
-        }
-        FrameSDK.openWindow("Panel_Task", { closeCB: closeCB });
+        // if (!FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.taskLevel)) {
+        //     closeCB?.();
+        //     return;
+        // }
+        // FrameSDK.openWindow("Panel_Task", { closeCB: closeCB });
+        closeCB?.();
     }
 
     static isTaskFinish() {
