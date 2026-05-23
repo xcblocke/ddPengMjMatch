@@ -62,7 +62,11 @@ export class FrameSDK {
         // FrameSDK.correctConfigs();
         cc.assetManager.getBundle(FrameSDK.bundleName).preloadDir("Prefab");
         FrameSDK.preloadOpenEffectMask();
-        PanelPool.startWarm(cc.sys.isNative ? 0.15 : 0.08);
+        PanelPool.startWarmWhenFpsStable(cc.sys.isNative ? 0.2 : 0.08, {
+            minFps: 45,
+            stableDurationSec: 0.4,
+            maxWaitSec: 12,
+        });
 
         this.setLan(cc.sys.languageCode);
         if (FrameData.saveData.date_day == null) {

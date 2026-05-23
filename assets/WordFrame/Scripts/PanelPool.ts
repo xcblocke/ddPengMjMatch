@@ -19,6 +19,8 @@ export default class PanelPool {
     private static prefabCache = new Map<string, cc.Prefab>();
     private static pools = new Map<string, cc.Node[]>();
     private static warming = false;
+    private static fpsWaitPending = false;
+    private static fpsWaitListener: (() => void) | null = null;
     /** 预热/静默实例化时屏蔽面板 onEnable，避免误触发新手教程 */
     private static suppressPanelLifecycle = false;
 
@@ -71,6 +73,68 @@ export default class PanelPool {
             PanelPool.prefabCache.set(name, prefab);
             cb(prefab);
         });
+    }
+
+    /**
+     * 等帧率稳定在 minFps 以上再分帧预热，避免刚进场景播动画时（约 15fps）与切场景抢性能。
+     * 超过 maxWaitSec 仍未达标则强制开始，避免低端机永远不预热。
+     */
+    static startWarmWhenFpsStable(
+        intervalSec = 0.12,
+        options?: {
+            minFps?: number;
+            stableDurationSec?: number;
+            maxWaitSec?: number;
+            onComplete?: () => void;
+        },
+    ) {
+        if (PanelPool.warming || PanelPool.fpsWaitPending) {
+            return;
+        }
+        const minFps = options?.minFps ?? 50;
+        const stableDurationSec = options?.stableDurationSec ?? 0.4;
+        const maxWaitSec = options?.maxWaitSec ?? 12;
+        const onComplete = options?.onComplete;
+
+        PanelPool.fpsWaitPending = true;
+        let stableAccum = 0;
+        let totalWait = 0;
+
+        const onUpdate = () => {
+            const rawDt = cc.director.getDeltaTime();
+            const dt = rawDt > 0 ? Math.min(rawDt, 0.1) : 0;
+            if (dt <= 0) {
+                return;
+            }
+            totalWait += dt;
+            const fps = 1 / dt;
+            if (fps >= minFps) {
+                stableAccum += dt;
+            } else {
+                stableAccum = 0;
+            }
+
+            if (stableAccum >= stableDurationSec || totalWait >= maxWaitSec) {
+                PanelPool.clearFpsWait();
+                CC_DEBUG && console.log(
+                    "[PanelPool] warm start",
+                    stableAccum >= stableDurationSec ? "fps_stable" : "timeout",
+                    { fps: Math.round(fps), stableSec: stableAccum.toFixed(2), waitedSec: totalWait.toFixed(2) },
+                );
+                PanelPool.startWarm(intervalSec, onComplete);
+            }
+        };
+
+        PanelPool.fpsWaitListener = onUpdate;
+        cc.director.on(cc.Director.EVENT_AFTER_UPDATE, onUpdate);
+    }
+
+    private static clearFpsWait() {
+        PanelPool.fpsWaitPending = false;
+        if (PanelPool.fpsWaitListener) {
+            cc.director.off(cc.Director.EVENT_AFTER_UPDATE, PanelPool.fpsWaitListener);
+            PanelPool.fpsWaitListener = null;
+        }
     }
 
     /** 分帧预热：每个面板间隔 intervalSec 实例化 1 个并入池 */
