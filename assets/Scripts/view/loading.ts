@@ -70,8 +70,10 @@ export default class loading extends cc.Component {
     }
 
     i18.init(this.languageJsonData.json,cc.sys.languageCode)
-   
 
+    /** 热重载 / 再次进入 loading 时释放上一轮预加载，避免重复占用 */
+    Res.releaseLaunchAssets();
+    LoadWord.releaseForLoadingRestart();
 
     if ("oppo" == SdkHelper.getChannelName() || "xiaomi" == SdkHelper.getChannelName() || "vivo" == SdkHelper.getChannelName() || "huawei" == SdkHelper.getChannelName() || "honor" == SdkHelper.getChannelName()) {
       this.logo.active = false;
@@ -115,6 +117,7 @@ export default class loading extends cc.Component {
   }
   onDestroy() {
     this.removeEvent();
+    /** 切到 mainScene 时 loading 销毁，游戏资源仍由 mainScene 使用，此处不 release */
   }
   addEvent() {
     EventMgr.listen(BaseEventType.SPLASH_FINISH, this.splashFinish, this);
@@ -412,77 +415,87 @@ export default class loading extends cc.Component {
     this.loadScene();
   }
   loadScene() {
-    var e = this;
+    var self = this;
     AudioManager.getInstance().initNativeUrl();
-    var t = "mainScene";
-    HotUpdate.getInstance().checkReviewVMVersion() && (t = "SceneA");
-    (function () {
-      e.loadProgress.stopFakeProgress();
-      e.loadProgress.loadType = LoadProgressType.LoadScene;
-      e.loadProgress.beginSmoothFollow();
-      var o = 1 - e.loadProgress.curPercent,
-        n = e.loadProgress.curPercent,
-        preloadShare = 0.5,
-        preload01 = 0,
-        res01 = 0,
-        merge = function () {
-          var m = preloadShare * preload01 + (1 - preloadShare) * res01;
-          e.loadProgress.curPercent = n + o * m;
-        };
-      var preloadPromise = new Promise(function (resolve) {
-        cc.director.preloadScene(t, function (c, total) {
-          if (!total || total <= 0) return;
-          preload01 = c / total;
-          merge();
-        }, function (err) {
-          preload01 = 1;
-          merge();
-          resolve(null);
+    var sceneName = "mainScene";
+    HotUpdate.getInstance().checkReviewVMVersion() && (sceneName = "SceneA");
+
+    self.loadProgress.stopFakeProgress();
+    self.loadProgress.endSmoothFollow();
+    self.loadProgress.loadType = LoadProgressType.LoadScene;
+    self.loadProgress.curPercent = 0;
+
+    /** loadScene 可能被重复触发时，先释放未进主场景的旧预加载 */
+    Res.releaseLaunchAssets();
+
+    /** 4 项并行：mainScene、prefabs、preload/prefabs、WordNewHand/newHand，各占 25% */
+    var STEP_COUNT = 4;
+    var stepProgress = [0, 0, 0, 0];
+    var reportProgress = function () {
+      if (!self.node || !cc.isValid(self.node)) return;
+      var sum = 0;
+      for (var i = 0; i < STEP_COUNT; i++) {
+        sum += stepProgress[i];
+      }
+      self.loadProgress.curPercent = sum / STEP_COUNT;
+    };
+
+    var preloadScenePromise = new Promise<void>(function (resolve, reject) {
+      cc.director.preloadScene(sceneName, function (completed, total) {
+        if (!total || total <= 0) return;
+        stepProgress[0] = completed / total;
+        reportProgress();
+      }, function (err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        stepProgress[0] = 1;
+        reportProgress();
+        resolve();
+      });
+    });
+
+    var prefabsPromise = Res.loadLaunchPrefabs(function (dirIndex, p) {
+      stepProgress[1 + dirIndex] = p;
+      reportProgress();
+    });
+
+    var newHandPromise = LoadWord.preloadNewHand(function (p) {
+      stepProgress[3] = p;
+      reportProgress();
+    });
+
+    /** 背景/牌面等贴图：必须在进 mainScene 前完成，但不计入上述 4 段进度 */
+    var spritesPromise = Res.loadEssentialSprites();
+
+    Promise.all([preloadScenePromise, prefabsPromise, newHandPromise, spritesPromise]).then(function () {
+      if (!self.node || !cc.isValid(self.node)) return;
+      stepProgress[0] = 1;
+      stepProgress[1] = 1;
+      stepProgress[2] = 1;
+      stepProgress[3] = 1;
+      self.loadProgress.curPercent = 1;
+      Res.markLaunchAssetsLoaded();
+
+      A.l1(function () {
+        console.log("l3。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l3));
+        console.log("l4。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l4));
+        A.t('g1');
+        console.log('g1=========================');
+
+        cc.director.loadScene(sceneName, function () {
+          A.t('g2');
+          console.log('g2=========================');
         });
+      }, {
+        m: function (mute: boolean) {
+          AudioManager.getInstance().setMute(mute);
+        },
       });
-      var resPromise = Res.loadGameRes(function (p) {
-        res01 = p;
-        merge();
-      });
-     
-      Promise.all([preloadPromise, resPromise]).then(function () {
-        if (!e.node || !cc.isValid(e.node)) return;
-        e.loadProgress.curPercent = 1;
-        e.loadProgress.snapSmoothToTarget();
-        e.loadProgress.endSmoothFollow();
-
-        // Matriarchalism.instance.init("isFlag_login");
-        // Matriarchalism.instance.copeiaPyrethrum([], () => {}, (conf, allConf) => {
-        //   console.log("conf..............", conf);
-        //   console.log("allConf.........", allConf);
-
-        //   cc.director.loadScene(t,()=>{
-        //     LoadWord.instance.init();
-        //   });
-          
-        // });
-        A.l1(()=>{
-          console.log("l3。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l3));
-          console.log("l4。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l4));
-          A.t('g1');
-          console.log('g1=========================');
-
-          cc.director.loadScene(t,()=>{
-            A.t('g2');
-            console.log('g2=========================');
-            
-          });
-        },{
-          m: (mute: boolean) => {
-            AudioManager.getInstance().setMute(mute);
-          },
-        });
-
-        
-      }).catch(function (err) {
-        console.error("loadScene pipeline", err);
-      });
-    })();
+    }).catch(function (err) {
+      console.error("loadScene pipeline", err);
+    });
   }
   getWxCode(e) {
     console.log("SPK1", e);
