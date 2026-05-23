@@ -8,8 +8,138 @@ import { A } from "../center/api";
 /** 与 assets/view/loading.ts 中加载的主场景名一致 */
 const MAIN_SCENE = "mainScene";
 const LOADING_SCENE = "loadingScene";
+const WORD_NEW_HAND_BUNDLE = "WordNewHand";
+const WORD_NEW_HAND_PREFAB = "newHand";
 
 export default class LoadWord {
+  /** loading 阶段预加载的 WordNewHand 分包与 newHand 预制体 */
+  static wordNewHandBundle: cc.AssetManager.Bundle = null;
+  static preloadedNewHandPrefab: cc.Prefab = null;
+
+  /**
+   * loading 阶段预加载 WordNewHand/newHand
+   * @param onProgress 0~1（bundle 占 0.3，prefab 占 0.7）
+   */
+  static preloadNewHand(onProgress?: (p: number) => void): Promise<void> {
+    return new Promise(function (resolve) {
+      var report = function (p: number) {
+        onProgress && onProgress(Math.max(0, Math.min(1, p)));
+      };
+      if (LoadWord.preloadedNewHandPrefab) {
+        report(1);
+        resolve();
+        return;
+      }
+      var bundle = LoadWord.wordNewHandBundle || cc.assetManager.getBundle(WORD_NEW_HAND_BUNDLE);
+      if (bundle) {
+        LoadWord.wordNewHandBundle = bundle;
+        report(0.3);
+        bundle.load(WORD_NEW_HAND_PREFAB, cc.Prefab, function (finished, total, _item) {
+          if (total > 0) {
+            report(0.3 + 0.7 * finished / total);
+          }
+        }, function (err, prefab) {
+          if (err) {
+            console.error("preload newHand prefab failed:", err);
+            report(1);
+            resolve();
+            return;
+          }
+          LoadWord.preloadedNewHandPrefab = prefab as cc.Prefab;
+          report(1);
+          resolve();
+        });
+        return;
+      }
+      cc.assetManager.loadBundle(WORD_NEW_HAND_BUNDLE, function (err, loadedBundle) {
+        if (err) {
+          console.error("preload WordNewHand bundle failed:", err);
+          report(1);
+          resolve();
+          return;
+        }
+        LoadWord.wordNewHandBundle = loadedBundle;
+        report(0.3);
+        loadedBundle.load(WORD_NEW_HAND_PREFAB, cc.Prefab, function (finished, total, _item) {
+          if (total > 0) {
+            report(0.3 + 0.7 * finished / total);
+          }
+        }, function (loadErr, prefab) {
+          if (loadErr) {
+            console.error("preload newHand prefab failed:", loadErr);
+            report(1);
+            resolve();
+            return;
+          }
+          LoadWord.preloadedNewHandPrefab = prefab as cc.Prefab;
+          report(1);
+          resolve();
+        });
+      });
+    });
+  }
+
+  /** 实例化后释放 loading 阶段缓存的 newHand 预制体资源（场景节点仍持有引用） */
+  static releasePreloadedNewHandAsset() {
+    if (!LoadWord.preloadedNewHandPrefab) return;
+    var bundle = LoadWord.wordNewHandBundle;
+    try {
+      LoadWord.preloadedNewHandPrefab.decRef();
+      if (bundle) {
+        bundle.release(WORD_NEW_HAND_PREFAB, cc.Prefab);
+      }
+    } catch (err) {
+      console.warn("releasePreloadedNewHandAsset", err);
+    }
+    LoadWord.preloadedNewHandPrefab = null;
+  }
+
+  /** 销毁新手节点并释放 WordNewHand 分包缓存 */
+  static releaseWordNewHandBundle(removeBundle = false) {
+    LoadWord.releasePreloadedNewHandAsset();
+    var bundle = LoadWord.wordNewHandBundle || cc.assetManager.getBundle(WORD_NEW_HAND_BUNDLE);
+    if (bundle) {
+      try {
+        bundle.release(WORD_NEW_HAND_PREFAB, cc.Prefab);
+        if (removeBundle) {
+          cc.assetManager.removeBundle(bundle);
+        }
+      } catch (err) {
+        console.warn("releaseWordNewHandBundle", err);
+      }
+    }
+    LoadWord.wordNewHandBundle = null;
+  }
+
+  static releaseWordFrameBundle(removeBundle = false) {
+    var bundle = cc.assetManager.getBundle("WordFrame");
+    if (!bundle) return;
+    try {
+      bundle.release("Frame", cc.Prefab);
+      if (removeBundle) {
+        cc.assetManager.removeBundle(bundle);
+      }
+    } catch (err) {
+      console.warn("releaseWordFrameBundle", err);
+    }
+  }
+
+  /**
+   * 重新进入 loadingScene 时调用：清 WordFrame / WordNewHand，避免重复占用内存。
+   */
+  static releaseForLoadingRestart() {
+    var inst = LoadWord.instance;
+    inst.releaseNewHandRuntime(true);
+    inst.releaseWordFrameRuntime();
+    LoadWord.releaseWordNewHandBundle(true);
+    LoadWord.releaseWordFrameBundle(true);
+    inst.isInit = false;
+    inst.initCallback = null;
+    inst._awaitNewHandRewardFlow = false;
+    inst._deferredPreLevelBanners = null;
+    inst.pendingHandSceneListener = false;
+  }
+
   private static _instance: LoadWord = null;
   static get instance(): LoadWord {
     return LoadWord._instance || (LoadWord._instance = new LoadWord());
@@ -25,6 +155,7 @@ export default class LoadWord {
   private pendingHandPrefab: cc.Prefab = null;
   private pendingHandSceneListener = false;
   private handNode: cc.Node = null;
+  private frameInstanceNode: cc.Node = null;
   /** isFlag 且本地尚无 newHand：须等新手领奖+飞币后再走进关横幅链 */
   private _awaitNewHandRewardFlow = false;
   private _deferredPreLevelBanners: (() => void) | null = null;
@@ -60,15 +191,22 @@ export default class LoadWord {
       this.isInit = true;
       if (null == cc.sys.localStorage.getItem("newHand") && NativeUtils.isFlag) {
         this._awaitNewHandRewardFlow = true;
-        cc.assetManager.loadBundle("WordNewHand", (err, bundle) => {
-          if (err) {
-            console.error("load WordNewHand bundle failed:", err);
-            this._awaitNewHandRewardFlow = false;
-            this.flushDeferredPreLevelBanners();
-          } else {
-            bundle.load("newHand", cc.Prefab, this.initHand.bind(this));
-          }
-        });
+        if (LoadWord.preloadedNewHandPrefab) {
+          this.initHand(null, LoadWord.preloadedNewHandPrefab);
+        } else if (LoadWord.wordNewHandBundle) {
+          LoadWord.wordNewHandBundle.load(WORD_NEW_HAND_PREFAB, cc.Prefab, this.initHand.bind(this));
+        } else {
+          cc.assetManager.loadBundle(WORD_NEW_HAND_BUNDLE, (err, bundle) => {
+            if (err) {
+              console.error("load WordNewHand bundle failed:", err);
+              this._awaitNewHandRewardFlow = false;
+              this.flushDeferredPreLevelBanners();
+            } else {
+              LoadWord.wordNewHandBundle = bundle;
+              bundle.load(WORD_NEW_HAND_PREFAB, cc.Prefab, this.initHand.bind(this));
+            }
+          });
+        }
       }
       cc.assetManager.loadBundle("WordFrame", (err, bundle) => {
         if (err) {
@@ -102,6 +240,26 @@ export default class LoadWord {
     }
     this._awaitNewHandRewardFlow = false;
     this.flushDeferredPreLevelBanners();
+  }
+
+  /** 销毁 persist 新手节点（不释放 WordNewHand 分包，便于下次冷启动重新预加载） */
+  releaseNewHandRuntime(destroyNode = true) {
+    if (destroyNode && this.handNode && cc.isValid(this.handNode)) {
+      try {
+        cc.game.removePersistRootNode(this.handNode);
+      } catch (_e) {}
+      this.handNode.destroy();
+    }
+    this.handNode = null;
+    this.pendingHandPrefab = null;
+    this.pendingHandSceneListener = false;
+  }
+
+  releaseWordFrameRuntime() {
+    if (this.frameInstanceNode && cc.isValid(this.frameInstanceNode)) {
+      this.frameInstanceNode.destroy();
+    }
+    this.frameInstanceNode = null;
   }
 
   initHand(error, assets) {
@@ -173,6 +331,7 @@ export default class LoadWord {
     cc.game.addPersistRootNode(node);
     this.handNode = node;
     this.pendingHandPrefab = null;
+    LoadWord.releasePreloadedNewHandAsset();
   }
 
   initWordFrame(error, assets) {
@@ -181,6 +340,7 @@ export default class LoadWord {
       return;
     }
     var node = cc.instantiate(assets);
+    this.frameInstanceNode = node;
 
     cc.director.on("goldPlus", (num: number, ispiao: boolean = false) => {
       if (ispiao) {
