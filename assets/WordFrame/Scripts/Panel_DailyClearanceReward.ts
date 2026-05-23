@@ -249,6 +249,7 @@ export default class Panel_DailyClearanceReward extends cc.Component {
 
     static start(closeCB?: () => void): void {
         FrameSDK.openWindow("Panel_DailyClearanceReward", { closeCB });
+        closeCB?.();
     }
 }
 
