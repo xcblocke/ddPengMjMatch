@@ -37,6 +37,7 @@ export default class RDM_Level extends cc.Component {
 
     coin: string = "0";
     guideInedx: number = 0;
+    private _newHandRdmDoneEmitted = false;
     private ka1Value = RDM_Level.DEFAULT_KA1_VALUE;
     private ka2Value = RDM_Level.DEFAULT_KA2_VALUE;
     private ka3Value = RDM_Level.DEFAULT_KA3_VALUE;
@@ -56,7 +57,7 @@ export default class RDM_Level extends cc.Component {
             FrameData.saveData.guideInedx = 2;
             this.scheduleOnce(() => {
                 this.openGuide();
-            }, 0.15);
+            }, 0);
             
         }
         this.scheduleOnce(() => {
@@ -94,7 +95,23 @@ export default class RDM_Level extends cc.Component {
     protected onDestroy(): void {
         this.unscheduleAllCallbacks();
         this.clearDibuRollTweens();
+        if (
+            FrameSDK.frameData?.gameData?.isFlag &&
+            FrameData.saveData.guideInedx >= 2 &&
+            !this._newHandRdmDoneEmitted
+        ) {
+            this.emitNewHandRdmTutorialDone();
+        }
         cc.director.removeAll(this);
+    }
+
+    private emitNewHandRdmTutorialDone() {
+        if (this._newHandRdmDoneEmitted) {
+            return;
+        }
+        this._newHandRdmDoneEmitted = true;
+        cc.director.emit("NEW_HAND_FINISH");
+        cc.director.emit("NEW_HAND_RDM_TUTORIAL_DONE");
     }
 
     updateUI() {
@@ -182,6 +199,7 @@ export default class RDM_Level extends cc.Component {
     onBtnEvent(target, data: string) {
         if (data == "0") {
             this.viewData?.closeCB?.();
+            this.emitNewHandRdmTutorialDone();
             this.node.destroy();
         } else if (data == "3") {
             this.guideInedx++;
@@ -363,9 +381,8 @@ export default class RDM_Level extends cc.Component {
                 object_action: 'show',
                 object_name: 'new_9',
             }, true);
-
-            this.node.destroy();
-            cc.director.emit("NEW_HAND_FINISH");
+            this.guide.active = false;
+            cc.director.emit("showBackHand");
         }
     }
 }

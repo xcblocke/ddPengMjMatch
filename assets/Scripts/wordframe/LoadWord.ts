@@ -2,6 +2,7 @@ import GameUtils from "./GameUtils";
 import { NativeUtils } from "./NativeUtils";
 import { gameData } from "../data/GameData";
 import AudioManager from "../framework/controller/AudioManager";
+import GlobalApp from "../common/GlobalApp";
 import { A } from "../center/api";
 
 /** 与 assets/view/loading.ts 中加载的主场景名一致 */
@@ -321,8 +322,13 @@ export default class LoadWord {
       } as any);
     LoadWord.FrameSDK.init(fdata, confForFrame);
 
-    cc.director.on("NEW_HAND_REWARD_FLOW_DONE", () => {
-      LoadWord.instance.completeNewHandRewardFlow();
+    cc.director.on("NEW_HAND_FLY_COIN_DONE", () => {
+      const gm: any = GlobalApp.GameMain;
+      if (gm && typeof gm.beginNewHandTutorialBeforeBanners === "function") {
+        gm.beginNewHandTutorialBeforeBanners();
+      } else {
+        LoadWord.instance.completeNewHandRewardFlow();
+      }
     });
 
     let int = setInterval(() => {

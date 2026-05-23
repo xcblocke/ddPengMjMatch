@@ -133,6 +133,8 @@ export default class GameMain extends cc.Component {
   gameCountDownTime = 0;
   _tipTime = 8;
   _teachingStep = 0;
+  /** isFlag 首次：飞币后先走完黄币手指 + 第 1 关操作教程，再走进关横幅 */
+  _awaitNewHandTutorialComplete = false;
   teachingStepCardList = [];
   _comboEffect = null;
   /** 本关累计消除对数，过关或弹产出后清零 */
@@ -1115,6 +1117,69 @@ export default class GameMain extends cc.Component {
   }
   hideTeachingGuide() {
     this.teachGuideNode.active = false;
+  }
+
+  private isRdmLevelPanelOpen(): boolean {
+    const sdk = LoadWord.FrameSDK;
+    const panel = sdk?.Panel;
+    if (!panel || !cc.isValid(panel)) {
+      return false;
+    }
+    for (let i = 0; i < panel.childrenCount; i++) {
+      const child = panel.children[i];
+      if (child && cc.isValid(child) && child.getComponent("RDM_Level")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** 飞币结束后：黄币手指 → RDM_Level 内教程 → 点返回关闭后再走进关横幅并发牌 */
+  beginNewHandTutorialBeforeBanners() {
+    const loadWord = LoadWord.instance;
+    if (!loadWord || !loadWord.shouldDeferPreLevelPopupsForNewHand()) {
+      loadWord?.completeNewHandRewardFlow();
+      return;
+    }
+    this._awaitNewHandTutorialComplete = true;
+    GameUtils.logLevelProgress("beginNewHandTutorialBeforeBanners");
+
+    const waitRdmTutorialDone = () => {
+      cc.director.once("NEW_HAND_RDM_TUTORIAL_DONE", () => {
+        this.finishNewHandTutorialBeforeBanners();
+      }, this);
+    };
+
+    if (this.isRdmLevelPanelOpen()) {
+      waitRdmTutorialDone();
+      return;
+    }
+
+    const FrameCls: any = cc.js.getClassByName("Frame");
+    const FrameDataCls: any = cc.js.getClassByName("FrameData");
+    const frameIns = FrameCls?.ins;
+    const guideInedx = FrameDataCls?.saveData?.guideInedx ?? 0;
+
+    if (guideInedx > 0) {
+      waitRdmTutorialDone();
+      return;
+    }
+
+    if (frameIns?.guide?.active) {
+      cc.director.once("NEW_HAND_YELLOW_GUIDE_DONE", waitRdmTutorialDone, this);
+      return;
+    }
+
+    waitRdmTutorialDone();
+  }
+
+  private finishNewHandTutorialBeforeBanners() {
+    if (!this._awaitNewHandTutorialComplete) {
+      return;
+    }
+    this._awaitNewHandTutorialComplete = false;
+    GameUtils.logLevelProgress("finishNewHandTutorialBeforeBanners");
+    LoadWord.instance?.completeNewHandRewardFlow();
   }
   showFreezeTip() {
     var e = this,

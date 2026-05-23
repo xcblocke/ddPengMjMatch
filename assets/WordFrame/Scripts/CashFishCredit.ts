@@ -79,6 +79,7 @@ export default class CashFishCredit extends cc.Component {
             if (FrameData.saveData.guideInedx == 0) {
                 FrameData.saveData.guideInedx++;
                 Frame.ins.setGuideShow(false);
+                cc.director.emit("NEW_HAND_YELLOW_GUIDE_DONE");
             }
         } else {
             FrameSDK.openPanel_Charity();
