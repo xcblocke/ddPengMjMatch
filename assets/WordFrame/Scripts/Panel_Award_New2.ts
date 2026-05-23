@@ -78,6 +78,7 @@ export default class Panel_Award_New2 extends cc.Component {
 
         FrameSDK.addCoin(FrameData.FRAME_CONF.OutputConfig.new, 0, 0, () => {
             Frame.ins.setGuideShow(true);
+            cc.director.emit("NEW_HAND_REWARD_FLOW_DONE");
         });
 
         this.onTouchCloseTips();

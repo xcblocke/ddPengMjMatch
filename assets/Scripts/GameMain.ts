@@ -333,6 +333,20 @@ export default class GameMain extends cc.Component {
           beginLevelFlow(true);
           return;
         }
+        const loadWord = LoadWord.instance;
+        if (loadWord && loadWord.shouldDeferPreLevelPopupsForNewHand()) {
+          GameUtils.logLevelProgress("defer_beforeGameLevelStart_newHand");
+          loadWord.setDeferredPreLevelBanners(() => {
+            const t0 = Date.now();
+            GameUtils.beforeGameLevelStart(gameData.gameLevel, roundForUi, null, () => {
+              GameUtils.logLevelProgress("beforeGameLevelStart_done_after_newHand", {
+                waitMs: Date.now() - t0
+              });
+              beginLevelFlow(false);
+            });
+          });
+          return;
+        }
         const t0 = Date.now();
         GameUtils.beforeGameLevelStart(gameData.gameLevel, roundForUi, null, () => {
           GameUtils.logLevelProgress("beforeGameLevelStart_done", {

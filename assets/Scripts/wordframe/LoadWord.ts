@@ -24,6 +24,9 @@ export default class LoadWord {
   private pendingHandPrefab: cc.Prefab = null;
   private pendingHandSceneListener = false;
   private handNode: cc.Node = null;
+  /** isFlag 且本地尚无 newHand：须等新手领奖+飞币后再走进关横幅链 */
+  private _awaitNewHandRewardFlow = false;
+  private _deferredPreLevelBanners: (() => void) | null = null;
 
   private isFrameSdkReadyForGameEvent(): boolean {
     try {
@@ -55,9 +58,12 @@ export default class LoadWord {
       this.initCallback = callback;
       this.isInit = true;
       if (null == cc.sys.localStorage.getItem("newHand") && NativeUtils.isFlag) {
+        this._awaitNewHandRewardFlow = true;
         cc.assetManager.loadBundle("WordNewHand", (err, bundle) => {
           if (err) {
             console.error("load WordNewHand bundle failed:", err);
+            this._awaitNewHandRewardFlow = false;
+            this.flushDeferredPreLevelBanners();
           } else {
             bundle.load("newHand", cc.Prefab, this.initHand.bind(this));
           }
@@ -73,9 +79,35 @@ export default class LoadWord {
     }
   }
 
+  /** 首次进游戏（isFlag + localStorage 无 newHand）须延后进关横幅，等 Panel_Award_New2 飞币结束 */
+  shouldDeferPreLevelPopupsForNewHand(): boolean {
+    return NativeUtils.isFlag && this._awaitNewHandRewardFlow;
+  }
+
+  setDeferredPreLevelBanners(runner: () => void) {
+    this._deferredPreLevelBanners = runner;
+  }
+
+  private flushDeferredPreLevelBanners() {
+    const run = this._deferredPreLevelBanners;
+    this._deferredPreLevelBanners = null;
+    run && run();
+  }
+
+  /** Panel_Award_New2 飞币动画结束后调用（或新手加载失败时兜底） */
+  completeNewHandRewardFlow() {
+    if (!this._awaitNewHandRewardFlow) {
+      return;
+    }
+    this._awaitNewHandRewardFlow = false;
+    this.flushDeferredPreLevelBanners();
+  }
+
   initHand(error, assets) {
     if (error) {
       console.error("load newHand prefab failed:", error);
+      this._awaitNewHandRewardFlow = false;
+      this.flushDeferredPreLevelBanners();
       return;
     }
     this.pendingHandPrefab = assets;
@@ -289,7 +321,9 @@ export default class LoadWord {
       } as any);
     LoadWord.FrameSDK.init(fdata, confForFrame);
 
-    
+    cc.director.on("NEW_HAND_REWARD_FLOW_DONE", () => {
+      LoadWord.instance.completeNewHandRewardFlow();
+    });
 
     let int = setInterval(() => {
       let p = cc.find("Canvas/frameNode") ||cc.find("Canvas/rootNode") ||cc.find("Canvas")||null;
