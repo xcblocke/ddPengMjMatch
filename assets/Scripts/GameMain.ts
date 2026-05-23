@@ -18,11 +18,10 @@ import AdSchedule from './common/AdSchedule';
 import card from './prefab/card';
 import touchCtrl from './touchCtrl';
 import combo from './prefab/combo';
-import countDown from './countDown';
+// import countDown from './countDown';
 import { Constants } from './common/Constants';
 import { gameConfig } from './data/GameConfig';
-import LevelStart from './LevelStart';
-import mainBtnGroupCtrl from './mainBtnGroupCtrl';
+// import mainBtnGroupCtrl from './mainBtnGroupCtrl';
 import { levelRewardCoin, MainConfig, ServerType } from './config';
 import { applyFreePropRewardIfAny } from './freePropPage';
 import GameUtils from './wordframe/GameUtils';
@@ -36,13 +35,6 @@ const {
 } = cc._decorator;
 @ccclass
 export default class GameMain extends cc.Component {
-  @property(cc.Node)
-  wxNode: cc.Node = null;
-  @property(cc.Node)
-  goldNode: cc.Node = null;
-
-  @property(cc.Node)
-  dollarNode: cc.Node = null;
 
   @property(cc.Node)
   map_root: cc.Node = null;
@@ -64,20 +56,20 @@ export default class GameMain extends cc.Component {
     displayName: "背景"
   })
   bg: cc.Node = null;
-  @property({
-    type: cc.Node,
-    displayName: "通关动画"
-  })
-  levelStart: cc.Node = null;
+  // @property({
+  //   type: cc.Node,
+  //   displayName: "通关动画"
+  // })
+  // levelStart: cc.Node = null;
   @property(cc.SpriteFrame)
   propSpriteFrame: cc.SpriteFrame = [];
   @property(cc.SpriteFrame)
   propNumIcons: cc.SpriteFrame = [];
-  @property({
-    type: cc.Node,
-    displayName: "倒计时节点"
-  })
-  countTimeNode: cc.Node = null;
+  // @property({
+  //   type: cc.Node,
+  //   displayName: "倒计时节点"
+    // })
+    countTimeNode: cc.Node = null;
   @property({
     type: cc.Prefab,
     displayName: "麻将牌预制体"
@@ -96,16 +88,16 @@ export default class GameMain extends cc.Component {
   operationGridLine: cc.Graphics = null;
   @property(cc.Node)
   comboNode: cc.Node = null;
-  @property(cc.Node)
-  freezeTipNode: cc.Node = null;
+    // @property(cc.Node)
+    // freezeTipNode: cc.Node = null;
   @property(cc.Prefab)
   comboEffectPrefab: cc.Prefab = null;
   @property(cc.Prefab)
   comboEffect15Prefab: cc.Prefab = null;
   // @property(cc.Prefab)
   // passLevelEffectPrefab: cc.Prefab = null;
-  @property(mainBtnGroupCtrl)
-  mainBtnGroupCtrl: mainBtnGroupCtrl = null;
+  // @property(mainBtnGroupCtrl)
+  // mainBtnGroupCtrl: mainBtnGroupCtrl = null;
   @property(cc.Node)
   teachGuideNode: cc.Node = null;
 
@@ -312,8 +304,8 @@ export default class GameMain extends cc.Component {
           if (sdk && sdk.Panel && typeof sdk.showLevelStartBanner === "function") {
             sdk.showLevelStartBanner(onLevelFlowDone, gameData.gameLevel);
           } else {
-            n.levelStart.active = true;
-            n.levelStart.getComponent(LevelStart).init({ cb: onLevelFlowDone });
+            // n.levelStart.active = true;
+            // n.levelStart.getComponent(LevelStart).init({ cb: onLevelFlowDone });
           }
         };
         const beginLevelFlow = (needLevelBanner = false) => {
@@ -447,7 +439,7 @@ export default class GameMain extends cc.Component {
     this.startGame(true, true);
   }
   showCountTimeNode(e) {
-    this.countTimeNode.getComponent(countDown).showCountTimeNode(e);
+    // this.countTimeNode.getComponent(countDown).showCountTimeNode(e);
   }
   startUpdateGameTime() {
     this.schedule(this.updateGameTime, 1);
@@ -800,10 +792,10 @@ export default class GameMain extends cc.Component {
   }
   clearGameUI() {
     this.isGameing = false;
-    this.freezeTipNode.active = false;
+    // this.freezeTipNode.active = false;
     this.teachGuideNode.active = false;
     this.comboNode.active = false;
-    this.countTimeNode.active = false;
+    // this.countTimeNode.active = false;
     this.map_root.active = false;
     this.tipPropBubbleNode.active = false;
     this.unschedule(this.showTipNode);
@@ -826,7 +818,7 @@ export default class GameMain extends cc.Component {
     gameData.gameState = GameState.gameing;
     if (e == FailedType.TIME_OUT) {
       gameData.globalCanClick = true;
-      this.countTimeNode.getComponent(countDown).showCountTimeNode(60);
+      // this.countTimeNode.getComponent(countDown).showCountTimeNode(60);
       EventMgr.trigger(GameEventType.START_COUNT_DOWN);
     } else {
       gameData.globalCanClick = true;
@@ -1182,24 +1174,24 @@ export default class GameMain extends cc.Component {
     LoadWord.instance?.completeNewHandRewardFlow();
   }
   showFreezeTip() {
-    var e = this,
-      t = this.freezeTipNode.getComponent(sp.Skeleton);
-    this.freezeTipNode.active = true;
-    t.setAnimation(0, "show", false);
-    t.setCompleteListener(null);
-    t.setCompleteListener(function (o) {
-      if ("show" == o.animation.name) {
-        t.setAnimation(0, "idle", true);
-      } else {
-        "end" == o.animation.name && (e.freezeTipNode.active = false);
-      }
-    });
-    this.countTimeNode.getComponent(countDown).pauseCountDown();
-    this.scheduleOnce(function () {
-      t.setAnimation(0, "end", false);
-      gameData.isUseFreeze = false;
-      e.countTimeNode.getComponent(countDown).resumeCountDown();
-    }, Constants.FreezeTime);
+    var e = this;
+    //   t = this.freezeTipNode.getComponent(sp.Skeleton);
+    // this.freezeTipNode.active = true;
+    // t.setAnimation(0, "show", false);
+    // t.setCompleteListener(null);
+    // t.setCompleteListener(function (o) {
+    //   if ("show" == o.animation.name) {
+    //     t.setAnimation(0, "idle", true);
+    //   } else {
+    //     "end" == o.animation.name && (e.freezeTipNode.active = false);
+    //   }
+    // });
+    // this.countTimeNode.getComponent(countDown).pauseCountDown();
+    // this.scheduleOnce(function () {
+    //   t.setAnimation(0, "end", false);
+    //   gameData.isUseFreeze = false;
+    //   // e.countTimeNode.getComponent(countDown).resumeCountDown();
+    // }, Constants.FreezeTime);
   }
   /** 原 settleMentPage._init 中的通关清场与本地金币入账（与弹窗解耦，供 Panel_Award_6 使用） */
   prepareMahjongPassSettlement() {
