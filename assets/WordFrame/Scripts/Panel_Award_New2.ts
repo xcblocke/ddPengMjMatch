@@ -56,6 +56,7 @@ export default class Panel_Award_New2 extends cc.Component {
 
     btnClick(index_box) {
         if (!this.isTouch) return;
+        FrameSDK.playEffect("click");
         this.isTouch = false;
 
 

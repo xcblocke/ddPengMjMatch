@@ -64,6 +64,7 @@ export default class Panel_Account extends cc.Component {
                 return;
             }
         }
+        FrameSDK.playEffect("click");
         this.close();
     }
 

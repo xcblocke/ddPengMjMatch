@@ -43,6 +43,7 @@ export default class RDM_Charity extends cc.Component {
     guideInedx: number = 0;
 
     protected onEnable(): void {
+        FrameSDK.playEffect("show_rd");
         this.updateUI();
         this.guide.active = false;
         if (FrameData.saveData.charityGuideIndex <= 1) {
@@ -72,7 +73,6 @@ export default class RDM_Charity extends cc.Component {
             this.scrollview.node.height = this.scrollview.node.convertToWorldSpaceAR(cc.v2()).y;
         });
 
-        FrameSDK.playEffect("show_rd")
         // this.top.on(cc.Node.EventType.TOUCH_END, () => {
         //     GM.open();
         // }, this);
@@ -149,7 +149,9 @@ export default class RDM_Charity extends cc.Component {
     }
 
     onBtnEvent(target, data: string) {
+        FrameSDK.playEffect("click");
         if (data == "0") {
+           
             FrameSDK.releasePanelNode(this.node);
         } else if (data == "3") {
             this.guideInedx++;

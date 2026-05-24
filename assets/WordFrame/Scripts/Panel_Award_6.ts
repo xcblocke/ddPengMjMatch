@@ -58,6 +58,7 @@ export default class Panel_Award_6 extends cc.Component {
         if (this._rewardClaimed) {
             return;
         }
+        FrameSDK.playEffect("click");
         this._rewardClaimed = true;
         this["noTouch"].node.active = true;
 

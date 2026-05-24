@@ -82,7 +82,7 @@ export default class SetUpPage extends BasePage {
     this.shakeUnNode.active = !AudioManager.getInstance().getVibratorState();
   }
   onBtn(e, t) {
-    AudioManager.getInstance().playMusic("btntouch");
+    AudioManager.getInstance().playMusic("click");
     if ("zd" == t) {
       this.touchZdBtn();
     } else {
@@ -118,7 +118,7 @@ export default class SetUpPage extends BasePage {
   }
 
   onLabelBtn(e, t) {
-    AudioManager.getInstance().playMusic("btntouch");
+    AudioManager.getInstance().playMusic("click");
     if ("yh" == t) {
       // this.userAgreement();
     } else {
@@ -139,7 +139,7 @@ export default class SetUpPage extends BasePage {
     SdkHelper.reportData("click_musicTouch");
   }
   customerService() {
-    AudioManager.getInstance().playMusic("btntouch");
+    AudioManager.getInstance().playMusic("click");
     SdkHelper.reportData("click_help_center");
     var e = CUSTOMER_SERVICE;
     EventMgr.trigger(GameEventType.PAGE_SHOW, {
@@ -151,7 +151,7 @@ export default class SetUpPage extends BasePage {
   }
 
   privacyPolicy() {
-    AudioManager.getInstance().playMusic("btntouch");
+    AudioManager.getInstance().playMusic("click");
     SdkHelper.reportData("u_click_user_privacy");
     // var e = PlayerDataSys.getPrivacyAgreementUrl();
     // EventMgr.trigger(GameEventType.PAGE_SHOW, {
@@ -188,7 +188,7 @@ export default class SetUpPage extends BasePage {
     });
   }
   onClose() {
-    AudioManager.getInstance().playMusic("btntouch");
+    AudioManager.getInstance().playMusic("click");
     SdkHelper.reportData("b_leave_page", {
       act_page: "setting_page",
       duration: new Date().getTime() - this.comeinTime
@@ -202,7 +202,7 @@ export default class SetUpPage extends BasePage {
   }
 
   reStartGame() {
-    AudioManager.getInstance().playMusic("btntouch");
+    AudioManager.getInstance().playMusic("click");
     EventMgr.trigger(GameEventType.RESTART_GAME);
     this._hide();
   }

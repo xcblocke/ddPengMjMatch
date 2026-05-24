@@ -565,6 +565,7 @@ export default class Panel_Clock extends cc.Component {
 
 
     onTouchClockIn() {
+        FrameSDK.playEffect("click");
         if (this.userInfo.canSign == true) {
             let index = this.getSignIndex();
             let cueenum = 0;
@@ -596,6 +597,7 @@ export default class Panel_Clock extends cc.Component {
     }
 
     onTouchClockIn2() {
+        FrameSDK.playEffect("click");
         if (this.userInfo.canSign == true) {
             //活跃时间不足
             // FrameSDK.showToast(`clok_018`);
@@ -612,6 +614,7 @@ export default class Panel_Clock extends cc.Component {
 
 
     onTouchS1() {
+        FrameSDK.playEffect("click");
         this.btnS1clickLight.active = false;
         this.onTouchClo();
         return
@@ -633,6 +636,7 @@ export default class Panel_Clock extends cc.Component {
 
 
     onTouchS2() {
+        FrameSDK.playEffect("click");
         if (this.nameEdBox.getComponent(cc.EditBox).string.length != 0 && this.addressEdBox.getComponent(cc.EditBox).string.length != 0 && this.eMailEdBox.getComponent(cc.EditBox).string.length != 0 && this.phoneEdBox.getComponent(cc.EditBox).string.length != 0) {
             this.isBlockKey = true;
             this.userInfo.accout = this.nameEdBox.getComponent(cc.EditBox).string;
@@ -688,6 +692,7 @@ export default class Panel_Clock extends cc.Component {
     }
 
     onTouchS4() {
+        FrameSDK.playEffect("click");
         this.isBlockKey = true;
         this.userInfo.SendTargetTime = FrameSDK.now + this.config.act_time;
         this.userInfo.SendVideoCount = 0;
@@ -699,6 +704,7 @@ export default class Panel_Clock extends cc.Component {
 
     onTouchClo() {
         this.preparePanelCloseAnim();
+        FrameSDK.playEffect("click");
         this.blockView.active = true;
         FrameSDK.closeEffect(this, this.viewData.closeCB)
     }

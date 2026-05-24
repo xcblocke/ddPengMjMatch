@@ -39,6 +39,7 @@ export default class Panel_Rating extends cc.Component {
 
 
     onStarClickEvent(target, data) {
+        FrameSDK.playEffect("click");
         this.leve = Number(data) + 1;
         for (let i = 0; i < this.starLayout.childrenCount; i++) {
             this.starLayout.children[i].getChildByName("yes").active = i < this.leve;
@@ -46,6 +47,7 @@ export default class Panel_Rating extends cc.Component {
     }
 
     onOkClickEvent(target, data) {
+        FrameSDK.playEffect("click");
         if (data == "0") {
             if (this.leve >= 5) {
                 if (FrameSDK.frameData.sdkFuc.openUrl) {

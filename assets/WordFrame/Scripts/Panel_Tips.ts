@@ -60,10 +60,12 @@ export default class Panel_Tips extends cc.Component {
         // } else if (this.viewData.type == 2) {
         //
         // }
+        FrameSDK.playEffect("click");
         this.onTouchCloseTips();
     }
 
     onClickClose() {
+        FrameSDK.playEffect("click");
         this.onTouchCloseTips();
     }
 

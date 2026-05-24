@@ -85,6 +85,7 @@ export default class Panel_Award_Luck extends cc.Component {
 
     @CLICKLOCK()
     click_Common() {
+        FrameSDK.playEffect("click");
         this.close();
     }
 

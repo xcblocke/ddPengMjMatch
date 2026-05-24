@@ -88,6 +88,7 @@ export default class Panel_PreRdm extends cc.Component {
     }
 
     onBtnEvent(target, data: string) {
+        FrameSDK.playEffect("click");
         if (data == "1") {
             if (this.editbox.string.trim().length > 0) {
                 const index = this.paymentToggleContainer.toggleItems.findIndex(toggle => toggle.isChecked);

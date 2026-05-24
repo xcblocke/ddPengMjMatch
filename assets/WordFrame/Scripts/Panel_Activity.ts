@@ -288,6 +288,7 @@ export default class Panel_Activity extends cc.Component {
     hideTime = 0;
 
     close() {
+        FrameSDK.playEffect("click");
         if (Date.now() - this.hideTime <= 300) {
             console.log("wait!!!，return");
         } else {

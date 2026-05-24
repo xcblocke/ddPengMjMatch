@@ -191,6 +191,7 @@ export default class RDM_Level extends cc.Component {
 
     onBtnEvent(target, data: string) {
         if (data == "0") {
+            FrameSDK.playEffect("click");
             this.viewData?.closeCB?.();
             this.emitNewHandRdmTutorialDone();
             this.node.destroy();
