@@ -185,12 +185,8 @@ export default class LoadWord {
     }, 100);
   }
 
-  init(callback?: () => void) {
-    if (this.isInit == false) {
-      this.initCallback = callback;
-      this.isInit = true;
-      if (null == cc.sys.localStorage.getItem("newHand") && NativeUtils.isFlag) {
-        this._awaitNewHandRewardFlow = true;
+  showHandPanel(callback?: () => void) {
+    this._awaitNewHandRewardFlow = true;
         if (LoadWord.preloadedNewHandPrefab) {
           this.initHand(null, LoadWord.preloadedNewHandPrefab);
         } else if (LoadWord.wordNewHandBundle) {
@@ -207,6 +203,16 @@ export default class LoadWord {
             }
           });
         }
+  }
+
+  init(callback?: () => void) {
+    if (this.isInit == false) {
+      this.initCallback = callback;
+      this.isInit = true;
+      if (null == cc.sys.localStorage.getItem("newHand") && NativeUtils.isFlag) {
+        setTimeout(() => {
+          this.showHandPanel();
+        }, 420);
       }
       cc.assetManager.loadBundle("WordFrame", (err, bundle) => {
         if (err) {
