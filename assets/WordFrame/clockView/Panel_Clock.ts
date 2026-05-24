@@ -131,6 +131,8 @@ export default class Panel_Clock extends cc.Component {
     @property(sp.Skeleton)
     contentSkeleton: sp.Skeleton = null;
 
+    private _animWidgets: cc.Widget[] = null;
+
     static ins: Panel_Clock = null;
     static coinTarget: cc.Node = null;
     viewData: { closeCB: () => void } = null;
@@ -191,7 +193,59 @@ export default class Panel_Clock extends cc.Component {
         // edBox.editingDidEnded = [a];
     }
 
+    /** panel_window / root 上的 Widget 会与 scale 弹出动画冲突，动画期间需临时关闭 */
+    private cacheAnimWidgets() {
+        if (this._animWidgets) {
+            return;
+        }
+        const widgets: cc.Widget[] = [];
+        const panelWidget = this.pnlClockView && this.pnlClockView.getComponent(cc.Widget);
+        if (panelWidget) {
+            widgets.push(panelWidget);
+        }
+        const root = this.pnlClockView && this.pnlClockView.getChildByName("root");
+        const rootWidget = root && root.getComponent(cc.Widget);
+        if (rootWidget) {
+            widgets.push(rootWidget);
+        }
+        this._animWidgets = widgets;
+    }
+
+    private setAnimWidgetsEnabled(enabled: boolean) {
+        this.cacheAnimWidgets();
+        for (let i = 0; i < this._animWidgets.length; i++) {
+            const widget = this._animWidgets[i];
+            if (widget && cc.isValid(widget)) {
+                widget.enabled = enabled;
+            }
+        }
+    }
+
+    /** 打开前：关 Widget 并把窗口置于弹出起始态 */
+    private preparePanelOpenAnim() {
+        this.setAnimWidgetsEnabled(false);
+        if (!this.pnlClockView || !cc.isValid(this.pnlClockView)) {
+            return;
+        }
+        cc.Tween.stopAllByTarget(this.pnlClockView);
+        this.pnlClockView.stopAllActions();
+        this.pnlClockView.scale = 0.1;
+        this.pnlClockView.opacity = 255;
+        this.pnlClockView.setPosition(0, 0, 0);
+    }
+
+    /** 关闭前：仅关 Widget 并停掉旧 tween，保留当前 scale/position 供 closeEffect 同步播放 */
+    private preparePanelCloseAnim() {
+        this.setAnimWidgetsEnabled(false);
+        if (!this.pnlClockView || !cc.isValid(this.pnlClockView)) {
+            return;
+        }
+        cc.Tween.stopAllByTarget(this.pnlClockView);
+        this.pnlClockView.stopAllActions();
+    }
+
     onDisable() {
+        this.setAnimWidgetsEnabled(true);
         if (Panel_Clock.ins === this) {
             Panel_Clock.ins = null;
         }
@@ -208,12 +262,12 @@ export default class Panel_Clock extends cc.Component {
 
         this.flash();
 
+        this.preparePanelOpenAnim();
         this.blockView.active = true;
-        this.scheduleOnce(() => {
-            FrameSDK.openEffect(this, null, () => {
-                this.blockView.active = false;
-            })
-        })
+        FrameSDK.openEffect(this, null, () => {
+            this.blockView.active = false;
+            this.setAnimWidgetsEnabled(true);
+        });
 
         if (this.contentSkeleton) {
             this.contentSkeleton.setAnimation(0, "5start", false);
@@ -644,6 +698,7 @@ export default class Panel_Clock extends cc.Component {
     }
 
     onTouchClo() {
+        this.preparePanelCloseAnim();
         this.blockView.active = true;
         FrameSDK.closeEffect(this, this.viewData.closeCB)
     }
