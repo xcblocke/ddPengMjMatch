@@ -1,4 +1,5 @@
 import EngineUtil from '../framework/EngineUtil';
+import LaunchLoadScheduler from './LaunchLoadScheduler';
 const {
   ccclass,
   property
@@ -118,38 +119,116 @@ export default class ResourcesManager {
   }
 
   /**
-   * 主场景必需贴图（bg / 麻将牌面 / icons），与 Prefab 预加载并行，不占用进度条份额。
+   * 主场景必需贴图。Web 可并行；原生请用 loadEssentialSpritesStaged。
    */
   async loadEssentialSprites(): Promise<void> {
+    if (LaunchLoadScheduler.useStagedNativeLoad()) {
+      return this.loadEssentialSpritesStaged();
+    }
     var bundle = cc.assetManager.getBundle("resources");
     if (!bundle) {
       throw new Error("resources bundle not found");
     }
     var dirs = [{
       path: "preload/icons",
-      type: cc.SpriteFrame,
       assign: function (self, list) {
         self._iconFrames = list || [];
       }
     }, {
       path: "preload/bg",
-      type: cc.SpriteFrame,
       assign: function (self, list) {
         self._bgFrames = list || [];
       }
     }, {
       path: "preload/mj",
-      type: cc.SpriteFrame,
       assign: function (self, list) {
         self._mahjongFrames = list || [];
       }
     }];
     var self = this;
     await Promise.all(dirs.map(function (dir) {
-      return self.loadDir(bundle, dir.path, dir.type).then(function (list) {
+      return self.loadDir(bundle, dir.path, cc.SpriteFrame).then(function (list) {
         dir.assign(self, list as cc.SpriteFrame[]);
       });
     }));
+  }
+
+  /**
+   * 原生分帧加载：先小图 bg/icons，麻将牌面按批 load + 每批让出主线程（避免 248 张同帧 decode）。
+   * @param onProgress 0~1 整体贴图加载进度
+   */
+  async loadEssentialSpritesStaged(onProgress?: (p: number) => void): Promise<void> {
+    var bundle = cc.assetManager.getBundle("resources");
+    if (!bundle) {
+      throw new Error("resources bundle not found");
+    }
+    var self = this;
+    var report = function (p: number) {
+      onProgress && onProgress(p > 1 ? 1 : p < 0 ? 0 : p);
+    };
+
+    var smallDirs = ["preload/icons", "preload/bg"];
+    for (var s = 0; s < smallDirs.length; s++) {
+      var smallList = (await this.loadDir(bundle, smallDirs[s], cc.SpriteFrame)) as cc.SpriteFrame[];
+      if (smallDirs[s] === "preload/icons") {
+        self._iconFrames = smallList || [];
+      } else {
+        self._bgFrames = smallList || [];
+      }
+      report((s + 1) / (smallDirs.length + 1) * 0.12);
+      await LaunchLoadScheduler.yieldFrames(1);
+    }
+
+    await new Promise<void>(function (resolve, reject) {
+      bundle.preloadDir("preload/mj", cc.SpriteFrame, function () {}, function (err) {
+        if (err) reject(err);
+        else resolve();
+      });
+    }).catch(function () {
+      /* preload 失败仍尝试分批 load */
+    });
+    await LaunchLoadScheduler.yieldFrames(2);
+
+    var infos = bundle.getDirWithPath("preload/mj", cc.SpriteFrame) || [];
+    var paths: string[] = [];
+    for (var i = 0; i < infos.length; i++) {
+      if (infos[i] && infos[i].path) {
+        paths.push(infos[i].path);
+      }
+    }
+
+    if (!paths.length) {
+      var fallback = (await this.loadDir(bundle, "preload/mj", cc.SpriteFrame)) as cc.SpriteFrame[];
+      self._mahjongFrames = fallback || [];
+      report(1);
+      return;
+    }
+
+    var batchSize = 8;
+    var mjFrames: cc.SpriteFrame[] = [];
+    var mjBaseProgress = 0.12;
+
+    for (var start = 0; start < paths.length; start += batchSize) {
+      var batch = paths.slice(start, start + batchSize);
+      var batchAssets = await Promise.all(batch.map(function (assetPath) {
+        return new Promise<cc.SpriteFrame>(function (resolve, reject) {
+          bundle.load(assetPath, cc.SpriteFrame, function (err, asset) {
+            if (err) reject(err);
+            else resolve(asset as cc.SpriteFrame);
+          });
+        });
+      }));
+      for (var b = 0; b < batchAssets.length; b++) {
+        if (batchAssets[b]) {
+          mjFrames.push(batchAssets[b]);
+        }
+      }
+      report(mjBaseProgress + (Math.min(start + batch.length, paths.length) / paths.length) * (1 - mjBaseProgress));
+      await LaunchLoadScheduler.yieldFrames(1);
+    }
+
+    self._mahjongFrames = mjFrames;
+    report(1);
   }
 
   /** 释放 loading 阶段预加载的 SpriteFrame（icons / bg / mj） */

@@ -42,21 +42,35 @@ export default class LoadProgress extends cc.Component {
   /** 为 true 时：外部设置的是目标值，每帧用插值逼近，避免进度猛跳 */
   _smoothFollow = false;
   _smoothTarget = 0;
+  /** 显示用百分比（0~100），避免 Label 每帧四舍五入抖动 */
+  _displayPercentInt = 0;
+  /** 平滑跟随：每秒最小前进比例（目标仍高于当前时） */
+  _smoothMinSpeed = 0.12;
+  /** 指数跟随系数，越小越丝滑、追上目标越慢 */
+  _smoothDamping = 9;
   get curPercent() {
     return this._curPercent;
   }
   set curPercent(e) {
     e = Math.max(0, Math.min(1, e));
     if (this._smoothFollow) {
-      this._smoothTarget = e;
+      if (e > this._smoothTarget) {
+        this._smoothTarget = e;
+      }
       return;
     }
     this.applyPercentImmediate(e);
   }
   /** 进入场景加载阶段时调用：进度改为平滑跟随目标 */
-  beginSmoothFollow() {
+  beginSmoothFollow(minSpeed?: number, damping?: number) {
     this._smoothFollow = true;
     this._smoothTarget = this._curPercent;
+    if (minSpeed != null) {
+      this._smoothMinSpeed = minSpeed;
+    }
+    if (damping != null) {
+      this._smoothDamping = damping;
+    }
   }
   /** 关闭插值并一次性对齐到当前目标（用于切场景前瞬间拉满，避免还要等插值） */
   snapSmoothToTarget() {
@@ -67,8 +81,14 @@ export default class LoadProgress extends cc.Component {
   }
   applyPercentImmediate(e) {
     this._curPercent = e;
-    this.progress.fillRange = e;
-    this.progressLabel.string = Math.round(100 * e) + "%";
+    if (this.progress) {
+      this.progress.fillRange = e;
+    }
+    var nextInt = Math.min(100, Math.floor(100 * e + 1e-5));
+    if (this.progressLabel && nextInt !== this._displayPercentInt) {
+      this._displayPercentInt = nextInt;
+      this.progressLabel.string = nextInt + "%";
+    }
     this.updateHandlePos();
   }
   update(dt) {
@@ -76,14 +96,22 @@ export default class LoadProgress extends cc.Component {
     var target = this._smoothTarget;
     var cur = this._curPercent;
     var diff = target - cur;
-    if (Math.abs(diff) < 1e-4) {
-      if (cur !== target) this.applyPercentImmediate(target);
+    if (diff <= 1e-5) {
+      if (cur !== target) {
+        this.applyPercentImmediate(target);
+      }
       return;
     }
-    var k = 18;
-    var alpha = 1 - Math.exp(-k * dt);
-    if (alpha > 1) alpha = 1;
-    this.applyPercentImmediate(cur + diff * alpha);
+    var alpha = 1 - Math.exp(-this._smoothDamping * dt);
+    if (alpha > 1) {
+      alpha = 1;
+    }
+    var step = diff * alpha;
+    var minStep = this._smoothMinSpeed * dt;
+    if (step < minStep) {
+      step = minStep > diff ? diff : minStep;
+    }
+    this.applyPercentImmediate(cur + step);
   }
   get loadType() {
     return this._loadType;
@@ -96,6 +124,7 @@ export default class LoadProgress extends cc.Component {
     this.progressHandle && (this.progressHandle.active = this.isHasHandle);
     this._animObj = null;
     this._smoothFollow = false;
+    this._displayPercentInt = -1;
     this.curPercent = 0;
   }
 

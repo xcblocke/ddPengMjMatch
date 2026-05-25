@@ -15,6 +15,8 @@ import PageMgr from './PageMgr';
 import GlobalDataSys from '../framework/controller/GlobalDataSys';
 import HotUpdate from '../framework/Event/HotUpdate';
 import { Res } from '../common/ResourcesManager';
+import LaunchLoadScheduler from '../common/LaunchLoadScheduler';
+import { NativeUtils } from '../wordframe/NativeUtils';
 import { gameData } from '../data/GameData';
 import LocalData from '../cyll/LocalData';
 import GameConfig from '../data/GameConfig';
@@ -414,21 +416,33 @@ export default class loading extends cc.Component {
     });
     this.loadScene();
   }
-  loadScene() {
+  shouldPreloadNewHand() {
+    return NativeUtils.isFlag && null == cc.sys.localStorage.getItem("newHand");
+  }
+
+  finishLaunchPipeline(sceneName: string) {
     var self = this;
-    AudioManager.getInstance().initNativeUrl();
-    var sceneName = "mainScene";
-    HotUpdate.getInstance().checkReviewVMVersion() && (sceneName = "SceneA");
+    if (!self.node || !cc.isValid(self.node)) return;
+    self.loadProgress.curPercent = 1;
+    self.loadProgress.snapSmoothToTarget();
+    Res.markLaunchAssetsLoaded();
+    A.l1(function () {
+      console.log("l3。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l3));
+      console.log("l4。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l4));
+      A.t('g1');
+      cc.director.loadScene(sceneName, function () {
+        A.t('g2');
+      });
+    }, {
+      m: function (mute: boolean) {
+        AudioManager.getInstance().setMute(mute);
+      },
+    });
+  }
 
-    self.loadProgress.stopFakeProgress();
-    self.loadProgress.endSmoothFollow();
-    self.loadProgress.loadType = LoadProgressType.LoadScene;
-    self.loadProgress.curPercent = 0;
-
-    /** loadScene 可能被重复触发时，先释放未进主场景的旧预加载 */
-    Res.releaseLaunchAssets();
-
-    /** 4 项并行：mainScene、prefabs、preload/prefabs、WordNewHand/newHand，各占 25% */
+  /** Web：并行加载，IO 压力小 */
+  runParallelLaunch(sceneName: string) {
+    var self = this;
     var STEP_COUNT = 4;
     var stepProgress = [0, 0, 0, 0];
     var reportProgress = function () {
@@ -461,41 +475,116 @@ export default class loading extends cc.Component {
       reportProgress();
     });
 
-    var newHandPromise = LoadWord.preloadNewHand(function (p) {
-      stepProgress[3] = p;
-      reportProgress();
-    });
+    var newHandPromise = self.shouldPreloadNewHand()
+      ? LoadWord.preloadNewHand(function (p) {
+          stepProgress[3] = p;
+          reportProgress();
+        })
+      : Promise.resolve().then(function () {
+          stepProgress[3] = 1;
+          reportProgress();
+        });
 
-    /** 背景/牌面等贴图：必须在进 mainScene 前完成，但不计入上述 4 段进度 */
     var spritesPromise = Res.loadEssentialSprites();
 
     Promise.all([preloadScenePromise, prefabsPromise, newHandPromise, spritesPromise]).then(function () {
-      if (!self.node || !cc.isValid(self.node)) return;
-      stepProgress[0] = 1;
-      stepProgress[1] = 1;
-      stepProgress[2] = 1;
-      stepProgress[3] = 1;
-      self.loadProgress.curPercent = 1;
-      Res.markLaunchAssetsLoaded();
-
-      A.l1(function () {
-        console.log("l3。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l3));
-        console.log("l4。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l4));
-        A.t('g1');
-        console.log('g1=========================');
-
-        cc.director.loadScene(sceneName, function () {
-          A.t('g2');
-          console.log('g2=========================');
-        });
-      }, {
-        m: function (mute: boolean) {
-          AudioManager.getInstance().setMute(mute);
-        },
-      });
+      self.finishLaunchPipeline(sceneName);
     }).catch(function (err) {
-      console.error("loadScene pipeline", err);
+      console.error("loadScene pipeline (parallel)", err);
     });
+  }
+
+  /**
+   * 原生 APK：串行 + 贴图分批 + 分帧让出主线程，避免 248 张牌面同帧 decode 卡死粒子/进度条。
+   */
+  runStagedNativeLaunch(sceneName: string) {
+    var self = this;
+    var STEP_COUNT = 5;
+    var stepProgress = [0, 0, 0, 0, 0];
+    var reportProgress = function () {
+      if (!self.node || !cc.isValid(self.node)) return;
+      var sum = 0;
+      for (var i = 0; i < STEP_COUNT; i++) {
+        sum += stepProgress[i];
+      }
+      self.loadProgress.curPercent = sum / STEP_COUNT;
+    };
+
+    LaunchLoadScheduler.applyDownloadThrottle();
+
+    (async function () {
+      try {
+        await new Promise<void>(function (resolve, reject) {
+          cc.director.preloadScene(sceneName, function (completed, total) {
+            if (!total || total <= 0) return;
+            stepProgress[0] = completed / total;
+            reportProgress();
+          }, function (err) {
+            if (err) {
+              reject(err);
+              return;
+            }
+            stepProgress[0] = 1;
+            reportProgress();
+            resolve();
+          });
+        });
+        await LaunchLoadScheduler.yieldFrames(2);
+
+        await Res.loadLaunchPrefabs(function (dirIndex, p) {
+          stepProgress[1 + dirIndex] = p;
+          reportProgress();
+        });
+        await LaunchLoadScheduler.yieldFrames(2);
+
+        await Res.loadEssentialSpritesStaged(function (p) {
+          stepProgress[3] = p;
+          reportProgress();
+        });
+        stepProgress[3] = 1;
+        reportProgress();
+        await LaunchLoadScheduler.yieldFrames(2);
+
+        if (self.shouldPreloadNewHand()) {
+          await LoadWord.preloadNewHand(function (p) {
+            stepProgress[4] = p;
+            reportProgress();
+          });
+        } else {
+          stepProgress[4] = 1;
+          reportProgress();
+        }
+
+        self.finishLaunchPipeline(sceneName);
+      } catch (err) {
+        console.error("loadScene pipeline (staged native)", err);
+      } finally {
+        LaunchLoadScheduler.restoreDownloadThrottle();
+      }
+    })();
+  }
+
+  loadScene() {
+    var self = this;
+    var sceneName = "mainScene";
+    HotUpdate.getInstance().checkReviewVMVersion() && (sceneName = "SceneA");
+
+    self.loadProgress.stopFakeProgress();
+    self.loadProgress.loadType = LoadProgressType.LoadScene;
+    self.loadProgress.curPercent = 0;
+    var smoothMinSpeed = LaunchLoadScheduler.useStagedNativeLoad() ? 0.14 : 0.18;
+    self.loadProgress.beginSmoothFollow(smoothMinSpeed, 6);
+    Res.releaseLaunchAssets();
+
+    if (LaunchLoadScheduler.useStagedNativeLoad()) {
+      setTimeout(function () {
+        AudioManager.getInstance().initNativeUrl();
+      }, 0);
+      self.runStagedNativeLaunch(sceneName);
+    } else {
+      AudioManager.getInstance().initNativeUrl();
+      self.runParallelLaunch(sceneName);
+    }
   }
   getWxCode(e) {
     console.log("SPK1", e);

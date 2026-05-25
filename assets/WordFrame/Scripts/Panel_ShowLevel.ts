@@ -52,7 +52,7 @@ export default class Panel_ShowLevel extends cc.Component {
 
         cc.tween(this.bgNode).to(0.8, {x: 0}, {
             easing: "backOut"
-        }).delay(1).to(0.8, {x: -x-300}, {
+        }).delay(0.4).to(0.8, {x: -x-300}, {
             easing: "backIn"
         }).call(() => {
             this.dismissPanel();
