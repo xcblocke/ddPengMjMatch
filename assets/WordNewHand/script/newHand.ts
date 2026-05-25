@@ -308,7 +308,26 @@ let langdataArray = [{
     "ms": "Mula Mendapat",
     "hi": "कमाई शुरू करें",
     "tr": "Kazanmaya Başlayın"
-}, {"key":"nkey_005","zh":"成功分类词组即可赚钱，通过第xxx_1关，收集到的所有货币，都可提现","en":"Sort words to earn! Pass level xxx_1 to withdraw all currency.","es":"¡Clasifica y gana! Pasa el nivel xxx_1 para retirar todo.","fr":"Triez et gagnez ! Passez le niv. xxx_1 pour tout retirer.","ja":"単語分類で稼ごう！xxx_1関クリアで全額出金可能。","de":"Sortieren & verdienen! Level xxx_1 zum Abheben aller Währungen.","ru":"Сортируй и зарабатывай! Пройди xxx_1 ур. для вывода всех средств.","pt":"Classifique e ganhe! Passe o nível xxx_1 para sacar tudo.","in":"Sortir kata & hasilkan uang! Lewati level xxx_1 untuk tarik semua.","vi":"Phân loại từ để kiếm tiền! Qua màn xxx_1 để rút toàn bộ tiền.","ar":"صنف الكلمات واربح! اجتز المستوى xxx_1 لسحب كل العملات.","th":"จัดกลุ่มคำเพื่อรับเงิน! ผ่านด่าน xxx_1 ถอนเงินทั้งหมดได้เลย","ko":"단어 분류하고 수익 창출! xxx_1단계를 통과해 전액 출금하세요.","fil":"Mag-sort para kumita! Ipasa ang level xxx_1 para i-withdraw lahat.","ms":"Isih kata & jana wang! Lepasi tahap xxx_1 untuk keluarkan semua.","hi":"शब्दों को छाँटें और कमाएँ! पैसे निकालने के लिए स्तर xxx_1 पार करें।","tr":"Sırala ve kazan! Tüm parayı çekmek için xxx_1. seviyeyi geç."},
+}, {
+    "key": "nkey_005",
+    "zh": "成功消除一组即可赚钱，通过第xxx_1关，收集到的所有货币，都可提现",
+    "en": "Eliminate one set to earn money. Pass level xxx_1 to withdraw all collected currency.",
+    "es": "Elimina un conjunto para ganar dinero. Supera el nivel xxx_1 para retirar toda la moneda recolectada.",
+    "fr": "Éliminez un ensemble pour gagner de l'argent. Terminez le niveau xxx_1 pour retirer toute la monnaie collectée.",
+    "ja": "1組を消すと収入獲得。レベルxxx_1をクリアすると、集めた全通貨を出金可能。",
+    "de": "Entfernen Sie ein Set, um Geld zu verdienen. Bestehen Sie Level xxx_1, um alle gesammelten Währungen abzuheben.",
+    "ru": "Устраните одну группу, чтобы заработать. Пройдите уровень xxx_1, чтобы вывести всю собранную валюту.",
+    "pt": "Elimine um conjunto para ganhar dinheiro. Passe o nível xxx_1 para sacar toda a moeda coletada.",
+    "in": "Hilangkan satu set untuk menghasilkan uang. Lewati level xxx_1 untuk menarik semua mata uang yang terkumpul.",
+    "vi": "Loại bỏ một bộ để kiếm tiền. Vượt qua màn xxx_1 để rút toàn bộ tiền tệ đã thu thập.",
+    "ar": "أزل مجموعة واحدة لكسب المال. اجتز المستوى xxx_1 لسحب كل العملات التي تم جمعها.",
+    "th": "กำจัดหนึ่งชุดเพื่อรับเงิน ผ่านด่าน xxx_1 เพื่อถอนเงินทั้งหมดที่สะสมไว้",
+    "ko": "한 세트를 제거하여 수익을 얻으세요. xxx_1 레벨을 통과하여 수집된 모든 통화를 인출하세요.",
+    "fil": "Tanggalin ang isang set para kumita ng pera. Pumasa sa level xxx_1 upang i-withdraw lahat ng nakolektang pera.",
+    "ms": "Hapuskan satu set untuk menjana wang. Lepasi tahap xxx_1 untuk mengeluarkan semua mata wang yang dikumpul.",
+    "hi": "एक सेट हटाकर पैसे कमाएँ। सभी एकत्रित मुद्रा निकालने के लिए स्तर xxx_1 पास करें।",
+    "tr": "Bir seti ortadan kaldırarak para kazanın. Toplanan tüm paranın çekilmesi için xxx_1 seviyesini geçin."
+},
  {
     "key": "nkey_006",
     "zh": "提现",

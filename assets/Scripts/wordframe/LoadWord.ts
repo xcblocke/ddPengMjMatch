@@ -559,14 +559,14 @@ export default class LoadWord {
     let logGameEvA = GameUtils.logGameEvA;
     GameUtils.logGameEvA = function (name, key, isInter = false) {
       const loadWord = LoadWord.instance;
-      let evkey = "sdywords_game_new";
+      let evkey = "sdymjmatch_game_new";
       let nodes = null;
       if (key == 2) {
-        evkey = "sdywords_game_ad";
+        evkey = "sdymjmatch_game_ad";
         nodes = isInter ? "inter" : "video";
       }
       if (key == 3) {
-        evkey = "sdywords_game_lv";
+        evkey = "sdymjmatch_game_lv";
         let levelNum = Math.max(1, GameUtils.getPassLevel() + 1);
         let curTurn = 1;
         let totalTurn = 1;

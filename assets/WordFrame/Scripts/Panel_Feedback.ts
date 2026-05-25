@@ -43,7 +43,7 @@ export default class Panel_Feedback extends cc.Component {
                 String(now.getDate()).padStart(2, '0') + ':' +
                 String(now.getHours()).padStart(2, '0')+ ':'+
                 String(now.getMinutes()).padStart(2, '0');
-            FrameSDK.logGameEvent('sdywords_feedback', {
+            FrameSDK.logGameEvent('sdymjmatch_feedback', {
                 object_action: 'question:'+this.editbox1.string,
                 object_name: `information:`+this.editbox2.string,
                 object_notes: `time:`+formatted,
