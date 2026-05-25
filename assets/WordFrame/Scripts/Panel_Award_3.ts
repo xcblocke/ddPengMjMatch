@@ -45,6 +45,11 @@ export default class Panel_Award_3 extends cc.Component {
     @property(cc.Node)
     lv_proNode: cc.Node = null;
 
+    @property(cc.ParticleSystem)
+    awardDollarParticle: cc.ParticleSystem = null;
+    @property(cc.ParticleSystem)
+    lightParticle: cc.ParticleSystem = null;
+
     adData = null;
     viewData: { closeCB: () => void } = null;
 
@@ -67,6 +72,30 @@ export default class Panel_Award_3 extends cc.Component {
         this.commonActionButton.on(cc.Node.EventType.TOUCH_END, () => {
             e.click_Common();
         });
+
+        if (!this.awardDollarParticle) {
+            const turn_dollar = cc.find("turn_dollar", this.node);
+            if (turn_dollar) {
+                this.awardDollarParticle = turn_dollar.getComponent(cc.ParticleSystem);
+            }
+        }
+
+        if (!this.lightParticle) {
+            const turn_sanguang = cc.find("turn_sanguang", this.node);
+            if (turn_sanguang) {
+                this.lightParticle = turn_sanguang.getComponent(cc.ParticleSystem);
+            }
+        }
+    }
+
+    private restartGameParticle() {
+        if (this.awardDollarParticle) {
+            this.awardDollarParticle.resetSystem();
+        }
+
+        if (this.lightParticle) {
+            this.lightParticle.resetSystem();
+        }
     }
 
     onEnable() {
@@ -82,6 +111,10 @@ export default class Panel_Award_3 extends cc.Component {
             object_name: `rew_show`,
             object_notes: `reward_3`,
         });
+
+        this.scheduleOnce(()=>{
+            this.restartGameParticle();
+        },0)
 
         FrameSDK.frameData.sdkFuc.ppEvent(this.adData.isFree ? 'freeShow' : 'popupShow');
 

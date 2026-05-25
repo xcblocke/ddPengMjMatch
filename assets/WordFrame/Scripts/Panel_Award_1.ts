@@ -34,6 +34,9 @@ export default class Panel_Award_1 extends cc.Component {
     @property(cc.Node)
     lv_proNode: cc.Node = null;
 
+    @property(cc.ParticleSystem)
+    gameOverDollarParticle: cc.ParticleSystem = null;
+
     getYCoin = 0;
 
     viewData: { closeCB: () => void, noInters: boolean } = null;
@@ -50,9 +53,22 @@ export default class Panel_Award_1 extends cc.Component {
         this.commonActionButton.on(cc.Node.EventType.TOUCH_END, () => {
             e.click_Common();
         });
+
+        if (!this.gameOverDollarParticle) {
+            const dollarNode = cc.find("game_over_dollar", this.node);
+            if (dollarNode) {
+                this.gameOverDollarParticle = dollarNode.getComponent(cc.ParticleSystem);
+            }
+        }
     }
 
     
+    private restartGameOverDollarParticle() {
+        if (this.gameOverDollarParticle) {
+            this.gameOverDollarParticle.resetSystem();
+        }
+    }
+
 
     onEnable() {
         this.adData = FrameData.getOutputConfig(true);
@@ -77,6 +93,10 @@ export default class Panel_Award_1 extends cc.Component {
         //     this.titleSkeleton.setAnimation(0, "start", false);
         //     this.titleSkeleton.addAnimation(0, "loop", true);
         // }
+        
+        this.scheduleOnce(()=>{
+            this.restartGameOverDollarParticle();
+        },0)
 
         if (this.contentSkeleton) {
             this.contentSkeleton.setAnimation(0, "qiehuan", false);

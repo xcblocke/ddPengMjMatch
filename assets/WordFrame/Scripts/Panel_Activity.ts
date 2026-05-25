@@ -50,6 +50,9 @@ export default class Panel_Activity extends cc.Component {
     @property(cc.Label)
     rew_Label: cc.Label = null;
 
+    @property(cc.ParticleSystem)
+    gameDollarParticle: cc.ParticleSystem = null;
+
     // LIFE-CYCLE CALLBACKS:
     viewData: { closeCB: () => void } = null;
 
@@ -88,6 +91,12 @@ export default class Panel_Activity extends cc.Component {
             FrameSDK.openWindow("Panel_Activity", { closeCB: closeCB });
         } else {
             closeCB?.();
+        }
+    }
+
+    private restartGameDollarParticle() {
+        if (this.gameDollarParticle) {
+            this.gameDollarParticle.resetSystem();
         }
     }
 
@@ -147,7 +156,11 @@ export default class Panel_Activity extends cc.Component {
                 position:cc.v3(0,0)
             }, {
                 easing: "backOut"
-            }).start();
+            })
+            .call(() => {
+                this.restartGameDollarParticle();
+            })
+            .start();
         }
     }
 
