@@ -44,6 +44,10 @@ export default class Panel_Award_6 extends cc.Component {
     @property(cc.Node)
     lv_proNode: cc.Node = null;
 
+    /** 通关美元粒子；面板入池复用后 playOnLoad 不会再次触发，需在 onEnable 里 reset */
+    @property(cc.ParticleSystem)
+    gameOverDollarParticle: cc.ParticleSystem = null;
+
     viewData: { closeCB: () => void, noInters: boolean } = null;
 
     adData: {  num: number[]; reward: number;  } = null;
@@ -110,7 +114,19 @@ export default class Panel_Award_6 extends cc.Component {
         // this.allNode.active = true;
 
         this.lv_proNode.active = FrameSDK.frameData.gameData.isFlag;
+        if (!this.gameOverDollarParticle) {
+            const dollarNode = cc.find("game_over_dollar", this.node);
+            if (dollarNode) {
+                this.gameOverDollarParticle = dollarNode.getComponent(cc.ParticleSystem);
+            }
+        }
         this.playAnim();
+    }
+
+    private restartGameOverDollarParticle() {
+        if (this.gameOverDollarParticle) {
+            this.gameOverDollarParticle.resetSystem();
+        }
     }
 
     playAnim() {
@@ -129,6 +145,7 @@ export default class Panel_Award_6 extends cc.Component {
         this.lv.string = "" + (FrameSDK.frameData.gameData.passLevel + 1);
         this.lv_proNode.active = FrameSDK.frameData.gameData.isFlag;
         this.playAnim();
+        this.restartGameOverDollarParticle();
 
         this.adData = FrameData.getCoinOutNum("box");
         const free = FrameData.getCoinOutNum("free");
