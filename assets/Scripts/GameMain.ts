@@ -737,7 +737,7 @@ export default class GameMain extends cc.Component {
       if (gameData.curClearNum == gameConfig.getComboBubbleStep()) {
         gameData.curClearNum = 0;
         var c = cc.instantiate(this.comboEffect15Prefab);
-        c.parent = this.node;
+        c.parent = this.node.getChildByName("effectNode") || this.node;
         c.active = true;
         var l = this.node.convertToNodeSpaceAR(e.pos0),
           d = cc.winSize.width,

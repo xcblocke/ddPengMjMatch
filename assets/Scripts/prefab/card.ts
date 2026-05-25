@@ -299,7 +299,7 @@ export default class card extends cc.Component {
         });
       }
       var n = cc.instantiate(this.clearEffect);
-      n.parent = GlobalApp.GameMain.node;
+      n.parent = GlobalApp.GameMain.node.getChildByName("effectNode") || GlobalApp.GameMain.node;
       var a = this.content.parent.convertToWorldSpaceAR(this.content.position),
         i = GlobalApp.GameMain.node.convertToNodeSpaceAR(a);
       n.position = i;
