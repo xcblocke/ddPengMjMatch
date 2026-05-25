@@ -52,8 +52,8 @@ export default class Panel_RedeemTips extends cc.Component {
         this.levelLabel.string = `${this.viewData.level}`;
 
         const levelRequiremnt = FrameSDK.getFirstRedeemRequirement().rdm_1;
-        this.tips1.string = `<outline color=#215B67 width=2>skey_078</outline>??&value1==<color= #FFF95C>${Math.max(0, levelRequiremnt - (FrameSDK.frameData.gameData.passLevel))}</c>`;
-        this.rtx_tips1.string = `<outline color=#215B67 width=2><img src="dollar4" offset=-3/>${FrameSDK.convertCoinToStr(this.viewData.currentBonus)}≈<color= #8AFF77>${FrameSDK.convertCoinToStr(this.viewData.currentBonus, true)}</c></outline>`;//`skey_079??&value1==<color= #8AFF77>${FrameSDK.convertCoinToStr(this.viewData.currentBonus, true)}</c>`;
+        this.tips1.string = `skey_078??&value1==<color= #FCFF0F>${Math.max(0, levelRequiremnt - (FrameSDK.frameData.gameData.passLevel))}</c>`;
+        this.rtx_tips1.string = `<img src="dollar4" offset=-3/>${FrameSDK.convertCoinToStr(this.viewData.currentBonus)}≈<color= #7AF465>${FrameSDK.convertCoinToStr(this.viewData.currentBonus, true)}</c>`;//`skey_079??&value1==<color= #8AFF77>${FrameSDK.convertCoinToStr(this.viewData.currentBonus, true)}</c>`;
 
         FrameSDK.playEffect("rewardshow");
 

@@ -1166,8 +1166,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 210.95,
-      "height": 69
+      "width": 204.95,
+      "height": 63
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1245,7 +1245,7 @@
     "node": {
       "__id__": 25
     },
-    "_enabled": false,
+    "_enabled": true,
     "_color": {
       "__type__": "cc.Color",
       "r": 1,
@@ -1268,7 +1268,7 @@
     "node": {
       "__id__": 25
     },
-    "_enabled": true,
+    "_enabled": false,
     "_color": {
       "__type__": "cc.Color",
       "r": 22,

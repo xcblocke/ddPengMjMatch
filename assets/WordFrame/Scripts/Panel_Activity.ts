@@ -206,11 +206,11 @@ export default class Panel_Activity extends cc.Component {
         if (data.state == 0) {
             cc.find("load2/label", this.state1).getComponent(cc.Label).string = FrameSDK.convertCoinToStr(data.coin) + "/" + FrameSDK.convertCoinToStr(conf.num);
             cc.find("load2/load1", this.state1).getComponent(cc.Sprite).fillRange = data.coin / conf.num;
-            this.tips.string = `skey_113??&value1==<img src="dollar4" offset=-5/> <size=38><outline color= #1F6E4C width=2><color = #86FF04>${FrameSDK.convertCoinToStr(conf.num)}</c></outline></size>`;
+            this.tips.string = `skey_113??&value1==<img src="dollar4" offset=-5/> <size=38><color = #a52a1c>${FrameSDK.convertCoinToStr(conf.num)}</c></size>`;
             this.buttonLabel.string = `skey_061`;
         } else if (data.state == 1) {
             // cc.find("Layout/label", this.state2).getComponent(cc.Label).string = FrameSDK.convertCoinToStr(data.coin);
-            this.tips2.string = `skey_115??&value1==<img src="dollar4" offset=-5/> <size=38><outline color= #1F6E4C width=2><color = #86FF04>${FrameSDK.convertCoinToStr(data.coin)}</c></outline></size>`;
+            this.tips2.string = `skey_115??&value1==<img src="dollar4" offset=-5/> <size=38><color = #a52a1c>${FrameSDK.convertCoinToStr(data.coin)}</c></size>`;
             this.buttonLabel.string = `skey_035`;
         }
     }

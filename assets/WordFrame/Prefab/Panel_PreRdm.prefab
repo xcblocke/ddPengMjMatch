@@ -1848,8 +1848,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 196.6,
-      "height": 67
+      "width": 192.6,
+      "height": 63
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1861,7 +1861,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        26.257,
+        25.487,
         0,
         0,
         0,
@@ -1927,7 +1927,7 @@
     "node": {
       "__id__": 47
     },
-    "_enabled": false,
+    "_enabled": true,
     "_color": {
       "__type__": "cc.Color",
       "r": 1,
@@ -1950,7 +1950,7 @@
     "node": {
       "__id__": 47
     },
-    "_enabled": true,
+    "_enabled": false,
     "_color": {
       "__type__": "cc.Color",
       "r": 56,

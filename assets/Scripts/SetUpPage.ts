@@ -11,6 +11,7 @@ import ClientData from './framework/Event/ClientData';
 import UrlMgr from './service/UrlMgr';
 import { A } from './center/api';
 import LoadWord from './wordframe/LoadWord';
+
 const {
   ccclass,
   property
@@ -61,6 +62,13 @@ export default class SetUpPage extends BasePage {
   }
 
 
+  onClickSupportBtn() {
+    // AudioManager.getInstance().playMusic("click");
+    setTimeout(() => {
+      LoadWord.FrameSDK.openFeedbackWindow();
+    }, 280);
+    this.onClose();
+  }
 
   onClickTitlele() {
     LoadWord.FrameSDK.openGMWindow();

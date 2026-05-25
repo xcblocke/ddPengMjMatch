@@ -102,6 +102,7 @@ export default class Panel_Award_3 extends cc.Component {
         this.adData = FrameData.getOutputConfig(false);
         this.getYCoin = FrameData.getCoinOutNum('draw');
         this.timeArray.push(...FrameData.getCoinOutNum('drawRate'));
+        console.log("timeArray===========33333",JSON.stringify(this.timeArray));
         const free = FrameData.getCoinOutNum('free');
         this.clickBeishu = 0;
 
@@ -244,7 +245,7 @@ export default class Panel_Award_3 extends cc.Component {
         });
 
         this.pointerIndicator.pauseAllActions();
-        this.setUi();
+        // this.setUi();
         console.log("beishe===========33333",this.beishe);
         this.clickBeishu = this.beishe;
 

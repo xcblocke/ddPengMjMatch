@@ -80,6 +80,26 @@
 		"tr": "Yeniden Başlat"
 	},
 	{
+		"key": "gkey_011",
+		"zh": "客服",
+		"en": "Support",
+		"es": "Soporte",
+		"fr": "Support",
+		"ja": "サポート",
+		"de": "Support",
+		"ru": "Поддержка",
+		"pt": "Suporte",
+		"in": "Support",
+		"vi": "Hỗ trợ",
+		"ar": "دعم",
+		"th": "การสนับสนุน",
+		"ko": "지원",
+		"fil": "Support",
+		"ms": "Sokongan",
+		"hi": "समर्थन",
+		"tr": "Destek"
+	},
+	{
 		"key": "gkey_051",
 		"zh": "立即领取",
 		"en": "Claim Now",

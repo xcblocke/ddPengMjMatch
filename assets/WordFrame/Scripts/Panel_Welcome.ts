@@ -22,7 +22,7 @@ export default class Panel_Welcome extends cc.Component {
         this.bg.x = x;
 
 
-        this.rtx_tips1.string = `<outline color=#215B67 width=2>skey_123</outline>??&value1==<color = #FFF95C><size=36>30</size></c>`;
+        this.rtx_tips1.string = `skey_123??&value1==<color = #FCFF0A><size=36>30</size></c>`;
 
         FrameSDK.playEffect("rewardshow");
 

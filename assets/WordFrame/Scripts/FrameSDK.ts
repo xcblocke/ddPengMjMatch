@@ -10,6 +10,7 @@ import RDM_Toast from "./RDM_Toast";
 import i18 from "./i18";
 import GM from "./GM/GM";
 import PanelPool from "./PanelPool";
+import Panel_Feedback from "./Panel_Feedback";
 
 type GoodsList = {
     id: number,
@@ -169,6 +170,11 @@ export class FrameSDK {
 
     static openGMWindow(cb = null) {
         GM.open(  cb  );
+    }
+
+    static openFeedbackWindow(cb = null) {
+        // GM.open(  cb  );
+        Panel_Feedback.openPage(cb);
     }
 
 
