@@ -105,6 +105,7 @@ export default class Panel_Award_3 extends cc.Component {
         console.log("timeArray===========33333",JSON.stringify(this.timeArray));
         const free = FrameData.getCoinOutNum('free');
         this.clickBeishu = 0;
+        this.contentSkeleton.paused = false;
 
         
         FrameSDK.logGameEvent('sdymjmatch_report_rew', {
@@ -248,6 +249,7 @@ export default class Panel_Award_3 extends cc.Component {
         // this.setUi();
         console.log("beishe===========33333",this.beishe);
         this.clickBeishu = this.beishe;
+        this.contentSkeleton.paused = true;
 
         const fail = () => {
             this.pointerIndicator.resumeAllActions();
