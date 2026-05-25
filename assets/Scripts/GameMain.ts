@@ -696,6 +696,7 @@ export default class GameMain extends cc.Component {
 
   /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
   dealMergeReward(levelCleared = false) {
+    console.log("dealMergeReward。。。。。。。。。。。。。。。。。。。", levelCleared);
     if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
       return;
     }
@@ -706,6 +707,21 @@ export default class GameMain extends cc.Component {
     if (this.rewardAbMergeCount <= this.rewaedAbMergeThreshold) {
       return;
     }
+
+    const remainingCards: card[] = [];
+    this._cardGrid.forEach((row) => {
+      row.forEach((c) => {
+        if (c && c.node && c.node.isValid) {
+          remainingCards.push(c);
+        }
+      });
+    });
+    if(remainingCards.length <= 0) {
+      return;
+    }
+    console.log("remainingCards。。。。。。。。。。。。。。。。。。。", remainingCards.length);
+
+
     if (!this.shouldShowRewardAbMergePopup(levelCleared)) {
       if (levelCleared || this.isTg() || gameData.gameState !== GameState.gameing) {
         this.rewardAbMergeCount = 0;
