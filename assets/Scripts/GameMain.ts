@@ -716,7 +716,7 @@ export default class GameMain extends cc.Component {
         }
       });
     });
-    if(remainingCards.length <= 0) {
+    if(remainingCards.length <= 2) {
       return;
     }
     console.log("remainingCards。。。。。。。。。。。。。。。。。。。", remainingCards.length);
