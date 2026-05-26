@@ -1035,6 +1035,8 @@ export class FrameSDK {
     static postLevelSettlementActive = false;
     /** 通关后解锁弹窗链执行中，避免与其它主动弹窗重叠 */
     static postLevelUnlockChainActive = false;
+    /** 首次新手（RDM 教程后）进关：跳过一次 Panel_RedeemTips，直接展示等级横幅 */
+    static skipNextRedeemTipsOnce = false;
 
     static setPostLevelSettlementActive(active: boolean): void {
         FrameSDK.postLevelSettlementActive = active;
@@ -1301,6 +1303,11 @@ export class FrameSDK {
 
         })
             .then(() => new Promise<void>(resolve => {
+                if (FrameSDK.skipNextRedeemTipsOnce) {
+                    FrameSDK.skipNextRedeemTipsOnce = false;
+                    resolve();
+                    return;
+                }
                 //不知道这个判断有啥用，我这个项目应该不适用，不然第一关的时候拉不起这个提示
                 // if (levelA < FrameData.FRAME_CONF.RedeemTipsStartLevel || levelA > this.getFirstRedeemRequirement().rdm_1) {
                 // if (levelA > this.getFirstRedeemRequirement().rdm_1) {

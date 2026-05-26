@@ -253,6 +253,12 @@ export default class LoadWord {
     if (!this._awaitNewHandRewardFlow && !force) {
       return;
     }
+    if (force) {
+      const sdk = LoadWord.FrameSDK;
+      if (sdk) {
+        sdk.skipNextRedeemTipsOnce = true;
+      }
+    }
     this._awaitNewHandRewardFlow = false;
     const run = this._deferredPreLevelBanners;
     this._deferredPreLevelBanners = null;
