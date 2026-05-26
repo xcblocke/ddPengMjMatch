@@ -128,7 +128,7 @@ export default class Panel_Award_Luck extends cc.Component {
         point = this.panel_window.parent.convertToNodeSpaceAR(point);
         cc.tween(this.panel_window).parallel(
             cc.tween().to(1, {
-                position: cc.v3(point.x, point.y, 0)
+                position: cc.v3(point.x, point.y - 100, 0)
             }, {
                 easing: "sineInOut"
             }),
