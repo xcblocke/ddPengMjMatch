@@ -155,7 +155,7 @@ export default class Panel_Award_Luck extends cc.Component {
             this.hideTime = Date.now();
             const rdmLevel = cc.find("Canvas/frameNode/Frame/popUpNode/RDM_Level");
             if (rdmLevel && cc.isValid(rdmLevel)) {
-                const closeTarget = cc.find("Canvas/frameNode/Frame/popUpNode/RDM_Level/panel_window/word_redeem_board2");
+                const closeTarget = cc.find("Canvas/frameNode/Frame/popUpNode/RDM_Level/scrollview");
                 this._close_target = closeTarget && cc.isValid(closeTarget) ? closeTarget : null;
             } else {
                 this._close_target = null;
@@ -164,6 +164,7 @@ export default class Panel_Award_Luck extends cc.Component {
                 this._closeToRedeemBoard(e || undefined);
             } else {
                 FrameSDK.closeEffect(this, () => {
+                    cc.director.emit("showBackHand");
                     this.viewData?.closeCB?.();
                     e && e();
                 });
