@@ -64,6 +64,16 @@ export default class loading extends cc.Component {
   fad = "";
   @property([cc.Node])
   fcmNodeList: Array<cc.Node> = [];
+  /** 资源分步预加载是否完成 */
+  _launchAssetsReady = false;
+  /** A.l1 登陆是否成功返回 */
+  _loginReady = false;
+  _enteringMain = false;
+  /** A.l1 当前轮次序号，用于丢弃超时重试后的过期回调 */
+  _l1AttemptSeq = 0;
+  _l1RetryTimer = null;
+  static readonly PROGRESS_CYCLE_SEC = 1.2;
+  static readonly L1_TIMEOUT_MS = 7000;
   onLoad() {
 
     if(MainConfig.curServerType == ServerType.develop)
@@ -119,6 +129,8 @@ export default class loading extends cc.Component {
   }
   onDestroy() {
     this.removeEvent();
+    this.cancelLoginRetry();
+    this.loadProgress && this.loadProgress.stopCycleLoop();
     /** 切到 mainScene 时 loading 销毁，游戏资源仍由 mainScene 使用，此处不 release */
   }
   addEvent() {
@@ -420,19 +432,55 @@ export default class loading extends cc.Component {
     return NativeUtils.isFlag && null == cc.sys.localStorage.getItem("newHand");
   }
 
-  finishLaunchPipeline(sceneName: string) {
+  canEnterMainScene() {
+    return this._launchAssetsReady && this._loginReady;
+  }
+
+  cancelLoginRetry() {
+    if (this._l1RetryTimer != null) {
+      clearTimeout(this._l1RetryTimer);
+      this._l1RetryTimer = null;
+    }
+  }
+
+  /** A.l1 超时 5 秒未回调则重新发起，直到成功 */
+  startLoginWithRetry() {
     var self = this;
-    if (!self.node || !cc.isValid(self.node)) return;
-    self.loadProgress.curPercent = 1;
-    self.loadProgress.snapSmoothToTarget();
-    Res.markLaunchAssetsLoaded();
+    self.cancelLoginRetry();
+    if (self._loginReady || self._enteringMain) {
+      return;
+    }
+    if (!self.node || !cc.isValid(self.node)) {
+      return;
+    }
+    var attemptId = ++self._l1AttemptSeq;
+    self._l1RetryTimer = setTimeout(function () {
+      self._l1RetryTimer = null;
+      if (!self.node || !cc.isValid(self.node)) {
+        return;
+      }
+      if (self._loginReady || self._enteringMain) {
+        return;
+      }
+      if (attemptId !== self._l1AttemptSeq) {
+        return;
+      }
+      console.warn("[loading] A.l1 timeout " + loading.L1_TIMEOUT_MS + "ms, retry...");
+      self.startLoginWithRetry();
+    }, loading.L1_TIMEOUT_MS);
+
     A.l1(function () {
-      console.log("l3。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l3));
-      console.log("l4。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l4));
-      A.t('g1');
-      cc.director.loadScene(sceneName, function () {
-        A.t('g2');
-      });
+      if (!self.node || !cc.isValid(self.node)) {
+        return;
+      }
+      if (self._loginReady || self._enteringMain) {
+        return;
+      }
+      if (attemptId !== self._l1AttemptSeq) {
+        return;
+      }
+      self.cancelLoginRetry();
+      self._loginReady = true;
     }, {
       m: function (mute: boolean) {
         AudioManager.getInstance().setMute(mute);
@@ -440,128 +488,30 @@ export default class loading extends cc.Component {
     });
   }
 
-  /** Web：并行加载，IO 压力小 */
-  runParallelLaunch(sceneName: string) {
+  tryEnterMainScene(sceneName: string) {
     var self = this;
-    var STEP_COUNT = 4;
-    var stepProgress = [0, 0, 0, 0];
-    var reportProgress = function () {
-      if (!self.node || !cc.isValid(self.node)) return;
-      var sum = 0;
-      for (var i = 0; i < STEP_COUNT; i++) {
-        sum += stepProgress[i];
-      }
-      self.loadProgress.curPercent = sum / STEP_COUNT;
-    };
-
-    var preloadScenePromise = new Promise<void>(function (resolve, reject) {
-      cc.director.preloadScene(sceneName, function (completed, total) {
-        if (!total || total <= 0) return;
-        stepProgress[0] = completed / total;
-        reportProgress();
-      }, function (err) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        stepProgress[0] = 1;
-        reportProgress();
-        resolve();
-      });
-    });
-
-    var prefabsPromise = Res.loadLaunchPrefabs(function (dirIndex, p) {
-      stepProgress[1 + dirIndex] = p;
-      reportProgress();
-    });
-
-    var newHandPromise = self.shouldPreloadNewHand()
-      ? LoadWord.preloadNewHand(function (p) {
-          stepProgress[3] = p;
-          reportProgress();
-        })
-      : Promise.resolve().then(function () {
-          stepProgress[3] = 1;
-          reportProgress();
-        });
-
-    var spritesPromise = Res.loadEssentialSprites();
-
-    Promise.all([preloadScenePromise, prefabsPromise, newHandPromise, spritesPromise]).then(function () {
-      self.finishLaunchPipeline(sceneName);
-    }).catch(function (err) {
-      console.error("loadScene pipeline (parallel)", err);
+    if (self._enteringMain || !self.canEnterMainScene()) return;
+    if (!self.node || !cc.isValid(self.node)) return;
+    self._enteringMain = true;
+    self.cancelLoginRetry();
+    self.loadProgress.stopCycleLoop();
+    self.loadProgress.applyPercentImmediate(1);
+    console.log("l3。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l3));
+    console.log("l4。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l4));
+    A.t('g1');
+    cc.director.loadScene(sceneName, function () {
+      A.t('g2');
     });
   }
 
-  /**
-   * 原生 APK：串行 + 贴图分批 + 分帧让出主线程，避免 248 张牌面同帧 decode 卡死粒子/进度条。
-   */
-  runStagedNativeLaunch(sceneName: string) {
+  /** 分步串行预加载（与进度条、登陆并行） */
+  runSequentialResourceLoad(sceneName: string) {
     var self = this;
-    var STEP_COUNT = 5;
-    var stepProgress = [0, 0, 0, 0, 0];
-    var reportProgress = function () {
-      if (!self.node || !cc.isValid(self.node)) return;
-      var sum = 0;
-      for (var i = 0; i < STEP_COUNT; i++) {
-        sum += stepProgress[i];
-      }
-      self.loadProgress.curPercent = sum / STEP_COUNT;
-    };
-
-    LaunchLoadScheduler.applyDownloadThrottle();
-
-    (async function () {
-      try {
-        await new Promise<void>(function (resolve, reject) {
-          cc.director.preloadScene(sceneName, function (completed, total) {
-            if (!total || total <= 0) return;
-            stepProgress[0] = completed / total;
-            reportProgress();
-          }, function (err) {
-            if (err) {
-              reject(err);
-              return;
-            }
-            stepProgress[0] = 1;
-            reportProgress();
-            resolve();
-          });
-        });
-        await LaunchLoadScheduler.yieldFrames(2);
-
-        await Res.loadLaunchPrefabs(function (dirIndex, p) {
-          stepProgress[1 + dirIndex] = p;
-          reportProgress();
-        });
-        await LaunchLoadScheduler.yieldFrames(2);
-
-        await Res.loadEssentialSpritesStaged(function (p) {
-          stepProgress[3] = p;
-          reportProgress();
-        });
-        stepProgress[3] = 1;
-        reportProgress();
-        await LaunchLoadScheduler.yieldFrames(2);
-
-        if (self.shouldPreloadNewHand()) {
-          await LoadWord.preloadNewHand(function (p) {
-            stepProgress[4] = p;
-            reportProgress();
-          });
-        } else {
-          stepProgress[4] = 1;
-          reportProgress();
-        }
-
-        self.finishLaunchPipeline(sceneName);
-      } catch (err) {
-        console.error("loadScene pipeline (staged native)", err);
-      } finally {
-        LaunchLoadScheduler.restoreDownloadThrottle();
-      }
-    })();
+    Res.loadSequentialLaunch(sceneName, self.shouldPreloadNewHand()).then(function () {
+      self._launchAssetsReady = true;
+    }).catch(function (err) {
+      console.error("loadSequentialLaunch failed", err);
+    });
   }
 
   loadScene() {
@@ -569,22 +519,31 @@ export default class loading extends cc.Component {
     var sceneName = "mainScene";
     HotUpdate.getInstance().checkReviewVMVersion() && (sceneName = "SceneA");
 
+    self._launchAssetsReady = false;
+    self._loginReady = false;
+    self._enteringMain = false;
+
     self.loadProgress.stopFakeProgress();
+    self.loadProgress.endSmoothFollow();
     self.loadProgress.loadType = LoadProgressType.LoadScene;
-    self.loadProgress.curPercent = 0;
-    var smoothMinSpeed = LaunchLoadScheduler.useStagedNativeLoad() ? 0.14 : 0.18;
-    self.loadProgress.beginSmoothFollow(smoothMinSpeed, 6);
     Res.releaseLaunchAssets();
+
+    self.loadProgress.startCycleLoop(loading.PROGRESS_CYCLE_SEC, function () {
+      return self.canEnterMainScene();
+    }, function () {
+      self.tryEnterMainScene(sceneName);
+    });
+
+    self.startLoginWithRetry();
 
     if (LaunchLoadScheduler.useStagedNativeLoad()) {
       setTimeout(function () {
         AudioManager.getInstance().initNativeUrl();
       }, 0);
-      self.runStagedNativeLaunch(sceneName);
     } else {
       AudioManager.getInstance().initNativeUrl();
-      self.runParallelLaunch(sceneName);
     }
+    self.runSequentialResourceLoad(sceneName);
   }
   getWxCode(e) {
     console.log("SPK1", e);

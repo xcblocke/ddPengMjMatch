@@ -1,5 +1,6 @@
 import EngineUtil from '../framework/EngineUtil';
 import LaunchLoadScheduler from './LaunchLoadScheduler';
+import LoadWord from '../wordframe/LoadWord';
 const {
   ccclass,
   property
@@ -85,6 +86,133 @@ export default class ResourcesManager {
       }
     }
   }
+  /** 加载并追加单个 Prefab 目录到缓存 */
+  async appendPrefabsFromDir(dir: string): Promise<void> {
+    var bundle = cc.assetManager.getBundle("resources");
+    if (!bundle) {
+      throw new Error("resources bundle not found");
+    }
+    var list = (await this.loadDir(bundle, dir, cc.Prefab)) as cc.Prefab[];
+    if (!list || !list.length) return;
+    for (var i = 0; i < list.length; i++) {
+      this._prefabRecords.push({
+        prefab: list[i],
+        dir: dir
+      });
+      this._prefabs.push(list[i]);
+    }
+  }
+
+  async loadSpriteDir(dir: string): Promise<void> {
+    var bundle = cc.assetManager.getBundle("resources");
+    if (!bundle) {
+      throw new Error("resources bundle not found");
+    }
+    var list = (await this.loadDir(bundle, dir, cc.SpriteFrame)) as cc.SpriteFrame[];
+    if (dir === "preload/icons") {
+      this._iconFrames = list || [];
+    } else if (dir === "preload/bg") {
+      this._bgFrames = list || [];
+    } else if (dir === "preload/mj") {
+      this._mahjongFrames = list || [];
+    }
+  }
+
+  /** 原生分批加载 preload/mj，不阻塞 UI 进度条 */
+  async loadMahjongSpritesBatched(): Promise<void> {
+    var bundle = cc.assetManager.getBundle("resources");
+    if (!bundle) {
+      throw new Error("resources bundle not found");
+    }
+    await new Promise<void>(function (resolve, reject) {
+      bundle.preloadDir("preload/mj", cc.SpriteFrame, function () {}, function (err) {
+        if (err) reject(err);
+        else resolve();
+      });
+    }).catch(function () {});
+    await LaunchLoadScheduler.yieldFrames(2);
+
+    var infos = bundle.getDirWithPath("preload/mj", cc.SpriteFrame) || [];
+    var paths: string[] = [];
+    for (var i = 0; i < infos.length; i++) {
+      if (infos[i] && infos[i].path) {
+        paths.push(infos[i].path);
+      }
+    }
+    if (!paths.length) {
+      this._mahjongFrames = (await this.loadDir(bundle, "preload/mj", cc.SpriteFrame)) as cc.SpriteFrame[] || [];
+      return;
+    }
+
+    var batchSize = 8;
+    var mjFrames: cc.SpriteFrame[] = [];
+    for (var start = 0; start < paths.length; start += batchSize) {
+      var batch = paths.slice(start, start + batchSize);
+      var batchAssets = await Promise.all(batch.map(function (assetPath) {
+        return new Promise<cc.SpriteFrame>(function (resolve, reject) {
+          bundle.load(assetPath, cc.SpriteFrame, function (err, asset) {
+            if (err) reject(err);
+            else resolve(asset as cc.SpriteFrame);
+          });
+        });
+      }));
+      for (var b = 0; b < batchAssets.length; b++) {
+        if (batchAssets[b]) {
+          mjFrames.push(batchAssets[b]);
+        }
+      }
+      await LaunchLoadScheduler.yieldFrames(1);
+    }
+    this._mahjongFrames = mjFrames;
+  }
+
+  /**
+   * 分步串行预加载（与进度条解耦）：场景 → prefabs → preload/prefabs → newHand → bg → mj → icons
+   */
+  async loadSequentialLaunch(sceneName: string, preloadNewHand: boolean): Promise<void> {
+    var useNative = LaunchLoadScheduler.useStagedNativeLoad();
+    if (useNative) {
+      LaunchLoadScheduler.applyDownloadThrottle();
+    }
+    try {
+      await new Promise<void>(function (resolve, reject) {
+        cc.director.preloadScene(sceneName, function () {}, function (err) {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+      await LaunchLoadScheduler.yieldFrames(useNative ? 2 : 0);
+
+      await this.appendPrefabsFromDir("prefabs");
+      await LaunchLoadScheduler.yieldFrames(useNative ? 1 : 0);
+
+      await this.appendPrefabsFromDir("preload/prefabs");
+      await LaunchLoadScheduler.yieldFrames(useNative ? 1 : 0);
+
+      if (preloadNewHand) {
+        await LoadWord.preloadNewHand();
+      }
+      await LaunchLoadScheduler.yieldFrames(useNative ? 1 : 0);
+
+      await this.loadSpriteDir("preload/bg");
+      await LaunchLoadScheduler.yieldFrames(useNative ? 1 : 0);
+
+      if (useNative) {
+        await this.loadMahjongSpritesBatched();
+      } else {
+        await this.loadSpriteDir("preload/mj");
+      }
+      await LaunchLoadScheduler.yieldFrames(useNative ? 1 : 0);
+
+      await this.loadSpriteDir("preload/icons");
+      this.markLaunchAssetsLoaded();
+    } finally {
+      if (useNative) {
+        LaunchLoadScheduler.restoreDownloadThrottle();
+      }
+    }
+  }
+
   /**
    * Loading 阶段预加载 resources 下两处 Prefab 目录，合并到 _prefabs。
    * @param onDirProgress (dirIndex, 0~1) dirIndex: 0=prefabs, 1=preload/prefabs

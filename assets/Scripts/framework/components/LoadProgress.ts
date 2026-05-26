@@ -37,6 +37,11 @@ export default class LoadProgress extends cc.Component {
   @property(cc.Label)
   loadingTipLabel: cc.Label = null;
   _animObj = null;
+  _cycleTweenTarget: { value: number } = null;
+  _cycleLoopStopped = false;
+  _cycleDuration = 1.2;
+  _cycleCanFinish: () => boolean = null;
+  _cycleOnComplete: () => void = null;
   _curPercent = 0;
   _loadType = LoadProgressType.FakeAnim;
   /** 为 true 时：外部设置的是目标值，每帧用插值逼近，避免进度猛跳 */
@@ -183,5 +188,54 @@ export default class LoadProgress extends cc.Component {
   stopFakeProgress() {
     cc.Tween.stopAllByTarget(this._animObj);
     this._animObj = null;
+  }
+
+  /**
+   * 独立进度循环：每 cycleDuration 秒 0→100%；到达 100% 时若 canFinish 为 true 则结束，否则从 0 再跑一轮。
+   */
+  startCycleLoop(cycleDuration: number, canFinish: () => boolean, onComplete: () => void) {
+    this.stopFakeProgress();
+    this.stopCycleLoop();
+    this.endSmoothFollow();
+    this._cycleDuration = cycleDuration > 0 ? cycleDuration : 1.5;
+    this._cycleCanFinish = canFinish;
+    this._cycleOnComplete = onComplete;
+    this._cycleLoopStopped = false;
+    this._runOneProgressCycle();
+  }
+
+  stopCycleLoop() {
+    this._cycleLoopStopped = true;
+    this._cycleCanFinish = null;
+    this._cycleOnComplete = null;
+    if (this._cycleTweenTarget) {
+      cc.Tween.stopAllByTarget(this._cycleTweenTarget);
+      this._cycleTweenTarget = null;
+    }
+  }
+
+  private _runOneProgressCycle() {
+    var self = this;
+    if (self._cycleLoopStopped) return;
+    self._cycleTweenTarget = {
+      value: 0
+    };
+    self.applyPercentImmediate(0);
+    cc.tween(self._cycleTweenTarget).to(self._cycleDuration, {
+      value: 1
+    }, {
+      progress: function (start, end, _current, ratio) {
+        if (self._cycleLoopStopped) return;
+        self.applyPercentImmediate(start + (end - start) * ratio);
+      }
+    }).call(function () {
+      if (self._cycleLoopStopped) return;
+      self.applyPercentImmediate(1);
+      if (self._cycleCanFinish && self._cycleCanFinish()) {
+        self._cycleOnComplete && self._cycleOnComplete();
+        return;
+      }
+      self._runOneProgressCycle();
+    }).start();
   }
 }
