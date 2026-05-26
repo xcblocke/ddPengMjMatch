@@ -177,10 +177,10 @@ export default class GameMain extends cc.Component {
       if (event.animation.name === "guan") { 
         this.scheduleOnce(() => {
           LoadWord.instance.init();
-        }, 0.4);
+        }, 0.5);
         this.scheduleOnce(() => {
           this.ruchangAni.setAnimation(0, "jingzhi", false);
-        }, 0.7);
+        }, 0.85);
       } else if (event.animation.name === "jingzhi") {
         this.ruchangAni.setAnimation(0, "kai", false);
         // this.ruchangAni.node.active = false;

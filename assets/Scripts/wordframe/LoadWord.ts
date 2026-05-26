@@ -212,7 +212,7 @@ export default class LoadWord {
       if (null == cc.sys.localStorage.getItem("newHand") && NativeUtils.isFlag) {
         setTimeout(() => {
           this.showHandPanel();
-        }, 420);
+        }, 500);
       }
       cc.assetManager.loadBundle("WordFrame", (err, bundle) => {
         if (err) {
