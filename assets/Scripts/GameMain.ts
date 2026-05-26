@@ -127,6 +127,8 @@ export default class GameMain extends cc.Component {
   _teachingStep = 0;
   /** isFlag 首次：飞币后先走完黄币手指 + 第 1 关操作教程，再走进关横幅 */
   _awaitNewHandTutorialComplete = false;
+  /** startGame 延后的进关横幅链；教程结束后若 defer 未挂上则走此兜底 */
+  _deferredNewHandPreLevelRunner: (() => void) | null = null;
   teachingStepCardList = [];
   _comboEffect = null;
   /** 本关累计消除对数，过关或弹产出后清零 */
@@ -334,7 +336,7 @@ export default class GameMain extends cc.Component {
         const loadWord = LoadWord.instance;
         if (loadWord && loadWord.shouldDeferPreLevelPopupsForNewHand()) {
           GameUtils.logLevelProgress("defer_beforeGameLevelStart_newHand");
-          loadWord.setDeferredPreLevelBanners(() => {
+          const deferredRunner = () => {
             const t0 = Date.now();
             GameUtils.beforeGameLevelStart(gameData.gameLevel, roundForUi, null, () => {
               GameUtils.logLevelProgress("beforeGameLevelStart_done_after_newHand", {
@@ -342,7 +344,9 @@ export default class GameMain extends cc.Component {
               });
               beginLevelFlow(false);
             });
-          });
+          };
+          n._deferredNewHandPreLevelRunner = deferredRunner;
+          loadWord.setDeferredPreLevelBanners(deferredRunner);
           return;
         }
         const t0 = Date.now();
@@ -1145,24 +1149,33 @@ export default class GameMain extends cc.Component {
     return false;
   }
 
-  /** 飞币结束后：黄币手指 → RDM_Level 内教程 → 点返回关闭后再走进关横幅并发牌 */
+  /**
+   * 飞币结束后：黄币手指 → RDM_Level 内教程 → 点返回关闭后再走进关横幅并发牌。
+   * 与 shouldDefer 解耦，避免 newHand 停留过久导致 startGame 未挂上 defer 后流程卡死。
+   */
   beginNewHandTutorialBeforeBanners() {
     const loadWord = LoadWord.instance;
-    if (!loadWord || !loadWord.shouldDeferPreLevelPopupsForNewHand()) {
-      loadWord?.completeNewHandRewardFlow();
-      return;
-    }
     const FrameDataCls: any = cc.js.getClassByName("FrameData");
-    const guideInedxDone = (FrameDataCls?.saveData?.guideInedx ?? 0) >= 3;
-    if (guideInedxDone) {
-      loadWord.completeNewHandRewardFlow();
+    const getSaveGuideInedx = () => FrameDataCls?.saveData?.guideInedx ?? 0;
+
+    if (!loadWord) {
       return;
     }
 
+    if (getSaveGuideInedx() >= 3 && !this.isRdmLevelPanelOpen()) {
+      loadWord.completeNewHandRewardFlow(true);
+      return;
+    }
+
+    loadWord.markAwaitNewHandRewardFlow();
     this._awaitNewHandTutorialComplete = true;
     GameUtils.logLevelProgress("beginNewHandTutorialBeforeBanners");
 
     const waitRdmTutorialDone = () => {
+      if (!this.isRdmLevelPanelOpen() && getSaveGuideInedx() >= 2) {
+        this.finishNewHandTutorialBeforeBanners();
+        return;
+      }
       cc.director.once("NEW_HAND_RDM_TUTORIAL_DONE", () => {
         this.finishNewHandTutorialBeforeBanners();
       }, this);
@@ -1175,9 +1188,8 @@ export default class GameMain extends cc.Component {
 
     const FrameCls: any = cc.js.getClassByName("Frame");
     const frameIns = FrameCls?.ins;
-    const guideInedx = FrameDataCls?.saveData?.guideInedx ?? 0;
 
-    if (guideInedx > 0) {
+    if (getSaveGuideInedx() > 0) {
       waitRdmTutorialDone();
       return;
     }
@@ -1190,6 +1202,21 @@ export default class GameMain extends cc.Component {
     waitRdmTutorialDone();
   }
 
+  /** 教程结束后恢复 defer 进关链；defer 未挂上时（竞态）用缓存 runner 或重走进关兜底 */
+  runDeferredNewHandPreLevelFlow() {
+    const run = this._deferredNewHandPreLevelRunner;
+    this._deferredNewHandPreLevelRunner = null;
+    if (run) {
+      GameUtils.logLevelProgress("runDeferredNewHandPreLevelFlow");
+      run();
+      return;
+    }
+    if (!this._mahjongSpawnAllowed) {
+      GameUtils.logLevelProgress("runDeferredNewHandPreLevelFlow_fallback_startGame");
+      this.startGame(false, true);
+    }
+  }
+
   private finishNewHandTutorialBeforeBanners() {
     if (!this._awaitNewHandTutorialComplete) {
       return;
@@ -1200,7 +1227,7 @@ export default class GameMain extends cc.Component {
       const FrameCls: any = cc.js.getClassByName("Frame");
       FrameCls?.ins?.setGuideShow(false);
     } catch (_) {}
-    LoadWord.instance?.completeNewHandRewardFlow();
+    LoadWord.instance?.completeNewHandRewardFlow(true);
   }
   showFreezeTip() {
     var e = this;

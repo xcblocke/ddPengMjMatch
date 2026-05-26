@@ -210,6 +210,8 @@ export default class LoadWord {
       this.initCallback = callback;
       this.isInit = true;
       if (null == cc.sys.localStorage.getItem("newHand") && NativeUtils.isFlag) {
+        // 尽早标记，避免 startGame 先于 showHandPanel 导致未注册 defer 回调
+        this._awaitNewHandRewardFlow = true;
         setTimeout(() => {
           this.showHandPanel();
         }, 500);
@@ -229,6 +231,13 @@ export default class LoadWord {
     return NativeUtils.isFlag && this._awaitNewHandRewardFlow;
   }
 
+  /** 飞币/教程阶段确保仍视为新手 defer 流程（localStorage 已写 newHand 后 startGame 仍需能挂上 defer） */
+  markAwaitNewHandRewardFlow() {
+    if (NativeUtils.isFlag) {
+      this._awaitNewHandRewardFlow = true;
+    }
+  }
+
   setDeferredPreLevelBanners(runner: () => void) {
     this._deferredPreLevelBanners = runner;
   }
@@ -240,12 +249,23 @@ export default class LoadWord {
   }
 
   /** Panel_Award_New2 飞币动画结束后调用（或新手加载失败时兜底） */
-  completeNewHandRewardFlow() {
-    if (!this._awaitNewHandRewardFlow) {
+  completeNewHandRewardFlow(force = false) {
+    if (!this._awaitNewHandRewardFlow && !force) {
       return;
     }
     this._awaitNewHandRewardFlow = false;
-    this.flushDeferredPreLevelBanners();
+    const run = this._deferredPreLevelBanners;
+    this._deferredPreLevelBanners = null;
+    if (run) {
+      run();
+      return;
+    }
+    if (force) {
+      const gm: any = GlobalApp.GameMain;
+      if (gm && typeof gm.runDeferredNewHandPreLevelFlow === "function") {
+        gm.runDeferredNewHandPreLevelFlow();
+      }
+    }
   }
 
   /** 销毁 persist 新手节点（不释放 WordNewHand 分包，便于下次冷启动重新预加载） */
