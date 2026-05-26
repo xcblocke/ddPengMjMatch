@@ -190,6 +190,8 @@ export default class Panel_Award_3 extends cc.Component {
         this.lv_proNode.active = FrameSDK.frameData.gameData.isFlag;
 
         this.zhizhenAin();
+
+        FrameSDK.playShakeAnim();
     }
 
     zhizhenAin() {

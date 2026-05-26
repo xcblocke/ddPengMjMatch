@@ -95,6 +95,12 @@ export class FrameSDK {
         }
       }
 
+      static playShakeAnim() {
+        if(FrameSDK.frameData.gameFuc.vibrate) {
+            FrameSDK.frameData.gameFuc.vibrate(500);
+        }
+      }
+
     static frameData: {
         isDeBug: boolean,
         sdkFuc: {

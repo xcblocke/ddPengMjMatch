@@ -143,6 +143,8 @@ export default class Panel_Award_1 extends cc.Component {
         if (this.isInters) {
             FrameSDK.videoCompensation('exposure', 'reward_1',true);
         }
+
+        FrameSDK.playShakeAnim();
     }
 
     @CLICKLOCK(1)

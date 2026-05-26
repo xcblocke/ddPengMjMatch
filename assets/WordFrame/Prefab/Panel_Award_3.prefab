@@ -4405,7 +4405,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 720,
-      "height": 280
+      "height": 283
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -6019,7 +6019,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        62.5,
+        64,
         0,
         0,
         0,
@@ -6083,7 +6083,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 405.95000000000005,
+      "width": 336.95000000000005,
       "height": 70
     },
     "_anchorPoint": {
@@ -6102,9 +6102,9 @@
         0,
         0,
         1,
-        0.8868087202857494,
-        0.8868087202857494,
-        0.8868087202857494
+        1,
+        1,
+        1
       ]
     },
     "_eulerAngles": {
@@ -6162,7 +6162,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -99.70000000000002,
+        -65.20000000000002,
         1.693,
         0,
         0,
@@ -6264,7 +6264,7 @@
       "__id__": 159
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 165
@@ -6405,7 +6405,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        143.77499999999998,
+        109.27499999999999,
         -0.307,
         0,
         0,
@@ -6509,7 +6509,7 @@
     "_enabled": true,
     "_layoutSize": {
       "__type__": "cc.Size",
-      "width": 405.95000000000005,
+      "width": 336.95000000000005,
       "height": 70
     },
     "_resize": 1,
@@ -7007,7 +7007,7 @@
       "ctor": "Float64Array",
       "array": [
         30,
-        -40,
+        -41.5,
         0,
         0,
         0,
@@ -7423,7 +7423,7 @@
     "_layoutSize": {
       "__type__": "cc.Size",
       "width": 720,
-      "height": 280
+      "height": 283
     },
     "_resize": 1,
     "_N$layoutType": 2,
@@ -7438,7 +7438,7 @@
     "_N$paddingTop": 0,
     "_N$paddingBottom": 80,
     "_N$spacingX": 0,
-    "_N$spacingY": 5,
+    "_N$spacingY": 8,
     "_N$verticalDirection": 1,
     "_N$horizontalDirection": 0,
     "_N$affectedByScale": false,
