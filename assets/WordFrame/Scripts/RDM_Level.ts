@@ -191,14 +191,24 @@ export default class RDM_Level extends cc.Component {
 
     onBtnEvent(target, data: string) {
         if (data == "0") {
-            FrameSDK.playEffect("click");
-            this.viewData?.closeCB?.();
-            this.emitNewHandRdmTutorialDone();
-            this.node.destroy();
+            this.closePanelAfterGuide();
         } else if (data == "3") {
+            // 第 3 步引导镂空在返回按钮上，但 guide 全屏按钮会先接到点击；
+            // 此处直接关面板，避免只关掉遮罩、需再点一次返回。
+            if (this.guideInedx == 2) {
+                this.closePanelAfterGuide();
+                return;
+            }
             this.guideInedx++;
             this.openGuide();
         }
+    }
+
+    private closePanelAfterGuide() {
+        FrameSDK.playEffect("click");
+        this.viewData?.closeCB?.();
+        this.emitNewHandRdmTutorialDone();
+        this.node.destroy();
     }
 
     updateDibu() {
