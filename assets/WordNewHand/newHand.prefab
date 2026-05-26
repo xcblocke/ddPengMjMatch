@@ -12454,13 +12454,13 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "particle_texture (2)",
+    "_name": "guanzi_dollar_tips",
     "_objFlags": 0,
     "_parent": {
       "__id__": 6
     },
     "_children": [],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 343
@@ -12492,7 +12492,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        957.748,
+        835.858,
         0,
         0,
         0,
@@ -12533,18 +12533,18 @@
     "_dstBlendFactor": 771,
     "_custom": false,
     "_file": {
-      "__uuid__": "3213f942-0891-4b46-a1a0-d32755569358"
+      "__uuid__": "7d2cf93c-7686-49c7-ae7c-526597846be3"
     },
     "_spriteFrame": null,
     "_texture": null,
     "_stopped": true,
-    "playOnLoad": true,
+    "playOnLoad": false,
     "autoRemoveOnFinish": false,
-    "totalParticles": 40,
+    "totalParticles": 16,
     "duration": -1,
-    "emissionRate": 26.666666666666668,
-    "life": 1.5,
-    "lifeVar": 0.4,
+    "emissionRate": 32,
+    "life": 0.5,
+    "lifeVar": 0,
     "_startColor": {
       "__type__": "cc.Color",
       "r": 255,
@@ -12556,8 +12556,8 @@
       "__type__": "cc.Color",
       "r": 0,
       "g": 0,
-      "b": 51,
-      "a": 25
+      "b": 0,
+      "a": 0
     },
     "_endColor": {
       "__type__": "cc.Color",
@@ -12570,18 +12570,18 @@
       "__type__": "cc.Color",
       "r": 0,
       "g": 0,
-      "b": 38,
+      "b": 0,
       "a": 0
     },
     "angle": -90,
-    "angleVar": 77,
-    "startSize": 87,
-    "startSizeVar": 16,
-    "endSize": 75,
-    "endSizeVar": 27,
-    "startSpin": 90,
-    "startSpinVar": 670,
-    "endSpin": 0,
+    "angleVar": 20,
+    "startSize": 99,
+    "startSizeVar": 20,
+    "endSize": 161,
+    "endSizeVar": 0,
+    "startSpin": -180,
+    "startSpinVar": 679,
+    "endSpin": -134,
     "endSpinVar": 0,
     "sourcePos": {
       "__type__": "cc.Vec2",
@@ -12590,22 +12590,22 @@
     },
     "posVar": {
       "__type__": "cc.Vec2",
-      "x": 182,
-      "y": 10
+      "x": 400,
+      "y": 50
     },
     "_positionType": 1,
     "positionType": 1,
     "emitterMode": 0,
     "gravity": {
       "__type__": "cc.Vec2",
-      "x": 26,
-      "y": -2000
+      "x": 15,
+      "y": -3000
     },
-    "speed": 961,
-    "speedVar": 0,
-    "tangentialAccel": 7,
+    "speed": 2200,
+    "speedVar": 1600,
+    "tangentialAccel": 0,
     "tangentialAccelVar": 0,
-    "radialAccel": -58,
+    "radialAccel": 0,
     "radialAccelVar": 0,
     "rotationIsDir": false,
     "startRadius": 0,
@@ -12625,7 +12625,7 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "15qp8QnmVCkLcq03ztcShH",
+    "fileId": "89OYJKvpxPfaiq100hxsmJ",
     "sync": false
   },
   {
@@ -12731,6 +12731,9 @@
     },
     "root2": {
       "__id__": 104
+    },
+    "particle": {
+      "__id__": 343
     },
     "_id": ""
   },

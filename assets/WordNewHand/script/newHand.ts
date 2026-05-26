@@ -20,6 +20,10 @@ export default class newHand extends cc.Component {
     root1: cc.Node = null;
     @property(cc.Node)
     root2: cc.Node = null;
+
+
+    @property(cc.ParticleSystem)
+    particle: cc.ParticleSystem = null;
     // @property(sp.Skeleton)
     // doorSkeleton: sp.Skeleton = null;
     config = null;
@@ -70,6 +74,11 @@ export default class newHand extends cc.Component {
         //     this.doorSkeleton.setAnimation(0,"start",false);
         //     this.doorSkeleton.addAnimation(0, "loop", true);
         // }
+        this.scheduleOnce(()=>{
+            if(this.particle){
+                this.particle.resetSystem();
+            }
+        },0)
     }
 
     openRoot1() {
