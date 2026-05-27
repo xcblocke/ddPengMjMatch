@@ -394,7 +394,7 @@ export default class LoadWord {
     };
 
     /** FrameSDK 旧接口 (success, fail) → A.v2(tag, { onResult })；click/succeed/fail 由 A.v2 统一打日志 */
-    const bridgeOpenVideo = (successCallback?: () => void, failedCallback?: () => void) => {
+    const bridgeOpenVideo = (successCallback?: () => void, failedCallback?: (isLoadFail?: boolean) => void) => {
       const tag = NativeUtils.placement || "reward_video";
       A.v2(tag, {
         onResult: (result) => {
@@ -402,18 +402,22 @@ export default class LoadWord {
             cc.director.emit("AD_SUC");
             successCallback && successCallback();
           } else if (result === -1) {
-            failedCallback && failedCallback();
+            failedCallback && failedCallback(true);
+          } else if (result === 0) {
+            failedCallback && failedCallback(false);
           }
         }
       });
     };
-    /** FrameSDK 旧接口 (callback) → A.i2(tag, { onResult }) */
-    const bridgeOpenInters = (callback?: () => void) => {
+    /** FrameSDK 旧接口 (callback, failcallback) → A.i2(tag, { onResult }) */
+    const bridgeOpenInters = (callback?: () => void, failedCallback?: () => void) => {
       const tag = NativeUtils.placement || "inters";
       A.i2(tag, {
         onResult: (result) => {
           if (result === 1) {
             callback && callback();
+          } else if (result === -1 || result === 0) {
+            failedCallback && failedCallback();
           }
         }
       });

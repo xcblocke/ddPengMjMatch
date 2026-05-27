@@ -284,7 +284,9 @@ export default class Panel_Award_1 extends cc.Component {
                 object_name: `reward_1`,
                 object_notes: `inter`
             });
-            FrameSDK.openInters(callBack, () => { }, "reward_1");
+            FrameSDK.openInters(callBack, () => { }, "reward_1", () => {
+                this["noTouch"].node.active = false;
+            });
         } else {
             callBack();
         }

@@ -255,6 +255,7 @@ export default class Panel_Award_3 extends cc.Component {
 
         const fail = () => {
             this.pointerIndicator.resumeAllActions();
+            this.contentSkeleton.paused = false;
             this["noTouch"].node.active = false;
             console.log("video fail===========3");
         };
@@ -332,7 +333,9 @@ export default class Panel_Award_3 extends cc.Component {
                     object_name: `reward_3`,
                     object_notes: `inter`,
                 });
-            },"reward_3");
+            }, "reward_3", () => {
+                this["noTouch"].node.active = false;
+            });
         } else {
             callBack();
         }

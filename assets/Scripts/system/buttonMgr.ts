@@ -212,6 +212,9 @@ export default class buttonMgr extends cc.Component {
     if (e == PropType.reshuffleCard) return "use_prop_reshuffle";
     return "use_prop_freeze";
   }
+  showPropAdFailToast() {
+    EngineUtil.showCocosToast3(`gkey_303`);
+  }
   watchVideoForProp(e) {
     var t = this;
     if (this.isWatchingPropVideo) return;
@@ -221,6 +224,10 @@ export default class buttonMgr extends cc.Component {
       idx: e
     });
     A.v0(n);
+    if (!A.v1) {
+      this.showPropAdFailToast();
+      return;
+    }
     this.isWatchingPropVideo = true;
     A.v2(n, {
       onResult: function (a) {
@@ -229,8 +236,10 @@ export default class buttonMgr extends cc.Component {
           cc.director.emit("AD_SUC");
           t.claimPropByVideo(e, o, true);
         } else if (-1 === a) {
-          SdkHelper.showForceToast(`gkey_314`);
+          t.showPropAdFailToast();
           t.claimPropByVideo(e, o, false);
+        } else if (0 === a) {
+          t.showPropAdFailToast();
         }
       }
     });

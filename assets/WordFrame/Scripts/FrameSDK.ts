@@ -105,8 +105,8 @@ export class FrameSDK {
     static frameData: {
         isDeBug: boolean,
         sdkFuc: {
-            openVideo: (callback?: () => void, failcallback?: () => void) => void,
-            openInters: (callback?: () => void) => void,
+            openVideo: (callback?: () => void, failcallback?: (isLoadFail?: boolean) => void) => void,
+            openInters: (callback?: () => void, failcallback?: () => void) => void,
             openBanner: (gravity?: number, margin?: number) => void,
             hiddenBanner: () => void,
             // logCommonEvent: (eventName: string, properties?: { [key: string]: any }) => void,
@@ -704,23 +704,47 @@ export class FrameSDK {
             FrameSDK.frameData.gameFuc.openLoad(5, "", true);
             startCallback && startCallback();
             FrameSDK.logLiftEvent(`first_ad`);
-            let successCall = (isInter: boolean = false) => {
+            let settled = false;
+            const finishSuccess = () => {
+                if (settled) {
+                    return;
+                }
+                settled = true;
                 FrameSDK.frameData.gameFuc.closeLoad();
-                successCallback();
+                successCallback && successCallback();
             };
-            let failedCall = () => {
-                if (!FrameSDK.frameData.gameData.noProfitAd) {
-                    FrameSDK.openInters(successCall, () => { }, placement + "_videoToInters");
+            const finishFailed = (showToast: boolean = true) => {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                FrameSDK.notifyAdFailed(failedCallback, showToast);
+            };
+            let interFallbackStarted = false;
+            const failedCall = (isLoadFail: boolean = true) => {
+                if (settled) {
+                    return;
+                }
+                if (isLoadFail && !FrameSDK.frameData.gameData.noProfitAd) {
+                    if (interFallbackStarted) {
+                        return;
+                    }
+                    interFallbackStarted = true;
+                    FrameSDK.openInters(finishSuccess, () => { }, placement + "_videoToInters", () => {
+                        finishFailed(true);
+                    });
                 } else {
-                    FrameSDK.frameData.gameFuc.closeLoad();
-                    failedCallback();
+                    finishFailed(isLoadFail);
                 }
             };
             let retrytime = FrameSDK.now;
             let openVideo = () => {
+                if (settled) {
+                    return;
+                }
                 if (FrameSDK.frameData.sdkFuc.isReadyVideo) {
                     FrameSDK.frameData.sdkFuc.placement = placement;
-                    FrameSDK.frameData.sdkFuc.openVideo(successCall, failedCall);
+                    FrameSDK.frameData.sdkFuc.openVideo(finishSuccess, failedCall);
                 } else if (retrytime + FrameData.SDK_CONF.videoRetryTime > FrameSDK.now) {
                     setTimeout(openVideo, 300);
                 } else {
@@ -732,25 +756,35 @@ export class FrameSDK {
     }
 
 
-    static openInters(callback?: () => any, startCallback?: () => any, placement: string = "") {
+    static openInters(callback?: () => any, startCallback?: () => any, placement: string = "", failedCallback?: () => any) {
         startCallback && startCallback();
         // 某些渠道/原生桥接可能重复触发回调，这里做一次性保护
-        let called = false;
-        const once = () => {
-            if (called) { return; }
-            called = true;
+        let settled = false;
+        const finishSuccess = () => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            FrameSDK.frameData?.gameFuc?.closeLoad();
             callback && callback();
         };
+        const finishFailed = (showToast: boolean = true) => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            FrameSDK.notifyAdFailed(failedCallback, showToast);
+        };
         if (FrameData.SDK_CONF.NO_VIDEO) {
-            once();
+            finishSuccess();
         } else if (FrameSDK.frameData) {
             FrameSDK.frameData.sdkFuc.placement = placement;
             FrameSDK.frameData.sdkFuc.openInters(() => {
                 this._lastVideoEndTime = Date.now();
-                once();
-            });
+                finishSuccess();
+            }, () => finishFailed(true));
         } else {
-            once();
+            finishSuccess();
         }
     }
 
@@ -842,6 +876,38 @@ export class FrameSDK {
             com.text = msg;
             node.parent = FrameSDK.Panel;
         });
+    }
+
+    /** 广告加载/播放失败时的统一提示文案 */
+    static readonly AD_FAIL_TOAST_KEY = "skey_151";
+
+    /** 解除 popUpNode 上弹窗的全屏触摸锁（openVideo/openInters 失败时必须调用） */
+    static unlockPanelTouch() {
+        if (!FrameSDK.Panel || !cc.isValid(FrameSDK.Panel)) {
+            return;
+        }
+        for (let i = 0; i < FrameSDK.Panel.childrenCount; i++) {
+            const child = FrameSDK.Panel.children[i];
+            if (!child || !child.active) {
+                continue;
+            }
+            const components = child.getComponents(cc.Component) || [];
+            for (let j = 0; j < components.length; j++) {
+                const comp: any = components[j];
+                if (comp?.noTouch?.node && cc.isValid(comp.noTouch.node)) {
+                    comp.noTouch.node.active = false;
+                }
+            }
+        }
+    }
+
+    static notifyAdFailed(failedCallback?: () => void, showToast: boolean = true) {
+        FrameSDK.frameData?.gameFuc?.closeLoad();
+        FrameSDK.unlockPanelTouch();
+        if (showToast) {
+            FrameSDK.showToast(FrameSDK.AD_FAIL_TOAST_KEY);
+        }
+        failedCallback && failedCallback();
     }
 
 
