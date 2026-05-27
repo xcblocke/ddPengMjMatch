@@ -118,29 +118,7 @@ export default class Panel_Activity extends cc.Component {
     }
 
     protected onLoad(): void {
-        this._close_target = Panel_Activity.coinTarget;
-        if (FrameData.saveData.activity == null) {
-            // 次日可领取：倒计时对齐到“下一天 00:00”
-            const nowMs = FrameSDK.now * 1000;
-            const nextMidnight = new Date(nowMs);
-            nextMidnight.setHours(24, 0, 0, 0);
-            const nextMidnightSec = Math.floor(nextMidnight.getTime() / 1000);
-            FrameData.saveData.activity = {
-                state: 0,
-                coin: 0,
-                time: nextMidnightSec,
-                lun:1
-            };
-
-            FrameSDK.logGameEvent('sdymjmatch_report_act', {
-                object_action: 'show',
-                object_name: `pig_start`,
-                object_notes: FrameData.saveData.activity.lun + "",
-            }, true);
-        }
-        if (FrameSDK.now < FrameData.saveData.activity.time) {
-            this.schedule(this.updateTime);
-        }
+        
     }
 
     showAnim() {
@@ -167,19 +145,38 @@ export default class Panel_Activity extends cc.Component {
     protected onEnable(): void {
         this._chainCloseDone = false;
         FrameSDK.playEffect("piggybank_show");
+        this._close_target = Panel_Activity.coinTarget;
+
+        if (FrameData.saveData.activity == null) {
+            // 次日可领取：倒计时对齐到“下一天 00:00”
+            const nowMs = FrameSDK.now * 1000;
+            const nextMidnight = new Date(nowMs);
+            nextMidnight.setHours(24, 0, 0, 0);
+            const nextMidnightSec = Math.floor(nextMidnight.getTime() / 1000);
+            FrameData.saveData.activity = {
+                state: 0,
+                coin: 0,
+                time: nextMidnightSec,
+                lun: 1
+            };
+
+            FrameSDK.logGameEvent('sdymjmatch_report_act', {
+                object_action: 'show',
+                object_name: `pig_start`,
+                object_notes: FrameData.saveData.activity.lun + "",
+            }, true);
+        }
+
         cc.director.emit("UPDATA_ACTIVITY");
         this.updateUi();
         this.node.opacity = 0;
         this.scheduleOnce(() => {
             this.showAnim();
         }, 0);
-        // if(this.piggySkeleton){
-        //     this.piggySkeleton2.setAnimation(0,"Bgstart",false);
-        //     this.piggySkeleton2.addAnimation(0, "Bgloop", true);
 
-        //     this.piggySkeleton.setAnimation(0,"start",false);
-        //     this.piggySkeleton.addAnimation(0, "loop", true);
-        // }
+        if (FrameSDK.now < FrameData.saveData.activity.time) {
+            this.schedule(this.updateTime);
+        }
     }
 
     onDisable() {
@@ -189,6 +186,9 @@ export default class Panel_Activity extends cc.Component {
 
     updateUi() {
         let data = FrameData.saveData.activity;
+        if (!data) {
+            return;
+        }
         let conf = FrameData.FRAME_CONF.PiggyConfig;
         this.state1.active = data.state == 0;
         this.state2.active = data.state == 1;

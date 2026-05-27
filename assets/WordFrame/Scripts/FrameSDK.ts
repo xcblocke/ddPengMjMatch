@@ -57,6 +57,7 @@ export class FrameSDK {
     static init(frameData, configs) {
         console.log("init=========== 11111", JSON.stringify(frameData));
         console.log("init=========== 22222",  JSON.stringify(configs));
+        
         this.frameData = frameData;
         FrameSDK.initCocosAmend();
         FrameSDK.initSettings(configs);
