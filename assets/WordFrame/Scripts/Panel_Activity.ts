@@ -142,8 +142,33 @@ export default class Panel_Activity extends cc.Component {
         }
     }
 
+    getCoin() {
+        const act = FrameData.saveData.activity;
+        if (!act) return 0;
+        const coin = Math.max(0, Math.floor(Number(act.coin) || 0));
+        if (coin <= 0) {
+            return 0;
+        }
+        return coin;
+    }
+
+    private syncActivityWhenTimeUp(): void {
+        const act = FrameData.saveData.activity;
+        if (!act || act.state !== 0) return;
+        if (FrameSDK.now < act.time) return;
+        const coin = Math.max(0, Math.floor(Number(act.coin) || 0));
+        if (coin <= 0) {
+            this.resetActive();
+            return;
+        }
+        act.state = 1;
+        // this.playPiggyAnimByState(1);
+        this.unschedule(this.updateTime);
+    }
+
     protected onEnable(): void {
         this._chainCloseDone = false;
+        this.syncActivityWhenTimeUp();
         FrameSDK.playEffect("piggybank_show");
         this._close_target = Panel_Activity.coinTarget;
 
@@ -173,6 +198,10 @@ export default class Panel_Activity extends cc.Component {
         this.scheduleOnce(() => {
             this.showAnim();
         }, 0);
+
+        console.log("FrameData.saveData.activity.time===========11111", FrameData.saveData.activity.time);
+        console.log("FrameSDK.now===========22222", FrameSDK.now);
+        console.log("FrameSDK.now < FrameData.saveData.activity.time===========33333", FrameSDK.now < FrameData.saveData.activity.time);
 
         if (FrameSDK.now < FrameData.saveData.activity.time) {
             this.schedule(this.updateTime);
@@ -204,6 +233,7 @@ export default class Panel_Activity extends cc.Component {
         // state=0（收集中）按钮置灰；state=1（次日可领）按钮高亮
         this.buttonSprite.setMaterial(0, cc.Material.getBuiltinMaterial(data.state == 0 ? "2d-gray-sprite" : "2d-sprite"));
         if (data.state == 0) {
+            cc.find("load2", this.state1).active = true;
             cc.find("load2/label", this.state1).getComponent(cc.Label).string = FrameSDK.convertCoinToStr(data.coin) + "/" + FrameSDK.convertCoinToStr(conf.num);
             cc.find("load2/load1", this.state1).getComponent(cc.Sprite).fillRange = data.coin / conf.num;
             this.tips.string = `skey_113??&value1==<img src="dollar4" offset=-5/> <size=38><color = #a52a1c>${FrameSDK.convertCoinToStr(conf.num)}</c></size>`;
@@ -223,6 +253,7 @@ export default class Panel_Activity extends cc.Component {
                 // this.countdownLabel.string = `${countdown.hour}:${countdown.minute}:${countdown.second}`
                 let countDown = FrameSDK.formatSeconds(time);
                 let list = countDown.split("")
+                this.countdownLabel.node.parent.active = this.getCoin() > 0;
                 this.countdownLabel.node.children.forEach((child,index) => {
                     child.getComponent(cc.Label).string = list[index];
                 });
