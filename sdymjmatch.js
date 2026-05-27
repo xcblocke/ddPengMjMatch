@@ -169,14 +169,14 @@
     };
     var onhot = function (hotTiem, size) {
       var data = {
-        "step": "hot_start"
+        "step": "star"
       };
       var data1 = {
         object_action: "show",
         object_name: "request_resource"
       };
       if (hotTiem) {
-        data.step = "hot_end";
+        data.step = "end";
         data.duration = hotTiem;
         data.res_ver = resVer;
         data1.object_name = "download_success";
