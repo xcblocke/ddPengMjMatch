@@ -1478,28 +1478,48 @@ export class FrameSDK {
         return FrameData.saveData.onceEventRecord[key] === true;
     }
 
+    /** 生命周期 step → A.t 预设事件名（L 埋点见 sdymjmatch.js addedPresetEventConfig） */
+    private static readonly LIFE_STEP_TO_PRESET: Readonly<Record<string, string>> = {
+        into_game: 'g2',
+        start_game: 'g3',
+        guide_start: 'n1',
+        guide_end: 'n4',
+        first_ad: 'v2',
+        reach_threshold: 'f8',
+        submit_order: 'f9',
+        finish_task: 'f10',
+    };
+
+    private static reportLifePreset(presetEvent: string): void {
+        const report = FrameSDK.frameData?.sdkFuc?.reportEventCall;
+        if (report) {
+            report(presetEvent);
+        }
+    }
+
     /**
      * 参数说明：finish_task 已自动计数，不需要加数字后缀，并且 submit_order 会在第一个 finish_task 事件中发送
      */
     static logLiftEvent(stepName: "into_game" | "guide_start" | "guide_end" | "start_game" | "first_ad" | "reach_threshold" | "finish_task"): void {
         let step: string = stepName;
+        let presetEvent = FrameSDK.LIFE_STEP_TO_PRESET[stepName];
 
         if (step === "finish_task") {
             if (++FrameData.saveData.wwyFinishTaskCount === 1) {
-                // FrameSDK.frameData.sdkFuc.lifeEvent("submit_order");
-                this.logCommonEvent(`game_life_key_node`, { "step": `submit_order` });
+                FrameSDK.reportLifePreset('f9');
             }
 
             step = `finish_task_${FrameData.saveData.wwyFinishTaskCount}`;
+            presetEvent = 'f10';
         }
 
         if (FrameData.saveData.wwyLifeEventRecord[step]) {
             return;
         }
 
-        // FrameSDK.frameData.sdkFuc.lifeEvent(step);
-        this.logCommonEvent(`game_life_key_node`, { "step": `${step}` });
-
+        if (presetEvent) {
+            FrameSDK.reportLifePreset(presetEvent);
+        }
 
         FrameData.saveData.wwyLifeEventRecord[step] = true;
     }
@@ -1521,7 +1541,15 @@ export class FrameSDK {
     }
 
     static logCommonEvent(eventName: string, storeData: { [key: string]: any; } = null) {
-        // FrameSDK.frameData.sdkFuc.logCommonEvent(eventName, storeData);
+        if (eventName !== 'game_life_key_node' || !storeData?.step) {
+            return;
+        }
+        const step = `${storeData.step}`;
+        const presetEvent = FrameSDK.LIFE_STEP_TO_PRESET[step]
+            ?? (step.startsWith('finish_task_') ? 'f10' : null);
+        if (presetEvent) {
+            FrameSDK.reportLifePreset(presetEvent);
+        }
     }
 
     static addCoin(num: number, charityNum: number, donateTime: number, call?: () => void,opts?: { excludePiggy?: boolean }) {
