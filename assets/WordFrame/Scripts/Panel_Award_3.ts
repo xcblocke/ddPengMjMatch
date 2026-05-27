@@ -136,7 +136,7 @@ export default class Panel_Award_3 extends cc.Component {
                         return;
                     }
                     this.contentSkeleton.setAnimation(0, "loop", true);
-                    this.contentSkeleton.timeScale = 0.6;
+                    this.contentSkeleton.timeScale = 0.8;
                 
                 }
             });
