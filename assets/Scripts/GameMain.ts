@@ -127,6 +127,8 @@ export default class GameMain extends cc.Component {
   _teachingStep = 0;
   /** isFlag 首次：飞币后先走完黄币手指 + 第 1 关操作教程，再走进关横幅 */
   _awaitNewHandTutorialComplete = false;
+  /** 防止 RDM 教程结束回调重复/过早触发导致进关链丢失 */
+  _newHandTutorialFinishHandled = false;
   /** startGame 延后的进关横幅链；教程结束后若 defer 未挂上则走此兜底 */
   _deferredNewHandPreLevelRunner: (() => void) | null = null;
   teachingStepCardList = [];
@@ -1168,14 +1170,11 @@ export default class GameMain extends cc.Component {
     }
 
     loadWord.markAwaitNewHandRewardFlow();
+    this._newHandTutorialFinishHandled = false;
     this._awaitNewHandTutorialComplete = true;
     GameUtils.logLevelProgress("beginNewHandTutorialBeforeBanners");
 
     const waitRdmTutorialDone = () => {
-      if (!this.isRdmLevelPanelOpen() && getSaveGuideInedx() >= 2) {
-        this.finishNewHandTutorialBeforeBanners();
-        return;
-      }
       cc.director.once("NEW_HAND_RDM_TUTORIAL_DONE", () => {
         this.finishNewHandTutorialBeforeBanners();
       }, this);
@@ -1217,17 +1216,33 @@ export default class GameMain extends cc.Component {
     }
   }
 
+  /** LoadWord 在 RDM 教程结束事件上的兜底入口 */
+  onNewHandRdmTutorialClosed() {
+    this.finishNewHandTutorialBeforeBanners();
+  }
+
   private finishNewHandTutorialBeforeBanners() {
-    if (!this._awaitNewHandTutorialComplete) {
+    if (this._newHandTutorialFinishHandled) {
       return;
     }
+    if (!this._awaitNewHandTutorialComplete && this._mahjongSpawnAllowed) {
+      return;
+    }
+    this._newHandTutorialFinishHandled = true;
     this._awaitNewHandTutorialComplete = false;
-    GameUtils.logLevelProgress("finishNewHandTutorialBeforeBanners");
+    GameUtils.logLevelProgress("finishNewHandTutorialBeforeBanners", {
+      mahjongSpawnAllowed: this._mahjongSpawnAllowed
+    });
     try {
       const FrameCls: any = cc.js.getClassByName("Frame");
       FrameCls?.ins?.setGuideShow(false);
     } catch (_) {}
-    LoadWord.instance?.completeNewHandRewardFlow(true);
+    if (this._mahjongSpawnAllowed) {
+      return;
+    }
+    const loadWord = LoadWord.instance;
+    loadWord?.markAwaitNewHandRewardFlow();
+    loadWord?.completeNewHandRewardFlow(true);
   }
   showFreezeTip() {
     var e = this;

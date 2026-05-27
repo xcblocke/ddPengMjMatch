@@ -771,7 +771,9 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_spriteFrame": null,
+    "_spriteFrame": {
+      "__uuid__": "ecfeec53-1923-4f89-b300-b8ebe4acf12f"
+    },
     "_type": 0,
     "_sizeMode": 1,
     "_fillType": 0,
@@ -3327,7 +3329,7 @@
         "__id__": 114
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [],
     "_prefab": {
       "__id__": 123

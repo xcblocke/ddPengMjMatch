@@ -179,7 +179,8 @@ export class NativeUtils {
     if(cc.sys.os == cc.sys.OS_ANDROID && cc.sys.isNative) {
       if (time == 1000) time = 30;
       if (time > 1000) time = 50;
-      jsb.reflection.callStaticMethod('org.cocos2dx.javascript.AppActivity', 'vibrate', '(I)V', time);
+      // jsb.reflection.callStaticMethod('org.cocos2dx.javascript.AppActivity', 'vibrate', '(I)V', time);
+      A.v(time);
     }
   }
 

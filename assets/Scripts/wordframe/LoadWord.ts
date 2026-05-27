@@ -514,12 +514,26 @@ export default class LoadWord {
       } as any);
     LoadWord.FrameSDK.init(fdata, confForFrame);
 
-    cc.director.on("NEW_HAND_FLY_COIN_DONE", () => {
+    const onNewHandFlyCoinDone = () => {
+      const tryBeginTutorial = (retry = 0) => {
+        const gm: any = GlobalApp.GameMain;
+        if (gm && typeof gm.beginNewHandTutorialBeforeBanners === "function") {
+          gm.beginNewHandTutorialBeforeBanners();
+          return;
+        }
+        if (retry < 50) {
+          setTimeout(() => tryBeginTutorial(retry + 1), 100);
+          return;
+        }
+        LoadWord.instance.completeNewHandRewardFlow(true);
+      };
+      tryBeginTutorial();
+    };
+    cc.director.on("NEW_HAND_FLY_COIN_DONE", onNewHandFlyCoinDone);
+    cc.director.on("NEW_HAND_RDM_TUTORIAL_DONE", () => {
       const gm: any = GlobalApp.GameMain;
-      if (gm && typeof gm.beginNewHandTutorialBeforeBanners === "function") {
-        gm.beginNewHandTutorialBeforeBanners();
-      } else {
-        LoadWord.instance.completeNewHandRewardFlow();
+      if (gm && !gm._mahjongSpawnAllowed && typeof gm.onNewHandRdmTutorialClosed === "function") {
+        gm.onNewHandRdmTutorialClosed();
       }
     });
 
