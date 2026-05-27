@@ -5743,8 +5743,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 300,
-      "height": 60
+      "width": 259.64,
+      "height": 50.4
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -5756,7 +5756,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        13.386,
+        10.792,
         0,
         0,
         0,
@@ -5798,7 +5798,7 @@
     "_string": "skey_009",
     "_N$string": "skey_009",
     "_fontSize": 42,
-    "_lineHeight": 44,
+    "_lineHeight": 40,
     "_enableWrapText": false,
     "_N$file": {
       "__uuid__": "2bb54948-da53-4166-8027-c0ca7f13884d"
@@ -7058,7 +7058,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        22.997,
+        30.9,
         0,
         0,
         0,
@@ -7232,8 +7232,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 300,
-      "height": 60
+      "width": 274.25,
+      "height": 55.44
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
