@@ -112,19 +112,20 @@ export default class RDM_Level extends cc.Component {
         this.lbl_gCoin.string = this.coin;
         const rate = FrameData.FRAME_CONF.RedeemRateConfig[0];
         console.log("rate。。。。。。。。..........", rate);
-        this.rtx_tips.string = `<outline color=#914129 width=2><b>skey_094</b></outline>??&value1==<img src="dollar4" offset=-3/> <color= #86FF04><outline color=#427F04 width=2>${FrameSDK.convertCoinToStr(rate)}</outline></c>&value2==<color= #86FF04><outline color=#427F04 width=2>${FrameSDK.convertCoinToStr(rate, true)}</outline></c>`;
+        this.rtx_tips.string = `<b>skey_094</b>??&value1==<img src="dollar4" offset=-3/> <color= #86FF04>${FrameSDK.convertCoinToStr(rate)}</c>&value2==<color= #86FF04>${FrameSDK.convertCoinToStr(rate, true)}</c>`;
         FrameData.FRAME_CONF.CoinConf.forEach((value, i) => {
             let itme = this.scrollview.content.children[i] || cc.instantiate(this.scrollview.content.children[0]);
             itme.getComponentInChildren(RDM_LevelItem).init(value);
             itme.parent = this.scrollview.content;
         });
         let account = FrameData.saveData.account;
-        if (account && account != "") {
-            this.accountLabel.node.parent.active = true;
-            this.accountLabel.string = `clok_015${account}`;
-        }else{
-            this.accountLabel.node.parent.active = false;
-        }
+        this.accountLabel.string = `clok_015${account}`;
+        // if (account && account != "") {
+        //     // this.accountLabel.node.parent.active = true;
+            
+        // }else{
+        //     // this.accountLabel.node.parent.active = false;
+        // }
     }
 
     openAccount(){
