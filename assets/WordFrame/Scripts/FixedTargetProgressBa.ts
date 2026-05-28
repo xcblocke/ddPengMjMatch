@@ -4,10 +4,18 @@ import LevelItem from "./LevelItem";
 // 适配 Cocos Creator 2.4.x 语法
 const { ccclass, property } = cc._decorator;
 
+enum RoundUiType {
+    mainGame =1,   
+    popUpNode =2,
+}
+
 @ccclass
 export default class LevelProgressBar extends cc.Component {
 
     // --- 绑定UI组件 (使用 cc.Node, cc.Label, cc.Sprite) ---
+
+    @property({type: cc.Enum(RoundUiType)})
+    roundUiType: RoundUiType = RoundUiType.mainGame;
 
     @property(cc.Sprite)
     progressBar: cc.Sprite = null;
@@ -127,7 +135,7 @@ export default class LevelProgressBar extends cc.Component {
             const isCurrent = item.LevelNumber && item.LevelNumber.string === String(currentLevel);
             if (showRound && isCurrent) {
                 if (item.level_loop) {
-                    item.level_loop.active = true;
+                    item.level_loop.active = this.roundUiType === RoundUiType.mainGame;
                 }
                 tipNode.active = true;
                 // item.FeatureTip.string = Lang.get("skey_152") + "  " + roundText;

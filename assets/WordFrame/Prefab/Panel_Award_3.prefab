@@ -19649,6 +19649,7 @@
       "__id__": 226
     },
     "_enabled": true,
+    "roundUiType": 2,
     "progressBar": {
       "__id__": 235
     },
