@@ -1572,12 +1572,12 @@ export class FrameSDK {
                 "click":         在广告内进行点击行为
     */
     static videoCompensation(action: "exposure" | "touch" | "impression" | "rewarded" | "close" | "click", name: string, isInterstitial?: boolean) {
-        // let data = (<any>{
-        //     "action": action,
-        //     "placement": name,
-        //     "type": isInterstitial ? "interstitial" : "video"
-        // });
-        // FrameSDK.frameData.sdkFuc.logCommonEvent("c_ad_event", data);
+        let data = (<any>{
+            "action": action,
+            "placement": name,
+            "type": isInterstitial ? "interstitial" : "video"
+        });
+        FrameSDK.logCommonEvent("c_ad_event", data);
     }
 
     static logCommonEvent(eventName: string, storeData: { [key: string]: any; } = null) {

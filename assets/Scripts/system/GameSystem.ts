@@ -11,6 +11,7 @@ import { PageEnum, VideoType } from '../framework/enum/AllEnum';
 import SdkHelper from '../framework/SdkHelper';
 import LocalData from '../cyll/LocalData';
 import PageMgr from '../view/PageMgr';
+import LoadWord from '../wordframe/LoadWord';
 class _GameSystem {
   static _instance = null;
   static _getInstance() {
@@ -270,6 +271,12 @@ class _GameSystem {
           prop3_num: Math.max(Number(srv.prop3_num || 0), Math.max(0, curFreeze - (usedId == 3 ? 1 : 0)))
         };
         PlayerDataSys.setUserPropCount(merged);
+        var remainCount = usedId == 1 ? Number(merged.prop1_num || 0) : usedId == 2 ? Number(merged.prop2_num || 0) : Number(merged.prop3_num || 0);
+        if (remainCount <= 0) {
+          var sdk = LoadWord.FrameSDK;
+          
+          sdk && sdk.videoCompensation && sdk.videoCompensation("exposure", reqPropId == 1 ? "refresh" : "tips");
+        }
         t(e);
       }).finally(function () {
         o();
