@@ -499,6 +499,28 @@
 		"hi": "जोड़ी पर टैप करें",
 		"tr": "Çifte dokun"
 	},
+
+	{
+		"key": "gkey_239",
+		"zh": "选择任何一个即可消除",
+		"en": "Select any one to eliminate",
+		"es": "Selecciona cualquiera para eliminar",
+		"fr": "Sélectionnez n'importe lequel pour éliminer",
+		"ja": "いずれかを選択して除去",
+		"de": "Wählen Sie eine beliebige aus, um zu entfernen",
+		"ru": "Выберите любой, чтобы удалить",
+		"pt": "Selecione qualquer um para eliminar",
+		"in": "Pilih salah satu untuk dihilangkan",
+		"vi": "Chọn bất kỳ để loại bỏ",
+		"ar": "اختر أي واحد للإزالة",
+		"th": "เลือกอันใดก็ได้เพื่อกำจัด",
+		"ko": "아무거나 선택하여 제거",
+		"fil": "Pumili ng kahit alin upang alisin",
+		"ms": "Pilih mana-mana untuk menghapus",
+		"hi": "हटाने के लिए कोई एक चुनें",
+		"tr": "Herhangi birini seçerek yok edin"
+	  },
+
 	{
 		"key": "gkey_257",
 		"zh": "隐私政策",
