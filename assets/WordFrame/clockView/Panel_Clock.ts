@@ -420,6 +420,7 @@ export default class Panel_Clock extends cc.Component {
 
         let isChangeState: boolean = false;
 
+        console.log("flash===========11111",type,this.type);
         //状态改变了
         if (type != this.type) {
             isChangeState = true;
@@ -458,7 +459,7 @@ export default class Panel_Clock extends cc.Component {
                         let needNum = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0;
                         this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${needNum}</b></c>`;
                         this.s1taskIcon.spriteFrame = this.taskIcon[1];
-                        curNum = this.userInfo.dayLevelTime;
+                        curNum = this.userInfo.dayLevelTime; //FrameSDK.frameData.gameData.passLevel - this.userInfo.startLevel;//
                         totalNum = this.config.task[0];
                     } else {
                         this.s1Rich.getComponent(cc.RichText).string = `clok_036??&value1==<color=#86FF04><b>${Math.round(this.config.task[this.userInfo.signCount]/60)}</b></c>`;
@@ -534,16 +535,17 @@ export default class Panel_Clock extends cc.Component {
                 break;
             case "s4":
                 if (isChangeState) {
-                    if(!this.s4.active ) {
-                        FrameSDK.logGameEvent('sdymjmatch_game_act', {
-                            object_action: 'show',
-                            object_name: `iphone_line`,
-                        }, true);
-                    }
                     this.s4.active = true;
                 }
                 break;
             case "s5":
+                if(!this.s5.active ) {
+                    FrameSDK.logGameEvent('sdymjmatch_game_act', {
+                        object_action: 'show',
+                        object_name: `iphone_line`,
+                    }, true);
+                }
+
                 if (isChangeState) {
                     this.s5.active = true;
 
