@@ -87,7 +87,7 @@ export default class unlockPropPage extends BasePage {
     AudioManager.instance.playMusic("xiu");
     AudioManager.instance.playMusic("dztx");
     if (this.type == PropType.tipCard) {
-      PlayerDataSys.tipCardCount = 1;
+      PlayerDataSys.tipCardCount = 3;
     } else {
       if (this.type == PropType.reshuffleCard) {
         PlayerDataSys.reshuffleCardCount = 1;

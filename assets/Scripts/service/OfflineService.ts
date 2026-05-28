@@ -437,7 +437,7 @@ function createDefaultState() {
     goldBalance: 0,
     propInfo: {
       prop1_num: 1,
-      prop2_num: 1,
+      prop2_num: 3,
       prop3_num: 1
     },
     noviceStatus: 0,

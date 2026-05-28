@@ -1009,10 +1009,10 @@ export default class GameMain extends cc.Component {
       this.showNextTeachingStep();
     }
     t = JSON.parse(cc.sys.localStorage.getItem("unLockPropGuide")) || [];
-    // 第二关一次性解锁「刷新 + 提示」，各 1 次；不弹 unlockPropPage、不走道具教程
+    // 第二关一次性解锁「刷新 1 次 + 提示 3 次」；不弹 unlockPropPage、不走道具教程
     if (2 == gameData.gameLevel && -1 == t.indexOf("2")) {
       PlayerDataSys.reshuffleCardCount = 1;
-      PlayerDataSys.tipCardCount = 1;
+      PlayerDataSys.tipCardCount = 3;
       t.push("2");
       cc.sys.localStorage.setItem("unLockPropGuide", JSON.stringify(t));
       EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
