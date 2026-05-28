@@ -140,6 +140,24 @@ export default class Panel_Award_6 extends cc.Component {
         }
     }
 
+    reportLevelEvent() {
+        const gameFuc = FrameSDK.frameData?.gameFuc;
+        const { levelId, curRound, totalRound } = gameFuc?.getLevelReportInfo?.() ?? {
+            levelId: FrameSDK.frameData.gameData.passLevel + 1,
+            curRound: 1,
+            totalRound: 1,
+        };
+        const objectNotes = String(levelId)  + "_" + curRound;
+
+        CC_DEBUG && console.log("[Panel_Award_6] reportLevelEvent", { levelId, curRound, totalRound, objectNotes });
+
+        FrameSDK.logGameEvent("sdymjmatch_game_lv", {
+            object_action: "show",
+            object_name: `lv_pass`,
+            object_notes: objectNotes
+        }, true);
+    }
+
     onEnable() {
         this._rewardClaimed = false;
         this.lv.string = "" + (FrameSDK.frameData.gameData.passLevel + 1);
@@ -153,15 +171,17 @@ export default class Panel_Award_6 extends cc.Component {
         this.adData = FrameData.getCoinOutNum("box");
         const free = FrameData.getCoinOutNum("free");
 
-        FrameSDK.logGameEvent("sdymjmatch_report_new", {
-            object_action: "show",
-            object_name: "new_16"
-        }, true);
-        FrameSDK.logGameEvent("sdymjmatch_report_rew", {
+        // FrameSDK.logGameEvent("sdymjmatch_game_new", {
+        //     object_action: "show",
+        //     object_name: "new_16"
+        // }, true);
+        FrameSDK.logGameEvent("sdymjmatch_game_rew", {
             object_action: "show",
             object_name: `sup_show`,
             object_notes: `reward_6`
         });
+
+        this.reportLevelEvent();
 
 
         FrameSDK.openEffect(this);
@@ -199,7 +219,7 @@ export default class Panel_Award_6 extends cc.Component {
         // if(!this.adData.isFree){
         //     FrameSDK.videoCompensation('exposure', 'reward_6');
         // }
-        // FrameSDK.logGameEvent("sdymjmatch_report_rew", {
+        // FrameSDK.logGameEvent("sdymjmatch_game_rew", {
         //     object_action: "show",
         //     object_name: `rew_ad`,
         //     object_notes: `reward_6`
@@ -218,7 +238,7 @@ export default class Panel_Award_6 extends cc.Component {
         this["noTouch"].node.active = true;
         let isInters = false;//FrameSDK.isShowInters() && !this.viewData.noInters;//免费奖励不要插屏了
 
-        FrameSDK.logGameEvent("sdymjmatch_report_rew", {
+        FrameSDK.logGameEvent("sdymjmatch_game_rew", {
             object_action: "show",
             object_name: `sup_free`,
             object_notes: `reward_6`

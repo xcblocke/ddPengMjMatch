@@ -108,7 +108,7 @@ export default class Panel_Award_3 extends cc.Component {
         this.contentSkeleton.paused = false;
 
         
-        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'show',
             object_name: `rew_show`,
             object_notes: `reward_3`,
@@ -241,7 +241,7 @@ export default class Panel_Award_3 extends cc.Component {
         if(!this.adData.isFree){
             FrameSDK.videoCompensation('touch', 'reward_3');
         }
-        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'show',
             object_name: `rew_ad`,
             object_notes: `reward_3`,
@@ -297,7 +297,7 @@ export default class Panel_Award_3 extends cc.Component {
             back();
         } else {
             FrameSDK.openVideo(back, fail, () => {
-                FrameSDK.logGameEvent('sdymjmatch_report_ad', {
+                FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                     object_action: 'show',
                     object_name: `reward_3`,
                     object_notes: `video`,
@@ -312,7 +312,7 @@ export default class Panel_Award_3 extends cc.Component {
         // let isInters = FrameData.saveData.skipADCount >= FrameData.FRAME_CONF.forceVideo;
         this["noTouch"].node.active = true;
 
-        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'show',
             object_name: `rew_free`,
             object_notes: `reward_3`,
@@ -328,7 +328,7 @@ export default class Panel_Award_3 extends cc.Component {
         if (this.isInters) {
             FrameSDK.videoCompensation('touch', 'reward_3',true);
             FrameSDK.openInters(callBack, () => {
-                FrameSDK.logGameEvent('sdymjmatch_report_ad', {
+                FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                     object_action: 'show',
                     object_name: `reward_3`,
                     object_notes: `inter`,

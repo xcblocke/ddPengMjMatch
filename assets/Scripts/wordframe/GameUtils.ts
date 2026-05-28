@@ -246,6 +246,68 @@ static showInterstitialAd(succFunc: (str?: string) => void = null) {
     };
   }
 
+  /**
+   * 埋点 / UI：当前大关与关内局数（逻辑在 WordFrame 外，经 gameFuc 桥接使用）。
+   * - levelId：gameLevel（当前大关）
+   * - curRound / totalRound：round_max>1 用 round_id；否则 turn_max>1 用 turn_id；否则 1/1
+   */
+  static getLevelReportInfo(): {
+    levelId: number;
+    passLevel: number;
+    curRound: number;
+    totalRound: number;
+  } {
+    const levelId = Math.max(1, Math.floor(Number(gameData.gameLevel) || 1));
+    const roundMax = Math.floor(Number(gameData.roundMax) || 1);
+    if (roundMax > 1) {
+      return {
+        levelId,
+        passLevel: GameUtils.getPassLevel(),
+        curRound: Math.max(1, Math.floor(Number(gameData.roundId) || 1)),
+        totalRound: roundMax,
+      };
+    }
+    const turnMax = Math.floor(Number(gameData.turnMax) || 1);
+    if (turnMax > 1) {
+      return {
+        levelId,
+        passLevel: GameUtils.getPassLevel(),
+        curRound: Math.max(1, Math.floor(Number(gameData.turnId) || 1)),
+        totalRound: turnMax,
+      };
+    }
+    return {
+      levelId,
+      passLevel: GameUtils.getPassLevel(),
+      curRound: 1,
+      totalRound: 1,
+    };
+  }
+
+  /** 与 FrameSDK.beforeGameLevelStart 一致：大关段_局段（如 2_1） */
+  static getLevelReportSegments(): number[] {
+    const levelA = Math.max(1, Math.floor(Number(gameData.gameLevel) || 1));
+    const segments: number[] = [levelA <= 1 ? 1 : levelA - 1];
+    const roundMax = Math.floor(Number(gameData.roundMax) || 1);
+    if (roundMax > 1) {
+      segments.push(Math.max(1, Math.floor(Number(gameData.roundId) || 1)));
+    }
+    return segments;
+  }
+
+  static formatLevelReportSegments(segments?: number[]): string {
+    return (segments ?? GameUtils.getLevelReportSegments()).join("_");
+  }
+
+  /** logGameEvA(key=3) 等：`lv:3` 或 `lv:3_r2_3` */
+  static formatLevelReportNotes(info?: ReturnType<typeof GameUtils.getLevelReportInfo>): string {
+    const { levelId, curRound, totalRound } = info ?? GameUtils.getLevelReportInfo();
+    if (totalRound > 1) {
+      return `lv:${levelId}_r${curRound}_${totalRound}`;
+    }
+    return `lv:${levelId}`;
+  }
+
   static logLevelProgress(tag: string, extra?: Record<string, unknown>) {
     const round = GameUtils.getCurRoundInfo();
     console.log("[LevelFlow]", tag, JSON.stringify(Object.assign({

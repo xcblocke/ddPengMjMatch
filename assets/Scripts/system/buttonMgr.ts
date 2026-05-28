@@ -12,6 +12,8 @@ import SdkHelper from '../framework/SdkHelper';
 import { levelRewardCoin } from '../config';
 import GlobalApp from '../common/GlobalApp';
 import { A } from '../center/api';
+import LoadProgress from '../framework/components/LoadProgress';
+import LoadWord from '../wordframe/LoadWord';
 const {
   ccclass,
   property
@@ -208,8 +210,8 @@ export default class buttonMgr extends cc.Component {
     return VideoType.FreezeCard;
   }
   getPropVideoTag(e) {
-    if (e == PropType.tipCard) return "use_prop_tip";
-    if (e == PropType.reshuffleCard) return "use_prop_reshuffle";
+    if (e == PropType.tipCard) return "tips";
+    if (e == PropType.reshuffleCard) return "refresh";
     return "use_prop_freeze";
   }
   showPropAdFailToast() {
@@ -223,6 +225,13 @@ export default class buttonMgr extends cc.Component {
     SdkHelper.reportData("get_prop_video", {
       idx: e
     });
+
+    LoadWord.FrameSDK.logGameEvent('sdymjmatch_game_ad', {
+      object_action: 'show',
+      object_name: e == PropType.tipCard ? "tips" : "refresh" ,
+      object_notes: `video`,
+  });
+
     A.v0(n);
     if (!A.v1) {
       this.showPropAdFailToast();

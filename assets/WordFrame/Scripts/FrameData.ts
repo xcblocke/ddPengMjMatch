@@ -425,7 +425,7 @@ export class FrameData {
                     targetCoin: null
                 };
 
-                FrameSDK.logGameEvent('sdymjmatch_report_rdm', {
+                FrameSDK.logGameEvent('sdymjmatch_game_rdm', {
                     object_action: 'show',
                     object_name: `rdm_1_start`,
                     object_notes: `redeem_${id}`,
@@ -446,7 +446,7 @@ export class FrameData {
                 };
             }
 
-            FrameSDK.logGameEvent('sdymjmatch_report_rdm', {
+            FrameSDK.logGameEvent('sdymjmatch_game_rdm', {
                 object_action: 'show',
                 object_name: `rdm2_1_start`,
                 object_notes: `redeem_${id}`,

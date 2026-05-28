@@ -114,7 +114,7 @@ export class FrameSDK {
             // logGameEvent: (eventName: string, properties: IEventLike, once: boolean) => void,
             // lifeEvent: (stepName: string) => void,
 
-            reportEventCall: (event: string) => void,
+            reportEventCall: (eventName: string, params?: { C?: { p?: { [key: string]: any }; o?: boolean } }) => void,
             ppEvent: (event: "gameLaunch" | "gameShow" | "slotShow" | "popupShow" | "claim" | "collected" | "freeShow" | "freeClaim" | "freeCollected") => void,
             openUrl: Function,
             isReadyVideo: boolean,
@@ -141,6 +141,10 @@ export class FrameSDK {
             closeLoad: () => void,
             vibrate: (durationInMilliseconds?: number) => void,
             getCurTurnInfo: Function,
+            getCurRoundInfo: Function,
+            getLevelReportInfo: () => { levelId: number; passLevel: number; curRound: number; totalRound: number },
+            formatLevelReportSegments: () => string,
+            formatLevelReportNotes: () => string,
             showToast: Function
         },
         gameNodeObj: {
@@ -1326,20 +1330,20 @@ export class FrameSDK {
             levels.push(levelB);
         }
         if (levelC !== null && levelC !== undefined) {
-            // levels.push(levelC);
-            FrameSDK?.logGameEvent("sdymjmatch_report_lv", {
-                object_action: "show",
-                object_name: `lv_info`,
-                object_notes: levelC
-            }, true);
+            levels.push(levelC);
+            // FrameSDK?.logGameEvent("sdymjmatch_game_lv", {
+            //     object_action: "show",
+            //     object_name: `lv_info`,
+            //     object_notes: levelC
+            // }, true);
         }
 
 
-        // FrameSDK.logGameEvent("sdymjmatch_report_lv", {
-        //     object_action: "show",
-        //     object_name: `lv_start`,
-        //     object_notes: `${levels.join("_")}`
-        // }, true);
+        FrameSDK.logGameEvent("sdymjmatch_game_lv", {
+            object_action: "show",
+            object_name: `lv_start`,
+            object_notes: `${levels.join("_")}`
+        }, true);
 
         new Promise<void>(resolve => {
             if (levelA > 1 && FrameSDK.todayFirst) {
@@ -1383,7 +1387,7 @@ export class FrameSDK {
                 // }
 
                 // if (levelA == 1) {
-                //     FrameSDK.logGameEvent('sdymjmatch_report_new', {
+                //     FrameSDK.logGameEvent('sdymjmatch_game_new', {
                 //         object_action: 'show',
                 //         object_name: 'new_9',
                 //     }, true);
@@ -1422,7 +1426,7 @@ export class FrameSDK {
                 }
                 let isin = FrameSDK.frameData.sdkFuc.isReadyInters;
                 if (isin) {
-                    FrameSDK.logGameEvent("sdymjmatch_report_ad", {
+                    FrameSDK.logGameEvent("sdymjmatch_game_ad", {
                         object_action: "show",
                         object_name: `enter_level`,
                         object_notes: `inter`
@@ -1461,7 +1465,15 @@ export class FrameSDK {
             data.object_notes = eventData.object_notes;
         }
 
-        // FrameSDK.frameData.sdkFuc.logGameEvent(eventName, data, once);
+        const report = FrameSDK.frameData?.sdkFuc?.reportEventCall;
+        if (report) {
+            report(eventName, {
+                C: {
+                    p: data,
+                    ...(once ? { o: true } : {}),
+                },
+            });
+        }
 
         if (once) {
             const key = this._getOnceEventCacheKey(eventName, eventData);

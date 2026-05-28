@@ -63,7 +63,7 @@ export default class RDM_CharityItem extends cc.Component {
             })
                 .then(() => {
                     FrameSDK.logLiftEvent(`finish_task`);
-                    FrameSDK.logGameEvent('sdymjmatch_report_rdm', {
+                    FrameSDK.logGameEvent('sdymjmatch_game_rdm', {
                         object_action: 'show',
                         object_name: `rdm2_${this.data.status}_end`,
                         object_notes: `redeem_${this.conf.rdm_id}`,
@@ -78,7 +78,7 @@ export default class RDM_CharityItem extends cc.Component {
                     }
                     cc.director.emit("REFRESH_INFO");
 
-                    FrameSDK.logGameEvent('sdymjmatch_report_rdm', {
+                    FrameSDK.logGameEvent('sdymjmatch_game_rdm', {
                         object_action: 'show',
                         object_name: `rdm2_${this.data.status}_start`,
                         object_notes: `redeem_${this.conf.rdm_id}`,

@@ -41,7 +41,7 @@ export default class Panel_Award_Super1 extends cc.Component {
 
         FrameSDK.frameData.sdkFuc.ppEvent('popupShow');
 
-        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'show',
             object_name: `sup_show`,
         });
@@ -79,7 +79,7 @@ export default class Panel_Award_Super1 extends cc.Component {
         FrameSDK.frameData.sdkFuc.ppEvent(shouldWatchAd ? 'claim' : 'freeClaim');
 
 
-        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'show',
             object_name: `sup_ad`,
         });
@@ -94,7 +94,7 @@ export default class Panel_Award_Super1 extends cc.Component {
                     this.isTouch = true;
                     console.log("video fail===========5");
                 }, () => {
-                    FrameSDK.logGameEvent('sdymjmatch_report_ad', {
+                    FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                         object_action: 'show',
                         object_name: `reward_sup`,
                         object_notes: `video`,
@@ -122,7 +122,7 @@ export default class Panel_Award_Super1 extends cc.Component {
 
         // let isInters = FrameSDK.isShowInters();
 
-        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'show',
             object_name: `sup_free`,
         });
@@ -137,7 +137,7 @@ export default class Panel_Award_Super1 extends cc.Component {
 
         if (this.isInters) {
             FrameSDK.openInters(callBack, () => {
-                FrameSDK.logGameEvent('sdymjmatch_report_ad', {
+                FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                     object_action: 'show',
                     object_name: `reward_sup`,
                     object_notes: `inter`,

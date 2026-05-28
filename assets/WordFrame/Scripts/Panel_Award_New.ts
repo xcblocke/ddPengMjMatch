@@ -54,10 +54,10 @@ export default class Panel_Award_New extends cc.Component {
             this.titleSkeleton.addAnimation(0, "loop", true);
         }
 
-        // FrameSDK.logGameEvent('sdymjmatch_report_new', {
-        //     object_action: 'show',
-        //     object_name: 'new_3',
-        // }, true);
+        FrameSDK.logGameEvent('sdymjmatch_game_new', {
+            object_action: 'show',
+            object_name: 'new_3',
+        }, true);
         // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_button", "guide_start");
 
         this.focus.active = true;
@@ -160,7 +160,7 @@ export default class Panel_Award_New extends cc.Component {
         box1.position = box2.position;
         box2.position = point1;
 
-        FrameSDK.logGameEvent('sdymjmatch_report_new', {
+        FrameSDK.logGameEvent('sdymjmatch_game_new', {
             object_action: 'show',
             object_name: 'new_4',
         }, true);
@@ -203,7 +203,7 @@ export default class Panel_Award_New extends cc.Component {
         cc.tween(this.superprize)
             .delay(3)
             .call(() => {
-                FrameSDK.logGameEvent('sdymjmatch_report_new', {
+                FrameSDK.logGameEvent('sdymjmatch_game_new', {
                     object_action: 'show',
                     object_name: 'new_5',
                 }, true);

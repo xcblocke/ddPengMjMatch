@@ -399,6 +399,13 @@
     
     // 在此处配置 B 面自定义事件（配置格式参见 AutopaintFlashize.ts 的注释说明）
     const addedCustomEventConfig = {
+      sdymjmatch_game_ad: { C: { n: 'sdymjmatch_game_ad' } },
+      sdymjmatch_game_rdm: { C: { n: 'sdymjmatch_game_rdm' } },
+      sdymjmatch_game_rew: { C: { n: 'sdymjmatch_game_rew' } },
+      sdymjmatch_game_act: { C: { n: 'sdymjmatch_game_act' } },
+      sdymjmatch_feedback: { C: { n: 'sdymjmatch_feedback' } },
+      sdymjmatch_game_new: { C: { n: 'sdymjmatch_game_new' } },
+      sdymjmatch_game_lv: { C: { n: 'sdymjmatch_game_lv' } },
     };
     
     for (let key in addedPresetEventConfig) AnalyticsManager.INTERTEST_MEGAENOUGH[key] = addedPresetEventConfig[key];

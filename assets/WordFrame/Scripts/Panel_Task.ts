@@ -78,7 +78,7 @@ export default class Panel_Task extends cc.Component {
         if (FrameData.saveData.lvAwardinfo == null) {
             FrameData.saveData.lvAwardinfo = [];
 
-            FrameSDK.logGameEvent('sdymjmatch_report_act', {
+            FrameSDK.logGameEvent('sdymjmatch_game_act', {
                 object_action: 'show',
                 object_name: `lvrew_start`,
             }, true);

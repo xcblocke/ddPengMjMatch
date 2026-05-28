@@ -1,4 +1,11 @@
+
 import AutoImg from "./AutoImg";
+
+interface IEventLike {
+    object_action: string,
+    object_name?: string,
+    object_notes?: string,
+};
 
 const {
     ccclass,
@@ -29,6 +36,7 @@ export default class newHand extends cc.Component {
     config = null;
     frameData: {
         gameName: string;
+        frameEventCall: (eventName: string, eventData: any, once: boolean) => void;
         // logLiftEvent: Function;
         // logGameEvent: Function;
         // earlierStageEvent: Function;
@@ -51,7 +59,10 @@ export default class newHand extends cc.Component {
         this.root1.active = true;
         this.root2.active = false;
 
-        
+        this.frameData.frameEventCall("sdymjmatch_game_new", {
+            object_action: "show",
+            object_name: "new_1"
+        }, true);
 
         this.openRoot2();
         let code = -1;
@@ -82,10 +93,7 @@ export default class newHand extends cc.Component {
     }
 
     openRoot1() {
-        // this.frameData.logGameEvent("sdymjmatch_game_new", {
-        //     object_action: "show",
-        //     object_name: "new_1"
-        // }, true);
+        
         
         this.openEffect(this.root1);
         this.playEffect("YX_TC_01");

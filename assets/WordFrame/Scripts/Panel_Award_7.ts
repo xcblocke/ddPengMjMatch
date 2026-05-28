@@ -72,7 +72,7 @@ export default class Panel_Award_7 extends cc.Component {
         if(!shouldWatchAd){
             FrameSDK.videoCompensation('exposure', 'reward_sup');
         }
-        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'show',
             object_name: `sup_show`,
         });
@@ -127,7 +127,7 @@ export default class Panel_Award_7 extends cc.Component {
         const shouldWatchAd = (this.state1.active && this.adIcon1.active) || (this.state2.active && this.adIcon2.active);
 
         FrameSDK.frameData.sdkFuc.ppEvent(shouldWatchAd ? 'claim' : 'freeClaim');
-        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'show',
             object_name: `sup_ad`,
         });
@@ -141,7 +141,7 @@ export default class Panel_Award_7 extends cc.Component {
                     resolve(false);
                     this.isTouch = true;
                 }, () => {
-                    FrameSDK.logGameEvent('sdymjmatch_report_ad', {
+                    FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                         object_action: 'show',
                         object_name: `reward_sup`,
                         object_notes: `video`,
@@ -170,7 +170,7 @@ export default class Panel_Award_7 extends cc.Component {
 
         let isInters = FrameSDK.isShowInters();
 
-        FrameSDK.logGameEvent('sdymjmatch_report_rew', {
+        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'show',
             object_name: `sup_free`,
         });
@@ -186,7 +186,7 @@ export default class Panel_Award_7 extends cc.Component {
         if (isInters) {
             FrameSDK.videoCompensation('touch', 'reward_sup',true);
             FrameSDK.openInters(callBack, () => {
-                FrameSDK.logGameEvent('sdymjmatch_report_ad', {
+                FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                     object_action: 'show',
                     object_name: `reward_sup`,
                     object_notes: `inter`,

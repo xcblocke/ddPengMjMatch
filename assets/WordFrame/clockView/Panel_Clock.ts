@@ -255,6 +255,11 @@ export default class Panel_Clock extends cc.Component {
         Panel_Clock.ins = this;
         this.isBlockKey = false;
 
+        FrameSDK.logGameEvent('sdymjmatch_game_act', {
+            object_action: 'show',
+            object_name: `iphone_start`,
+        }, true);
+
         FrameSDK.playEffect("iPhone_open");
         this.type = "";
 
@@ -499,12 +504,24 @@ export default class Panel_Clock extends cc.Component {
             case "s2":
                 if (isChangeState) {
                     this.topRoot.active = false;
+                    if(!this.s2.active ) {
+                        FrameSDK.logGameEvent('sdymjmatch_game_act', {
+                            object_action: 'show',
+                            object_name: `iphone_redeem`,
+                        }, true);
+                    }
                     this.s2.active = true;
                 }
                 break;
             case "s3":
                 if (isChangeState) {
                     this.s3.active = true;
+                    if(!this.s3.active ) {
+                        FrameSDK.logGameEvent('sdymjmatch_game_act', {
+                            object_action: 'show',
+                            object_name: `iphone_redeem_ad`,
+                        }, true);
+                    }
                     this.s3Rich.getComponent(cc.RichText).string = `clok_010??&value1==<color=#86FF04>${Math.floor(this.config.act_time / 3600)}</color>&value2==<color=#86FF04>${this.config.act_ad[FrameSDK.getCountryIndex()]}</color>`;
                 }
                 haveTime = this.userInfo.SendTargetTime - FrameSDK.now;
@@ -522,6 +539,12 @@ export default class Panel_Clock extends cc.Component {
             case "s4":
                 if (isChangeState) {
                     this.s4.active = true;
+                    if(!this.s4.active ) {
+                        FrameSDK.logGameEvent('sdymjmatch_game_act', {
+                            object_action: 'show',
+                            object_name: `iphone_line`,
+                        }, true);
+                    }
                 }
                 break;
             case "s5":
@@ -604,6 +627,11 @@ export default class Panel_Clock extends cc.Component {
 
             Panel_Clock.jellyAction(this.s1PR);
             this.btnS1clickLight.active = true;
+
+            FrameSDK.logGameEvent('sdymjmatch_game_act', {
+                object_action: 'show',
+                object_name: `clock_day1_complete`,
+            }, true);
 
         }
         else {

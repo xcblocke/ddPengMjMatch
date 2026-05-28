@@ -35,10 +35,10 @@ export default class Panel_Award_New2 extends cc.Component {
         this.new_coin_label.string = `${FrameSDK.convertCoinToStr(FrameData.FRAME_CONF.OutputConfig.new)}`;
         this.yue_coin_label.string = `≈${FrameSDK.convertCoinToStr(FrameData.FRAME_CONF.OutputConfig.new,true)}`;
 
-        // FrameSDK.logGameEvent('sdymjmatch_report_new', {
-        //     object_action: 'show',
-        //     object_name: 'new_3',
-        // }, true);
+        FrameSDK.logGameEvent('sdymjmatch_game_new', {
+            object_action: 'show',
+            object_name: 'new_3',
+        }, true);
         // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_button", "guide_start");
 
         const paymentIDs = FrameData.CountryConf.cash_id.slice(0, 4);
@@ -60,7 +60,7 @@ export default class Panel_Award_New2 extends cc.Component {
         this.isTouch = false;
 
 
-        FrameSDK.logGameEvent('sdymjmatch_report_new', {
+        FrameSDK.logGameEvent('sdymjmatch_game_new', {
             object_action: 'show',
             object_name: 'new_4',
         }, true);
@@ -72,7 +72,7 @@ export default class Panel_Award_New2 extends cc.Component {
         // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_reward", "guide_button");
 
 
-        FrameSDK.logGameEvent('sdymjmatch_report_new', {
+        FrameSDK.logGameEvent('sdymjmatch_game_new', {
             object_action: 'show',
             object_name: 'new_5',
         }, true);

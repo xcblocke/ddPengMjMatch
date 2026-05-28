@@ -374,6 +374,9 @@ export default class LoadWord {
       // logGameEvent: NativeUtils.wwylogComm,
       // earlierStageEvent: Matriarchalism.instance.indispositions.bind(Matriarchalism.instance),
       // sdyEvent: NativeUtils.sdyLog,
+      frameEventCall: (eventName: string, eventData: any, once: boolean = false): void =>{
+        LoadWord.FrameSDK.logGameEvent(eventName, eventData, once);
+      },
       showGameGuide: () => {}
     };
     node.getComponent("newHand").init(data, frameData);
@@ -521,6 +524,9 @@ export default class LoadWord {
         getCurTurnInfo: () => GameUtils.getCurTurnInfo(),
         getCurRoundInfo: () => GameUtils.getCurRoundInfo(),
         getRoundProgressText: () => GameUtils.getRoundProgressText(),
+        getLevelReportInfo: () => GameUtils.getLevelReportInfo(),
+        formatLevelReportSegments: () => GameUtils.formatLevelReportSegments(),
+        formatLevelReportNotes: () => GameUtils.formatLevelReportNotes(),
         showToast: GameUtils.getInstance().showToast.bind(GameUtils.getInstance())
       },
       gameNodeObj: {}
@@ -626,28 +632,7 @@ export default class LoadWord {
       }
       if (key == 3) {
         evkey = "sdymjmatch_game_lv";
-        let levelNum = Math.max(1, GameUtils.getPassLevel() + 1);
-        let curTurn = 1;
-        let totalTurn = 1;
-        try {
-          levelNum = Math.max(
-            1,
-            Math.floor(Number(gameData.gameLevel) || levelNum)
-          );
-        } catch {}
-        try {
-          const roundInfo = GameUtils.getCurRoundInfo();
-          if (roundInfo.totalRound > 1) {
-            totalTurn = roundInfo.totalRound;
-            curTurn = roundInfo.curRound + 1;
-          } else {
-            const CurTurnInfo = GameUtils.getCurTurnInfo();
-            totalTurn = Math.max(1, Math.floor(Number(CurTurnInfo?.totalTurn) || 1));
-            curTurn = Math.max(1, Math.floor(Number(CurTurnInfo?.curTurn) || 0) + 1);
-          }
-        } catch {}
-        nodes =
-          totalTurn > 1 ? `lv:${levelNum}_r${curTurn}_${totalTurn}` : `lv:${levelNum}`;
+        nodes = GameUtils.formatLevelReportNotes();
       }
 
       const eventData = {
