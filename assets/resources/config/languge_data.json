@@ -139,6 +139,28 @@
 		"hi": "ग्रिड टाइलें साफ़ करें",
 		"tr": "Izgara taşlarını dışarı temizle"
 	},
+
+	{
+		"key": "gkey_053",
+		"zh": "Anna is right at your doorstep, take her home quickly!",
+		"en": "Anna is right at your doorstep, take her home quickly!",
+		"es": "¡Anna está justo en tu puerta, llévala a casa rápido!",
+		"fr": "Anna est juste devant ta porte, ramène-la vite à la maison !",
+		"ja": "アンナがあなたの玄関にいるよ、早く家に連れて帰って！",
+		"de": "Anna steht direkt vor deiner Tür, bring sie schnell nach Hause!",
+		"ru": "Анна прямо у твоего порога, отведи её домой быстро!",
+		"pt": "Anna está bem na sua porta, leve-a para casa rapidamente!",
+		"in": "Anna ada di depan pintumu, bawa dia pulang cepat!",
+		"vi": "Anna đang ngay trước cửa nhà bạn, hãy đưa cô ấy về nhà nhanh lên!",
+		"ar": "آنا على عتبة بابك، خذها إلى المنزل بسرعة!",
+		"th": "แอนนาอยู่ที่หน้าประตูคุณแล้ว พาเธอกลับบ้านเร็วเข้า!",
+		"ko": "Anna가 당신 현관 앞에 있어요, 빨리 집으로 데려가세요!",
+		"fil":"Nasa harapan ng iyong pintuan si Anna, iuwi mo siya agad!",
+		"ms": "Anna ada di depan pintu rumah awak, bawa dia pulang dengan cepat!",
+		"hi": "अन्ना आपके दरवाजे पर है, उसे जल्दी से घर ले जाएँ!",
+		"tr": "Anna tam kapının eşiğinde, onu hemen eve götür!"
+	  },
+
 	{
 		"key": "gkey_064",
 		"zh": "等级",

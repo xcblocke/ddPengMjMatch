@@ -14,16 +14,24 @@ import GlobalApp from '../common/GlobalApp';
 import { A } from '../center/api';
 import LoadProgress from '../framework/components/LoadProgress';
 import LoadWord from '../wordframe/LoadWord';
+import { NativeUtils } from '../wordframe/NativeUtils';
 const {
   ccclass,
   property
 } = cc._decorator;
 @ccclass
 export default class buttonMgr extends cc.Component {
+  static ins: buttonMgr = null;
   isClicking = false;
   isReqUseProp = false;
   propBtnIsFlag = false;
   isWatchingPropVideo = false;
+  onLoad() {
+    buttonMgr.ins = this;
+  }
+  onDestroy() {
+    buttonMgr.ins === this && (buttonMgr.ins = null);
+  }
   passVideoClose(e) {
     e.target.parent.active = false;
   }
@@ -153,7 +161,7 @@ export default class buttonMgr extends cc.Component {
       round_id: gameData.roundId,
       set_id: gameData.setId
     });
-    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.tipCardCount <= 0) this.watchVideoForProp(PropType.tipCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_OPERATE_TIP);else {
+    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.tipCardCount <= 0) this.tryGetPropByVideo(PropType.tipCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_OPERATE_TIP);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
@@ -173,7 +181,7 @@ export default class buttonMgr extends cc.Component {
       set_id: gameData.setId
     });
     AudioManager.getInstance().playMusic("btntouch");
-    if (gameData.globalCanClick) if (PlayerDataSys.reshuffleCardCount <= 0) this.watchVideoForProp(PropType.reshuffleCard);else if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else {
+    if (gameData.globalCanClick) if (PlayerDataSys.reshuffleCardCount <= 0) this.tryGetPropByVideo(PropType.reshuffleCard);else if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
@@ -216,6 +224,18 @@ export default class buttonMgr extends cc.Component {
   }
   showPropAdFailToast() {
     EngineUtil.showCocosToast3(`gkey_303`);
+  }
+  tryGetPropByVideo(e) {
+    if (NativeUtils.isFlag) {
+      this.watchVideoForProp(e);
+      return;
+    }
+    EventMgr.trigger(GameEventType.PAGE_SHOW, {
+      name: "propGetPage",
+      data: {
+        type: e
+      }
+    });
   }
   watchVideoForProp(e) {
     var t = this;

@@ -52,6 +52,7 @@ export var PageEnum = {
   newYearPage: "newYearPage",
   taskPage: "taskPage",
   propPage: "propPage",
+  propGetPage: "propGetPage",
   oppoAdPage: "oppoAdPage",
   newPlayerRewardPage: "newPlayerGoldGuidePage",
   largeDetailPage: "LargeDetailPage",
