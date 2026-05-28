@@ -111,7 +111,7 @@ export default class GM extends cc.Component {
                 break;
             case "3":
                 FrameData.isTest = target.target.getComponent(cc.Toggle).isChecked;
-                cc.director.emit("showTest");
+                cc.director.emit("showTest",FrameData.isTest);
                 break;
             case "4":
                 this.initLang();

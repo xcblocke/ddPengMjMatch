@@ -18,6 +18,16 @@ export default class IsDeBug extends cc.Component {
 
     onLoad() {
         this.node.active = FrameSDK.frameData.isDeBug || FrameData.isTest;
+
+        cc.director.on("showTest",this.showTest,this);
+    }
+
+    showTest(isShow: boolean) {
+        this.node.active = isShow;
+    }
+
+    protected onDestroy(): void {
+        cc.director.off("showTest",this.showTest,this);
     }
 
 
