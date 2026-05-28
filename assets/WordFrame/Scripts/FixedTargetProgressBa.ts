@@ -130,7 +130,9 @@ export default class LevelProgressBar extends cc.Component {
                     item.level_loop.active = true;
                 }
                 tipNode.active = true;
-                item.FeatureTip.string = roundText;
+                // item.FeatureTip.string = Lang.get("skey_152") + "  " + roundText;
+                item.FeatureTip.string = `skey_152` + " " + roundText;
+
             } else {
                 tipNode.active = false;
                 if (item.level_loop) {

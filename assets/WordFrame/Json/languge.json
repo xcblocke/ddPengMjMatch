@@ -148,6 +148,28 @@
     "tr": "Para Çekme Gereksinimleri:"
   },
 
+  {
+    "key": "skey_152",
+    "zh": "局",
+    "en": "Round",
+    "es": "Ronda",
+    "fr": "Round",
+    "ja": "ラウンド数",
+    "de": "Anzahl der Runden",
+    "ru": "Количество раундов",
+    "pt": "Número de rodadas",
+    "in": "Jumlah ronde",
+    "vi": "Số vòng",
+    "ar": "عدد الجولات",
+    "th": "จำนวนรอบ",
+    "ko": "라운드 수",
+    "fil": "Bilang ng rounds",
+    "ms": "Bilangan pusingan",
+    "hi": "राउंड की संख्या",
+    "tr": "Tur sayısı"
+  },
+
+
 {"key":"skey_130","zh":"提现幸运卡","en":"Withdrawal Lucky Card","es":"Tarjeta de Suerte de Retiro","fr":"Carte de retrait chanceuse","ja":"出金ラッキーカード","de":"Auszahlungs-Glückskarte","ru":"Удачная карта вывода","pt":"Cartão de Sorte de Saque","in":"Kartu Keberuntungan Penarikan","vi":"Thẻ rút tiền may mắn","ar":"بطاقة السحب المحظوظة","th":"การ์ดนำโชคการถอน","ko":"출금 행운 카드","fil":"Withdrawal Lucky Card","ms":"Kad Bertuah Pengeluaran","hi":"निकासी लकी कार्ड","tr":"Çekim Şans Kartı"},
 {"key":"skey_131","zh":"提现要求大幅降低","en":"Withdrawal requirements reduced","es":"Requisitos de retiro reducidos","fr":"Exigences de retrait réduites","ja":"出金条件が大幅に緩和","de":"Auszahlungshürden gesenkt","ru":"Требования к выводу снижены","pt":"Requisitos de saque reduzidos","in":"Syarat penarikan dikurangi","vi":"Yêu cầu rút tiền giảm mạnh","ar":"تقليل متطلبات السحب بشكل كبير","th":"เงื่อนไขการถอนลดลงอย่างมาก","ko":"출금 조건 대폭 완화","fil":"Pinababang withdrawal requirements","ms":"Syarat pengeluaran dikurangkan","hi":"निकासी की शर्तें कम हुई","tr":"Çekim gereksinimleri azaldı"},
 {"key":"skey_132","zh":"完成关卡 xxx_1 后提现","en":"Pass level xxx_1 to withdraw","es":"Pasa el nivel xxx_1 para retirar","fr":"Niveau xxx_1 pour retirer","ja":"xxx_1関クリア後に出金","de":"Level xxx_1 zum Abheben abschließen","ru":"Пройди xxx_1 ур. для вывода","pt":"Passe o nível xxx_1 para sacar","in":"Lewati level xxx_1 untuk menarik","vi":"Qua màn xxx_1 để rút tiền","ar":"اجتز المستوى xxx_1 للسحب","th":"ผ่านด่าน xxx_1 แล้วถอนเงิน","ko":"xxx_1단계를 완료한 후 출금","fil":"Ipasa ang level xxx_1 para mag-withdraw","ms":"Lepas tahap xxx_1 untuk keluar wang","hi":"निकालने के लिए स्तर xxx_1 पार करें","tr":"Çekmek için xxx_1. seviyeyi geç"},
