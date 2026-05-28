@@ -1,4 +1,5 @@
 import { CLICKLOCK } from "./CLICKLOCK";
+import Frame from "./Frame";
 import { FrameData } from "./FrameData";
 import { FrameSDK } from "./FrameSDK";
 
@@ -140,24 +141,6 @@ export default class Panel_Award_6 extends cc.Component {
         }
     }
 
-    reportLevelEvent() {
-        const gameFuc = FrameSDK.frameData?.gameFuc;
-        const { levelId, curRound, totalRound } = gameFuc?.getLevelReportInfo?.() ?? {
-            levelId: FrameSDK.frameData.gameData.passLevel + 1,
-            curRound: 1,
-            totalRound: 1,
-        };
-        const objectNotes = String(levelId)  + "_" + curRound;
-
-        CC_DEBUG && console.log("[Panel_Award_6] reportLevelEvent", { levelId, curRound, totalRound, objectNotes });
-
-        FrameSDK.logGameEvent("sdymjmatch_game_lv", {
-            object_action: "show",
-            object_name: `lv_pass`,
-            object_notes: objectNotes
-        }, true);
-    }
-
     onEnable() {
         this._rewardClaimed = false;
         this.lv.string = "" + (FrameSDK.frameData.gameData.passLevel + 1);
@@ -181,7 +164,7 @@ export default class Panel_Award_6 extends cc.Component {
         //     object_notes: `reward_6`
         // });
 
-        this.reportLevelEvent();
+        FrameSDK.reportGameLevelEvent();
 
 
         FrameSDK.openEffect(this);

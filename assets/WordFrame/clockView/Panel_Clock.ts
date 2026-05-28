@@ -280,6 +280,8 @@ export default class Panel_Clock extends cc.Component {
 
         }
 
+        console.log("Panel_Clock===========11111",this.userInfo.signCount);
+
     }
 
     addEvent() {
@@ -516,12 +518,6 @@ export default class Panel_Clock extends cc.Component {
             case "s3":
                 if (isChangeState) {
                     this.s3.active = true;
-                    if(!this.s3.active ) {
-                        FrameSDK.logGameEvent('sdymjmatch_game_act', {
-                            object_action: 'show',
-                            object_name: `iphone_redeem_ad`,
-                        }, true);
-                    }
                     this.s3Rich.getComponent(cc.RichText).string = `clok_010??&value1==<color=#86FF04>${Math.floor(this.config.act_time / 3600)}</color>&value2==<color=#86FF04>${this.config.act_ad[FrameSDK.getCountryIndex()]}</color>`;
                 }
                 haveTime = this.userInfo.SendTargetTime - FrameSDK.now;
@@ -538,13 +534,13 @@ export default class Panel_Clock extends cc.Component {
                 break;
             case "s4":
                 if (isChangeState) {
-                    this.s4.active = true;
                     if(!this.s4.active ) {
                         FrameSDK.logGameEvent('sdymjmatch_game_act', {
                             object_action: 'show',
                             object_name: `iphone_line`,
                         }, true);
                     }
+                    this.s4.active = true;
                 }
                 break;
             case "s5":
@@ -608,6 +604,17 @@ export default class Panel_Clock extends cc.Component {
 
                 this.flash();
                 FrameSDK.showToast(`clok_002`);
+                FrameSDK.logGameEvent('sdymjmatch_game_act', {
+                    object_action: 'show',
+                    object_name: `clock_day${this.userInfo.signCount}_complete`,
+                }, true);
+
+                if(this.userInfo.signCount == 3) {
+                    FrameSDK.logGameEvent('sdymjmatch_game_act', {
+                        object_action: 'show',
+                        object_name: `clock_day3_complete`,
+                    }, true);
+                }
                 // })
             }
             else {
@@ -630,7 +637,7 @@ export default class Panel_Clock extends cc.Component {
 
             FrameSDK.logGameEvent('sdymjmatch_game_act', {
                 object_action: 'show',
-                object_name: `clock_day1_complete`,
+                object_name: `clock_day${this.userInfo.signCount+1}_complete`,
             }, true);
 
         }
@@ -675,6 +682,10 @@ export default class Panel_Clock extends cc.Component {
             // FrameSDK.frameData.gameFuc.openLoad(() => {
             this.isBlockKey = false;
             this.flash();
+            FrameSDK.logGameEvent('sdymjmatch_game_act', {
+                object_action: 'show',
+                object_name: `iphone_redeem_ad`,
+            }, true);
             // })
         }
         else {

@@ -1087,7 +1087,10 @@ export class FrameSDK {
             : FrameSDK.frameData.gameData.passLevel + 1;
         FrameSDK.openWindow("Panel_ShowLevel", {
             level: lv,
-            closeCB: callback
+            closeCB: () => {
+                FrameSDK.reportGameLevelEvent(true);
+                callback?.();
+            }
         });
     }
 
@@ -1186,6 +1189,26 @@ export class FrameSDK {
             cc.director.on("CHARITY_GUIDE_FINISH", done, FrameSDK);
         });
     }
+
+
+    static reportGameLevelEvent(isBegin: boolean = false) {
+        const gameFuc = FrameSDK.frameData?.gameFuc;
+        const { levelId, curRound, totalRound } = gameFuc?.getLevelReportInfo?.() ?? {
+            levelId: FrameSDK.frameData.gameData.passLevel + 1,
+            curRound: 1,
+            totalRound: 1,
+        };
+        const objectNotes = String(levelId)  + "_" + curRound;
+
+        CC_DEBUG && console.log("reportLevelEvent", { levelId, curRound, totalRound, objectNotes });
+
+        FrameSDK.logGameEvent("sdymjmatch_game_lv", {
+            object_action: "show",
+            object_name:  isBegin ? `lv_start` : `lv_pass`,
+            object_notes: objectNotes
+        }, true);
+    }
+
 
     static openRating(callback?: () => any) {
         if (false == FrameData.saveData.isRating && FrameSDK.frameData.gameData.passLevel+1  <= FrameData.FRAME_CONF.ratingLevel2) {
@@ -1474,6 +1497,8 @@ export class FrameSDK {
                 },
             });
         }
+
+        console.log("FrameSDK.logGameEvent===========11111",eventName, data);
 
         if (once) {
             const key = this._getOnceEventCacheKey(eventName, eventData);
