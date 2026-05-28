@@ -43,10 +43,10 @@ export default class Panel_Award_Luck extends cc.Component {
 
     onEnable() {
 
-        FrameSDK.logGameEvent("sdymjmatch_game_new", {
-            object_action: "show",
-            object_name: "new_17"
-        }, true);
+        // FrameSDK.logGameEvent("sdymjmatch_game_new", {
+        //     object_action: "show",
+        //     object_name: "new_17"
+        // }, true);
 
 
 

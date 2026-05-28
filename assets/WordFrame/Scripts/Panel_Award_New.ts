@@ -56,7 +56,7 @@ export default class Panel_Award_New extends cc.Component {
 
         FrameSDK.logGameEvent('sdymjmatch_game_new', {
             object_action: 'show',
-            object_name: 'new_3',
+            object_name: 'new_2',
         }, true);
         // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_button", "guide_start");
 
@@ -160,10 +160,10 @@ export default class Panel_Award_New extends cc.Component {
         box1.position = box2.position;
         box2.position = point1;
 
-        FrameSDK.logGameEvent('sdymjmatch_game_new', {
-            object_action: 'show',
-            object_name: 'new_4',
-        }, true);
+        // FrameSDK.logGameEvent('sdymjmatch_game_new', {
+        //     object_action: 'show',
+        //     object_name: 'new_4',
+        // }, true);
 
         this.boxNode.children.forEach((value, index) => {
             cc.find("click", value).active = false;

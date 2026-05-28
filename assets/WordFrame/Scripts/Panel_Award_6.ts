@@ -154,6 +154,14 @@ export default class Panel_Award_6 extends cc.Component {
         this.adData = FrameData.getCoinOutNum("box");
         const free = FrameData.getCoinOutNum("free");
 
+        console.log("this.adData===========66666",FrameSDK.frameData.gameData.passLevel);
+        if(FrameSDK.frameData.gameData.passLevel <= 0){
+            FrameSDK.logGameEvent('sdymjmatch_game_new', {
+                object_action: 'show',
+                object_name: 'new_8',
+            }, true);
+        }
+
         // FrameSDK.logGameEvent("sdymjmatch_game_new", {
         //     object_action: "show",
         //     object_name: "new_16"

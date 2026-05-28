@@ -37,7 +37,7 @@ export default class Panel_Award_New2 extends cc.Component {
 
         FrameSDK.logGameEvent('sdymjmatch_game_new', {
             object_action: 'show',
-            object_name: 'new_3',
+            object_name: 'new_2',
         }, true);
         // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_button", "guide_start");
 
@@ -60,10 +60,10 @@ export default class Panel_Award_New2 extends cc.Component {
         this.isTouch = false;
 
 
-        FrameSDK.logGameEvent('sdymjmatch_game_new', {
-            object_action: 'show',
-            object_name: 'new_4',
-        }, true);
+        // FrameSDK.logGameEvent('sdymjmatch_game_new', {
+        //     object_action: 'show',
+        //     object_name: 'new_4',
+        // }, true);
 
         this.playNewCoin();
     }
@@ -72,10 +72,10 @@ export default class Panel_Award_New2 extends cc.Component {
         // FrameSDK.frameData.sdkFuc.earlierStageEvent("guide_reward", "guide_button");
 
 
-        FrameSDK.logGameEvent('sdymjmatch_game_new', {
-            object_action: 'show',
-            object_name: 'new_5',
-        }, true);
+        // FrameSDK.logGameEvent('sdymjmatch_game_new', {
+        //     object_action: 'show',
+        //     object_name: 'new_5',
+        // }, true);
 
         FrameSDK.addCoin(FrameData.FRAME_CONF.OutputConfig.new, 0, 0, () => {
             Frame.ins.setGuideShow(true);

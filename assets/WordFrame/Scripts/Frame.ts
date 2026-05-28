@@ -111,7 +111,7 @@ export default class Frame extends cc.Component {
         if (isShow) {
             FrameSDK.logGameEvent("sdymjmatch_game_new", {
                 object_action: "show",
-                object_name: "new_6"
+                object_name: "new_3"
             }, true);
         }
     }

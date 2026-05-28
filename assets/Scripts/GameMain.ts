@@ -1128,6 +1128,10 @@ export default class GameMain extends cc.Component {
     }
     if (n) {
       this.teachGuideNode.active = true;
+      LoadWord.FrameSDK.logGameEvent('sdymjmatch_game_new', {
+        object_action: 'show',
+        object_name: 'new_7',
+      }, true);
       this.teachGuideNode.getChildByPath("gborder/tip").getComponent(cc.RichText).string = r;
       EventMgr.trigger(GameEventType.TEACHING_OPERATE_TIP, n);
     }

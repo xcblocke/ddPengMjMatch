@@ -328,7 +328,7 @@ export default class RDM_Level extends cc.Component {
         if (this.guideInedx == 0) {
             FrameSDK.logGameEvent('sdymjmatch_game_new', {
                 object_action: 'show',
-                object_name: 'new_7',
+                object_name: 'new_4',
             }, true);
 
             cc.find("tips1", this.guide).active = true;
@@ -342,7 +342,7 @@ export default class RDM_Level extends cc.Component {
         } else if (this.guideInedx == 1) {
             FrameSDK.logGameEvent('sdymjmatch_game_new', {
                 object_action: 'show',
-                object_name: 'new_8',
+                object_name: 'new_5',
             }, true);
 
             cc.find("tips2", this.guide).active = true;
@@ -359,6 +359,12 @@ export default class RDM_Level extends cc.Component {
                 y: 50
             }).union().repeatForever().start();
         } else if (this.guideInedx == 2) {
+
+            FrameSDK.logGameEvent('sdymjmatch_game_new', {
+                object_action: 'show',
+                object_name: 'new_6',
+            }, true);
+
             cc.find("tips3", this.guide).active = true;
             let data = RDM_Level.getData(FrameData.FRAME_CONF.CoinConf[0].rdm_id);
             const passLevel = FrameSDK.frameData.gameData.passLevel;
@@ -377,10 +383,7 @@ export default class RDM_Level extends cc.Component {
             mask.node.position = cc.find("btn_close", this.node).position;
 
         } else if (this.guideInedx == 3) {
-            // FrameSDK.logGameEvent('sdymjmatch_game_new', {
-            //     object_action: 'show',
-            //     object_name: 'new_9',
-            // }, true);
+            
             this.guide.active = false;
             cc.director.emit("showBackHand");
         }
