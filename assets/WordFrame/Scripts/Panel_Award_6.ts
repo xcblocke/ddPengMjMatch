@@ -175,11 +175,11 @@ export default class Panel_Award_6 extends cc.Component {
         //     object_action: "show",
         //     object_name: "new_16"
         // }, true);
-        FrameSDK.logGameEvent("sdymjmatch_game_rew", {
-            object_action: "show",
-            object_name: `sup_show`,
-            object_notes: `reward_6`
-        });
+        // FrameSDK.logGameEvent("sdymjmatch_game_rew", {
+        //     object_action: "show",
+        //     object_name: `sup_show`,
+        //     object_notes: `reward_6`
+        // });
 
         this.reportLevelEvent();
 
@@ -238,11 +238,11 @@ export default class Panel_Award_6 extends cc.Component {
         this["noTouch"].node.active = true;
         let isInters = false;//FrameSDK.isShowInters() && !this.viewData.noInters;//免费奖励不要插屏了
 
-        FrameSDK.logGameEvent("sdymjmatch_game_rew", {
-            object_action: "show",
-            object_name: `sup_free`,
-            object_notes: `reward_6`
-        });
+        // FrameSDK.logGameEvent("sdymjmatch_game_rew", {
+        //     object_action: "show",
+        //     object_name: `sup_free`,
+        //     object_notes: `reward_6`
+        // });
         
 
         this.settleRewardThenExit(FrameData.getCoinOutNum("free"), false);

@@ -72,10 +72,10 @@ export default class Panel_Award_7 extends cc.Component {
         if(!shouldWatchAd){
             FrameSDK.videoCompensation('exposure', 'reward_sup');
         }
-        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
-            object_action: 'show',
-            object_name: `sup_show`,
-        });
+        // FrameSDK.logGameEvent('sdymjmatch_game_rew', {
+        //     object_action: 'show',
+        //     object_name: `sup_show`,
+        // });
 
         this.externalRootNode.removeAllChildren();
 
@@ -127,10 +127,10 @@ export default class Panel_Award_7 extends cc.Component {
         const shouldWatchAd = (this.state1.active && this.adIcon1.active) || (this.state2.active && this.adIcon2.active);
 
         FrameSDK.frameData.sdkFuc.ppEvent(shouldWatchAd ? 'claim' : 'freeClaim');
-        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
-            object_action: 'show',
-            object_name: `sup_ad`,
-        });
+        // FrameSDK.logGameEvent('sdymjmatch_game_rew', {
+        //     object_action: 'show',
+        //     object_name: `sup_ad`,
+        // });
 
         new Promise<boolean>(resolve => {
             if (shouldWatchAd) {
@@ -170,10 +170,10 @@ export default class Panel_Award_7 extends cc.Component {
 
         let isInters = FrameSDK.isShowInters();
 
-        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
-            object_action: 'show',
-            object_name: `sup_free`,
-        });
+        // FrameSDK.logGameEvent('sdymjmatch_game_rew', {
+        //     object_action: 'show',
+        //     object_name: `sup_free`,
+        // });
 
         // FrameSDK.frameData.sdkFuc.ppEvent(isInters ? 'claim' : 'freeClaim');
 

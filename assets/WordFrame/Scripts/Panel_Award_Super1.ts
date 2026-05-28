@@ -41,10 +41,10 @@ export default class Panel_Award_Super1 extends cc.Component {
 
         FrameSDK.frameData.sdkFuc.ppEvent('popupShow');
 
-        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
-            object_action: 'show',
-            object_name: `sup_show`,
-        });
+        // FrameSDK.logGameEvent('sdymjmatch_game_rew', {
+        //     object_action: 'show',
+        //     object_name: `sup_show`,
+        // });
         
         this.titleSkeleton1.setAnimation(0, "show", false);
         this.titleSkeleton1.addAnimation(0, "idle", true);
@@ -79,10 +79,10 @@ export default class Panel_Award_Super1 extends cc.Component {
         FrameSDK.frameData.sdkFuc.ppEvent(shouldWatchAd ? 'claim' : 'freeClaim');
 
 
-        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
-            object_action: 'show',
-            object_name: `sup_ad`,
-        });
+        // FrameSDK.logGameEvent('sdymjmatch_game_rew', {
+        //     object_action: 'show',
+        //     object_name: `sup_ad`,
+        // });
 
         new Promise<boolean>(resolve => {
             if (shouldWatchAd) {
@@ -122,10 +122,10 @@ export default class Panel_Award_Super1 extends cc.Component {
 
         // let isInters = FrameSDK.isShowInters();
 
-        FrameSDK.logGameEvent('sdymjmatch_game_rew', {
-            object_action: 'show',
-            object_name: `sup_free`,
-        });
+        // FrameSDK.logGameEvent('sdymjmatch_game_rew', {
+        //     object_action: 'show',
+        //     object_name: `sup_free`,
+        // });
 
         FrameSDK.frameData.sdkFuc.ppEvent(this.isInters ? 'claim' : 'freeClaim');
 
