@@ -70,12 +70,12 @@ export default class Button_Activity extends cc.Component {
     updatepro(){
         // this.pro_label.string = FrameSDK.convertCoinToStr(FrameData.saveData.activity?.coin || 0) + "/" + FrameSDK.convertCoinToStr(FrameData.FRAME_CONF.PiggyConfig.num);
         let coin = FrameData.saveData.activity?.coin || 0;
-        this.pro_label.string = FrameSDK.convertCoinToStr(coin)
-        if(coin <= 0){
-            this.pro_label.node.parent.active = false;
-        }else{
-            this.pro_label.node.parent.active = true;
-        }
+        // this.pro_label.string = FrameSDK.convertCoinToStr(coin)
+        // if(coin <= 0){
+        //     this.pro_label.node.parent.active = false;
+        // }else{
+        //     this.pro_label.node.parent.active = true;
+        // }
         this.bar_sp.fillRange = coin / FrameData.FRAME_CONF.PiggyConfig.num;
     }
 
