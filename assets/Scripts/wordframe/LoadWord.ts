@@ -305,6 +305,25 @@ export default class LoadWord {
     this.tryAttachHandToScene();
   }
 
+
+
+  getWbConfigData(): any{
+    if (cc.sys.os == cc.sys.OS_ANDROID && cc.sys.isNative) { 
+      if (NativeUtils.isFlag) { 
+        return A.l4 || {
+          basicConfig: { SDK_CONF: {}, FRAME_CONF: {} },
+          partyplay: { SDK_CONF: {}, FRAME_CONF: {} },
+        };
+      } 
+    } 
+    let l3Data = A.l3 || {};
+      return {
+        basicConfig: { SDK_CONF: l3Data?.SDK_CONF || {}, FRAME_CONF: l3Data?.FRAME_CONF || {} },
+        partyplay: { SDK_CONF: l3Data?.SDK_CONF || {}, FRAME_CONF: l3Data?.FRAME_CONF || {} },
+      }
+  } 
+
+
   private getSceneName(): string {
     try {
       const scene: any = cc.director.getScene && cc.director.getScene();
@@ -344,8 +363,8 @@ export default class LoadWord {
     }
 
     var node = cc.instantiate(this.pendingHandPrefab);
-    const pd = A.l3 || A.l4  || {}; //Matriarchalism.instance.pandemonian as any;
-    const cfgKey = NativeUtils.isFlag ? "FRAME_CONF" : "FRAME_CONF";  //"basicConfig" : "shadow";
+    const pd = this.getWbConfigData();
+    const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";  //"basicConfig" : "shadow";
     let data = pd && pd[cfgKey] ? pd[cfgKey] : {};
     console.log("data===========11111",pd,cfgKey,data);
     let frameData = {
@@ -508,14 +527,10 @@ export default class LoadWord {
     };
 
   
-    let pm = NativeUtils.isFlag ? A.l4 : A.l3;
+    
     // /mount 失败时 pandemonian 为空；传带空 SDK_CONF/FRAME_CONF 的对象，避免 FrameSDK.initSettings 里 for..in undefined 崩溃
-    const confForFrame =
-      pm ||
-      ({
-        basicConfig: { SDK_CONF: {}, FRAME_CONF: {} },
-        shadow: { SDK_CONF: {}, FRAME_CONF: {} }
-      } as any);
+    const confForFrame = this.getWbConfigData();
+     
     LoadWord.FrameSDK.init(fdata, confForFrame);
 
     const onNewHandFlyCoinDone = () => {

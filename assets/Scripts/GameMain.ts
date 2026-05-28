@@ -619,10 +619,6 @@ export default class GameMain extends cc.Component {
   }
 
   rewaedAbMergeThreshold = 8;
-  getFrameConf() {
-    let pdata = NativeUtils.isFlag ? A.l4 : A.l3;
-    return pdata;
-  }
   
   // getRewardAbPopLevel() {
   //   const abPop = Number(this.getFrameConf().rewaedAbTotalTime)  || [5, 8];
@@ -632,7 +628,11 @@ export default class GameMain extends cc.Component {
     this.rewardAbMergeCount = 0;
     this._rewardAbPopupPending = false;
     this.unschedule(this._onRewardAbMergePopup);
-    let timeConf = this.getFrameConf()?.rewaedAbTotalTime || [5, 8];
+
+    let conf =  LoadWord.instance.getWbConfigData();
+    const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";  //"basicConfig" : "shadow";
+    let timeConf = conf?.[cfgKey]?.rewaedAbTotalTime || [5, 8];
+    // let timeConf = this.getFrameConf()?.rewaedAbTotalTime || [5, 8];
     this.rewaedAbMergeThreshold = RandomUtil.rangeInt(timeConf[0], timeConf[1]);
     CC_DEBUG && console.log("[rewardAB] merge count reset");
   }
@@ -641,9 +641,9 @@ export default class GameMain extends cc.Component {
   isRewardAbPopupUnlocked(): boolean {
     const passLevel = GameUtils.getPassLevel();
     let abPop = 3;
-    const conf = this.getFrameConf() as any;
+    const conf = LoadWord.instance.getWbConfigData() as any;
     if (conf) {
-      const v = conf.AbPop ?? conf.basicConfig?.FRAME_CONF?.AbPop ?? conf.shadow?.FRAME_CONF?.AbPop;
+      const v = conf.AbPop ?? conf.basicConfig?.FRAME_CONF?.AbPop ?? conf.partyplay?.FRAME_CONF?.AbPop;
       if (v != null) {
         abPop = Math.floor(Number(v)) || abPop;
       }
