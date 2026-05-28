@@ -1488,6 +1488,8 @@ export class FrameSDK {
         if (eventData.object_notes !== null && eventData.object_notes !== undefined) {
             data.object_notes = eventData.object_notes;
         }
+2
+        console.log("FrameSDK.logGameEvent===========2222",eventName,eventData,once);
 
         const report = FrameSDK.frameData?.sdkFuc?.reportEventCall;
         if (report) {
