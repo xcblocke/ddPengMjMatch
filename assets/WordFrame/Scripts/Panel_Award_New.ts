@@ -203,10 +203,10 @@ export default class Panel_Award_New extends cc.Component {
         cc.tween(this.superprize)
             .delay(3)
             .call(() => {
-                FrameSDK.logGameEvent('sdymjmatch_game_new', {
-                    object_action: 'show',
-                    object_name: 'new_5',
-                }, true);
+                // FrameSDK.logGameEvent('sdymjmatch_game_new', {
+                //     object_action: 'show',
+                //     object_name: 'new_5',
+                // }, true);
 
                 FrameSDK.addCoin(this.awardList[0], 0, 0, () => {
                     Frame.ins.setGuideShow(true);
