@@ -81,8 +81,8 @@ export default class Frame extends cc.Component {
         if (!FrameSDK.frameData.gameData.noProfitAd) {
             FrameSDK.frameData.sdkFuc.ppEvent("slotShow");
         }
-        FrameSDK.logLiftEvent(`into_game`);
-        FrameSDK.logLiftEvent(`start_game`);
+        // FrameSDK.logLiftEvent(`into_game`);
+        // FrameSDK.logLiftEvent(`start_game`);
         this.sendLevelMD();
         if (cc.sys.os === cc.sys.OS_ANDROID && FrameData.FRAME_CONF.androidRateUrl == "") {
             console.error("未配置Android评星链接：FrameData.FRAME_CONF.androidRateUrl = \"\"");
