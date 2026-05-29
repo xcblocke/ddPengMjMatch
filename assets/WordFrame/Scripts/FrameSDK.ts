@@ -1581,6 +1581,7 @@ export class FrameSDK {
     };
 
     static videoCompensation(action: "exposure" | "touch" | "impression" | "rewarded" | "close" | "click", name: string, isInterstitial?: boolean) {
+        console.log("FrameSDK.videoCompensation===========11111",action,name,isInterstitial);
         const data = {
             action: action,
             placement: name,
@@ -1589,10 +1590,12 @@ export class FrameSDK {
         const adType = isInterstitial ? "interstitial" : "video";
         const presetKey = FrameSDK.AD_COMPENSATION_PRESET_KEYS[action]?.[adType];
         const report = FrameSDK.frameData?.sdkFuc?.reportEventCall;
+        console.log("FrameSDK.videoCompensation===========22222",report,presetKey,FrameSDK._hasAnalyticsPreset(presetKey));
         if (report && presetKey && FrameSDK._hasAnalyticsPreset(presetKey)) {
             report(presetKey, { A: { p: { placement: name } } } as any);
             return;
         }
+        console.log("FrameSDK.videoCompensation===========33333",data);
         FrameSDK._reportAdCommonEvent(data);
     }
 
