@@ -345,6 +345,10 @@ export default class Panel_Clock extends cc.Component {
     /** 过关后累加当日关卡数并刷新面板 */
     static levelCallBack() {
         if (!FrameData.saveData.ClockUserInfo) { return }
+        if(!cc.isValid(Panel_Clock.ins) || Panel_Clock.ins == null || !cc.isValid(Panel_Clock.ins.node)) {
+            // console.log("levelCallBack===========11111");
+            return;
+        }
         const info: ClockUserInfo = FrameData.saveData.ClockUserInfo;
         info.dayLevelTime = Math.max(0, Math.floor(Number(info.dayLevelTime) || 0)) + 1;
         Panel_Clock.refreshPanelIfOpen(info);
@@ -420,12 +424,14 @@ export default class Panel_Clock extends cc.Component {
 
         let isChangeState: boolean = false;
 
-        console.log("flash===========11111",type,this.type);
+        
         //状态改变了
         if (type != this.type) {
             isChangeState = true;
             this.type = type;
         }
+
+        // console.log("flash===========11111",type,this.type,isChangeState);
 
         // console.log(this.type);
         if (isChangeState == true) {
@@ -459,7 +465,7 @@ export default class Panel_Clock extends cc.Component {
                         let needNum = this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime >= 0 ? this.config.task[this.userInfo.signCount] - this.userInfo.dayLevelTime : 0;
                         this.s1Rich.getComponent(cc.RichText).string = `clok_037??&value1==<color=#86FF04><b>${needNum}</b></c>`;
                         this.s1taskIcon.spriteFrame = this.taskIcon[1];
-                        curNum = this.userInfo.dayLevelTime; //FrameSDK.frameData.gameData.passLevel - this.userInfo.startLevel;//
+                        curNum = this.userInfo.dayLevelTime;
                         totalNum = this.config.task[0];
                     } else {
                         this.s1Rich.getComponent(cc.RichText).string = `clok_036??&value1==<color=#86FF04><b>${Math.round(this.config.task[this.userInfo.signCount]/60)}</b></c>`;
