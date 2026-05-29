@@ -50,6 +50,9 @@ export default class Panel_Activity extends cc.Component {
     @property(cc.Label)
     rew_Label: cc.Label = null;
 
+    @property(cc.Node)
+    flyTargetNode: cc.Node = null;
+
     @property(cc.ParticleSystem)
     gameDollarParticle: cc.ParticleSystem = null;
 
@@ -171,6 +174,11 @@ export default class Panel_Activity extends cc.Component {
         this.syncActivityWhenTimeUp();
         FrameSDK.playEffect("piggybank_show");
         this._close_target = Panel_Activity.coinTarget;
+
+
+        if(this.flyTargetNode && cc.isValid(this.flyTargetNode)) {
+            this.flyTargetNode.active = false;
+        }
 
         if (FrameData.saveData.activity == null) {
             // 次日可领取：倒计时对齐到“下一天 00:00”
@@ -302,7 +310,15 @@ export default class Panel_Activity extends cc.Component {
                 }, true);
 
                 // 领取：收集到多少就领多少，领完后直接重置开始新一轮
-                FrameSDK.addCoin(coin, 0, 0, () => this.resetActive());
+                if(this.flyTargetNode && cc.isValid(this.flyTargetNode)) {
+                    this.flyTargetNode.active = true;
+                }
+                FrameSDK.addCoin(coin, 0, 0, () => {
+                    this.resetActive()
+                    if(this.flyTargetNode && cc.isValid(this.flyTargetNode)) {
+                        this.flyTargetNode.active = false;
+                    }
+                } );
                 // FrameData.saveData.activity = <any>0;
                 // this.close();
             }

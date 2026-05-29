@@ -1021,7 +1021,7 @@
         "__id__": 45
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 55
@@ -8116,7 +8116,7 @@
         "__id__": 222
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 226
@@ -8454,7 +8454,7 @@
         "__id__": 231
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 235
@@ -8907,6 +8907,9 @@
     },
     "rew_Label": {
       "__id__": 69
+    },
+    "flyTargetNode": {
+      "__id__": 24
     },
     "gameDollarParticle": {
       "__id__": 60
