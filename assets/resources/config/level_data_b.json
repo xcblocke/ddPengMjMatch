@@ -1444,11 +1444,11 @@
         "level_info": {
             "level_id": 5,
             "round_id": 1,
-            "round_max": 1,
+            "round_max": 5,
             "set_id": 1,
             "set_max": 1,
             "turn_id": 1,
-            "turn_max": 5
+            "turn_max": 1
         },
         "lun_level": 5
     },
@@ -1860,12 +1860,12 @@
         },
         "level_info": {
             "level_id": 5,
-            "round_id": 1,
-            "round_max": 1,
+            "round_id": 2,
+            "round_max": 5,
             "set_id": 1,
             "set_max": 1,
-            "turn_id": 2,
-            "turn_max": 5
+            "turn_id": 1,
+            "turn_max": 1
         },
         "lun_level": 6
     },
@@ -2181,12 +2181,12 @@
         },
         "level_info": {
             "level_id": 5,
-            "round_id": 1,
-            "round_max": 1,
+            "round_id": 3,
+            "round_max": 5,
             "set_id": 1,
             "set_max": 1,
-            "turn_id": 3,
-            "turn_max": 5
+            "turn_id": 1,
+            "turn_max": 1
         },
         "lun_level": 7
     },
@@ -2602,8 +2602,8 @@
             "round_max": 1,
             "set_id": 1,
             "set_max": 1,
-            "turn_id": 4,
-            "turn_max": 5
+            "turn_id": 1,
+            "turn_max": 1
         },
         "lun_level": 8
     },
@@ -3015,12 +3015,12 @@
         },
         "level_info": {
             "level_id": 5,
-            "round_id": 1,
+            "round_id": 5,
             "round_max": 5,
             "set_id": 1,
             "set_max": 1,
             "turn_id": 1,
-            "turn_max": 5
+            "turn_max": 1
         },
         "lun_level": 9
     },
@@ -3531,13 +3531,13 @@
             ]
         },
         "level_info": {
-            "level_id": 5,
-            "round_id": 2,
-            "round_max": 5,
+            "level_id": 6,
+            "round_id": 1,
+            "round_max": 1,
             "set_id": 1,
             "set_max": 1,
             "turn_id": 1,
-            "turn_max": 5
+            "turn_max": 1
         },
         "lun_level": 10
     },
@@ -4048,13 +4048,13 @@
             ]
         },
         "level_info": {
-            "level_id": 5,
-            "round_id": 3,
-            "round_max": 5,
+            "level_id": 7,
+            "round_id": 1,
+            "round_max": 1,
             "set_id": 1,
             "set_max": 1,
             "turn_id": 1,
-            "turn_max": 5
+            "turn_max": 1
         },
         "lun_level": 11
     },

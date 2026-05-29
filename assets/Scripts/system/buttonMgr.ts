@@ -152,7 +152,7 @@ export default class buttonMgr extends cc.Component {
   againGameBtnClick() {}
   tipCardBtnClick() {
     var e = this;
-    AudioManager.getInstance().playMusic("btntouch");
+    
     SdkHelper.reportData("click_prop", {
       prop_type: PropType.tipCard,
       game_level: gameData.gameLevel,
@@ -167,6 +167,7 @@ export default class buttonMgr extends cc.Component {
         e.propBtnIsFlag = false;
       }, 3000);
       EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
+      AudioManager.getInstance().playMusic("Prop_tip");
       EventMgr.trigger(GameEventType.USER_OPERATE_TIP);
     }
   }
@@ -180,13 +181,17 @@ export default class buttonMgr extends cc.Component {
       round_id: gameData.roundId,
       set_id: gameData.setId
     });
-    AudioManager.getInstance().playMusic("btntouch");
+   
     if (gameData.globalCanClick) if (PlayerDataSys.reshuffleCardCount <= 0) this.tryGetPropByVideo(PropType.reshuffleCard);else if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
       }, 3000);
-      if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_RESHUFFLE_CARD);else {
+      if (cc.sys.isBrowser || gameData.isOpenDemo) {
+        EventMgr.trigger(GameEventType.USER_RESHUFFLE_CARD);
+      }
+       else {
+        AudioManager.getInstance().playMusic("Prop_stirringrod");
         EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
         EventMgr.trigger(GameEventType.USER_RESHUFFLE_CARD);
       }

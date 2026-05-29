@@ -191,6 +191,7 @@ export default class GameMain extends cc.Component {
         // this.startGame(false, true);
         
       } else if (event.animation.name === "kai") {
+        AudioManager.getInstance().playMusic("door_open");
         this.ruchangAni.node.active = false;
         this.startGame(false, true);
       } 

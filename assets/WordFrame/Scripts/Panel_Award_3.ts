@@ -151,6 +151,9 @@ export default class Panel_Award_3 extends cc.Component {
                 } else if(eventName == "x5"){
                     this.targetIndex = 2;
                 }
+                this.scheduleOnce(()=>{
+                    FrameSDK.playEffect("output_rateslide");
+                },0.14);
                 this.beishe = this.timeArray[this.targetIndex] ?? 1;
                 this.updataBeiShe();    
             });
