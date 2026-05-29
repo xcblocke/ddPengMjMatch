@@ -11181,7 +11181,7 @@
     "node": {
       "__id__": 308
     },
-    "_enabled": false,
+    "_enabled": true,
     "_color": {
       "__type__": "cc.Color",
       "r": 56,
@@ -11199,7 +11199,7 @@
     "node": {
       "__id__": 308
     },
-    "_enabled": true,
+    "_enabled": false,
     "_color": {
       "__type__": "cc.Color",
       "r": 1,
