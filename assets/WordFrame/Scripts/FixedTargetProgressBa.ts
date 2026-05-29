@@ -126,16 +126,27 @@ export default class LevelProgressBar extends cc.Component {
         //     }
         //     curTurnRoot = curTurnRoot.parent;
         // }
+        console.log("applyRoundBadge===========11111",roundText);
+       
         for (let i = 0; i < this.levelNodes.length; i++) {
             const item = this.levelNodes[i].getComponent(LevelItem);
             if (!item || !item.FeatureTip) {
                 continue;
             }
+            
             const tipNode = item.FeatureTip.node;
             const isCurrent = item.LevelNumber && item.LevelNumber.string === String(currentLevel);
             if (showRound && isCurrent) {
                 if (item.level_loop) {
-                    item.level_loop.active = this.roundUiType === RoundUiType.mainGame;
+                    let isShow = false;
+                    if(roundText != null){
+                        let roundNum = Number(roundText.split("/")[0]);
+                        // Number(roundText.split("/")[0]) > 1;
+                        if(roundNum > 1){
+                            isShow = true;
+                        }
+                    }
+                    item.level_loop.active = this.roundUiType === RoundUiType.mainGame ? isShow : false;
                 }
                 tipNode.active = true;
                 // item.FeatureTip.string = Lang.get("skey_152") + "  " + roundText;
@@ -253,6 +264,7 @@ export default class LevelProgressBar extends cc.Component {
     }
 
     renderUI(levels: number[], currentLevel: number) {
+        console.log("renderUI===========11111",levels, currentLevel);
         for (let i = 0; i < 5; i++) {
             const levelNum = levels[i];
             // const label = this.levelLabels[i];
