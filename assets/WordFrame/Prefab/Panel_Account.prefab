@@ -940,8 +940,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 530,
-      "height": 110
+      "width": 375.68,
+      "height": 104
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -992,8 +992,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "$66.66",
-    "_N$string": "$66.66",
+    "_string": "",
+    "_N$string": "",
     "_fontSize": 120,
     "_lineHeight": 104,
     "_enableWrapText": false,

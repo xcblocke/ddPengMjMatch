@@ -1933,8 +1933,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 608,
-      "height": 120
+      "width": 505.4,
+      "height": 110
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1985,8 +1985,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "222",
-    "_N$string": "222",
+    "_string": "",
+    "_N$string": "",
     "_fontSize": 150,
     "_lineHeight": 110,
     "_enableWrapText": false,
