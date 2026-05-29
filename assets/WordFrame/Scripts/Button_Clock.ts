@@ -54,9 +54,7 @@ export default class Button_Activity extends cc.Component {
     }
 
     addLv(){
-        if(FrameData.saveData.ClockUserInfo){
-            FrameData.saveData.ClockUserInfo.dayLevelTime +=1;
-        }
+        Panel_Clock.addDayLevelProgressGM();
     }
 
     // update (dt) {}

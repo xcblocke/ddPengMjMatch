@@ -356,13 +356,18 @@ export default class Panel_Clock extends cc.Component {
     static syncDayLevelProgress(info?: ClockUserInfo): ClockUserInfo {
         if (!FrameData.saveData.ClockUserInfo) { return null; }
         const userInfo = info || FrameData.saveData.ClockUserInfo;
-        let startLevel = Math.max(0, Math.floor(Number(userInfo.startLevel) || 0));
+        let startLevel = Math.floor(Number(userInfo.startLevel) || 0);
         const passLevel = FrameSDK.frameData.gameData.passLevel;
         const clockLevel = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.ClockLevel) || 0));
         // 兼容旧存档：首次签到前 startLevel 落在解锁关之前，补到解锁关
         if (userInfo.signCount === 0 && startLevel < clockLevel) {
-            startLevel = clockLevel;
-            userInfo.startLevel = startLevel;
+            const maxDayLevelWithoutGm = Math.max(0, passLevel - clockLevel);
+            const savedDayLevel = Math.max(0, Math.floor(Number(userInfo.dayLevelTime) || 0));
+            // 进度未超过自然上限时才补 startLevel，避免 GM 加成被 clamp 掉
+            if (savedDayLevel <= maxDayLevelWithoutGm) {
+                startLevel = clockLevel;
+                userInfo.startLevel = startLevel;
+            }
         }
         userInfo.dayLevelTime = Math.max(0, passLevel - startLevel);
         return userInfo;
@@ -372,6 +377,17 @@ export default class Panel_Clock extends cc.Component {
     static levelCallBack() {
         if (!FrameData.saveData.ClockUserInfo) { return }
         const info = Panel_Clock.syncDayLevelProgress();
+        Panel_Clock.refreshPanelIfOpen(info);
+    }
+
+    /** GM：模拟当日多过一关（反推 startLevel，允许低于 clockLevel 以突破自然上限） */
+    static addDayLevelProgressGM(delta: number = 1) {
+        if (!FrameData.saveData.ClockUserInfo || delta <= 0) { return; }
+        const info = FrameData.saveData.ClockUserInfo;
+        Panel_Clock.syncDayLevelProgress(info);
+        info.dayLevelTime = Math.max(0, Math.floor(Number(info.dayLevelTime) || 0)) + delta;
+        const passLevel = FrameSDK.frameData.gameData.passLevel;
+        info.startLevel = passLevel - info.dayLevelTime;
         Panel_Clock.refreshPanelIfOpen(info);
     }
 
@@ -756,8 +772,7 @@ export default class Panel_Clock extends cc.Component {
         this.flash();
     }
     onTouchAdd5() {
-        this.userInfo.dayLevelTime +=1
-        this.flash();
+        Panel_Clock.addDayLevelProgressGM();
     }
 
     /**设置时间文本 */
