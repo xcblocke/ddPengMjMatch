@@ -134,7 +134,6 @@ export default class Panel_Award_7 extends cc.Component {
 
         new Promise<boolean>(resolve => {
             if (shouldWatchAd) {
-            FrameSDK.videoCompensation('touch', 'reward_sup');
                 FrameSDK.openVideo(() => {
                     resolve(true);
                 }, () => {
@@ -184,7 +183,6 @@ export default class Panel_Award_7 extends cc.Component {
         };
 
         if (isInters) {
-            FrameSDK.videoCompensation('touch', 'reward_sup',true);
             FrameSDK.openInters(callBack, () => {
                 FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                     object_action: 'show',

@@ -86,7 +86,6 @@ export default class Panel_Award_Super1 extends cc.Component {
 
         new Promise<boolean>(resolve => {
             if (shouldWatchAd) {
-                FrameSDK.videoCompensation('touch', 'reward_sup');
                 FrameSDK.openVideo(() => {
                     resolve(true);
                 }, () => {

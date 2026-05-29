@@ -144,7 +144,6 @@ export default class FlyingBonus extends cc.Component {
             FrameData.saveData.fly_free--;
         } else {
             FrameSDK.openVideo(back, fail, () => {
-                FrameSDK.videoCompensation('touch', 'fly_sup');
                 FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                     object_action: 'show',
                     object_name: `fly_sup`,
