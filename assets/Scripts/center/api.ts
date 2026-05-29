@@ -131,7 +131,6 @@
 
 import { TEventOverrideData } from "./a/PostdelayNonrun";
 import { IAdListenerLike, IPlatformExternalHandlersLike, NextlyAnyoneize } from "./p/NextlyAnyoneize";
-import { logAd, wrapVideoAdListener } from "../common/AdLog";
 import { lanData, ICountryConfigLike } from "./i/BuildingUnhardware";
 
 interface IAPILike {
@@ -307,6 +306,8 @@ interface IAPILike {
      */
     readonly i1: boolean,
 
+    
+
     /**
      * 播放插屏广告
      * @param tag 广告埋点标签（比如：reward_1/reward_2/start_level）
@@ -480,12 +481,6 @@ export const A: IAPILike = new Proxy(NextlyAnyoneize.instance, {
         const key = typeof k === 'string' ? k : '';
         const real = M[key] ?? k;
         const v = t[real as keyof NextlyAnyoneize];
-        if (key === 'v2' && typeof v === 'function') {
-            return (tag: string, listener?: IAdListenerLike, allowInterstitialAdFallback?: boolean) => {
-                logAd('click');
-                return v.call(t, tag, wrapVideoAdListener(listener), allowInterstitialAdFallback);
-            };
-        }
         return typeof v === 'function' ? v.bind(t) : v;
     },
 }) as any;

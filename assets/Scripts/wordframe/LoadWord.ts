@@ -432,14 +432,16 @@ export default class LoadWord {
       });
     };
     /** FrameSDK 旧接口 (callback, failcallback) → A.i2(tag, { onResult }) */
-    const bridgeOpenInters = (callback?: () => void, failedCallback?: () => void) => {
+    const bridgeOpenInters = (callback?: () => void, failedCallback?: (isLoadFail?: boolean) => void) => {
       const tag = NativeUtils.placement || "inters";
       A.i2(tag, {
         onResult: (result) => {
           if (result === 1) {
             callback && callback();
-          } else if (result === -1 || result === 0) {
-            failedCallback && failedCallback();
+          } else if (result === -1) {
+            failedCallback && failedCallback(true);
+          } else if (result === 0) {
+            failedCallback && failedCallback(false);
           }
         }
       });

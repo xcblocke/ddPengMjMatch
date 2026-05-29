@@ -241,6 +241,9 @@ export default class Panel_Award_3 extends cc.Component {
     click_AD() {
         FrameSDK.frameData.sdkFuc.ppEvent(this.adData.isFree ? 'freeClaim' : 'claim');
 
+        if (!this.adData.isFree) {
+            FrameSDK.videoCompensation('touch', 'reward_3');
+        }
         FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'show',
             object_name: `rew_ad`,
@@ -257,7 +260,6 @@ export default class Panel_Award_3 extends cc.Component {
             this.pointerIndicator.resumeAllActions();
             this.contentSkeleton.paused = false;
             this["noTouch"].node.active = false;
-            console.log("video fail===========3");
         };
 
         const back = () => {
@@ -302,7 +304,7 @@ export default class Panel_Award_3 extends cc.Component {
                     object_name: `reward_3`,
                     object_notes: `video`,
                 });
-            },"reward_3");
+            }, "reward_3", back);
         }
     }
 
@@ -326,6 +328,7 @@ export default class Panel_Award_3 extends cc.Component {
             this.close();
         };
         if (this.isInters) {
+            FrameSDK.videoCompensation('touch', 'reward_3', true);
             FrameSDK.openInters(callBack, () => {
                 FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                     object_action: 'show',
@@ -334,7 +337,7 @@ export default class Panel_Award_3 extends cc.Component {
                 });
             }, "reward_3", () => {
                 this["noTouch"].node.active = false;
-            });
+            }, callBack);
         } else {
             callBack();
         }
