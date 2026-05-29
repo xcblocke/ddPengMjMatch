@@ -860,7 +860,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 116.01,
+      "width": 117.59,
       "height": 38.76
     },
     "_anchorPoint": {
@@ -912,8 +912,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "loading...",
-    "_N$string": "loading...",
+    "_string": "gkey_213",
+    "_N$string": "gkey_213",
     "_fontSize": 26,
     "_lineHeight": 26,
     "_enableWrapText": true,
@@ -1403,7 +1403,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 104.77,
+      "width": 117.59,
       "height": 38.76
     },
     "_anchorPoint": {
@@ -1455,8 +1455,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "Agree to",
-    "_N$string": "Agree to",
+    "_string": "gkey_214",
+    "_N$string": "gkey_214",
     "_fontSize": 26,
     "_lineHeight": 26,
     "_enableWrapText": true,
@@ -1521,7 +1521,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 171.65,
+      "width": 120.4,
       "height": 38.76
     },
     "_anchorPoint": {
@@ -1573,8 +1573,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "Privacy Policy",
-    "_N$string": "Privacy Policy",
+    "_string": "gkey_257",
+    "_N$string": "gkey_257",
     "_fontSize": 26,
     "_lineHeight": 26,
     "_enableWrapText": true,
