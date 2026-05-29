@@ -8,8 +8,8 @@
   "premultiplyAlpha": false,
   "genMipmaps": false,
   "packable": true,
-  "width": 115,
-  "height": 59,
+  "width": 144,
+  "height": 54,
   "platformSettings": {},
   "subMetas": {
     "qipao": {
@@ -28,10 +28,10 @@
       "height": 54,
       "rawWidth": 144,
       "rawHeight": 54,
-      "borderTop": 0,
-      "borderBottom": 0,
-      "borderLeft": 0,
-      "borderRight": 0,
+      "borderTop": 9,
+      "borderBottom": 28,
+      "borderLeft": 32,
+      "borderRight": 28,
       "subMetas": {}
     }
   }
