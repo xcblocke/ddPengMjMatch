@@ -291,7 +291,8 @@ export default class Panel_Clock extends cc.Component {
     }
 
     static bulidUserData() {
-        if (FrameData.saveData.ClockUserInfo == null) {
+        const isNew = FrameData.saveData.ClockUserInfo == null;
+        if (isNew) {
             FrameData.saveData.ClockUserInfo = {
                 /**签到时间戳 （默认-1）*/
                 signTimeStamp: -1,
@@ -323,6 +324,13 @@ export default class Panel_Clock extends cc.Component {
 
         // cc.systemEvent.on("SecondEvent", Panel_Clock.checkDay, this)
         Panel_Clock.checkDay();
+        if (isNew) {
+            // 解锁弹窗时 passLevel 尚未随 START_GAME 推进（仍少 1），基准设为 passLevel+1
+            const passLevel = FrameSDK.frameData.gameData.passLevel;
+            FrameData.saveData.ClockUserInfo.startLevel = passLevel + 1;
+            Panel_Clock.syncDayLevelProgress();
+            cc.director.emit("SYNC_FRAME_PASS_LEVEL");
+        }
 
 
     }
@@ -344,15 +352,26 @@ export default class Panel_Clock extends cc.Component {
         FrameData.saveData.ClockUserInfo.HuoYueTime++;
     }
 
-    /** 过关后累加当日关卡数并刷新面板 */
+    /** 按 startLevel 基准同步当日过关进度（passLevel 在 START_GAME 前会滞后一关） */
+    static syncDayLevelProgress(info?: ClockUserInfo): ClockUserInfo {
+        if (!FrameData.saveData.ClockUserInfo) { return null; }
+        const userInfo = info || FrameData.saveData.ClockUserInfo;
+        let startLevel = Math.max(0, Math.floor(Number(userInfo.startLevel) || 0));
+        const passLevel = FrameSDK.frameData.gameData.passLevel;
+        const clockLevel = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.ClockLevel) || 0));
+        // 兼容旧存档：首次签到前 startLevel 落在解锁关之前，补到解锁关
+        if (userInfo.signCount === 0 && startLevel < clockLevel) {
+            startLevel = clockLevel;
+            userInfo.startLevel = startLevel;
+        }
+        userInfo.dayLevelTime = Math.max(0, passLevel - startLevel);
+        return userInfo;
+    }
+
+    /** 过关后按 startLevel 基准同步当日关卡进度并刷新面板 */
     static levelCallBack() {
         if (!FrameData.saveData.ClockUserInfo) { return }
-        // if(!cc.isValid(Panel_Clock.ins) || Panel_Clock.ins == null || !cc.isValid(Panel_Clock.ins.node)) {
-        //     // console.log("levelCallBack===========11111");
-        //     return;
-        // }
-        const info: ClockUserInfo = FrameData.saveData.ClockUserInfo;
-        info.dayLevelTime = Math.max(0, Math.floor(Number(info.dayLevelTime) || 0)) + 1;
+        const info = Panel_Clock.syncDayLevelProgress();
         Panel_Clock.refreshPanelIfOpen(info);
     }
 
@@ -419,6 +438,10 @@ export default class Panel_Clock extends cc.Component {
     flash() {
         if (this.isBlockKey == true) {
             return;
+        }
+
+        if (this.userInfo && this.firstSignTaskUseLevel) {
+            Panel_Clock.syncDayLevelProgress(this.userInfo);
         }
 
         let type = Panel_Clock.calcState();
@@ -601,8 +624,12 @@ export default class Panel_Clock extends cc.Component {
             if (index == 0) {
                 // 原逻辑第一档用活跃时长判断，这里临时切成过关数判断。
                 // cueenum = this.userInfo.HuoYueTime;
+                if (this.firstSignTaskUseLevel) {
+                    Panel_Clock.syncDayLevelProgress(this.userInfo);
+                }
                 cueenum = this.firstSignTaskUseLevel ? this.userInfo.dayLevelTime : this.userInfo.HuoYueTime;
             } else {
+                Panel_Clock.syncDayLevelProgress(this.userInfo);
                 cueenum = this.userInfo.dayLevelTime//FrameSDK.frameData.gameData.passLevel - this.userInfo.dayVideoTime
             }
             if (cueenum >= this.config.task[index]) {

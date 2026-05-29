@@ -61,6 +61,10 @@ export default class Frame extends cc.Component {
             Panel_Clock.videoCallBack();
         });
 
+        cc.director.on("SYNC_FRAME_PASS_LEVEL", () => {
+            this.passLevel = FrameSDK.frameData.gameData.passLevel;
+        }, this);
+
         this.setGuideShow(false);
         this.setGuide2Show(false);
         FrameSDK.currLevel = FrameSDK.frameData.gameData.passLevel + 1;
@@ -95,12 +99,13 @@ export default class Frame extends cc.Component {
     passLevel: number = -1;
 
     sendLevelMD() {
-        if (this.passLevel != FrameSDK.frameData.gameData.passLevel) {
-            if (this.passLevel != -1) {
+        const currentPassLevel = FrameSDK.frameData.gameData.passLevel;
+        if (this.passLevel != currentPassLevel) {
+            if (this.passLevel != -1 && FrameData.saveData.ClockUserInfo) {
                 // FrameSDK.gameMDEvent(4, "lv_end", this.passLevel.toString());
                 Panel_Clock.levelCallBack();
             }
-            this.passLevel = FrameSDK.frameData.gameData.passLevel;
+            this.passLevel = currentPassLevel;
             // FrameSDK.gameMDEvent(4, "lv_start", FrameSDK.frameData.gameData.passLevel.toString());
             cc.director.emit("UPDATA_LEVEL");
         }
