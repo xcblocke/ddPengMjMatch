@@ -1571,13 +1571,39 @@ export class FrameSDK {
                 "close":         收到广告关闭回调时上报
                 "click":         在广告内进行点击行为
     */
+    private static readonly AD_COMPENSATION_PRESET_KEYS: Readonly<Record<string, Readonly<Partial<Record<"video" | "interstitial", string>>>>> = {
+        exposure: { video: "v0", interstitial: "i0" },
+        touch: { video: "v1", interstitial: "i1" },
+        impression: { video: "v2", interstitial: "i2" },
+        click: { video: "v3", interstitial: "i3" },
+        close: { video: "v4", interstitial: "i4" },
+        rewarded: { video: "v5" },
+    };
+
     static videoCompensation(action: "exposure" | "touch" | "impression" | "rewarded" | "close" | "click", name: string, isInterstitial?: boolean) {
-        let data = (<any>{
-            "action": action,
-            "placement": name,
-            "type": isInterstitial ? "interstitial" : "video"
-        });
-        FrameSDK.logCommonEvent("c_ad_event", data);
+        const data = {
+            action: action,
+            placement: name,
+            type: isInterstitial ? "interstitial" : "video"
+        };
+        const adType = isInterstitial ? "interstitial" : "video";
+        const presetKey = FrameSDK.AD_COMPENSATION_PRESET_KEYS[action]?.[adType];
+        const report = FrameSDK.frameData?.sdkFuc?.reportEventCall;
+        if (report && presetKey && FrameSDK._hasAnalyticsPreset(presetKey)) {
+            report(presetKey, { A: { p: { placement: name } } } as any);
+            return;
+        }
+        FrameSDK._reportAdCommonEvent(data);
+    }
+
+    private static _hasAnalyticsPreset(presetKey: string): boolean {
+        const analytics = cc.js.getClassByName("ExtrajourneyEnjoytion") as any;
+        return !!(analytics?.INTERTEST_MEGAENOUGH?.[presetKey] || analytics?.FAMILYIST_SIMPLEARY?.[presetKey]);
+    }
+
+    private static _reportAdCommonEvent(data: { action: string; placement: string; type: string }) {
+        const tracker = (cc.js.getClassByName("SubbillHyperforce") as any)?.instance;
+        tracker?.superwayTranscrew?.("c_ad_event", data);
     }
 
     static logCommonEvent(eventName: string, storeData: { [key: string]: any; } = null) {
