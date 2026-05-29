@@ -10220,7 +10220,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 396.25,
+      "width": 350.63,
       "height": 110
     },
     "_anchorPoint": {
@@ -10276,7 +10276,7 @@
     "_N$string": "$3,000",
     "_fontSize": 110,
     "_lineHeight": 110,
-    "_enableWrapText": true,
+    "_enableWrapText": false,
     "_N$file": {
       "__uuid__": "6ff95ed0-d577-465d-a648-b294fa94096d"
     },
