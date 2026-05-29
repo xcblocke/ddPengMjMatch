@@ -161,7 +161,7 @@ export default class buttonMgr extends cc.Component {
       round_id: gameData.roundId,
       set_id: gameData.setId
     });
-    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.tipCardCount <= 0) this.tryGetPropByVideo(PropType.tipCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_OPERATE_TIP);else {
+    if (gameData.globalCanClick) if (PlayerDataSys.tipCardCount <= 0) this.tryGetPropByVideo(PropType.tipCard);else if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_OPERATE_TIP);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
@@ -257,7 +257,8 @@ export default class buttonMgr extends cc.Component {
       object_notes: `video`,
   });
 
-    A.v0(n);
+    // exposure 仅在 useProp 用完最后一个道具时上报（tips/refresh）；
+    // 此处数量为 0 直接看广告，不再重复上报 v0
     if (!A.v1) {
       this.showPropAdFailToast();
       return;
