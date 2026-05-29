@@ -345,10 +345,10 @@ export default class Panel_Clock extends cc.Component {
     /** 过关后累加当日关卡数并刷新面板 */
     static levelCallBack() {
         if (!FrameData.saveData.ClockUserInfo) { return }
-        if(!cc.isValid(Panel_Clock.ins) || Panel_Clock.ins == null || !cc.isValid(Panel_Clock.ins.node)) {
-            // console.log("levelCallBack===========11111");
-            return;
-        }
+        // if(!cc.isValid(Panel_Clock.ins) || Panel_Clock.ins == null || !cc.isValid(Panel_Clock.ins.node)) {
+        //     // console.log("levelCallBack===========11111");
+        //     return;
+        // }
         const info: ClockUserInfo = FrameData.saveData.ClockUserInfo;
         info.dayLevelTime = Math.max(0, Math.floor(Number(info.dayLevelTime) || 0)) + 1;
         Panel_Clock.refreshPanelIfOpen(info);
