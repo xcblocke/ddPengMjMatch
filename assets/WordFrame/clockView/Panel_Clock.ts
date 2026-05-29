@@ -173,7 +173,7 @@ export default class Panel_Clock extends cc.Component {
         this.panel_window = this.pnlClockView;
         this.userInfo = FrameData.saveData.ClockUserInfo;
         this.config = FrameData.FRAME_CONF.ClockConfig;
-        this.addEvent();
+        
         this.oneTime();
         // this.contentSkeleton.setCompleteListener(()=>{
         //     this.bottomNode.active = true;
@@ -262,6 +262,8 @@ export default class Panel_Clock extends cc.Component {
 
         FrameSDK.playEffect("iPhone_open");
         this.type = "";
+
+        this.addEvent();
 
         this.testFrame.active = CC_DEBUG || FrameData.isTest;
 
@@ -431,7 +433,7 @@ export default class Panel_Clock extends cc.Component {
             this.type = type;
         }
 
-        // console.log("flash===========11111",type,this.type,isChangeState);
+        console.log("flash===========11111",type,this.type,isChangeState);
 
         // console.log(this.type);
         if (isChangeState == true) {
