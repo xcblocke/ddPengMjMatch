@@ -308,14 +308,14 @@ export default class LoadWord {
 
 
   getWbConfigData(): any{
-    if (cc.sys.os == cc.sys.OS_ANDROID && cc.sys.isNative) { 
+   
       if (NativeUtils.isFlag) { 
         return A.l4 || {
           basicConfig: { SDK_CONF: {}, FRAME_CONF: {} },
           partyplay: { SDK_CONF: {}, FRAME_CONF: {} },
         };
       } 
-    } 
+
     let l3Data = A.l3 || {};
       return {
         basicConfig: { SDK_CONF: l3Data?.SDK_CONF || {}, FRAME_CONF: l3Data?.FRAME_CONF || {} },

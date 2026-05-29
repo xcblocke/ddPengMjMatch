@@ -711,7 +711,7 @@ export default class GameMain extends cc.Component {
       return;
     }
     this.rewardAbMergeCount++;
-    if (this.rewardAbMergeCount <= this.rewaedAbMergeThreshold) {
+    if (this.rewardAbMergeCount < this.rewaedAbMergeThreshold) {
       return;
     }
 
