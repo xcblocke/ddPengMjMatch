@@ -632,8 +632,7 @@ export default class GameMain extends cc.Component {
 
     let conf =  LoadWord.instance.getWbConfigData();
     const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";  //"basicConfig" : "shadow";
-    let timeConf = conf?.[cfgKey]?.rewaedAbTotalTime || [6, 8];
-    console.log("...................... resetRewardAbMergeCount",timeConf);
+    let timeConf = conf?.[cfgKey]?.["FRAME_CONF"]?.rewaedAbTotalTime || [6, 8];
     // let timeConf = this.getFrameConf()?.rewaedAbTotalTime || [5, 8];
     this.rewaedAbMergeThreshold = RandomUtil.rangeInt(timeConf[0], timeConf[1]);
     CC_DEBUG && console.log("[rewardAB] merge count reset");
