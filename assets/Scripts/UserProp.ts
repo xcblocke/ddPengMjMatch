@@ -36,7 +36,6 @@ export default class UserProp extends cc.Component {
     this.requestUseProp(PropType.freezeCard);
   }
   userOperateTip() {
-    if (Number(PlayerDataSys.tipCardCount || 0) <= 0) return;
     this.operAction = null;
     this.startOperateTipLoop();
     AudioManager.getInstance().playMusic("Prop_tip");
@@ -50,7 +49,6 @@ export default class UserProp extends cc.Component {
       i,
       r,
       h = this;
-    if (!e && Number(PlayerDataSys.reshuffleCardCount || 0) <= 0) return Promise.resolve();
     gameData.globalCanClick = false;
     EventMgr.trigger(GameEventType.UPDATE_BACK_STEP_STATE);
     AudioManager.getInstance().playMusic("Prop_stirringrod");
