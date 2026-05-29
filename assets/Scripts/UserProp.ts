@@ -7,6 +7,7 @@ import { gameConfig } from './data/GameConfig';
 import card from './prefab/card';
 import GameSystem from './system/GameSystem';
 import GameMain from './GameMain';
+import PlayerDataSys from './framework/controller/PlayerDataSys';
 const {
   ccclass,
   property
@@ -418,6 +419,8 @@ export default class UserProp extends cc.Component {
   }
   requestUseProp(e) {
     var t = this;
+    var countBeforeUse = e == PropType.reshuffleCard ? Number(PlayerDataSys.reshuffleCardCount || 0) : e == PropType.tipCard ? Number(PlayerDataSys.tipCardCount || 0) : Number(PlayerDataSys.freezeCardCount || 0);
+    if (countBeforeUse <= 0) return;
     gameData.isOpenDemo || GameSystem.useProp({
       is_revive: 0,
       prop_id: e,

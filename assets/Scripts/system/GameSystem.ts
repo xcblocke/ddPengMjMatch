@@ -265,6 +265,7 @@ class _GameSystem {
         var curReshuffle = Number(PlayerDataSys.reshuffleCardCount || 0);
         var curFreeze = Number(PlayerDataSys.freezeCardCount || 0);
         var usedId = reqPropId;
+        var countBeforeUse = usedId == 1 ? curReshuffle : usedId == 2 ? curTip : curFreeze;
         var merged = {
           prop1_num: Math.max(Number(srv.prop1_num || 0), Math.max(0, curReshuffle - (usedId == 1 ? 1 : 0))),
           prop2_num: Math.max(Number(srv.prop2_num || 0), Math.max(0, curTip - (usedId == 2 ? 1 : 0))),
@@ -272,9 +273,9 @@ class _GameSystem {
         };
         PlayerDataSys.setUserPropCount(merged);
         var remainCount = usedId == 1 ? Number(merged.prop1_num || 0) : usedId == 2 ? Number(merged.prop2_num || 0) : Number(merged.prop3_num || 0);
-        if (remainCount <= 0) {
+        // 仅在本轮实际消耗道具（使用前 > 0）且用完后归零时上报曝光，数量为 0 再次点击走广告时不触发
+        if (countBeforeUse > 0 && remainCount <= 0) {
           var sdk = LoadWord.FrameSDK;
-          
           sdk && sdk.videoCompensation && sdk.videoCompensation("exposure", reqPropId == 1 ? "refresh" : "tips");
         }
         t(e);
