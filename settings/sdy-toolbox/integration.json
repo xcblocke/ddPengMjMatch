@@ -13,21 +13,14 @@
     }
   },
   "__meta": {
-    "pluginVersion": "1.1.0"
+    "pluginVersion": "1.1.2"
   },
   "loginFile": {
     "isSameAB": true,
     "isInvite": false
   },
   "native": {
-    "keystoreByGameCode": {
-      "sdymjmatch": {
-        "password": "sdymjmatch123",
-        "alias": "sdymjmatch",
-        "aliasPassword": "sdymjmatch123",
-        "fingerprint": "2A:EF:F3:FA:38:14:4E:D4:7C:B4:FB:84:B7:74:20:59:A8:A6:82:70:1E:63:57:DB:D7:BE:24:34:BC:C4:8E:2D"
-      }
-    },
+    "keystoreByGameCode": {},
     "GOOGLE_PLAY": {
       "gameName": "Mahjong Pair Drift",
       "dependencies": []

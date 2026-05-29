@@ -256,7 +256,7 @@ interface IAPILike {
      * 显示横幅广告
      * @param anchor 锚点位置
      * @param margin 距离锚点的位置: 单位像素
-     * @param listener 横幅广告监听器
+     * @param listener 监听器
      */
     b1: (anchor?: 'top' | 'bottom', margin?: number, listener?: IAdListenerLike) => void,
 
@@ -305,8 +305,6 @@ interface IAPILike {
      * 插屏广告是否已填充
      */
     readonly i1: boolean,
-
-    
 
     /**
      * 播放插屏广告

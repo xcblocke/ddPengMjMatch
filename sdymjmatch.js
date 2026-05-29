@@ -1,5 +1,5 @@
 /*
-*当前版本 ：2026.5.14
+*当前版本 ：2026.5.25
 *看你本地版本，和更新日志对比
 *如果差2个版本以上建议重新更新全文件
 *如果只差1个版本，可在上面的日志里查看修改日志
@@ -169,7 +169,7 @@
     };
     var onhot = function (hotTiem, size) {
       var data = {
-        "step": "star"
+        "step": "start"
       };
       var data1 = {
         object_action: "show",
@@ -382,7 +382,7 @@
       f6: { P: { n: 'sdk_theme_stuff', p: { step: 'stuff_click_free' } } },
       f7: { P: { n: 'sdk_theme_stuff', p: { step: 'stuff_get_success_free' } }, S: { n: 349, o: true } },
       f8: { L: { n: 'game_life_key_node', p: { step: 'reach_threshold' } } },
-      f9: { L: { n: 'game_life_key_node', p: { step: 'submit_order' } } },
+      f9: { L: { n: 'game_life_key_node', p: { step: 'submit_order' }, o: true } },
       f10: { L: { n: 'game_life_key_node', p: { step: 'finish_task' }, o: true } },
       v0: { A: { n: 'c_ad_event', p: { action: 'exposure', type: 'video', placement: 'game' } } },
       v1: { A: { n: 'c_ad_event', p: { action: 'touch', type: 'video', placement: 'game' } } },

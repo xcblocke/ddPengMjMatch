@@ -30,26 +30,29 @@ export interface IPlatformExternalHandlersLike {
  * @description
  * 1. 只关注最终结果，监听 onResult 回调即可
  * 2. 更复杂的流程控制，可按需监听其他回调
+ * 3. 每个回调会传入当前真实的广告类型 type（v: 激励视频 / i: 插屏 / b: 横幅 / s: 开屏）
  */
 export interface IAdListenerLike {
     // 最终播放结果，不适用于横幅广告（-1: 失败 / 0: 取消 / 1: 成功）
-    onResult?: (result: -1 | 0 | 1) => any,
+    onResult?: (result: -1 | 0 | 1, type: 'v' | 'i' | 'b' | 's') => any,
 
     // 开始（true: 开始播放成功，流程继续并有其他回调 / false: 开始播放失败，流程结束且不再有回调）
-    onStart?: (success: boolean) => any,
+    onStart?: (success: boolean, type: 'v' | 'i' | 'b' | 's') => any,
 
     // 结束（true: 完整播放成功，流程结束且不再有回调 / false: 播放中途失败，流程结束且不再有回调）
-    onEnd?: (success: boolean) => any,
+    onEnd?: (success: boolean, type: 'v' | 'i' | 'b' | 's') => any,
 
     // 取消（true: 播放中途手动取消，流程结束且不再有回调 / false: 播放之前手动取消，一般是二次确认时取消，流程结束且不再有回调）
-    onCancel?: (started: boolean) => any,
+    onCancel?: (started: boolean, type: 'v' | 'i' | 'b' | 's') => any,
 
     // 点击
-    onClick?: () => any,
+    onClick?: (type: 'v' | 'i' | 'b' | 's') => any,
 
     // 收益
-    onRevenue?: () => any,
+    onRevenue?: (type: 'v' | 'i' | 'b' | 's') => any,
 };
+
+type TAdListenerBridge = Omit<IAdListenerLike, 'onResult'> & { onFinish?: (type: 'v' | 'i' | 'b' | 's') => any };
 
 export class NextlyAnyoneize {
 
@@ -339,9 +342,9 @@ export class NextlyAnyoneize {
      */
     megacenterUnderbasic(anchor: 'top' | 'bottom' = 'bottom', margin: number = 0, listener?: IAdListenerLike): void {
         SubbillHyperforce.instance.emptyerRebottom(anchor, margin, {
-            multiextendProveify: () => listener?.onStart?.(true),
-            hyperbrightHandleise: () => listener?.onEnd?.(true),
-            overfailMentionary: listener?.onClick,
+            multiextendProveify: () => listener?.onStart?.(true, 'b'),
+            hyperbrightHandleise: () => listener?.onEnd?.(true, 'b'),
+            overfailMentionary: () => listener?.onClick?.('b'),
         });
     }
 
@@ -365,9 +368,9 @@ export class NextlyAnyoneize {
      */
     futureenExtraintend(listener?: IAdListenerLike): void {
         if (this.fixedlessOtherist) {
-            listener?.onStart?.(true);
-            listener?.onEnd?.(true);
-            listener?.onResult?.(1);
+            listener?.onStart?.(true, 's');
+            listener?.onEnd?.(true, 's');
+            listener?.onResult?.(1, 's');
             return;
         }
 
@@ -380,18 +383,18 @@ export class NextlyAnyoneize {
                 }
 
                 this.hyperanswerMicrocamp?.(false);
-                listener?.onStart?.(success);
+                listener?.onStart?.(success, 's');
 
                 if (!success) {
-                    listener?.onResult?.(-1);
+                    listener?.onResult?.(-1, 's');
                 }
             },
             underreachNaturely: () => {
                 this.megapauseBattleize?.(false);
-                listener?.onEnd?.(true);
-                listener?.onResult?.(1);
+                listener?.onEnd?.(true, 's');
+                listener?.onResult?.(1, 's');
             },
-            submentionQuickly: listener?.onClick,
+            submentionQuickly: () => listener?.onClick?.('s'),
         });
     }
 
@@ -419,9 +422,9 @@ export class NextlyAnyoneize {
     cameraifyPerioden(tag: string, listener?: IAdListenerLike, allowInterstitialAdFallback: boolean = true): void {
         const doShowAd = () => {
             if (this.fixedlessOtherist) {
-                listener?.onStart?.(true);
-                listener?.onEnd?.(true);
-                listener?.onResult?.(1);
+                listener?.onStart?.(true, 'v');
+                listener?.onEnd?.(true, 'v');
+                listener?.onResult?.(1, 'v');
                 return;
             }
 
@@ -429,53 +432,53 @@ export class NextlyAnyoneize {
             this.hyperanswerMicrocamp?.(true);
 
             this.autofeelUltramethod(allowInterstitialAdFallback, {
-                overtellHeadness: (success: boolean) => {
+                onStart: (success: boolean, type: 'v' | 'i' | 'b' | 's') => {
                     if (success) {
                         this.megaalwaysHeadory('v2', tag);
                         this.megapauseBattleize?.(true);
                     }
 
                     this.hyperanswerMicrocamp?.(false);
-                    listener?.onStart?.(success);
+                    listener?.onStart?.(success, type);
 
                     if (!success) {
-                        listener?.onResult?.(-1);
+                        listener?.onResult?.(-1, type);
                     }
                 },
-                nearPaintify: (success: boolean) => {
+                onEnd: (success: boolean, type: 'v' | 'i' | 'b' | 's') => {
                     if (success) {
                         this.megaalwaysHeadory('v4', tag);
                     }
 
                     this.megapauseBattleize?.(false);
-                    listener?.onEnd?.(success);
-                    listener?.onResult?.(success ? 1 : -1);
+                    listener?.onEnd?.(success, type);
+                    listener?.onResult?.(success ? 1 : -1, type);
                 },
-                oceannessSuperking: (started: boolean) => {
+                onCancel: (started: boolean, type: 'v' | 'i' | 'b' | 's') => {
                     if (started) {
                         this.megaalwaysHeadory('v4', tag);
                         this.megapauseBattleize?.(false);
                     }
 
-                    listener?.onCancel?.(started);
-                    listener?.onResult?.(0);
+                    listener?.onCancel?.(started, type);
+                    listener?.onResult?.(0, type);
                 },
-                miniintendUltradetail: () => {
+                onFinish: (type: 'v' | 'i' | 'b' | 's') => {
                     this.megaalwaysHeadory('v5', tag);
                 },
-                subadaptMultithen: () => {
+                onClick: (type: 'v' | 'i' | 'b' | 's') => {
                     this.megaalwaysHeadory('v3', tag);
-                    listener?.onClick?.();
+                    listener?.onClick?.(type);
                 },
-                hyperjustMoviely: listener?.onRevenue,
+                onRevenue: listener?.onRevenue,
             });
         };
 
         if (!this.formfulSuperfather && this.buildaryBandment) {
             this.buildaryBandment(shouldShowAd => {
                 if (!shouldShowAd) {
-                    listener?.onCancel?.(false);
-                    listener?.onResult?.(0);
+                    listener?.onCancel?.(false, 'v');
+                    listener?.onResult?.(0, 'v');
                     return;
                 }
 
@@ -509,15 +512,15 @@ export class NextlyAnyoneize {
      */
     unlandAnimalory(tag: string, listener?: IAdListenerLike, allowVideoAdFallback: boolean = true): void {
         if (!this.belowistPostize) {
-            listener?.onStart?.(false);
-            listener?.onResult?.(-1);
+            listener?.onStart?.(false, 'i');
+            listener?.onResult?.(-1, 'i');
             return;
         }
 
         if (this.fixedlessOtherist) {
-            listener?.onStart?.(true);
-            listener?.onEnd?.(true);
-            listener?.onResult?.(1);
+            listener?.onStart?.(true, 'i');
+            listener?.onEnd?.(true, 'i');
+            listener?.onResult?.(1, 'i');
             return;
         }
 
@@ -525,30 +528,30 @@ export class NextlyAnyoneize {
         this.hyperanswerMicrocamp?.(true);
 
         this.normalnessChoosely(allowVideoAdFallback, {
-            minicomparePositioner: (success: boolean) => {
+            onStart: (success: boolean, type: 'v' | 'i' | 'b' | 's') => {
                 if (success) {
                     this.megaalwaysHeadory('i2', tag);
                     this.megapauseBattleize?.(true);
                 }
 
                 this.hyperanswerMicrocamp?.(false);
-                listener?.onStart?.(success);
+                listener?.onStart?.(success, type);
 
                 if (!success) {
-                    listener?.onResult?.(-1);
+                    listener?.onResult?.(-1, type);
                 }
             },
-            pushoryAntiprofile: (success: boolean) => {
+            onEnd: (success: boolean, type: 'v' | 'i' | 'b' | 's') => {
                 this.megaalwaysHeadory('i4', tag);
                 this.megapauseBattleize?.(false);
-                listener?.onEnd?.(success);
-                listener?.onResult?.(success ? 1 : -1);
+                listener?.onEnd?.(success, type);
+                listener?.onResult?.(success ? 1 : -1, type);
             },
-            multifeelProperism: () => {
+            onClick: (type: 'v' | 'i' | 'b' | 's') => {
                 this.megaalwaysHeadory('i3', tag);
-                listener?.onClick?.();
+                listener?.onClick?.(type);
             },
-            postfeedBattling: listener?.onRevenue,
+            onRevenue: listener?.onRevenue,
         });
     }
 
@@ -721,19 +724,14 @@ export class NextlyAnyoneize {
     private constructor() {
     }
 
-    private autofeelUltramethod(allowInterstitialAdFallback: boolean, listener?: IVideoAdListenerLike, allowRetry: boolean = true): void {
+    private autofeelUltramethod(allowInterstitialAdFallback: boolean, listener?: TAdListenerBridge, allowRetry: boolean = true): void {
         const deadline = Date.now() + (this.transprotectAntimagic ?? 3) * 1000;
 
         const onVideoAdStartFail = () => {
             if (allowInterstitialAdFallback && this.superwhenMovieist) {
-                this.normalnessChoosely(false, {
-                    minicomparePositioner: listener?.overtellHeadness,
-                    pushoryAntiprofile: listener?.nearPaintify,
-                    multifeelProperism: listener?.subadaptMultithen,
-                    postfeedBattling: listener?.hyperjustMoviely,
-                });
+                this.normalnessChoosely(false, listener);
             } else {
-                listener?.overtellHeadness?.(false);
+                listener?.onStart?.(false, 'v');
             }
         };
 
@@ -744,41 +742,34 @@ export class NextlyAnyoneize {
                 } else {
                     onVideoAdStartFail();
                 }
-
                 return;
             }
 
             SubbillHyperforce.instance.overforwardFullary({
                 overtellHeadness: (success: boolean) => {
                     if (success) {
-                        listener?.overtellHeadness?.(success);
-                        return;
+                        listener?.onStart?.(success, 'v');
+                    } else {
+                        onVideoAdStartFail();
                     }
-
-                    onVideoAdStartFail();
                 },
-                nearPaintify: listener?.nearPaintify,
-                oceannessSuperking: () => listener?.oceannessSuperking?.(true),
-                miniintendUltradetail: listener?.miniintendUltradetail,
-                subadaptMultithen: listener?.subadaptMultithen,
-                hyperjustMoviely: listener?.hyperjustMoviely,
+                nearPaintify: (success: boolean) => listener?.onEnd?.(success, 'v'),
+                oceannessSuperking: (started: boolean) => listener?.onCancel?.(started, 'v'),
+                miniintendUltradetail: () => listener?.onFinish?.('v'),
+                subadaptMultithen: () => listener?.onClick?.('v'),
+                hyperjustMoviely: () => listener?.onRevenue?.('v'),
             });
         };
 
         doShowAd();
     }
 
-    private normalnessChoosely(allowVideoAdFallback: boolean, listener?: IInterstitialAdListenerLike): void {
+    private normalnessChoosely(allowVideoAdFallback: boolean, listener?: TAdListenerBridge): void {
         const onInterstitialAdStartFail = () => {
             if (allowVideoAdFallback && this.messagelyMacroinvite) {
-                this.autofeelUltramethod(false, {
-                    overtellHeadness: listener?.minicomparePositioner,
-                    nearPaintify: listener?.pushoryAntiprofile,
-                    subadaptMultithen: listener?.multifeelProperism,
-                    hyperjustMoviely: listener?.postfeedBattling,
-                }, false);
+                this.autofeelUltramethod(false, listener, false);
             } else {
-                listener?.minicomparePositioner?.(false);
+                listener?.onStart?.(false, 'i');
             }
         };
 
@@ -790,15 +781,14 @@ export class NextlyAnyoneize {
         SubbillHyperforce.instance.overmuchMinicurious({
             minicomparePositioner: (success: boolean) => {
                 if (success) {
-                    listener?.minicomparePositioner?.(success);
-                    return;
+                    listener?.onStart?.(success, 'i');
+                } else {
+                    onInterstitialAdStartFail();
                 }
-
-                onInterstitialAdStartFail();
             },
-            pushoryAntiprofile: listener?.pushoryAntiprofile,
-            multifeelProperism: listener?.multifeelProperism,
-            postfeedBattling: listener?.postfeedBattling,
+            pushoryAntiprofile: (success: boolean) => listener?.onEnd?.(success, 'i'),
+            multifeelProperism: () => listener?.onClick?.('i'),
+            postfeedBattling: () => listener?.onRevenue?.('i'),
         });
     }
 

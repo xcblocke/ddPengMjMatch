@@ -20,6 +20,6 @@ export enum ServerType {
 }
 
 export const MainConfig = {
-  curServerType: 1,
+  curServerType: 2,
   serveUrl: "",
 };
