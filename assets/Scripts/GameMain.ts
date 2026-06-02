@@ -1423,6 +1423,8 @@ export default class GameMain extends cc.Component {
       this.comboNode.active = true;
       this.comboNode.getComponent(combo).updateCombo();
       if (gameData.comboCount >= 5) {
+        // console.log("updateComboCount.................: 11111");
+        NativeUtils.vibrate(100);
         if (!this._comboEffect) {
           this._comboEffect = cc.instantiate(this.comboEffectPrefab);
           this._comboEffect.parent = this.node;
