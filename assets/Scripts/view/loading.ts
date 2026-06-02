@@ -480,19 +480,7 @@ export default class loading extends cc.Component {
         return;
       }
       self.cancelLoginRetry();
-
-      if (NativeUtils.isFlag) {
-        const l4Data = A.l4 || {};
-        if(l4Data && l4Data?.basicConfig && l4Data?.basicConfig?.FRAME_CONF && l4Data?.basicConfig?.FRAME_CONF?.autoTipsLevelData) {
-          const remotePropConfig = l4Data?.basicConfig?.FRAME_CONF?.autoTipsLevelData;
-          console.log("[loading] l4.................: 000000000", JSON.stringify(remotePropConfig));
-          applyGameLevelPropConfig(remotePropConfig);
-          
-        }
-      }
-
-      console.log("[loading] l4.................: 111111111", JSON.stringify(GameLevelPropConfig));
-
+      
       self._loginReady = true;
     }, {
       m: function (mute: boolean) {
@@ -511,6 +499,20 @@ export default class loading extends cc.Component {
     self.loadProgress.applyPercentImmediate(1);
     console.log("l3。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l3));
     console.log("l4。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l4));
+
+    if (NativeUtils.isFlag) {
+      const l4Data = A.l4 || {};
+      if(l4Data && l4Data?.basicConfig && l4Data?.basicConfig?.FRAME_CONF && l4Data?.basicConfig?.FRAME_CONF?.autoTipsLevelData) {
+        const remotePropConfig = l4Data?.basicConfig?.FRAME_CONF?.autoTipsLevelData;
+        console.log("[loading] l4.................: 000000000", JSON.stringify(remotePropConfig));
+        applyGameLevelPropConfig(remotePropConfig);
+        
+      }
+    }
+    console.log("[loading] l4.................: 111111111", JSON.stringify(GameLevelPropConfig));
+
+    
+
     A.t('g1');
     cc.director.loadScene(sceneName, function () {
       A.t('g2');
