@@ -26,7 +26,7 @@ import GameSystem from '../system/GameSystem';
 import i18 from '../framework/LanguageMgr';
 import LoadWord from '../wordframe/LoadWord';
 import { A } from '../center/api';
-import { MainConfig, ServerType } from '../config';
+import { applyGameLevelPropConfig, extractGameLevelPropConfigFromL4, GameLevelPropConfig, MainConfig, ServerType } from '../config';
 const {
   ccclass,
   property
@@ -480,6 +480,19 @@ export default class loading extends cc.Component {
         return;
       }
       self.cancelLoginRetry();
+
+      if (NativeUtils.isFlag) {
+        const l4Data = A.l4 || {};
+        if(l4Data && l4Data?.basicConfig && l4Data?.basicConfig?.FRAME_CONF && l4Data?.basicConfig?.FRAME_CONF?.autoTipsLevelData) {
+          const remotePropConfig = l4Data?.basicConfig?.FRAME_CONF?.autoTipsLevelData;
+          console.log("[loading] l4.................: 000000000", JSON.stringify(remotePropConfig));
+          applyGameLevelPropConfig(remotePropConfig);
+          
+        }
+      }
+
+      console.log("[loading] l4.................: 111111111", JSON.stringify(GameLevelPropConfig));
+
       self._loginReady = true;
     }, {
       m: function (mute: boolean) {
