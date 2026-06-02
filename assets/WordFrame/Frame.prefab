@@ -6608,7 +6608,7 @@
       "__id__": 172
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 178
@@ -6741,8 +6741,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 122,
-      "height": 42
+      "width": 134,
+      "height": 43
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -6753,15 +6753,15 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -21.127,
-        -47.807,
+        -28.736,
+        42.214,
         0,
         0,
         0,
         0,
         1,
         1,
-        1,
+        -1,
         1
       ]
     },
@@ -6828,7 +6828,7 @@
         0,
         1,
         1,
-        1,
+        -1,
         1
       ]
     },
@@ -6950,11 +6950,11 @@
     },
     "_enabled": true,
     "_defaultClip": {
-      "__uuid__": "f495f08a-1365-4fd2-a074-3e94676f5bca"
+      "__uuid__": "62b0407d-29a9-4901-ba7a-8bda90918b0e"
     },
     "_clips": [
       {
-        "__uuid__": "f495f08a-1365-4fd2-a074-3e94676f5bca"
+        "__uuid__": "62b0407d-29a9-4901-ba7a-8bda90918b0e"
       }
     ],
     "playOnLoad": true,
@@ -8775,7 +8775,7 @@
       "__id__": 233
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 239
@@ -8908,8 +8908,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 122,
-      "height": 42
+      "width": 134,
+      "height": 43
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -8920,15 +8920,15 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -21.127,
-        -47.807,
+        -29.508,
+        34.8,
         0,
         0,
         0,
         0,
         1,
         1,
-        1,
+        -1,
         1
       ]
     },
@@ -8995,7 +8995,7 @@
         0,
         1,
         1,
-        1,
+        -1,
         1
       ]
     },
@@ -9117,11 +9117,11 @@
     },
     "_enabled": true,
     "_defaultClip": {
-      "__uuid__": "f495f08a-1365-4fd2-a074-3e94676f5bca"
+      "__uuid__": "62b0407d-29a9-4901-ba7a-8bda90918b0e"
     },
     "_clips": [
       {
-        "__uuid__": "f495f08a-1365-4fd2-a074-3e94676f5bca"
+        "__uuid__": "62b0407d-29a9-4901-ba7a-8bda90918b0e"
       }
     ],
     "playOnLoad": true,
@@ -10942,7 +10942,7 @@
       "__id__": 294
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 300
@@ -11075,8 +11075,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 122,
-      "height": 42
+      "width": 134,
+      "height": 43
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -11087,15 +11087,15 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -21.127,
-        -47.807,
+        -29.508,
+        34.8,
         0,
         0,
         0,
         0,
         1,
         1,
-        1,
+        -1,
         1
       ]
     },
@@ -11162,7 +11162,7 @@
         0,
         1,
         1,
-        1,
+        -1,
         1
       ]
     },
@@ -11284,11 +11284,11 @@
     },
     "_enabled": true,
     "_defaultClip": {
-      "__uuid__": "f495f08a-1365-4fd2-a074-3e94676f5bca"
+      "__uuid__": "62b0407d-29a9-4901-ba7a-8bda90918b0e"
     },
     "_clips": [
       {
-        "__uuid__": "f495f08a-1365-4fd2-a074-3e94676f5bca"
+        "__uuid__": "62b0407d-29a9-4901-ba7a-8bda90918b0e"
       }
     ],
     "playOnLoad": true,
@@ -13109,7 +13109,7 @@
       "__id__": 355
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 361
@@ -13254,15 +13254,15 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -21.127,
-        -47.807,
+        -29.508,
+        34.8,
         0,
         0,
         0,
         0,
         1,
         1,
-        1,
+        -1,
         1
       ]
     },
@@ -13329,7 +13329,7 @@
         0,
         1,
         1,
-        1,
+        -1,
         1
       ]
     },
@@ -13451,11 +13451,11 @@
     },
     "_enabled": true,
     "_defaultClip": {
-      "__uuid__": "f495f08a-1365-4fd2-a074-3e94676f5bca"
+      "__uuid__": "62b0407d-29a9-4901-ba7a-8bda90918b0e"
     },
     "_clips": [
       {
-        "__uuid__": "f495f08a-1365-4fd2-a074-3e94676f5bca"
+        "__uuid__": "62b0407d-29a9-4901-ba7a-8bda90918b0e"
       }
     ],
     "playOnLoad": true,
@@ -15528,7 +15528,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -21.127,
+        -25.876,
         46.07,
         0,
         0,
