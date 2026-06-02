@@ -17792,7 +17792,7 @@
     "node": {
       "__id__": 491
     },
-    "_enabled": false,
+    "_enabled": true,
     "_color": {
       "__type__": "cc.Color",
       "r": 139,
