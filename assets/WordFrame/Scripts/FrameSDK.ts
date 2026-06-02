@@ -1539,11 +1539,11 @@ export class FrameSDK {
                         object_notes: `inter`
                     });
                 }
-                FrameSDK.openInters(cb, () => { }, "level_start_inters");
+                // FrameSDK.openInters(cb, () => { }, "level_start_inters");
                 // 拉取/播放失败时 grantOnTotalFail=cb：发 charity 奖励并 safeResolve，避免卡关
-                // FrameSDK.openInters(cb, () => { }, "level_start_inters", () => {
-                //     safeResolve();
-                // }, cb);
+                FrameSDK.openInters(cb, () => { }, "level_start_inters", () => {
+                    safeResolve();
+                }, cb);
             })).then(() => new Promise<void>(resolve => {
                 const enteringLevel = Math.max(
                     Math.floor(Number(levelA) || 0),
