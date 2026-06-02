@@ -20,6 +20,25 @@ export enum ServerType {
 }
 
 export const MainConfig = {
-  curServerType: 2,
+  curServerType: 1,
   serveUrl: "",
 };
+
+/** 关卡道具与前期引导配置（改 UnlevelPropConfig 即可调整道具解锁关卡） */
+export const GameLevelPropConfig = {
+  /** 到达该关卡开始展示并解锁道具栏，如 4 表示第 4 关 */
+  UnlevelPropConfig: 7,
+  /** 解锁时赠送的刷新道具数量 */
+  unlockReshuffleCount: 1,
+  /** 解锁时赠送的提示道具数量 */
+  unlockTipCount: 10,
+  /** 无道具栏时，启用 idle 自动提示的关卡 */
+  earlyAutoHintLevels: [2, 3,4,5,6],
+  /** 无操作超过该秒数后自动提示（交互同提示道具，不消耗道具） */
+  earlyAutoHintIdleSeconds: 3,
+};
+
+export function getUnlockPropLevel(): number {
+  const v = Math.floor(Number(GameLevelPropConfig.UnlevelPropConfig));
+  return v > 0 ? v : 4;
+}

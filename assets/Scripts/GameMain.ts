@@ -22,7 +22,7 @@ import combo from './prefab/combo';
 import { Constants } from './common/Constants';
 import { gameConfig } from './data/GameConfig';
 // import mainBtnGroupCtrl from './mainBtnGroupCtrl';
-import { levelRewardCoin, MainConfig, ServerType } from './config';
+import { GameLevelPropConfig, getUnlockPropLevel, levelRewardCoin, MainConfig, ServerType } from './config';
 import { applyFreePropRewardIfAny } from './freePropPage';
 import GameUtils from './wordframe/GameUtils';
 import LoadWord from './wordframe/LoadWord';
@@ -251,6 +251,8 @@ export default class GameMain extends cc.Component {
     EventMgr.listen(GameEventType.UPDATE_DOLLARBALANCE, this.updateCoinTextUI, this);
     EventMgr.listen(GameEventType.FULL_SCREEN_CLICK, this.closePropTip, this);
     EventMgr.listen(GameEventType.FULL_SCREEN_MOVE, this.closePropTip, this);
+    EventMgr.listen(GameEventType.FULL_SCREEN_CLICK, this.onEarlyAutoHintUserActivity, this);
+    EventMgr.listen(GameEventType.FULL_SCREEN_MOVE, this.onEarlyAutoHintUserActivity, this);
   }
   removeEvent() {
     EventMgr.ignore(GameEventType.REBORN, this.rebornGame, this);
@@ -271,6 +273,79 @@ export default class GameMain extends cc.Component {
     EventMgr.ignore(GameEventType.UPDATE_DOLLARBALANCE, this.updateCoinTextUI, this);
     EventMgr.ignore(GameEventType.FULL_SCREEN_CLICK, this.closePropTip, this);
     EventMgr.ignore(GameEventType.FULL_SCREEN_MOVE, this.closePropTip, this);
+    EventMgr.ignore(GameEventType.FULL_SCREEN_CLICK, this.onEarlyAutoHintUserActivity, this);
+    EventMgr.ignore(GameEventType.FULL_SCREEN_MOVE, this.onEarlyAutoHintUserActivity, this);
+  }
+  isPropVisibleLevel(level = gameData.gameLevel): boolean {
+    return level >= getUnlockPropLevel();
+  }
+  isEarlyAutoHintLevel(level = gameData.gameLevel): boolean {
+    const levels = GameLevelPropConfig.earlyAutoHintLevels || [2, 3];
+    return levels.indexOf(level) >= 0;
+  }
+  startEarlyAutoHintTimer() {
+    this.stopEarlyAutoHintTimer();
+    if (!this.isEarlyAutoHintLevel()) {
+      return;
+    }
+    const delay = Math.max(0.1, Number(GameLevelPropConfig.earlyAutoHintIdleSeconds) || 3);
+    this.scheduleOnce(this.onEarlyAutoHintTimeout, delay);
+  }
+  stopEarlyAutoHintTimer() {
+    this.unschedule(this.onEarlyAutoHintTimeout);
+  }
+  resetEarlyAutoHintTimer() {
+    if (!this.isEarlyAutoHintLevel() || gameData.gameState !== GameState.gameing) {
+      return;
+    }
+    this.startEarlyAutoHintTimer();
+  }
+  onEarlyAutoHintUserActivity() {
+    if (!this.isEarlyAutoHintLevel()) {
+      return;
+    }
+    this.resetEarlyAutoHintTimer();
+  }
+  shouldShowEarlyAutoHint(): boolean {
+    if (!this.isEarlyAutoHintLevel()) {
+      return false;
+    }
+    if (gameData.gameState !== GameState.gameing) {
+      return false;
+    }
+    if (!gameData.globalCanClick) {
+      return false;
+    }
+    if (this.teachGuideNode && this.teachGuideNode.active) {
+      return false;
+    }
+    if (this._rewardAbPopupPending) {
+      return false;
+    }
+    const overlay = this.node.getChildByName("__operate_tip_overlay__");
+    if (overlay && overlay.active) {
+      return false;
+    }
+    return true;
+  }
+  onEarlyAutoHintTimeout() {
+    if (!this.isEarlyAutoHintLevel() || gameData.gameState !== GameState.gameing) {
+      return;
+    }
+    if (!this.shouldShowEarlyAutoHint()) {
+      if (!gameData.globalCanClick || this.teachGuideNode && this.teachGuideNode.active || this._rewardAbPopupPending) {
+        this.scheduleOnce(this.onEarlyAutoHintTimeout, 0.5);
+      }
+      return;
+    }
+    const touch = this._touchCtrl;
+    const action = touch && typeof touch.getOperateTipAction === "function" ? touch.getOperateTipAction() : null;
+    if (!action) {
+      this.resetEarlyAutoHintTimer();
+      return;
+    }
+    AudioManager.getInstance().playMusic("Prop_tip");
+    EventMgr.trigger(GameEventType.TEACHING_OPERATE_TIP, action);
   }
   onDestroy() {
     this.removeEvent();
@@ -490,6 +565,7 @@ export default class GameMain extends cc.Component {
     this.updatePorpCount();
     this.updateBackStepBtnState();
     await this.gameInitGuide();
+    this.startEarlyAutoHintTimer();
     cc.director.emit("resfLv");
     return;
   }
@@ -754,6 +830,7 @@ export default class GameMain extends cc.Component {
     }
     if (gameData.gameState == GameState.gameing) {
       this.isGameing = true;
+      this.onEarlyAutoHintUserActivity();
       this.startShowTipNode();
       gameData.curClearNum++;
       this.hideTipNode();
@@ -825,6 +902,7 @@ export default class GameMain extends cc.Component {
     this.map_root.active = false;
     this.tipPropBubbleNode.active = false;
     this.unschedule(this.showTipNode);
+    this.stopEarlyAutoHintTimer();
     this.mahjongContainer.removeAllChildren();
   }
   checkoutGameOver() {}
@@ -834,7 +912,7 @@ export default class GameMain extends cc.Component {
     this.scheduleOnce(this.showTipNode, this._tipTime);
   }
   showTipNode() {
-    gameData.gameState == GameState.gameing && gameData.gameLevel > 2 && (this.tipPropBubbleNode.active = true);
+    gameData.gameState == GameState.gameing && this.isPropVisibleLevel() && (this.tipPropBubbleNode.active = true);
   }
   hideTipNode() {
     this.tipPropBubbleNode.active = false;
@@ -862,7 +940,8 @@ export default class GameMain extends cc.Component {
   updatePorpCount() {
     var e = this;
     if (gameData.openGameModule.propModule) {
-      if (gameData.gameLevel < 2) this.propContainer.active = false;else {
+      const unlockPropLevel = getUnlockPropLevel();
+      if (gameData.gameLevel < unlockPropLevel) this.propContainer.active = false;else {
         this.propContainer.active = true;
         this.propContainer.children.forEach(function (t) {
           var o = cc.find("ui_you/numLb", t),
@@ -870,7 +949,7 @@ export default class GameMain extends cc.Component {
             a = cc.find("ui_you", t);
           a.active = true;
           if ("reshuffleCard" == t.name) {
-            t.active = gameData.gameLevel >= 2;
+            t.active = gameData.gameLevel >= unlockPropLevel;
             o.getComponent(cc.Label).string = 0 == PlayerDataSys.reshuffleCardCount ? "+" : "" + PlayerDataSys.reshuffleCardCount;
             if (PlayerDataSys.reshuffleCardCount > 9) {
               a.getComponent(cc.Sprite).spriteFrame = e.propNumIcons[1];
@@ -880,7 +959,7 @@ export default class GameMain extends cc.Component {
             n.active = 0 == PlayerDataSys.reshuffleCardCount;
             o.active = 0 != PlayerDataSys.reshuffleCardCount;
           } else if ("tipBtn" == t.name) {
-            t.active = gameData.gameLevel >= 2;
+            t.active = gameData.gameLevel >= unlockPropLevel;
             o.getComponent(cc.Label).string = 0 == PlayerDataSys.tipCardCount ? "+" : "" + PlayerDataSys.tipCardCount;
             n.active = 0 == PlayerDataSys.tipCardCount;
             o.active = 0 != PlayerDataSys.tipCardCount;
@@ -1010,19 +1089,25 @@ export default class GameMain extends cc.Component {
       this.showNextTeachingStep();
     }
     t = JSON.parse(cc.sys.localStorage.getItem("unLockPropGuide")) || [];
-    // 第二关一次性解锁「刷新 1 次 + 提示 3 次」；不弹 unlockPropPage、不走道具教程
-    if (2 == gameData.gameLevel && -1 == t.indexOf("2")) {
-      PlayerDataSys.reshuffleCardCount = 1;
-      PlayerDataSys.tipCardCount = 3;
-      t.push("2");
+    const unlockPropLevel = getUnlockPropLevel();
+    const levelKey = String(gameData.gameLevel);
+    // 到达配置关卡一次性解锁「刷新 + 提示」两道具；不弹 unlockPropPage、不走道具教程
+    if (gameData.gameLevel === unlockPropLevel && -1 === t.indexOf(levelKey)) {
+      PlayerDataSys.reshuffleCardCount = Number(GameLevelPropConfig.unlockReshuffleCount) || 1;
+      PlayerDataSys.tipCardCount = Number(GameLevelPropConfig.unlockTipCount) || 3;
+      if (gameData.gameLevel === 4) {
+        PlayerDataSys.freezeCardCount = 0;
+      }
+      t.push(levelKey);
       cc.sys.localStorage.setItem("unLockPropGuide", JSON.stringify(t));
       EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
+      await EngineUtil.sleep(500);
       applyFreePropRewardIfAny();
       EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
       return;
     }
     e = null;
-    4 == gameData.gameLevel && (e = {
+    4 == gameData.gameLevel && unlockPropLevel !== 4 && (e = {
       type: PropType.freezeCard,
       level: gameData.gameLevel
     });
