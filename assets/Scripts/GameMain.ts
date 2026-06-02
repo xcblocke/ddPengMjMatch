@@ -374,6 +374,7 @@ export default class GameMain extends cc.Component {
         n.map_root.active = false;
         n.mahjongContainer.removeAllChildren();
         const roundForUi = gameData.roundMax > 1 ? gameData.roundId : undefined;
+        const enteringLevel = GameUtils.getEnteringLevelId();
         let levelFlowStarted = false;
         const onLevelFlowDone = () => {
           GameUtils.logLevelProgress("onLevelFlowDone_initGameData");
@@ -385,7 +386,7 @@ export default class GameMain extends cc.Component {
         const showLevelBannerThenStart = () => {
           const sdk = LoadWord.FrameSDK;
           if (sdk && sdk.Panel && typeof sdk.showLevelStartBanner === "function") {
-            sdk.showLevelStartBanner(onLevelFlowDone, gameData.gameLevel);
+            sdk.showLevelStartBanner(onLevelFlowDone, enteringLevel);
           } else {
             // n.levelStart.active = true;
             // n.levelStart.getComponent(LevelStart).init({ cb: onLevelFlowDone });
@@ -405,19 +406,30 @@ export default class GameMain extends cc.Component {
             onLevelFlowDone();
           }
         };
-        if (gameData.skipNextPreLevelPopups || GameUtils.shouldSkipPreLevelPopups()) {
+        if (gameData.skipNextPreLevelPopups) {
           gameData.skipNextPreLevelPopups = false;
-          GameUtils.logLevelProgress("skip_beforeGameLevelStart");
+          GameUtils.logLevelProgress("skip_beforeGameLevelStart_force");
+          beginLevelFlow(true);
+          return;
+        }
+        if (GameUtils.shouldSkipPreLevelPopups()) {
+          GameUtils.logLevelProgress("skip_beforeGameLevelStart_same_level_round2", {
+            enteringLevel,
+            roundId: gameData.roundId,
+            roundMax: gameData.roundMax
+          });
           beginLevelFlow(true);
           return;
         }
         const loadWord = LoadWord.instance;
         if (loadWord && loadWord.shouldDeferPreLevelPopupsForNewHand()) {
-          GameUtils.logLevelProgress("defer_beforeGameLevelStart_newHand");
+          GameUtils.logLevelProgress("defer_beforeGameLevelStart_newHand", { enteringLevel });
           const deferredRunner = () => {
             const t0 = Date.now();
-            GameUtils.beforeGameLevelStart(gameData.gameLevel, roundForUi, null, () => {
+            const lv = GameUtils.getEnteringLevelId();
+            GameUtils.beforeGameLevelStart(lv, roundForUi, null, () => {
               GameUtils.logLevelProgress("beforeGameLevelStart_done_after_newHand", {
+                enteringLevel: lv,
                 waitMs: Date.now() - t0
               });
               beginLevelFlow(false);
@@ -428,8 +440,9 @@ export default class GameMain extends cc.Component {
           return;
         }
         const t0 = Date.now();
-        GameUtils.beforeGameLevelStart(gameData.gameLevel, roundForUi, null, () => {
+        GameUtils.beforeGameLevelStart(enteringLevel, roundForUi, null, () => {
           GameUtils.logLevelProgress("beforeGameLevelStart_done", {
+            enteringLevel,
             waitMs: Date.now() - t0
           });
           beginLevelFlow(false);

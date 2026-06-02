@@ -26,9 +26,10 @@ export default class Panel_RedeemTips extends cc.Component {
     @property(cc.Node)
     paymentRootNode: cc.Node = null;
 
-    // LIFE-CYCLE CALLBACKS:
-    viewData: { level: number, currentBonus: number, closeCB?: () => void } = null;
+    viewData: { level: number | string, currentBonus: number, closeCB?: () => void } = null;
     private _closed = false;
+    /** onLoad 已成功挂上 viewData 并开始展示 */
+    private _started = false;
 
     private finishClose() {
         if (this._closed) return;
@@ -39,21 +40,24 @@ export default class Panel_RedeemTips extends cc.Component {
     }
 
     protected onLoad(): void {
+        if (!this.viewData || !this.bg) {
+            console.warn("[Panel_RedeemTips] missing viewData or bg, skip");
+            this.scheduleOnce(() => this.finishClose(), 0);
+            return;
+        }
+        this._closed = false;
+        this._started = true;
+
         let x = cc.winSize.width * 0.5 + this.bg.width * 0.5;
         this.bg.x = x;
 
         this.rounds_sp.active = false;
-        // if(this.viewData.level.toString().includes("/")){
-        //     this.rounds_sp.active = true;
-        // }
-        // this.lv_sp.active = !this.rounds_sp.active;
-
 
         this.levelLabel.string = `${this.viewData.level}`;
 
         const levelRequiremnt = FrameSDK.getFirstRedeemRequirement().rdm_1;
         this.tips1.string = `skey_078??&value1==<color= #FCFF0F>${Math.max(0, levelRequiremnt - (FrameSDK.frameData.gameData.passLevel))}</c>`;
-        this.rtx_tips1.string = `<img src="dollar4" offset=-3/>${FrameSDK.convertCoinToStr(this.viewData.currentBonus)}≈<color= #7AF465>${FrameSDK.convertCoinToStr(this.viewData.currentBonus, true)}</c>`;//`skey_079??&value1==<color= #8AFF77>${FrameSDK.convertCoinToStr(this.viewData.currentBonus, true)}</c>`;
+        this.rtx_tips1.string = `<img src="dollar4" offset=-3/>${FrameSDK.convertCoinToStr(this.viewData.currentBonus)}≈<color= #7AF465>${FrameSDK.convertCoinToStr(this.viewData.currentBonus, true)}</c>`;
 
         FrameSDK.playEffect("rewardshow");
 
@@ -67,17 +71,17 @@ export default class Panel_RedeemTips extends cc.Component {
     }
 
     protected onEnable(): void {
+        if (!this._started) {
+            return;
+        }
         FrameSDK.openEffect(this);
         const paymentIDs = FrameData.CountryConf.cash_id.slice(0, 4);
         this.paymentRootNode.children.forEach((node, index) => {
             node.getComponent(PaymentItem).paymentID = paymentIDs[index] ?? 0;
         });
-
     }
 
-    onDisable() {
+    onDestroy() {
         this.finishClose();
     }
-
-    // update (dt) {}
 }

@@ -214,10 +214,35 @@ static showInterstitialAd(succFunc: (str?: string) => void = null) {
     return `${curRound + 1}/${totalRound}`;
   }
 
-  /** 同一大关内第 2 局及以后：跳过进关弹窗链 */
+  /**
+   * 同一大关内第 2 局及以后：仅展示 Level 横幅，不走 beforeGameLevelStart 全链。
+   * （Welcome / 幸运奖 / 插屏等也不再弹）
+   */
   static shouldSkipPreLevelPopups() {
     const { totalRound, curRound } = GameUtils.getCurRoundInfo();
     return totalRound > 1 && curRound > 0;
+  }
+
+  /**
+   * 本次 start_game 后要进入的大关 id（兼容接口 game_level 滞后、仍显示上一关的情况）。
+   */
+  static getEnteringLevelId(): number {
+    const fromStart = Math.floor(Number(gameData.startGameData?.game_level) || 0);
+    const fromGame = Math.floor(Number(gameData.gameLevel) || 0);
+    const fromPass = GameUtils.getPassLevel() + 1;
+    return Math.max(1, fromStart, fromGame, fromPass);
+  }
+
+  /** 是否跳过 Panel_RedeemTips（截图2）：第 1 关，或同关第 2 局及以后 */
+  static shouldSkipRedeemTips(enteringLevel?: number): boolean {
+    const lv = Math.max(
+      1,
+      Math.floor(Number(enteringLevel ?? GameUtils.getEnteringLevelId()) || 1)
+    );
+    if (lv <= 1) {
+      return true;
+    }
+    return GameUtils.shouldSkipPreLevelPopups();
   }
 
   /**
@@ -317,7 +342,9 @@ static showInterstitialAd(succFunc: (str?: string) => void = null) {
       roundMax: gameData.roundMax,
       roundText: GameUtils.getRoundProgressText(),
       passLevel: GameUtils.getPassLevel(),
-      skipPreLevelPopups: GameUtils.shouldSkipPreLevelPopups()
+      enteringLevel: GameUtils.getEnteringLevelId(),
+      skipPreLevelPopups: GameUtils.shouldSkipPreLevelPopups(),
+      skipRedeemTips: GameUtils.shouldSkipRedeemTips()
     }, extra || {})));
   }
 

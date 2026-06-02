@@ -145,6 +145,9 @@ export class FrameSDK {
             getLevelReportInfo: () => { levelId: number; passLevel: number; curRound: number; totalRound: number },
             formatLevelReportSegments: () => string,
             formatLevelReportNotes: () => string,
+            getEnteringLevelId?: () => number,
+            shouldSkipRedeemTips?: (enteringLevel?: number) => boolean,
+            getRoundProgressText?: () => string | null,
             showToast: Function
         },
         gameNodeObj: {
@@ -620,7 +623,8 @@ export class FrameSDK {
             if (assets) {
                 cb(cc.instantiate(assets));
             } else {
-                console.error(error);
+                console.error("[FrameSDK] loadPrefab failed:", name, error);
+                cb(null);
             }
         });
     }
@@ -1128,17 +1132,41 @@ export class FrameSDK {
     }
 
     static openWindow(name: string, data: any = {}, parent?: cc.Node) {
+        const closeCB = data && data.closeCB;
         FrameSDK.loadPrefab(name, (node) => {
             if (!node) {
+                console.warn("[FrameSDK] openWindow failed:", name);
+                closeCB && closeCB();
                 return;
             }
             const comp = node.getComponent(name);
-            if (comp) {
-                comp.viewData = data;
+            if (!comp) {
+                console.warn("[FrameSDK] openWindow missing component:", name);
+                node.destroy();
+                closeCB && closeCB();
+                return;
             }
+            comp.viewData = data;
             node.parent = parent || FrameSDK.Panel;
             node.active = true;
         });
+    }
+
+    private static dismissStalePanelOnPopUpLayer(panelName: string) {
+        const panel = FrameSDK.Panel;
+        if (!panel || !cc.isValid(panel)) {
+            return;
+        }
+        const stale: cc.Node[] = [];
+        panel.children.forEach((child) => {
+            if (!child || !cc.isValid(child)) {
+                return;
+            }
+            if (child.name === panelName || child.getComponent(panelName)) {
+                stale.push(child);
+            }
+        });
+        stale.forEach((node) => FrameSDK.releasePanelNode(node));
     }
 
     /** 关卡开始横幅（Panel_ShowLevel 预制体） */
@@ -1458,32 +1486,27 @@ export class FrameSDK {
 
         })
             .then(() => new Promise<void>(resolve => {
-                if (FrameSDK.skipNextRedeemTipsOnce) {
-                    FrameSDK.skipNextRedeemTipsOnce = false;
+                FrameSDK.skipNextRedeemTipsOnce = false;
+                const enteringLevel = Math.max(
+                    Math.floor(Number(levelA) || 0),
+                    FrameSDK.frameData?.gameFuc?.getEnteringLevelId?.() ?? levelA
+                );
+                const skipRedeem = FrameSDK.frameData?.gameFuc?.shouldSkipRedeemTips?.(enteringLevel)
+                    ?? (enteringLevel <= 1);
+                if (skipRedeem) {
+                    console.log("[FrameSDK] skip Panel_RedeemTips", { enteringLevel, levelA, levelB });
                     resolve();
                     return;
                 }
-                //不知道这个判断有啥用，我这个项目应该不适用，不然第一关的时候拉不起这个提示
-                // if (levelA < FrameData.FRAME_CONF.RedeemTipsStartLevel || levelA > this.getFirstRedeemRequirement().rdm_1) {
-                // if (levelA > this.getFirstRedeemRequirement().rdm_1) {
-                //     resolve();
-                //     return;
-                // }
-
-                // if (levelA == 1) {
-                //     FrameSDK.logGameEvent('sdymjmatch_game_new', {
-                //         object_action: 'show',
-                //         object_name: 'new_9',
-                //     }, true);
-                // }
                 let CurTurnInfo = FrameSDK.frameData.gameFuc.getCurTurnInfo();
                 if (CurTurnInfo.totalTurn > 1) {
                     // featureTip.string = `${CurTurnInfo.curTurn+1}/${CurTurnInfo.totalTurn}`;
                     // levelB = CurTurnInfo.curTurn+1;
                 }
-
+                console.log("[FrameSDK] show Panel_RedeemTips", { enteringLevel, levelA, levelB });
+                FrameSDK.dismissStalePanelOnPopUpLayer("Panel_RedeemTips");
                 this.openWindow("Panel_RedeemTips", {
-                    level: levelB ? `${levelA}  ${levelB}/${CurTurnInfo.totalTurn}` : levelA,//levelB?levelA+"_"+levelB:levelA,
+                    level: levelB ? `${enteringLevel}  ${levelB}/${CurTurnInfo.totalTurn}` : enteringLevel,
                     currentBonus: FrameData.credit,
                     closeCB: resolve
                 });
@@ -1517,8 +1540,16 @@ export class FrameSDK {
                     });
                 }
                 FrameSDK.openInters(cb, () => { }, "level_start_inters");
+                // 拉取/播放失败时 grantOnTotalFail=cb：发 charity 奖励并 safeResolve，避免卡关
+                // FrameSDK.openInters(cb, () => { }, "level_start_inters", () => {
+                //     safeResolve();
+                // }, cb);
             })).then(() => new Promise<void>(resolve => {
-                FrameSDK.showLevelStartBanner(resolve, levelA);
+                const enteringLevel = Math.max(
+                    Math.floor(Number(levelA) || 0),
+                    FrameSDK.frameData?.gameFuc?.getEnteringLevelId?.() ?? levelA
+                );
+                FrameSDK.showLevelStartBanner(resolve, enteringLevel);
             }))
             .then(() => {
                 callback?.();

@@ -256,7 +256,7 @@ export default class LoadWord {
     if (force) {
       const sdk = LoadWord.FrameSDK;
       if (sdk) {
-        sdk.skipNextRedeemTipsOnce = true;
+        sdk.skipNextRedeemTipsOnce = false;
       }
     }
     this._awaitNewHandRewardFlow = false;
@@ -529,6 +529,8 @@ export default class LoadWord {
         getLevelReportInfo: () => GameUtils.getLevelReportInfo(),
         formatLevelReportSegments: () => GameUtils.formatLevelReportSegments(),
         formatLevelReportNotes: () => GameUtils.formatLevelReportNotes(),
+        getEnteringLevelId: () => GameUtils.getEnteringLevelId(),
+        shouldSkipRedeemTips: (lv?: number) => GameUtils.shouldSkipRedeemTips(lv),
         showToast: GameUtils.getInstance().showToast.bind(GameUtils.getInstance())
       },
       gameNodeObj: {}
@@ -599,19 +601,26 @@ export default class LoadWord {
     };
 
     GameUtils.beforeGameLevelStart = function (levelA, levelB, levelC, callback) {
-      if (gameData.skipNextPreLevelPopups || GameUtils.shouldSkipPreLevelPopups()) {
+      if (gameData.skipNextPreLevelPopups) {
         gameData.skipNextPreLevelPopups = false;
-        GameUtils.logLevelProgress("LoadWord_skip_beforeGameLevelStart", {
-          afterPass: true
-        });
+        GameUtils.logLevelProgress("LoadWord_skip_beforeGameLevelStart_force");
         callback && callback();
         return;
       }
+      const resolvedLevel = Math.max(
+        Math.floor(Number(levelA) || 0),
+        GameUtils.getEnteringLevelId()
+      );
       const t0 = Date.now();
-      GameUtils.logLevelProgress("LoadWord_beforeGameLevelStart", { levelA, levelB });
-      LoadWord.FrameSDK.beforeGameLevelStart(levelA, levelB, levelC, () => {
+      GameUtils.logLevelProgress("LoadWord_beforeGameLevelStart", {
+        levelA,
+        resolvedLevel,
+        levelB,
+        skipRedeemTips: GameUtils.shouldSkipRedeemTips(resolvedLevel)
+      });
+      LoadWord.FrameSDK.beforeGameLevelStart(resolvedLevel, levelB, levelC, () => {
         GameUtils.logLevelProgress("LoadWord_beforeGameLevelStart_done", {
-          levelA,
+          levelA: resolvedLevel,
           waitMs: Date.now() - t0
         });
         callback && callback();
