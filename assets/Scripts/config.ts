@@ -42,7 +42,7 @@ const DEFAULT_GAME_LEVEL_PROP_CONFIG: IGameLevelPropConfig = {
   unlockReshuffleCount: 1,
   unlockTipCount: 3,
   earlyAutoHintLevels: [2, 3],
-  earlyAutoHintIdleSeconds: 5,
+  earlyAutoHintIdleSeconds: 4,
 };
 
 /** 关卡道具与前期引导配置（本地默认值；B 面登录后由后台 VERSION_CONF.FSDK_CONF 覆盖） */

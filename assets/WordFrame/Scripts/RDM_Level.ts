@@ -334,7 +334,13 @@ export default class RDM_Level extends cc.Component {
             cc.find("tips1", this.guide).active = true;
             mask.spriteFrame = this.stepNodes[0].getComponent(cc.Sprite).spriteFrame;//FrameSDK.getNodeTexture(cc.find("node_list2", this.node));
             mask.node.setContentSize(this.stepNodes[0].getContentSize())
-            mask.node.position = cc.v3(0, cc.find("node_list2", this.node).position.y);
+
+
+            let itemNode = cc.find("node_list2/card/word_redeem_board1", this.node);
+            let posInA = this.node.convertToNodeSpaceAR(itemNode.convertToWorldSpaceAR(cc.v2(0, 0)));
+            mask.node.position = cc.v3(0, posInA.y);
+            // mask.node.position = cc.v3(0, cc.find("node_list2", this.node).position.y);
+
             cc.tween(cc.find("tips1/hand", this.guide)).by(0.5, {x: 50, y: -50}).by(0.5, {
                 x: -50,
                 y: 50
