@@ -25,7 +25,7 @@ export const MainConfig = {
 };
 
 /** 关卡道具与前期引导配置（改 UnlevelPropConfig 即可调整道具解锁关卡） */
-export const GameLevelPropConfig = {
+export let GameLevelPropConfig:any = {
   /** 到达该关卡开始展示并解锁道具栏，如 4 表示第 4 关 */
   UnlevelPropConfig: 7,
   /** 解锁时赠送的刷新道具数量 */
