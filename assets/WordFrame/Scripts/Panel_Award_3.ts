@@ -136,7 +136,7 @@ export default class Panel_Award_3 extends cc.Component {
                         return;
                     }
                     this.contentSkeleton.setAnimation(0, "loop", true);
-                    this.contentSkeleton.timeScale = 0.8;
+                    this.contentSkeleton.timeScale = 0.75;
                 
                 }
             });
@@ -151,10 +151,14 @@ export default class Panel_Award_3 extends cc.Component {
                 } else if(eventName == "x5"){
                     this.targetIndex = 2;
                 }
-                this.scheduleOnce(()=>{
-                    FrameSDK.playEffect("output_rateslide");
-                },0.14);
+                if(this.timeArray[this.targetIndex] != this.beishe){
+                    this.scheduleOnce(()=>{
+                        FrameSDK.playEffect("output_rateslide");
+                    },0.36);
+                }
+                
                 this.beishe = this.timeArray[this.targetIndex] ?? 1;
+
                 this.updataBeiShe();    
             });
         }
