@@ -861,8 +861,8 @@ export default class GameMain extends cc.Component {
     return;
   }
   showNextTeachingStep() {
-    for (var e = ["guide/teachGuide_1", "guide/teachGuide_2", "guide/teachGuide_3", "guide/teachGuide_4", "guide/teachGuide_5"], t = 0; t < e.length; t++)
-      //  AudioManager.getInstance().stopMusic(e[t]);
+    for (var e = ["guide/teachGuide_1", "guide/teachGuide_2", "guide/teachGuide_3", "guide/teachGuide_4", "guide/teachGuide_5"], t = 0; t < e.length; t++) AudioManager.getInstance().stopMusic(e[t])
+      //  ;
     this._teachingStep++;
     SdkHelper.reportData("guide_" + this._teachingStep);
     var o = null,
@@ -870,7 +870,7 @@ export default class GameMain extends cc.Component {
       a = null,
       i = null,
       r = "";
-    // e[this._teachingStep - 1] && AudioManager.getInstance().playMusic(e[this._teachingStep - 1]);
+    e[this._teachingStep - 1] && AudioManager.getInstance().playMusic(e[this._teachingStep - 1]);
     switch (this._teachingStep) {
       case 1:
         n = {
