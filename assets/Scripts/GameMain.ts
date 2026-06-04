@@ -870,7 +870,7 @@ export default class GameMain extends cc.Component {
       a = null,
       i = null,
       r = "";
-    e[this._teachingStep - 1] && AudioManager.getInstance().playMusic(e[this._teachingStep - 1]);
+    // e[this._teachingStep - 1] && AudioManager.getInstance().playMusic(e[this._teachingStep - 1]);
     switch (this._teachingStep) {
       case 1:
         n = {
