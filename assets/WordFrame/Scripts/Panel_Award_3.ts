@@ -59,6 +59,7 @@ export default class Panel_Award_3 extends cc.Component {
     speed: number = 240; // 角度/秒，180度用2秒来回一次
     timeArray: Array<number> = [];
     isInters:boolean = true;
+    isFirstADShowInters: boolean = false;
 
     targetIndex: number = 0;
 
@@ -182,6 +183,7 @@ export default class Panel_Award_3 extends cc.Component {
         this.commonActionButton.getComponentInChildren(cc.Label).string = `skey_122 ${FrameSDK.convertCoinToStr(free)}`;
         this.adBannerButton.getChildByName("no_ad_xiao").active = this.adData.isFree; 
         this.isInters = FrameSDK.isShowInters();
+        this.isFirstADShowInters = FrameSDK.isFirstADShowInters();
         this.commonActionButton.getChildByName("no_ad_xiao").active = !this.isInters;
         this.commonActionButton.x = this.isInters ? 0 : 30;
 
@@ -298,7 +300,21 @@ export default class Panel_Award_3 extends cc.Component {
         }
         if (this.adData.isFree) {
             back();
+        } else if (this.isFirstADShowInters) {
+            console.log("isFirstADShowInters===========33333 当前走的插屏广告");
+            const grant = () => {
+                FrameSDK.markFirstRewardADIntersUsed();
+                back();
+            };
+            FrameSDK.openInters(grant, () => {
+                FrameSDK.logGameEvent('sdymjmatch_game_ad', {
+                    object_action: 'show',
+                    object_name: `reward_3`,
+                    object_notes: `video`,
+                });
+            }, "reward_3", fail, grant);
         } else {
+            console.log("isFirstADShowInters===========33333 当前走的激励视频广告");
             FrameSDK.openVideo(back, fail, () => {
                 FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                     object_action: 'show',

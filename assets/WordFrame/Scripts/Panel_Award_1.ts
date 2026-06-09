@@ -44,6 +44,7 @@ export default class Panel_Award_1 extends cc.Component {
     adData: { isFree: boolean, ml: number, range: number[] } = null;
 
     isInters: boolean = true;
+    isFirstADShowInters: boolean = true;
 
     onLoad() {
         var e = this;
@@ -132,6 +133,7 @@ export default class Panel_Award_1 extends cc.Component {
         //视频按钮的无广告图标
         this.adBannerButton.getChildByName("no_ad_xiao").active = this.adData.isFree;
         this.isInters = FrameSDK.isShowInters() && !this.viewData.noInters;
+        this.isFirstADShowInters = FrameSDK.isFirstADShowInters() && !this.viewData.noInters;
         this.commonActionButton.getChildByName("no_ad_xiao").active = !this.isInters;
         this.commonActionButton.x = this.isInters ? 0 : 30;
 
@@ -242,7 +244,23 @@ export default class Panel_Award_1 extends cc.Component {
         }
         if (this.adData.isFree) {
             callBack();
+        } else if (this.isFirstADShowInters) {
+            console.log("isFirstADShowInters===========33333 当前走的插屏广告");
+            const grant = () => {
+                FrameSDK.markFirstRewardADIntersUsed();
+                callBack();
+            };
+            FrameSDK.openInters(grant, () => {
+                FrameSDK.logGameEvent("sdymjmatch_game_ad", {
+                    object_action: "show",
+                    object_name: `reward_1`,
+                    object_notes: `video`
+                });
+            }, "reward_1", () => {
+                this["noTouch"].node.active = false;
+            }, grant);
         } else {
+            console.log("isFirstADShowInters===========33333 当前走的激励视频广告");
             FrameSDK.openVideo(callBack, () => {
                 this["noTouch"].node.active = false;
             }, () => {

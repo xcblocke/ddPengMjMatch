@@ -855,6 +855,20 @@ export class FrameSDK {
             && FrameSDK.frameData.gameData.passLevel+1 >= FrameData.FRAME_CONF.InterConfig.maxFreeLevel
             && Date.now() - this._lastVideoEndTime >= FrameData.FRAME_CONF.InterConfig.cooldown;
     }
+
+    static isFirstADShowInters() {
+        console.log("isFirstADShowInters.............................", FrameData.FRAME_CONF.isAbFirstShowInter);
+        console.log("isFirstADShowInters.............................", !FrameData.saveData.firstRewardADIntersUsed);
+        return FrameData.FRAME_CONF.isAbFirstShowInter
+            && !FrameData.saveData.firstRewardADIntersUsed
+    }
+
+    static markFirstRewardADIntersUsed() {
+        if (!FrameData.saveData.firstRewardADIntersUsed) {
+            FrameData.saveData.firstRewardADIntersUsed = true;
+        }
+    }
+
     /**进入关卡的时候用的 */
     static isShowInters2() {
         return !FrameSDK.frameData.gameData.noProfitAd

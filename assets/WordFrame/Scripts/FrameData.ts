@@ -86,6 +86,8 @@ class Data {
     dailyClearanceProgress: { day: number, count: number } = null;
     /** 每日通关领奖「双倍」免看视频：生涯已用次数（上限见 DailyClearanceRewardGetFreeVideoTimes，不随日期重置） */
     dailyClearanceGetFreeVideoUsed: number = 0;
+    /** 产出弹窗首次点击激励视频按钮已走过插屏（生涯一次，重启后仍生效） */
+    firstRewardADIntersUsed: boolean = false;
 
     constructor() {
         let data = Data.getStorageItem("FrameData", null, {});
@@ -391,7 +393,8 @@ export class FrameData {
             "cooldown": 30000,
             "maxFreeLevel": 8,//xxx关后
         },
-        "before_NoInter":true,//进入关卡的时候是否要判断冷却时间条件拉插屏 false就是不要
+         "before_NoInter":true,//进入关卡的时候是否要判断冷却时间条件拉插屏 false就是不要
+         "isAbFirstShowInter":true,//进入ab奖励页面，第一次点击激励视频领取是否开启插屏 true就是开启 false就是关闭
     };
 
     static get credit() {
