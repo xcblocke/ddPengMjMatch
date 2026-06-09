@@ -1275,7 +1275,7 @@
                     },
                     {
                         "id": "T12CLUYE0O3267H7-01-01",
-                        "type": 35,
+                        "type": 21,
                         "x": 1,
                         "y": 1
                     },
@@ -1413,7 +1413,7 @@
                     },
                     {
                         "id": "K80F7X26545PIICV-04-05",
-                        "type": 11,
+                        "type": 101,
                         "x": 5,
                         "y": 4
                     }
@@ -1454,82 +1454,6 @@
                         "type": 102,
                         "x": 5,
                         "y": 5
-                    }
-                ],
-                [
-                    {
-                        "id": "902W7JU0HKB4JJ94-06-00",
-                        "type": 35,
-                        "x": 0,
-                        "y": 6
-                    },
-                    {
-                        "id": "XL18205ZU3S6KG9U-06-01",
-                        "type": 11,
-                        "x": 1,
-                        "y": 6
-                    },
-                    {
-                        "id": "CVF3W3377O9J6EB9-06-02",
-                        "type": 11,
-                        "x": 2,
-                        "y": 6
-                    },
-                    {
-                        "id": "VC17X3K05KF4UT15-06-03",
-                        "type": 19,
-                        "x": 3,
-                        "y": 6
-                    },
-                    {
-                        "id": "5G87IG53Z4X7J5TB-06-04",
-                        "type": 101,
-                        "x": 4,
-                        "y": 6
-                    },
-                    {
-                        "id": "650UG86GBGI364ZX-06-05",
-                        "type": 11,
-                        "x": 5,
-                        "y": 6
-                    }
-                ],
-                [
-                    {
-                        "id": "Z2U22TUT3K901S7L-07-00",
-                        "type": 21,
-                        "x": 0,
-                        "y": 7
-                    },
-                    {
-                        "id": "86O1020BZWZ0INC2-07-01",
-                        "type": 32,
-                        "x": 1,
-                        "y": 7
-                    },
-                    {
-                        "id": "6R9R8DYD6A5IF719-07-02",
-                        "type": 21,
-                        "x": 2,
-                        "y": 7
-                    },
-                    {
-                        "id": "RA578A8PWIGY9134-07-03",
-                        "type": 19,
-                        "x": 3,
-                        "y": 7
-                    },
-                    {
-                        "id": "873I8I6CH6OX8N9Q-07-04",
-                        "type": 32,
-                        "x": 4,
-                        "y": 7
-                    },
-                    {
-                        "id": "QW8Y3A6J64644NVV-07-05",
-                        "type": 21,
-                        "x": 5,
-                        "y": 7
                     }
                 ]
             ]
@@ -1710,7 +1634,7 @@
                     },
                     {
                         "id": "896RHZJI3SPK5920-04-01",
-                        "type": 18,
+                        "type": 31,
                         "x": 1,
                         "y": 4
                     },
@@ -1734,7 +1658,7 @@
                     },
                     {
                         "id": "73W0FIU9W57D7S2E-04-05",
-                        "type": 15,
+                        "type": 25,
                         "x": 5,
                         "y": 4
                     }
@@ -1766,7 +1690,7 @@
                     },
                     {
                         "id": "9X40UL0ZZ6Y01I9N-05-04",
-                        "type": 22,
+                        "type": 32,
                         "x": 4,
                         "y": 5
                     },
@@ -1775,82 +1699,6 @@
                         "type": 32,
                         "x": 5,
                         "y": 5
-                    }
-                ],
-                [
-                    {
-                        "id": "13DXH9Q9NTI0H292-06-00",
-                        "type": 32,
-                        "x": 0,
-                        "y": 6
-                    },
-                    {
-                        "id": "J149THOOPI24V369-06-01",
-                        "type": 28,
-                        "x": 1,
-                        "y": 6
-                    },
-                    {
-                        "id": "Z7891NRBM3K79UD1-06-02",
-                        "type": 28,
-                        "x": 2,
-                        "y": 6
-                    },
-                    {
-                        "id": "921ZRC5FAK70HT11-06-03",
-                        "type": 25,
-                        "x": 3,
-                        "y": 6
-                    },
-                    {
-                        "id": "709VID63UV36ZGR8-06-04",
-                        "type": 18,
-                        "x": 4,
-                        "y": 6
-                    },
-                    {
-                        "id": "IX26E1OD4ZS11E95-06-05",
-                        "type": 15,
-                        "x": 5,
-                        "y": 6
-                    }
-                ],
-                [
-                    {
-                        "id": "3W5XC0549TXRK81E-07-00",
-                        "type": 102,
-                        "x": 0,
-                        "y": 7
-                    },
-                    {
-                        "id": "8GZ30V7W0F9Q77HQ-07-01",
-                        "type": 31,
-                        "x": 1,
-                        "y": 7
-                    },
-                    {
-                        "id": "UV32LO8L30E75IJ3-07-02",
-                        "type": 102,
-                        "x": 2,
-                        "y": 7
-                    },
-                    {
-                        "id": "C8EBLD4D7Z43Q998-07-03",
-                        "type": 2,
-                        "x": 3,
-                        "y": 7
-                    },
-                    {
-                        "id": "26EPE0UH570TM34H-07-04",
-                        "type": 2,
-                        "x": 4,
-                        "y": 7
-                    },
-                    {
-                        "id": "RI5PWPF34882Q0X7-07-05",
-                        "type": 22,
-                        "x": 5,
-                        "y": 7
                     }
                 ]
             ]
@@ -2069,13 +1917,13 @@
                     },
                     {
                         "id": "570JH982X1QAWXV2-05-01",
-                        "type": 34,
+                        "type": 32,
                         "x": 1,
                         "y": 5
                     },
                     {
                         "id": "N27KW8NR262OXH17-05-02",
-                        "type": 7,
+                        "type": 103,
                         "x": 2,
                         "y": 5
                     },
@@ -2096,82 +1944,6 @@
                         "type": 33,
                         "x": 5,
                         "y": 5
-                    }
-                ],
-                [
-                    {
-                        "id": "85B8OT9YXA7047VS-06-00",
-                        "type": 32,
-                        "x": 0,
-                        "y": 6
-                    },
-                    {
-                        "id": "79BPS4PJWR7S7984-06-01",
-                        "type": 26,
-                        "x": 1,
-                        "y": 6
-                    },
-                    {
-                        "id": "3R3TNC21JL6X7J64-06-02",
-                        "type": 34,
-                        "x": 2,
-                        "y": 6
-                    },
-                    {
-                        "id": "D4HG3KM85J3LO888-06-03",
-                        "type": 31,
-                        "x": 3,
-                        "y": 6
-                    },
-                    {
-                        "id": "YML946V4199LAQ9I-06-04",
-                        "type": 7,
-                        "x": 4,
-                        "y": 6
-                    },
-                    {
-                        "id": "O7B193VUR0J9AW32-06-05",
-                        "type": 26,
-                        "x": 5,
-                        "y": 6
-                    }
-                ],
-                [
-                    {
-                        "id": "32RZN8159VH0QKB4-07-00",
-                        "type": 3,
-                        "x": 0,
-                        "y": 7
-                    },
-                    {
-                        "id": "A1ADY2KV5N279F49-07-01",
-                        "type": 19,
-                        "x": 1,
-                        "y": 7
-                    },
-                    {
-                        "id": "FTN6S83LA91852KE-07-02",
-                        "type": 19,
-                        "x": 2,
-                        "y": 7
-                    },
-                    {
-                        "id": "T05LF70QP96J7OT1-07-03",
-                        "type": 31,
-                        "x": 3,
-                        "y": 7
-                    },
-                    {
-                        "id": "9OD571D82KRT1SX8-07-04",
-                        "type": 3,
-                        "x": 4,
-                        "y": 7
-                    },
-                    {
-                        "id": "07M8N64B6OJZ3C9G-07-05",
-                        "type": 103,
-                        "x": 5,
-                        "y": 7
                     }
                 ]
             ]
@@ -2232,7 +2004,7 @@
                 [
                     {
                         "id": "09VQ7LO6Z4ML6E11-01-00",
-                        "type": 11,
+                        "type": 31,
                         "x": 0,
                         "y": 1
                     },
@@ -2346,7 +2118,7 @@
                 [
                     {
                         "id": "8KI52QNL53IE13N3-04-00",
-                        "type": 27,
+                        "type": 1,
                         "x": 0,
                         "y": 4
                     },
@@ -2402,7 +2174,7 @@
                     },
                     {
                         "id": "M6FA0W8QI9T6Q449-05-03",
-                        "type": 33,
+                        "type": 32,
                         "x": 3,
                         "y": 5
                     },
@@ -2417,82 +2189,6 @@
                         "type": 17,
                         "x": 5,
                         "y": 5
-                    }
-                ],
-                [
-                    {
-                        "id": "43783R6J50KWZQLT-06-00",
-                        "type": 14,
-                        "x": 0,
-                        "y": 6
-                    },
-                    {
-                        "id": "08R9MD2NM42R7B4R-06-01",
-                        "type": 14,
-                        "x": 1,
-                        "y": 6
-                    },
-                    {
-                        "id": "28PFYKV14Y4731QU-06-02",
-                        "type": 33,
-                        "x": 2,
-                        "y": 6
-                    },
-                    {
-                        "id": "LPG45YO2A0Z466E4-06-03",
-                        "type": 27,
-                        "x": 3,
-                        "y": 6
-                    },
-                    {
-                        "id": "Y23NA05OB45VZ0U3-06-04",
-                        "type": 31,
-                        "x": 4,
-                        "y": 6
-                    },
-                    {
-                        "id": "N5FIA2OO2954T95V-06-05",
-                        "type": 32,
-                        "x": 5,
-                        "y": 6
-                    }
-                ],
-                [
-                    {
-                        "id": "41Q70FEJ7IQ988ZU-07-00",
-                        "type": 36,
-                        "x": 0,
-                        "y": 7
-                    },
-                    {
-                        "id": "7P2R42Y615OQ1CGV-07-01",
-                        "type": 33,
-                        "x": 1,
-                        "y": 7
-                    },
-                    {
-                        "id": "YZ05K51657ZMGEH9-07-02",
-                        "type": 36,
-                        "x": 2,
-                        "y": 7
-                    },
-                    {
-                        "id": "2T201CE0QF2Q9AD5-07-03",
-                        "type": 1,
-                        "x": 3,
-                        "y": 7
-                    },
-                    {
-                        "id": "4MSG8PLU87G4S516-07-04",
-                        "type": 11,
-                        "x": 4,
-                        "y": 7
-                    },
-                    {
-                        "id": "W3N4T95E2EM5OX52-07-05",
-                        "type": 33,
-                        "x": 5,
-                        "y": 7
                     }
                 ]
             ]
@@ -2965,18 +2661,6 @@
                         "type": 33,
                         "x": 5,
                         "y": 0
-                    },
-                    {
-                        "id": "ZI397KD3GYR4X883-00-06",
-                        "type": 22,
-                        "x": 6,
-                        "y": 0
-                    },
-                    {
-                        "id": "YJM41L110T6QI1S5-00-07",
-                        "type": 35,
-                        "x": 7,
-                        "y": 0
                     }
                 ],
                 [
@@ -3000,7 +2684,7 @@
                     },
                     {
                         "id": "AD0EP56FC61K8F80-01-03",
-                        "type": 6,
+                        "type": 35,
                         "x": 3,
                         "y": 1
                     },
@@ -3014,18 +2698,6 @@
                         "id": "5JU2354FMQ3P3JW4-01-05",
                         "type": 33,
                         "x": 5,
-                        "y": 1
-                    },
-                    {
-                        "id": "Y7SXJY8J0185J30V-01-06",
-                        "type": 24,
-                        "x": 6,
-                        "y": 1
-                    },
-                    {
-                        "id": "T9CG0704K272YIKJ-01-07",
-                        "type": 6,
-                        "x": 7,
                         "y": 1
                     }
                 ],
@@ -3065,18 +2737,6 @@
                         "type": 18,
                         "x": 5,
                         "y": 2
-                    },
-                    {
-                        "id": "KK4CY3E2250O48NB-02-06",
-                        "type": 32,
-                        "x": 6,
-                        "y": 2
-                    },
-                    {
-                        "id": "O6400L0G8H3O7ONP-02-07",
-                        "type": 46,
-                        "x": 7,
-                        "y": 2
                     }
                 ],
                 [
@@ -3114,18 +2774,6 @@
                         "id": "A9V20DKD5BL942G7-03-05",
                         "type": 21,
                         "x": 5,
-                        "y": 3
-                    },
-                    {
-                        "id": "E85U9OT86T845ZTK-03-06",
-                        "type": 7,
-                        "x": 6,
-                        "y": 3
-                    },
-                    {
-                        "id": "59903IYPWO0HN30G-03-07",
-                        "type": 13,
-                        "x": 7,
                         "y": 3
                     }
                 ],
@@ -3165,18 +2813,6 @@
                         "type": 36,
                         "x": 5,
                         "y": 4
-                    },
-                    {
-                        "id": "32AM81KA47Q0VGU2-04-06",
-                        "type": 28,
-                        "x": 6,
-                        "y": 4
-                    },
-                    {
-                        "id": "A3R847U3B3FTV63X-04-07",
-                        "type": 36,
-                        "x": 7,
-                        "y": 4
                     }
                 ],
                 [
@@ -3215,18 +2851,6 @@
                         "type": 13,
                         "x": 5,
                         "y": 5
-                    },
-                    {
-                        "id": "D06IDNXJ37P079C1-05-06",
-                        "type": 28,
-                        "x": 6,
-                        "y": 5
-                    },
-                    {
-                        "id": "910FMI566TJF71OK-05-07",
-                        "type": 18,
-                        "x": 7,
-                        "y": 5
                     }
                 ],
                 [
@@ -3256,7 +2880,7 @@
                     },
                     {
                         "id": "00ORG91V4SZN69E9-06-04",
-                        "type": 22,
+                        "type": 13,
                         "x": 4,
                         "y": 6
                     },
@@ -3264,18 +2888,6 @@
                         "id": "4AQ6600PR8QM96ZH-06-05",
                         "type": 26,
                         "x": 5,
-                        "y": 6
-                    },
-                    {
-                        "id": "X1ULI7D5J67180GN-06-06",
-                        "type": 32,
-                        "x": 6,
-                        "y": 6
-                    },
-                    {
-                        "id": "5P1V746VT3S2SCB7-06-07",
-                        "type": 18,
-                        "x": 7,
                         "y": 6
                     }
                 ],
@@ -3306,7 +2918,7 @@
                     },
                     {
                         "id": "0L66VM8D5XK17P8J-07-04",
-                        "type": 7,
+                        "type": 24,
                         "x": 4,
                         "y": 7
                     },
@@ -3314,18 +2926,6 @@
                         "id": "H4D8YT0KR0S52R24-07-05",
                         "type": 24,
                         "x": 5,
-                        "y": 7
-                    },
-                    {
-                        "id": "N579HSJ06EB2N75H-07-06",
-                        "type": 46,
-                        "x": 6,
-                        "y": 7
-                    },
-                    {
-                        "id": "98B1O0IXSM3W63P5-07-07",
-                        "type": 36,
-                        "x": 7,
                         "y": 7
                     }
                 ]
@@ -26527,7 +26127,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 72
+        "lun_level": 57
     },
     {
         "countdown": 600,
@@ -27044,7 +26644,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 73
+        "lun_level": 58
     },
     {
         "countdown": 600,
@@ -27461,7 +27061,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 74
+        "lun_level": 59
     },
     {
         "countdown": 600,
@@ -27978,7 +27578,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 75
+        "lun_level": 60
     },
     {
         "countdown": 600,
@@ -28395,7 +27995,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 76
+        "lun_level": 61
     },
     {
         "countdown": 600,
@@ -28812,7 +28412,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 77
+        "lun_level": 62
     },
     {
         "countdown": 600,
@@ -29229,7 +28829,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 78
+        "lun_level": 63
     },
     {
         "countdown": 600,
@@ -29746,7 +29346,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 79
+        "lun_level": 63
     },
     {
         "countdown": 600,
@@ -30263,7 +29863,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 80
+        "lun_level": 64
     },
     {
         "countdown": 600,
@@ -30900,7 +30500,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 81
+        "lun_level": 65
     },
     {
         "countdown": 600,
@@ -31317,7 +30917,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 82
+        "lun_level": 66
     },
     {
         "countdown": 600,
@@ -31734,7 +31334,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 83
+        "lun_level": 67
     },
     {
         "countdown": 600,
@@ -32251,7 +31851,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 84
+        "lun_level": 68
     },
     {
         "countdown": 600,
@@ -32768,7 +32368,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 85
+        "lun_level": 69
     },
     {
         "countdown": 600,
@@ -33405,7 +33005,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 86
+        "lun_level": 70
     },
     {
         "countdown": 600,
@@ -34042,7 +33642,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 87
+        "lun_level": 71
     },
     {
         "countdown": 600,
@@ -34559,7 +34159,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 88
+        "lun_level": 72
     },
     {
         "countdown": 600,
@@ -35076,7 +34676,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 89
+        "lun_level": 73
     },
     {
         "countdown": 600,
@@ -35713,7 +35313,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 90
+        "lun_level": 74
     },
     {
         "countdown": 600,
@@ -36350,7 +35950,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 91
+        "lun_level": 75
     },
     {
         "countdown": 600,
@@ -36867,7 +36467,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 92
+        "lun_level": 76
     },
     {
         "countdown": 600,
@@ -37284,7 +36884,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 93
+        "lun_level": 77
     },
     {
         "countdown": 600,
@@ -37801,7 +37401,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 94
+        "lun_level": 78
     },
     {
         "countdown": 600,
@@ -38218,7 +37818,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 95
+        "lun_level": 79
     },
     {
         "countdown": 600,
@@ -38635,7 +38235,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 96
+        "lun_level": 80
     },
     {
         "countdown": 600,
@@ -39052,7 +38652,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 97
+        "lun_level": 81
     },
     {
         "countdown": 600,
@@ -39569,7 +39169,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 98
+        "lun_level": 82
     },
     {
         "countdown": 600,
@@ -40086,7 +39686,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 99
+        "lun_level": 83
     },
     {
         "countdown": 600,
@@ -40723,7 +40323,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 100
+        "lun_level": 84
     },
     {
         "countdown": 600,
@@ -41140,7 +40740,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 101
+        "lun_level": 85
     },
     {
         "countdown": 600,
@@ -41557,7 +41157,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 102
+        "lun_level": 86
     },
     {
         "countdown": 600,
@@ -42074,7 +41674,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 103
+        "lun_level": 87
     },
     {
         "countdown": 600,
@@ -42591,7 +42191,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 104
+        "lun_level": 88
     },
     {
         "countdown": 600,
@@ -43228,7 +42828,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 105
+        "lun_level": 89
     },
     {
         "countdown": 600,
@@ -43865,7 +43465,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 106
+        "lun_level": 90
     },
     {
         "countdown": 600,
@@ -44382,7 +43982,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 107
+        "lun_level": 91
     },
     {
         "countdown": 600,
@@ -44899,7 +44499,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 108
+        "lun_level": 92
     },
     {
         "countdown": 600,
@@ -45536,7 +45136,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 109
+        "lun_level": 93
     },
     {
         "countdown": 600,
@@ -46173,7 +45773,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 110
+        "lun_level": 94
     },
     {
         "countdown": 600,
@@ -46690,7 +46290,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 111
+        "lun_level": 95
     },
     {
         "countdown": 600,
@@ -47107,7 +46707,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 112
+        "lun_level": 96
     },
     {
         "countdown": 600,
@@ -47624,7 +47224,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 113
+        "lun_level": 97
     },
     {
         "countdown": 600,
@@ -48041,7 +47641,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 114
+        "lun_level": 98
     },
     {
         "countdown": 600,
@@ -48458,7 +48058,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 115
+        "lun_level": 99
     },
     {
         "countdown": 600,
@@ -48875,7 +48475,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 116
+        "lun_level": 100
     },
     {
         "countdown": 600,
@@ -49392,7 +48992,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 117
+        "lun_level": 101
     },
     {
         "countdown": 600,
@@ -49909,7 +49509,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 118
+        "lun_level": 102
     },
     {
         "countdown": 600,
@@ -50546,7 +50146,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 119
+        "lun_level": 103
     },
     {
         "countdown": 600,
@@ -50963,7 +50563,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 120
+        "lun_level": 104
     },
     {
         "countdown": 600,
@@ -51380,7 +50980,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 121
+        "lun_level": 105
     },
     {
         "countdown": 600,
@@ -51897,7 +51497,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 122
+        "lun_level": 106
     },
     {
         "countdown": 600,
@@ -52414,7 +52014,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 123
+        "lun_level": 107
     },
     {
         "countdown": 600,
@@ -53051,7 +52651,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 124
+        "lun_level": 108
     },
     {
         "countdown": 600,
@@ -53688,7 +53288,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 125
+        "lun_level": 109
     },
     {
         "countdown": 600,
@@ -54205,7 +53805,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 126
+        "lun_level": 110
     },
     {
         "countdown": 600,
@@ -54722,7 +54322,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 127
+        "lun_level": 111
     },
     {
         "countdown": 600,
@@ -55359,7 +54959,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 128
+        "lun_level": 112
     },
     {
         "countdown": 600,
@@ -55994,9 +55594,9 @@
             "set_id": 1,
             "set_max": 1,
             "turn_id": 1,
-            "turn_max": 11
+            "turn_max": 1
         },
-        "lun_level": 129
+        "lun_level": 113
     },
     {
         "countdown": 600,
@@ -56513,7 +56113,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 130
+        "lun_level": 114
     },
     {
         "countdown": 600,
@@ -57347,7 +56947,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 131
+        "lun_level": 115
     },
     {
         "countdown": 600,
@@ -57864,7 +57464,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 132
+        "lun_level": 116
     },
     {
         "countdown": 600,
@@ -58281,7 +57881,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 133
+        "lun_level": 117
     },
     {
         "countdown": 600,
@@ -58698,7 +58298,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 134
+        "lun_level": 118
     },
     {
         "countdown": 600,
@@ -59115,7 +58715,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 135
+        "lun_level": 119
     },
     {
         "countdown": 600,
@@ -59632,7 +59232,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 136
+        "lun_level": 120
     },
     {
         "countdown": 600,
@@ -60149,7 +59749,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 137
+        "lun_level": 121
     },
     {
         "countdown": 600,
@@ -60786,7 +60386,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 138
+        "lun_level": 122
     },
     {
         "countdown": 600,
@@ -61203,7 +60803,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 139
+        "lun_level": 123
     },
     {
         "countdown": 600,
@@ -61620,7 +61220,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 140
+        "lun_level": 124
     },
     {
         "countdown": 600,
@@ -62137,7 +61737,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 141
+        "lun_level": 125
     },
     {
         "countdown": 600,
@@ -62654,7 +62254,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 142
+        "lun_level": 126
     },
     {
         "countdown": 600,
@@ -63291,7 +62891,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 143
+        "lun_level": 127
     },
     {
         "countdown": 600,
@@ -63928,7 +63528,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 144
+        "lun_level": 128
     },
     {
         "countdown": 600,
@@ -64445,7 +64045,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 145
+        "lun_level": 129
     },
     {
         "countdown": 600,
@@ -64962,7 +64562,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 146
+        "lun_level": 130
     },
     {
         "countdown": 600,
@@ -65599,7 +65199,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 147
+        "lun_level": 131
     },
     {
         "countdown": 600,
@@ -66236,7 +65836,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 148
+        "lun_level": 132
     },
     {
         "countdown": 600,
@@ -66753,7 +66353,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 149
+        "lun_level": 133
     },
     {
         "countdown": 600,
@@ -67170,7 +66770,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 150
+        "lun_level": 134
     },
     {
         "countdown": 600,
@@ -67687,7 +67287,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 151
+        "lun_level": 135
     },
     {
          "countdown": 600,
@@ -68104,7 +67704,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 152
+        "lun_level": 136
     },
     {
         "countdown": 600,
@@ -68521,7 +68121,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 153
+        "lun_level": 137
     },
     {
         "countdown": 600,
@@ -68938,7 +68538,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 154
+        "lun_level": 138
     },
     {
         "countdown": 600,
@@ -69455,7 +69055,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 155
+        "lun_level": 139
     },
     {
         "countdown": 600,
@@ -69972,7 +69572,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 156
+        "lun_level": 140
     },
     {
         "countdown": 600,
@@ -70609,7 +70209,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 157
+        "lun_level": 141
     },
     {
         "countdown": 600,
@@ -71026,7 +70626,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 158
+        "lun_level": 142
     },
     {
         "countdown": 600,
@@ -71443,7 +71043,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 159
+        "lun_level": 143
     },
     {
         "countdown": 600,
@@ -71960,7 +71560,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 160
+        "lun_level": 144
     },
     {
         "countdown": 600,
@@ -72477,7 +72077,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 161
+        "lun_level": 145
     },
     {
         "countdown": 600,
@@ -73114,7 +72714,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 162
+        "lun_level": 146
     },
     {
         "countdown": 600,
@@ -73751,7 +73351,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 163
+        "lun_level": 147
     },
     {
         "countdown": 600,
@@ -74268,7 +73868,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 164
+        "lun_level": 148
     },
     {
         "countdown": 600,
@@ -74785,7 +74385,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 165
+        "lun_level": 149
     },
     {
         "countdown": 600,
@@ -75422,7 +75022,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 166
+        "lun_level": 150
     },
     {
         "countdown": 600,
@@ -76059,7 +75659,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 167
+        "lun_level": 151
     },
     {
         "countdown": 600,
@@ -76576,7 +76176,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 168
+        "lun_level": 152
     },
     {
         "countdown": 600,
@@ -76993,7 +76593,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 169
+        "lun_level": 153
     },
     {
         "countdown": 600,
@@ -77510,7 +77110,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 170
+        "lun_level": 154
     },
     {
         "countdown": 600,
@@ -77927,7 +77527,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 171
+        "lun_level": 155
     },
     {
         "countdown": 600,
@@ -78344,7 +77944,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 172
+        "lun_level": 156
     },
     {
         "countdown": 600,
@@ -78761,7 +78361,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 173
+        "lun_level": 157
     },
     {
         "countdown": 600,
@@ -79278,7 +78878,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 174
+        "lun_level": 158
     },
     {
         "countdown": 600,
@@ -79795,7 +79395,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 175
+        "lun_level": 159
     },
     {
         "countdown": 600,
@@ -80432,7 +80032,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 176
+        "lun_level": 160
     },
     {
         "countdown": 600,
@@ -80849,7 +80449,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 177
+        "lun_level": 161
     },
     {
         "countdown": 600,
@@ -81266,7 +80866,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 178
+        "lun_level": 162
     },
     {
         "countdown": 600,
@@ -81783,7 +81383,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 179
+        "lun_level": 163
     },
     {
         "countdown": 600,
@@ -82300,7 +81900,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 180
+        "lun_level": 164
     },
     {
         "countdown": 600,
@@ -82937,7 +82537,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 181
+        "lun_level": 165
     },
     {
         "countdown": 600,
@@ -83574,7 +83174,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 182
+        "lun_level": 166
     },
     {
         "countdown": 600,
@@ -84091,7 +83691,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 183
+        "lun_level": 167
     },
     {
         "countdown": 600,
@@ -84608,7 +84208,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 184
+        "lun_level": 168
     },
     {
         "countdown": 600,
@@ -85245,7 +84845,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 185
+        "lun_level": 169
     },
     {
         "countdown": 600,
@@ -85882,7 +85482,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 186
+        "lun_level": 170
     },
     {
         "countdown": 600,
@@ -86399,7 +85999,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 187
+        "lun_level": 171
     },
     {
         "countdown": 600,
@@ -86816,7 +86416,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 188
+        "lun_level": 172
     },
     {
         "countdown": 600,
@@ -87333,7 +86933,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 189
+        "lun_level": 173
     },
     {
         "countdown": 600,
@@ -87750,7 +87350,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 190
+        "lun_level": 174
     },
     {
         "countdown": 600,
@@ -88167,7 +87767,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 191
+        "lun_level": 175
     },
     {
         "countdown": 600,
@@ -88584,7 +88184,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 192
+        "lun_level": 176
     },
     {
         "countdown": 600,
@@ -89101,7 +88701,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 193
+        "lun_level": 177
     },
     {
         "countdown": 600,
@@ -89618,7 +89218,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 194
+        "lun_level": 178
     },
     {
         "countdown": 600,
@@ -90255,7 +89855,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 195
+        "lun_level": 179
     },
     {
         "countdown": 600,
@@ -90672,7 +90272,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 196
+        "lun_level": 180
     },
     {
         "countdown": 600,
@@ -91089,7 +90689,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 197
+        "lun_level": 181
     },
     {
         "countdown": 600,
@@ -91606,7 +91206,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 198
+        "lun_level": 182
     },
     {
         "countdown": 600,
@@ -92123,7 +91723,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 199
+        "lun_level": 183
     },
     {
         "countdown": 600,
@@ -92760,7 +92360,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 200
+        "lun_level": 184
     },
     {
         "countdown": 600,
@@ -93397,7 +92997,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 201
+        "lun_level": 185
     },
     {
         "countdown": 600,
@@ -93914,7 +93514,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 202
+        "lun_level": 186
     },
     {
         "countdown": 600,
@@ -94431,7 +94031,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 203
+        "lun_level": 187
     },
     {
         "countdown": 600,
@@ -95068,7 +94668,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 204
+        "lun_level": 188
     },
     {
         "countdown": 600,
@@ -95705,7 +95305,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 205
+        "lun_level": 189
     },
     {
         "countdown": 600,
@@ -96222,7 +95822,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 206
+        "lun_level": 190
     },
     {
         "countdown": 600,
@@ -96639,7 +96239,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 207
+        "lun_level": 191
     },
     {
         "countdown": 600,
@@ -97156,7 +96756,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 208
+        "lun_level": 192
     },
     {
         "countdown": 600,
@@ -97573,7 +97173,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 209
+        "lun_level": 193
     },
     {
         "countdown": 600,
@@ -97990,7 +97590,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 210
+        "lun_level": 194
     },
     {
         "countdown": 600,
@@ -98407,7 +98007,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 211
+        "lun_level": 195
     },
     {
         "countdown": 600,
@@ -98924,7 +98524,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 212
+        "lun_level": 196
     },
     {
         "countdown": 600,
@@ -99441,7 +99041,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 213
+        "lun_level": 197
     },
     {
         "countdown": 600,
@@ -100078,7 +99678,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 214
+        "lun_level": 198
     },
     {
         "countdown": 600,
@@ -100495,7 +100095,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 215
+        "lun_level": 199
     },
     {
         "countdown": 600,
@@ -100912,7 +100512,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 216
+        "lun_level": 200
     },
     {
         "countdown": 600,
@@ -101429,7 +101029,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 217
+        "lun_level": 201
     },
     {
         "countdown": 600,
@@ -101946,7 +101546,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 218
+        "lun_level": 202
     },
     {
         "countdown": 600,
@@ -102583,7 +102183,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 219
+        "lun_level": 203
     },
     {
         "countdown": 600,
@@ -103220,7 +102820,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 220
+        "lun_level": 204
     },
     {
         "countdown": 600,
@@ -103737,7 +103337,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 221
+        "lun_level": 205
     },
     {
         "countdown": 600,
@@ -104254,7 +103854,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 222
+        "lun_level": 206
     },
     {
         "countdown": 600,
@@ -104891,7 +104491,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 223
+        "lun_level": 207
     },
     {
         "countdown": 600,
@@ -105528,7 +105128,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 224
+        "lun_level": 208
     },
     {
         "countdown": 600,
@@ -106045,7 +105645,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 225
+        "lun_level": 209
     },
     {
         "countdown": 600,
@@ -106462,7 +106062,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 226
+        "lun_level": 210
     },
     {
         "countdown": 600,
@@ -106979,7 +106579,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 227
+        "lun_level": 211
     },
     {
         "countdown": 600,
@@ -107396,7 +106996,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 228
+        "lun_level": 212
     },
     {
         "countdown": 600,
@@ -108330,7 +107930,7 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 22
+        "lun_level": 214
     },
     {
         "countdown": 600,
@@ -108847,6 +108447,6 @@
             "turn_id": 1,
             "turn_max": 1
         },
-        "lun_level": 23
+        "lun_level": 215
     }
 ]
