@@ -33,6 +33,9 @@ const {
   ccclass,
   property
 } = cc._decorator;
+
+const IN_PROGRESS_GRID_KEY = "mj_in_progress_grid_v1";
+const IN_PROGRESS_SNAPSHOT_TTL_MS = 86400000;
 @ccclass
 export default class GameMain extends cc.Component {
 
@@ -136,6 +139,8 @@ export default class GameMain extends cc.Component {
   /** 本关累计消除对数，过关或弹产出后清零 */
   rewardAbMergeCount = 0;
   _rewardAbPopupPending = false;
+  /** 产出弹窗未关时若触发 startGame，延后到弹窗收尾再执行 */
+  _deferredStartGameArgs: { restart: boolean; skipAfterLevel: boolean } | null = null;
   get gridRows() {
     return this._gridRows;
   }
@@ -253,6 +258,7 @@ export default class GameMain extends cc.Component {
     EventMgr.listen(GameEventType.FULL_SCREEN_MOVE, this.closePropTip, this);
     EventMgr.listen(GameEventType.FULL_SCREEN_CLICK, this.onEarlyAutoHintUserActivity, this);
     EventMgr.listen(GameEventType.FULL_SCREEN_MOVE, this.onEarlyAutoHintUserActivity, this);
+    cc.game.on(cc.game.EVENT_HIDE, this.saveInProgressSnapshot, this);
   }
   removeEvent() {
     EventMgr.ignore(GameEventType.REBORN, this.rebornGame, this);
@@ -275,6 +281,77 @@ export default class GameMain extends cc.Component {
     EventMgr.ignore(GameEventType.FULL_SCREEN_MOVE, this.closePropTip, this);
     EventMgr.ignore(GameEventType.FULL_SCREEN_CLICK, this.onEarlyAutoHintUserActivity, this);
     EventMgr.ignore(GameEventType.FULL_SCREEN_MOVE, this.onEarlyAutoHintUserActivity, this);
+    cc.game.off(cc.game.EVENT_HIDE, this.saveInProgressSnapshot, this);
+  }
+  saveInProgressSnapshot() {
+    if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
+      return;
+    }
+    if (!this._mahjongSpawnAllowed || gameData.gameState !== GameState.gameing) {
+      return;
+    }
+    const grid = gameData.getGridData();
+    if (!grid || !grid.length) {
+      return;
+    }
+    try {
+      cc.sys.localStorage.setItem(IN_PROGRESS_GRID_KEY, JSON.stringify({
+        gameLevel: gameData.gameLevel,
+        lun_level: gameData.lun_level,
+        roundId: gameData.roundId,
+        grid: gameData.deepCopyNestedArrays(grid),
+        curClearNum: gameData.curClearNum,
+        gameTime: gameData.gameTime,
+        ts: Date.now()
+      }));
+    } catch (_e) {}
+  }
+  clearInProgressSnapshot() {
+    try {
+      cc.sys.localStorage.removeItem(IN_PROGRESS_GRID_KEY);
+    } catch (_e) {}
+  }
+  tryApplyInProgressSnapshot(): boolean {
+    try {
+      const raw = cc.sys.localStorage.getItem(IN_PROGRESS_GRID_KEY);
+      if (!raw) {
+        return false;
+      }
+      const snap = JSON.parse(raw);
+      if (!snap || !snap.grid) {
+        this.clearInProgressSnapshot();
+        return false;
+      }
+      if (Date.now() - (snap.ts || 0) > IN_PROGRESS_SNAPSHOT_TTL_MS) {
+        this.clearInProgressSnapshot();
+        return false;
+      }
+      if (snap.gameLevel !== gameData.gameLevel || snap.lun_level !== gameData.lun_level || snap.roundId !== gameData.roundId) {
+        return false;
+      }
+      gameData._grid_data = gameData.deepCopyNestedArrays(snap.grid);
+      gameData.curClearNum = snap.curClearNum || 0;
+      gameData.gameTime = snap.gameTime || 0;
+      return true;
+    } catch (_e) {
+      this.clearInProgressSnapshot();
+      return false;
+    }
+  }
+  restoreAfterRewardPopup() {
+    this.resetRewardAbMergeCount();
+    if (gameData.gameState === GameState.gameing) {
+      gameData.globalCanClick = true;
+    }
+    this.flushDeferredStartGame();
+  }
+  flushDeferredStartGame() {
+    const args = this._deferredStartGameArgs;
+    if (!args) {
+      return;
+    }
+    this._deferredStartGameArgs = null;
+    this.startGame(args.restart, args.skipAfterLevel);
   }
   isPropVisibleLevel(level = gameData.gameLevel): boolean {
     return level >= getUnlockPropLevel();
@@ -353,6 +430,14 @@ export default class GameMain extends cc.Component {
   async startGame(e = false, t = false) {
     var o = this;
     console.log("startGame", e, t);
+    if (this._rewardAbPopupPending && !e) {
+      GameUtils.logLevelProgress("startGame_deferred_reward_popup");
+      this._deferredStartGameArgs = { restart: !!e, skipAfterLevel: !!t };
+      return;
+    }
+    if (e) {
+      this.clearInProgressSnapshot();
+    }
     if (!t) {
       await this.packagingProcess.excuteAfterLevel();
     }
@@ -532,6 +617,8 @@ export default class GameMain extends cc.Component {
   reStartGame() {
     AudioManager.getInstance().playMusic("btntouch");
     SdkHelper.reportData("re_start_game");
+    this._deferredStartGameArgs = null;
+    this.clearInProgressSnapshot();
     this.closeGameEvent();
     this.clearGameUI();
     this.startGame(true, true);
@@ -561,6 +648,9 @@ export default class GameMain extends cc.Component {
     if (!this._mahjongSpawnAllowed) {
       GameUtils.logLevelProgress("initGameData_blocked_wait_level_banner");
       return;
+    }
+    if (!e && this.tryApplyInProgressSnapshot()) {
+      GameUtils.logLevelProgress("initGameData_restored_snapshot");
     }
     GameUtils.logLevelProgress("initGameData", { is_restart: !!e });
     this.bg.zIndex = -1;
@@ -694,6 +784,8 @@ export default class GameMain extends cc.Component {
     type: FailedType.Normal
   }) {
     console.log("gameOver", e.type);
+    this._deferredStartGameArgs = null;
+    this.clearInProgressSnapshot();
     if (gameData.gameState == GameState.gameing) {
       console.log("gameOver", gameData.gameState);
       gameData.gameState = GameState.gameover;
@@ -781,13 +873,8 @@ export default class GameMain extends cc.Component {
       return;
     }
     gameData.globalCanClick = false;
-    GameUtils.rewardAB(() => {
-      this._rewardAbPopupPending = false;
-      this.resetRewardAbMergeCount();
-      if (gameData.gameState === GameState.gameing) {
-        gameData.globalCanClick = true;
-      }
-    });
+    this.saveInProgressSnapshot();
+    GameUtils.rewardAB(() => this.restoreAfterRewardPopup());
   }
 
   /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
@@ -880,11 +967,18 @@ export default class GameMain extends cc.Component {
         gameData.gameState = GameState.gameResult;
         this.stopUpdateGameTime();
         this.resetRewardAbMergeCount();
+        this.clearInProgressSnapshot();
       }
+      this.saveInProgressSnapshot();
       var v = function v(e) {
         if (e.is_tg) {
           gameData.gameState = GameState.gameResult;
-          t.startGame(false);
+          t.clearInProgressSnapshot();
+          if (t._rewardAbPopupPending) {
+            t._deferredStartGameArgs = { restart: false, skipAfterLevel: false };
+          } else {
+            t.startGame(false);
+          }
         }
         if (gameData.gameLevel > 2 && !PlayerDataSys.isOppoReviewer() && !gameData.isOpenDemo) {
           gameData.linkTimes++;

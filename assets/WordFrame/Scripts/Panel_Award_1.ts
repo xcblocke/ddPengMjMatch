@@ -229,9 +229,12 @@ export default class Panel_Award_1 extends cc.Component {
                 })
                 .delay(1)
                 .call(() => {
-                    FrameSDK.addCoin(this.getYCoin * this.adData.ml, this.adData.isFree ? 0 : FrameData.getCoinOutNum("charity"), this.adData.isFree ? 0 : 1, this.viewData?.closeCB);
+                    this.grantRewardAndClose(
+                        this.getYCoin * this.adData.ml,
+                        this.adData.isFree ? 0 : FrameData.getCoinOutNum("charity"),
+                        this.adData.isFree ? 0 : 1
+                    );
                     FrameSDK.frameData.sdkFuc.ppEvent(this.adData.isFree ? "freeCollected" : "collected");
-                    this.close();
                 })
                 .start();
         };
@@ -261,9 +264,10 @@ export default class Panel_Award_1 extends cc.Component {
             }, grant);
         } else {
             console.log("isFirstADShowInters===========33333 当前走的激励视频广告");
-            FrameSDK.openVideo(callBack, () => {
+            const onAdFail = () => {
                 this["noTouch"].node.active = false;
-            }, () => {
+            };
+            FrameSDK.openVideo(callBack, onAdFail, () => {
                 FrameSDK.logGameEvent("sdymjmatch_game_ad", {
                     object_action: "show",
                     object_name: `reward_1`,
@@ -288,8 +292,11 @@ export default class Panel_Award_1 extends cc.Component {
         });
 
         let callBack = () => {
-            FrameSDK.addCoin(FrameData.getCoinOutNum("free"), this.isInters ? FrameData.getCoinOutNum("charity") : 0, 0, this.viewData?.closeCB);
-            this.close();
+            this.grantRewardAndClose(
+                FrameData.getCoinOutNum("free"),
+                this.isInters ? FrameData.getCoinOutNum("charity") : 0,
+                0
+            );
         };
         if (this.isInters) {
             FrameSDK.logGameEvent("sdymjmatch_game_ad", {
@@ -315,6 +322,17 @@ export default class Panel_Award_1 extends cc.Component {
             this.hideTime = Date.now();
             FrameSDK.closeEffect(this, e);
         }
+    }
+
+    /** 发奖并关窗：立即恢复局内操作（closeCB），飘币动画异步进行 */
+    private grantRewardAndClose(coin: number, charityNum: number, donateTime: number) {
+        const closeCB = this.viewData?.closeCB;
+        if (this.viewData) {
+            this.viewData.closeCB = null;
+        }
+        FrameSDK.addCoin(coin, charityNum, donateTime);
+        closeCB && closeCB();
+        this.close();
     }
 
 }

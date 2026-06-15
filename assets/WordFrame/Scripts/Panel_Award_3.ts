@@ -286,8 +286,11 @@ export default class Panel_Award_3 extends cc.Component {
                 })
                 .delay(1)
                 .call(() => {
-                    FrameSDK.addCoin(this.clickBeishu * this.getYCoin, this.adData.isFree ? 0 : FrameData.getCoinOutNum('charity'), this.adData.isFree ? 0 : 1, this.viewData?.closeCB);
-                    this.close();
+                    this.grantRewardAndClose(
+                        this.clickBeishu * this.getYCoin,
+                        this.adData.isFree ? 0 : FrameData.getCoinOutNum('charity'),
+                        this.adData.isFree ? 0 : 1
+                    );
                 })
                 .start();
         };
@@ -340,9 +343,11 @@ export default class Panel_Award_3 extends cc.Component {
         // let isInters = FrameSDK.isShowInters();
         // FrameSDK.frameData.sdkFuc.ppEvent(this.isInters ? 'claim' : 'freeClaim');
         let callBack = () => {
-            FrameSDK.addCoin(FrameData.getCoinOutNum('free'),  this.isInters ?FrameData.getCoinOutNum("charity") : 0, 0, this.viewData?.closeCB);
-            // FrameSDK.frameData.sdkFuc.ppEvent(this.isInters ? 'collected' : 'freeCollected');
-            this.close();
+            this.grantRewardAndClose(
+                FrameData.getCoinOutNum('free'),
+                this.isInters ? FrameData.getCoinOutNum("charity") : 0,
+                0
+            );
         };
         if (this.isInters) {
             FrameSDK.openInters(callBack, () => {
@@ -373,5 +378,16 @@ export default class Panel_Award_3 extends cc.Component {
             this.hideTime = Date.now();
             FrameSDK.closeEffect(this, e);
         }
+    }
+
+    /** 发奖并关窗：立即恢复局内操作（closeCB），飘币动画异步进行 */
+    private grantRewardAndClose(coin: number, charityNum: number, donateTime: number) {
+        const closeCB = this.viewData?.closeCB;
+        if (this.viewData) {
+            this.viewData.closeCB = null;
+        }
+        FrameSDK.addCoin(coin, charityNum, donateTime);
+        closeCB && closeCB();
+        this.close();
     }
 }
