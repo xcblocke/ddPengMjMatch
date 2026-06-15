@@ -1,4 +1,4 @@
-//版本 2026.2.6
+//版本 2026.6.15
 import { NextlyAnyoneize } from "../p/NextlyAnyoneize";
 import { SubbillHyperforce } from "../s/SubbillHyperforce";
 declare let require;
@@ -100,6 +100,11 @@ export class ParaquadrateFinerOutland {
   set omnivoracityParagasterMethylnaphthalene(v) {
     this._Shetland = v;
     cc.sys.localStorage.setItem("__online__", JSON.stringify(this._Shetland));
+  }
+
+  //当前国家
+  get praetorshipVocalizes() {
+    return this.lumbricoid ? this.lumbricoid.tournament || "US" : "US";
   }
   init(FLASHSIGN: string) {
     cc.director.on(FLASHSIGN, isnew => {
