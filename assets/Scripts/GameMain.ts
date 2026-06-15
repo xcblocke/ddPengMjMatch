@@ -572,7 +572,8 @@ export default class GameMain extends cc.Component {
     EventMgr.trigger(GameEventType.UPDATE_WHEEL_BUBBLE);
     EventMgr.trigger(GameEventType.SHOW_BUBBLE);
     EventMgr.trigger(GameEventType.FRESH_GAME_LEVELINFO);
-    1 != gameData.gameLevel && (gameData.globalCanClick = true);
+    this.unschedule(this._onMahjongSpawnComplete);
+    gameData.globalCanClick = false;
     this.createMahjong();
     this.initMahjongGridLine();
     this.updatePorpCount();
@@ -582,14 +583,25 @@ export default class GameMain extends cc.Component {
     cc.director.emit("resfLv");
     return;
   }
+  /** 与 card.playEnterAnim 一致：delay(0.2 + 0.1 * row) + to(0.4) */
+  _getMahjongEnterAnimDuration(rows: number) {
+    return 0.6 + 0.1 * Math.max(0, rows - 1);
+  }
+  _onMahjongSpawnComplete() {
+    if (gameData.gameState === GameState.gameing && !this._rewardAbPopupPending) {
+      gameData.globalCanClick = true;
+    }
+  }
+  _scheduleMahjongSpawnComplete(rows: number) {
+    this.unschedule(this._onMahjongSpawnComplete);
+    this.scheduleOnce(this._onMahjongSpawnComplete, this._getMahjongEnterAnimDuration(rows));
+  }
   createMahjong() {
     AudioManager.getInstance().playMusic("Mahjong_Start");
     this.mahjongContainer.removeAllChildren();
     this._cardGrid = [];
     gameData.globalCanClick = false;
-    this.scheduleOnce(function () {
-      gameData.globalCanClick = true;
-    }, 0.075 * this._gridRows);
+    this.unschedule(this._onMahjongSpawnComplete);
     var e = gameData.getGridData();
     if (e) {
       var t = e.length,
@@ -638,6 +650,9 @@ export default class GameMain extends cc.Component {
         y.init(e[p][d]);
         this._cardGrid[p][d] = y;
       }
+      this._scheduleMahjongSpawnComplete(t);
+    } else {
+      this._scheduleMahjongSpawnComplete(0);
     }
   }
   initMahjongGridLine() {
@@ -908,6 +923,8 @@ export default class GameMain extends cc.Component {
   }
   clearGameUI() {
     this.isGameing = false;
+    this.unschedule(this._onMahjongSpawnComplete);
+    gameData.globalCanClick = false;
     // this.freezeTipNode.active = false;
     this.teachGuideNode.active = false;
     this.comboNode.active = false;
