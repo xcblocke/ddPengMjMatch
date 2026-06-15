@@ -229,8 +229,13 @@ export default class Panel_Award_1 extends cc.Component {
                 })
                 .delay(1)
                 .call(() => {
-                    FrameSDK.addCoin(this.getYCoin * this.adData.ml, this.adData.isFree ? 0 : FrameData.getCoinOutNum("charity"), this.adData.isFree ? 0 : 1, this.viewData?.closeCB);
+                    const closeCB = this.viewData?.closeCB;
+                    if (this.viewData) {
+                        this.viewData.closeCB = null;
+                    }
+                    FrameSDK.addCoin(this.getYCoin * this.adData.ml, this.adData.isFree ? 0 : FrameData.getCoinOutNum("charity"), this.adData.isFree ? 0 : 1);
                     FrameSDK.frameData.sdkFuc.ppEvent(this.adData.isFree ? "freeCollected" : "collected");
+                    closeCB && closeCB();
                     this.close();
                 })
                 .start();
@@ -288,7 +293,12 @@ export default class Panel_Award_1 extends cc.Component {
         });
 
         let callBack = () => {
-            FrameSDK.addCoin(FrameData.getCoinOutNum("free"), this.isInters ? FrameData.getCoinOutNum("charity") : 0, 0, this.viewData?.closeCB);
+            const closeCB = this.viewData?.closeCB;
+            if (this.viewData) {
+                this.viewData.closeCB = null;
+            }
+            FrameSDK.addCoin(FrameData.getCoinOutNum("free"), this.isInters ? FrameData.getCoinOutNum("charity") : 0, 0);
+            closeCB && closeCB();
             this.close();
         };
         if (this.isInters) {

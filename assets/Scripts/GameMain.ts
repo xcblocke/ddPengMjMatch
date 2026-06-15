@@ -136,6 +136,8 @@ export default class GameMain extends cc.Component {
   /** 本关累计消除对数，过关或弹产出后清零 */
   rewardAbMergeCount = 0;
   _rewardAbPopupPending = false;
+  /** 产出弹窗期间若有 startGame 请求，延后到弹窗 closeCB */
+  _deferredStartGameArgs: { restart: boolean; skipAfterLevel: boolean } | null = null;
   get gridRows() {
     return this._gridRows;
   }
@@ -353,6 +355,10 @@ export default class GameMain extends cc.Component {
   async startGame(e = false, t = false) {
     var o = this;
     console.log("startGame", e, t);
+    if (this._rewardAbPopupPending && !e) {
+      this._deferredStartGameArgs = { restart: !!e, skipAfterLevel: !!t };
+      return;
+    }
     if (!t) {
       await this.packagingProcess.excuteAfterLevel();
     }
@@ -781,13 +787,22 @@ export default class GameMain extends cc.Component {
       return;
     }
     gameData.globalCanClick = false;
-    GameUtils.rewardAB(() => {
-      this._rewardAbPopupPending = false;
-      this.resetRewardAbMergeCount();
-      if (gameData.gameState === GameState.gameing) {
-        gameData.globalCanClick = true;
-      }
-    });
+    GameUtils.rewardAB(() => this.onRewardAbPopupClosed());
+  }
+
+  /** 产出弹窗关闭：恢复局内操作，并执行弹窗期间延后的 startGame */
+  onRewardAbPopupClosed() {
+    this._rewardAbPopupPending = false;
+    this.resetRewardAbMergeCount();
+    if (gameData.gameState === GameState.gameing) {
+      gameData.globalCanClick = true;
+    }
+    const deferred = this._deferredStartGameArgs;
+    if (!deferred) {
+      return;
+    }
+    this._deferredStartGameArgs = null;
+    this.startGame(deferred.restart, deferred.skipAfterLevel);
   }
 
   /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
