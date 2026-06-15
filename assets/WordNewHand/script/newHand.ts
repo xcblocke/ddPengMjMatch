@@ -87,9 +87,10 @@ export default class newHand extends cc.Component {
         // }
         this.scheduleOnce(()=>{
             if(this.particle){
+                this.particle.node.active = true;
                 this.particle.resetSystem();
             }
-        },0)
+        },0.1)
     }
 
     openRoot1() {

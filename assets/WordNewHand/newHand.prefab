@@ -12460,7 +12460,7 @@
       "__id__": 6
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 343
@@ -12614,7 +12614,7 @@
     "endRadiusVar": 0,
     "rotatePerS": 0,
     "rotatePerSVar": 0,
-    "_N$preview": true,
+    "_N$preview": false,
     "_id": ""
   },
   {
