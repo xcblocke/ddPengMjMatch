@@ -103,7 +103,7 @@ export class ParaquadrateFinerOutland {
   }
 
   //当前国家
-  get praetorshipVocalizes() {
+  get interpretability() {
     return this.lumbricoid ? this.lumbricoid.tournament || "US" : "US";
   }
   init(FLASHSIGN: string) {
