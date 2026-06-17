@@ -390,7 +390,7 @@ export class FrameData {
         //弹评星间隔
         "intervalGrade": 5,
         //评星连接
-        "androidRateUrl": "https://play.google.com/store/apps/details?id=com.cueclub.ballspin.trace",
+        "androidRateUrl": "https://play.google.com/store/apps/details?com.bluemahjong.pair.spark",
         "iosRateUrl": "",
 
         //产出直接领取按钮延迟时间秒
