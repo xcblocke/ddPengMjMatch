@@ -1340,6 +1340,12 @@ export class FrameSDK {
             callback?.();
         }
     }
+
+
+    static getRewardAbMergeIntervalRange( level: number, frameConf?: any ): [number, number] {
+        return FrameData.getRewardAbMergeIntervalRange(level, frameConf);
+    }
+
     /**
      * 通关结算动画全部结束后调用：串行弹出解锁/教程弹窗，全部关闭后再 callback（如 START_GAME）。
      * 须与 Panel_Award_6 领取+飞币流程解耦，不要在 prepareMahjongPassSettlement 里提前调用。

@@ -376,6 +376,14 @@ export class FrameData {
         "AbPop": 3,//弹产出的关卡包括3
         "rewaedAbTotalTime": [5, 8],//产出间隔区间
         "rewaedAbTotalMiniTime": [10, 20],//简单关卡产出间隔区间
+        /** AB面产出消除间隔梯度：[关卡min, 关卡max, 间隔min, 间隔max] */
+        "rewaedAbLevelGrads": [
+            [5, 7, 14, 16],
+            [8, 10, 11, 13],
+            [11, 18, 8, 10],
+            [19, 25, 5, 7],
+            [26, 99999, 2, 4],
+        ],
         "miniTime_Lv": 5,//XXX关前使用短时间的间隔
         "RedeemAddCoin": 10000,//兑换二阶段额外增加的钱
 
@@ -396,6 +404,24 @@ export class FrameData {
          "before_NoInter":true,//进入关卡的时候是否要判断冷却时间条件拉插屏 false就是不要
          "isAbFirstShowInter":true,//进入ab奖励页面，第一次点击激励视频领取是否开启插屏 true就是开启 false就是关闭
     };
+
+    /** 根据当前关卡取 AB 面产出消除间隔区间 [min, max]（含端点） */
+    static getRewardAbMergeIntervalRange(level: number, frameConf?: any): [number, number] {
+        const lv = Math.max(1, Math.floor(Number(level) || 1));
+        const grads = frameConf?.rewaedAbLevelGrads ?? FrameData.FRAME_CONF.rewaedAbLevelGrads;
+        if (Array.isArray(grads)) {
+            for (const grad of grads) {
+                if (Array.isArray(grad) && grad.length >= 4) {
+                    const [levelMin, levelMax, intervalMin, intervalMax] = grad;
+                    if (lv >= levelMin && lv <= levelMax) {
+                        return [intervalMin, intervalMax];
+                    }
+                }
+            }
+        }
+        const fallback = frameConf?.rewaedAbTotalTime ?? FrameData.FRAME_CONF.rewaedAbTotalTime ?? [5, 8];
+        return [fallback[0], fallback[1]];
+    }
 
     static get credit() {
         return FrameData.saveData.credit.yellowCoin;
