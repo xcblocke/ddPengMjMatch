@@ -745,8 +745,8 @@ export default class GameMain extends cc.Component {
     const conf = LoadWord.instance.getWbConfigData();
     const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";
     const frameConf = conf?.[cfgKey]?.["FRAME_CONF"];
-    console.log("[rewardAB] mframeConf.......", frameConf);
     let intervalRange: [number, number] = LoadWord.FrameSDK.getRewardAbMergeIntervalRange(currentLevel, frameConf);
+    console.log("[rewardAB] mframeConf.......", frameConf,intervalRange);
     if(!intervalRange || intervalRange.length <=0) {
       intervalRange = frameConf?.rewaedAbTotalTime ?? [6, 8];
     }

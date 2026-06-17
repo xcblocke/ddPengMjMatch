@@ -114,6 +114,9 @@ export default class newHand extends cc.Component {
         this.closeEffect(this.root1);
         this.openEffect(this.root2);
         let FRAME_CONF = this.config.FRAME_CONF;
+        if(!FRAME_CONF) {
+            return;
+        }
         cc.find("label_1", this.root2).getComponent(cc.Label).string = `nkey_005??&value1==${20}`//${FRAME_CONF.CoinConf[0].rdm_1}`;
         cc.find("label_2", this.root2).getComponent(cc.Label).string = this.formatNumber(FRAME_CONF.newHand.max);
         cc.find("richtext_1", this.root2).getComponent(cc.RichText).string = `<outline color=#0C2B3C width=2><b>nkey_009</b></outline>??&value1==<size=26><color= #FFF95C>86%</c></size>&value2==<size=26><color= #FFF95C>30</c></size>`;
