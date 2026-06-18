@@ -833,7 +833,7 @@
       "ctor": "Float64Array",
       "array": [
         8.225,
-        -15.887,
+        -121.183,
         0,
         0,
         0,
@@ -1154,7 +1154,7 @@
         "__id__": 34
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 39
@@ -1484,7 +1484,7 @@
     "node": {
       "__id__": 30
     },
-    "_enabled": true,
+    "_enabled": false,
     "_materials": [
       {
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
@@ -1516,7 +1516,7 @@
     "node": {
       "__id__": 30
     },
-    "_enabled": true,
+    "_enabled": false,
     "_normalMaterial": null,
     "_grayMaterial": null,
     "duration": 0.1,
@@ -1990,7 +1990,7 @@
       "ctor": "Float64Array",
       "array": [
         -822.191,
-        28.04,
+        -20.558,
         0,
         0,
         0,
