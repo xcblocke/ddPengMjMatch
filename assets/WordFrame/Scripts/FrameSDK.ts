@@ -719,6 +719,7 @@ export class FrameSDK {
                 }
                 settled = true;
                 FrameSDK.frameData.gameFuc.closeLoad();
+                this._lastVideoEndTime = Date.now();
                 successCallback && successCallback();
             };
             const finishGrantFallback = () => {
@@ -748,7 +749,7 @@ export class FrameSDK {
                     finishUserCancel();
                     return;
                 }
-                if (!FrameSDK.frameData.gameData.noProfitAd) {
+                if (!FrameSDK.frameData.gameData.noProfitAd && FrameSDK.isShowInters()) {
                     if (interFallbackStarted) {
                         return;
                     }
