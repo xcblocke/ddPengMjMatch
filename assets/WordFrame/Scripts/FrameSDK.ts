@@ -1399,7 +1399,7 @@ export class FrameSDK {
                 }
                 done();
             }))
-            // 4. 预绑定：先 RDM_Level 黄板，关后再 Panel_PreRdm（仅一次）
+            // 4. 预绑定：RDM_Level 与 Panel_PreRdm 同时弹出（仅一次）；关 Panel_PreRdm 不推进流程，仅 RDM_Level 返回后 done
             .then(() => FrameSDK.runUnlockPopUpStep((done) => {
                 const unlockLv = Math.max(1, Math.floor(Number(FrameData.FRAME_CONF.preRdmUnlockLevel) || 10));
                 const unlocked = FrameSDK.hasPassedConfigLevel(unlockLv);
@@ -1409,13 +1409,9 @@ export class FrameSDK {
                 const once = FrameData.saveData.onceEventRecord["pre_rdm_unlock"];
                 if (FrameSDK.frameData.gameData.isFlag && unlocked && !once) {
                     FrameData.saveData.onceEventRecord["pre_rdm_unlock"] = true;
-                    FrameSDK.openPanel_Yellow(() => {
-                        FrameSDK.waitForPopUpLayerIdle().then(() => {
-                            FrameSDK.openWindow("Panel_PreRdm", {
-                                numStr: FrameSDK.convertCoinToStr(FrameData.credit, true),
-                                closeCB: done,
-                            });
-                        });
+                    FrameSDK.openPanel_Yellow(done);
+                    FrameSDK.openWindow("Panel_PreRdm", {
+                        numStr: FrameSDK.convertCoinToStr(FrameData.credit, true),
                     });
                     return;
                 }
