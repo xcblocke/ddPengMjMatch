@@ -1,6 +1,9 @@
 import { gameData } from './data/GameData';
 import PageMgr from './view/PageMgr';
 import BasePage, { AnimType } from './view/BasePage';
+import AudioManager from './framework/controller/AudioManager';
+import GameEventType from './framework/Event/GameEventType';
+import EventMgr from './framework/Event/EventMgr';
 const {
   ccclass,
   property
@@ -11,6 +14,9 @@ export default class MainNodePage extends BasePage {
 
   @property(cc.Label)
   coinTextLabel: cc.Label = null;
+
+  @property(cc.Label)
+  levelTextLabel: cc.Label = null;
 
   @property(cc.Button)
   btnLevel: cc.Button = null;
@@ -39,10 +45,19 @@ export default class MainNodePage extends BasePage {
   }
 
   onClickLevelBtn() {
+    AudioManager.getInstance().playMusic("click");
     this.node.destroy();
   }
 
+  onClickSet() {
+    AudioManager.getInstance().playMusic("click");
+    EventMgr.trigger(GameEventType.PAGE_SHOW, {
+      name: "SetUpPage"
+    });
+  }
+
   onClickTujian() {
+    AudioManager.getInstance().playMusic("click");
     PageMgr.showPage({
       name: "TujianNodePage"
     });

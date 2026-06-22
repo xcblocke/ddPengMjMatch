@@ -33,6 +33,29 @@ export const MainConfig = {
   serveUrl: "",
 };
 
+
+export const TujianUnlockConfig = [
+  {
+    unlockLevel: 1,
+    unLockIDs: [1,2],
+    status: 0,
+    unlockDesc: "",
+  },
+  {
+    unlockLevel: 2,
+    unLockIDs: [4,5,6],
+    status: 1,
+    unlockDesc: "",
+  },
+  {
+    unlockLevel: 3,
+    unLockIDs: [7,8,9],
+    status: 2,
+    unlockDesc: "",
+  },
+];
+
+
 export const propLevelShowConfig = {
   [PropType.tipCard]: {
     level: 3,

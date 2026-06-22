@@ -5,7 +5,7 @@ import EventMgr from './framework/Event/EventMgr';
 import GameEventType from './framework/Event/GameEventType';
 import GlobalApp from './common/GlobalApp';
 import BasePage from './view/BasePage';
-import { GameLevelPropConfig, markWhitePropClaimed } from './config';
+import { GameLevelPropConfig, markWhitePropClaimed, TujianUnlockConfig } from './config';
 import SdkHelper from './framework/SdkHelper';
 const {
   ccclass,
@@ -30,29 +30,10 @@ export default class TujianNodePage extends BasePage {
     super._onShow.call(this);
   }
 
-  private unlockConfig = [
-    {
-      unlockLevel: 1,
-      unLockIDs: [1,2,3],
-      status: 0,
-      unlockDesc: "",
-    },
-    {
-      unlockLevel: 2,
-      unLockIDs: [4,5,6],
-      status: 1,
-      unlockDesc: "",
-    },
-    {
-      unlockLevel: 3,
-      unLockIDs: [7,8,9],
-      status: 2,
-      unlockDesc: "",
-    },
-  ];
 
   _init(e) {
-     this.unlockConfig.forEach((item, index) => {
+    this.scrollView.content.removeAllChildren();
+    TujianUnlockConfig.forEach((item, index) => {
       const itemNode = cc.instantiate(this.itemPrefab);
       itemNode.parent = this.scrollView.content;
     }); 
