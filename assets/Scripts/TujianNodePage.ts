@@ -45,7 +45,7 @@ export default class TujianNodePage extends BasePage {
       const currentLevel = gameData.gameLevel;
 
       
-      console.log("currentLevel.....................", currentLevel, item.unlockLevel);
+      // console.log("currentLevel.....................", currentLevel, item.unlockLevel);
 
       itemNode.getChildByName("diPass").active = currentLevel > item.unlockLevel;
       itemNode.getChildByName("diNow").active = currentLevel == item.unlockLevel;
