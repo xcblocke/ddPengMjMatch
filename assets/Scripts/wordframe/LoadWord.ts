@@ -3,7 +3,7 @@ import { NativeUtils } from "./NativeUtils";
 import { gameData } from "../data/GameData";
 import AudioManager from "../framework/controller/AudioManager";
 import GlobalApp from "../common/GlobalApp";
-import { A } from "../center/api";
+import { A } from "../centerio/api";
 
 /** 与 assets/view/loading.ts 中加载的主场景名一致 */
 const MAIN_SCENE = "mainScene";

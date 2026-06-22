@@ -77,7 +77,7 @@ export default class effect extends cc.Component {
   addEffect2(e, t, o, n, a, i) {
     var r = this,
       c = this.effectPool.size() > 0 ? this.effectPool.get() : cc.instantiate(this.effectPrefab);
-    c.scale = 0.5;
+    c.scale = 1;
     c.setPosition(e);
     c.getComponent(cc.Sprite).spriteFrame = this.typeIcon[o];
     var s = cc.find("num", c);
@@ -97,7 +97,7 @@ export default class effect extends cc.Component {
   addEffect(e, t, o, n, a, i) {
     var r = this,
       c = this.effectPool.size() > 0 ? this.effectPool.get() : cc.instantiate(this.effectPrefab);
-    c.scale = 0.5;
+    c.scale = 1;
     c.setPosition(e);
     c.getComponent(cc.Sprite).spriteFrame = this.typeIcon[o];
     var s = cc.find("num", c);

@@ -1,4 +1,5 @@
 import { MainConfig, ServerType } from '../config';
+import AdaptUIMgr from '../framework/AdaptUIMgr';
 import HotUpdate from '../framework/Event/HotUpdate';
 import GlobalApp from './GlobalApp';
 const {
@@ -31,6 +32,7 @@ if (!cc.Node.prototype.getChildByPath) {
 @ccclass
 export default class init extends cc.Component {
   onLoad() {
+    AdaptUIMgr.adapt();
     this.initLog();
     HotUpdate.getInstance().getBaseVersion();
     cc.director.loadScene("loadingScene");

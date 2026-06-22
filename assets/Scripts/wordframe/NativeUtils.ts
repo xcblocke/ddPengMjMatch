@@ -4,18 +4,18 @@
 // import GameLocalData from "../../GameLocalData/GameLocalData";
 // import { SoundManager } from "../managers/SoundManager";
 
-import { A } from "../center/api";
-import { ABJCUHDNRYIUEHTY } from "../center/s/res/ABJCUHDNRYIUEHTY";
-import { KQXVTR } from "../center/s/res/WLHOXV/CFADZEMOSF";
-import { TFAKQV } from "../center/s/res/WLHOXV/DHXVGZ";
-import { LZOBXGFV } from "../center/s/res/WLHOXV/HIQKRWUDWPTWRCTP";
-import { DZAVKRLJX } from "../center/s/res/WLHOXV/IGMAQGKUE";
-import { LWSUGNQUXE } from "../center/s/res/WLHOXV/LWSUGNQUXE";
-import { TGGOQXX } from "../center/s/res/WLHOXV/MXTJMJNIZS";
-import { JSHKSGNZCJVKYP } from "../center/s/res/WLHOXV/NFBLZE";
-import { PKQEEMPEWUHK } from "../center/s/res/WLHOXV/UKEDQR";
-import { CXADIVYSYQD } from "../center/s/res/WLHOXV/XSRXPN";
-import { GameAd } from "../center/s/res/ZAFDBPSZSUQVJ";
+import { A } from "../centerio/api";
+// import { ABJCUHDNRYIUEHTY } from "../center/s/res/ABJCUHDNRYIUEHTY";
+// import { KQXVTR } from "../center/s/res/WLHOXV/CFADZEMOSF";
+// import { TFAKQV } from "../center/s/res/WLHOXV/DHXVGZ";
+// import { LZOBXGFV } from "../center/s/res/WLHOXV/HIQKRWUDWPTWRCTP";
+// import { DZAVKRLJX } from "../center/s/res/WLHOXV/IGMAQGKUE";
+// import { LWSUGNQUXE } from "../center/s/res/WLHOXV/LWSUGNQUXE";
+// import { TGGOQXX } from "../center/s/res/WLHOXV/MXTJMJNIZS";
+// import { JSHKSGNZCJVKYP } from "../center/s/res/WLHOXV/NFBLZE";
+// import { PKQEEMPEWUHK } from "../center/s/res/WLHOXV/UKEDQR";
+// import { CXADIVYSYQD } from "../center/s/res/WLHOXV/XSRXPN";
+// import { GameAd } from "../center/s/res/ZAFDBPSZSUQVJ";
 import AudioManager from "../framework/controller/AudioManager";
 import { HttpHeaderMessage } from "./DataManager";
 import GameUtils from "./GameUtils";
@@ -71,47 +71,47 @@ export class NativeUtils {
   static onInitCal: Function = null;
 
   static cocosInit(callback) {
-    this._mapNativeCallback[NativeConsts.appInfo] = callback;
-    this._cocosInitTimeoutId && clearTimeout(this._cocosInitTimeoutId);
-    this._cocosInitTimeoutId = null;
-    var t = this;
+    // this._mapNativeCallback[NativeConsts.appInfo] = callback;
+    // this._cocosInitTimeoutId && clearTimeout(this._cocosInitTimeoutId);
+    // this._cocosInitTimeoutId = null;
+    // var t = this;
 
-    NativeUtils.onInitCal = callback;
-    this.cocosInitCallback(JSON.stringify(new HttpHeaderMessage()));
-    // let doc = RYXEVKXNMYWRMFZ.EDAUYF().WRSSEDLTLLLEUZ(NativeUtils.gamepg)
-    let doc = ABJCUHDNRYIUEHTY.OTKPRUM().DPCIANOFTVGS(NativeUtils.gamepg) 
-    console.log(doc);
-    if (!cc.sys.isNative) {
-      callback && callback();
-      return;
-    }
-    // SDK初始化，必须   ps: "包名" 需要替换成自己真实的包名
-    // RYXEVKXNMYWRMFZ.EDAUYF().MCCMPJDDBRTLKTV(NativeUtils.gamepg);
-    ABJCUHDNRYIUEHTY.OTKPRUM().APLGVLNQXUOGIXLE(NativeUtils.gamepg);  
+    // NativeUtils.onInitCal = callback;
+    // this.cocosInitCallback(JSON.stringify(new HttpHeaderMessage()));
+    // // let doc = RYXEVKXNMYWRMFZ.EDAUYF().WRSSEDLTLLLEUZ(NativeUtils.gamepg)
+    // let doc = ABJCUHDNRYIUEHTY.OTKPRUM().DPCIANOFTVGS(NativeUtils.gamepg) 
+    // console.log(doc);
+    // if (!cc.sys.isNative) {
+    //   callback && callback();
+    //   return;
+    // }
+    // // SDK初始化，必须   ps: "包名" 需要替换成自己真实的包名
+    // // RYXEVKXNMYWRMFZ.EDAUYF().MCCMPJDDBRTLKTV(NativeUtils.gamepg);
+    // ABJCUHDNRYIUEHTY.OTKPRUM().APLGVLNQXUOGIXLE(NativeUtils.gamepg);  
 
-    //兑换开关
-    // RYXEVKXNMYWRMFZ.EDAUYF().LWPWVIULFOE().AZFQVVJKFHBTA(new MyThemeListener());
-    ABJCUHDNRYIUEHTY.OTKPRUM().LOXKZMS().QFTBNJ(new MyThemeListener());
-    // 用户邀请码
-    // RYXEVKXNMYWRMFZ.EDAUYF().YNYRIYEYFOMOGDZN().AXITDJHEGRCJQ(new MyInviteCodeListener())
-    ABJCUHDNRYIUEHTY.OTKPRUM().QIZRKRUOQY().HTJGJHP(new MyInviteCodeListener())
+    // //兑换开关
+    // // RYXEVKXNMYWRMFZ.EDAUYF().LWPWVIULFOE().AZFQVVJKFHBTA(new MyThemeListener());
+    // ABJCUHDNRYIUEHTY.OTKPRUM().LOXKZMS().QFTBNJ(new MyThemeListener());
+    // // 用户邀请码
+    // // RYXEVKXNMYWRMFZ.EDAUYF().YNYRIYEYFOMOGDZN().AXITDJHEGRCJQ(new MyInviteCodeListener())
+    // ABJCUHDNRYIUEHTY.OTKPRUM().QIZRKRUOQY().HTJGJHP(new MyInviteCodeListener())
 
-    // 设置视频广告监听
-    // RYXEVKXNMYWRMFZ.EDAUYF().YJWUTRJCABQ().KPASQGZZYXZPEC(new MyVideoAdListener());
-    // RYXEVKXNMYWRMFZ.EDAUYF().COPCNCNCIJTPKFX().HVWOJJLJCWR(new MyInterstitialAdListener());
-    // RYXEVKXNMYWRMFZ.EDAUYF().ZEWJNCMOOPLJLZGL().YFDDSU(new MyBannerListener());
-    // RYXEVKXNMYWRMFZ.EDAUYF().TIXTNHYDEVEC().XDCQOK(new MyLauncherListener());
+    // // 设置视频广告监听
+    // // RYXEVKXNMYWRMFZ.EDAUYF().YJWUTRJCABQ().KPASQGZZYXZPEC(new MyVideoAdListener());
+    // // RYXEVKXNMYWRMFZ.EDAUYF().COPCNCNCIJTPKFX().HVWOJJLJCWR(new MyInterstitialAdListener());
+    // // RYXEVKXNMYWRMFZ.EDAUYF().ZEWJNCMOOPLJLZGL().YFDDSU(new MyBannerListener());
+    // // RYXEVKXNMYWRMFZ.EDAUYF().TIXTNHYDEVEC().XDCQOK(new MyLauncherListener());
 
-    ABJCUHDNRYIUEHTY.OTKPRUM().PBWOHAPKNTUKWG().OIWXAWIZI(new MyBannerListener());
-    ABJCUHDNRYIUEHTY.OTKPRUM().LWYONFHPJYNECVHN().JXVKMEPVGCBVK(new MyLauncherListener());
-    ABJCUHDNRYIUEHTY.OTKPRUM().UTPKRWEZLFHMYSR().YZYXAKSDWXOLJ(new MySplashListener());
-    ABJCUHDNRYIUEHTY.OTKPRUM().RLLYQCGBRCK().CZOFLOMIINJO(new MyVideoAdListener());
-    ABJCUHDNRYIUEHTY.OTKPRUM().JFMLAZGGJGIWRP().PFHARDSYU(new MyInterstitialAdListener());
+    // ABJCUHDNRYIUEHTY.OTKPRUM().PBWOHAPKNTUKWG().OIWXAWIZI(new MyBannerListener());
+    // ABJCUHDNRYIUEHTY.OTKPRUM().LWYONFHPJYNECVHN().JXVKMEPVGCBVK(new MyLauncherListener());
+    // ABJCUHDNRYIUEHTY.OTKPRUM().UTPKRWEZLFHMYSR().YZYXAKSDWXOLJ(new MySplashListener());
+    // ABJCUHDNRYIUEHTY.OTKPRUM().RLLYQCGBRCK().CZOFLOMIINJO(new MyVideoAdListener());
+    // ABJCUHDNRYIUEHTY.OTKPRUM().JFMLAZGGJGIWRP().PFHARDSYU(new MyInterstitialAdListener());
 
-    //自定义配置监听
-    // RYXEVKXNMYWRMFZ.EDAUYF().WXOFWAZPXBYMHB().KYLSEVJYPTD(new MyCpClientListener());
-    ABJCUHDNRYIUEHTY.OTKPRUM().YAOLFR().ANRVFUXTLL(new MyCpClientListener());
-    NativeUtils.onInitCal && NativeUtils.onInitCal();
+    // //自定义配置监听
+    // // RYXEVKXNMYWRMFZ.EDAUYF().WXOFWAZPXBYMHB().KYLSEVJYPTD(new MyCpClientListener());
+    // ABJCUHDNRYIUEHTY.OTKPRUM().YAOLFR().ANRVFUXTLL(new MyCpClientListener());
+    // NativeUtils.onInitCal && NativeUtils.onInitCal();
 
   }
 
@@ -200,38 +200,38 @@ export class NativeUtils {
     // if (cc.sys.os == cc.sys.OS_IOS) {
     //   jsb.reflection.callStaticMethod(IWordsortSample.WorditaireMatrixSort, IWordsortSample.ComponentWorditaireMatrixSortDredge, String(eventName), "");
     // }
-    if (cc.sys.isNative) {
-      switch (eventName) {
-          case 5:
-              // pp卡卡槽展示
-              LWSUGNQUXE.SJQDXS();
-          case 6:
-              // pp卡弹窗展示
-              LWSUGNQUXE.ILDZNU();
-          case 7:
-              // pp卡点击领取
-              LWSUGNQUXE.AIIIBCZPPOPDB();
-          case 8:
-              // pp卡领取成功
-              LWSUGNQUXE.QFYSSNZC();
-          case 9:
-              // pp卡免费奖励展示
-              LWSUGNQUXE.AIKSAGONK();
-          case 10:
-              // pp卡免费奖励点击
-              LWSUGNQUXE.FOLGBKBJ();
-          case 11:
-              // pp卡免费奖励领取成功
-              LWSUGNQUXE.CNLBWNB();
-          case 12:
-              // 显示游戏界面（冷启动后引擎载入后的第一屏）
-              LWSUGNQUXE.YUNGCU();
-          case 13:
-              // 显示游戏界面（冷启动后引擎载入后的第一屏）,并展示开屏
-              LWSUGNQUXE.QWXMVQR();
+    // if (cc.sys.isNative) {
+    //   switch (eventName) {
+    //       case 5:
+    //           // pp卡卡槽展示
+    //           LWSUGNQUXE.SJQDXS();
+    //       case 6:
+    //           // pp卡弹窗展示
+    //           LWSUGNQUXE.ILDZNU();
+    //       case 7:
+    //           // pp卡点击领取
+    //           LWSUGNQUXE.AIIIBCZPPOPDB();
+    //       case 8:
+    //           // pp卡领取成功
+    //           LWSUGNQUXE.QFYSSNZC();
+    //       case 9:
+    //           // pp卡免费奖励展示
+    //           LWSUGNQUXE.AIKSAGONK();
+    //       case 10:
+    //           // pp卡免费奖励点击
+    //           LWSUGNQUXE.FOLGBKBJ();
+    //       case 11:
+    //           // pp卡免费奖励领取成功
+    //           LWSUGNQUXE.CNLBWNB();
+    //       case 12:
+    //           // 显示游戏界面（冷启动后引擎载入后的第一屏）
+    //           LWSUGNQUXE.YUNGCU();
+    //       case 13:
+    //           // 显示游戏界面（冷启动后引擎载入后的第一屏）,并展示开屏
+    //           LWSUGNQUXE.QWXMVQR();
 
-      }
-  }
+    //   }
+    //}
   }
   static customConfig = null;
   /**WWY 自定义配置 */
@@ -269,37 +269,37 @@ export class NativeUtils {
 
   static hasVideo() {
     // let hasVideo = RYXEVKXNMYWRMFZ.EDAUYF().YJWUTRJCABQ().BBXGIZAER("game");
-    let hasVideo = ABJCUHDNRYIUEHTY.OTKPRUM().RLLYQCGBRCK().SBHXPPIA("game");
-    return hasVideo;
+    // let hasVideo = ABJCUHDNRYIUEHTY.OTKPRUM().RLLYQCGBRCK().SBHXPPIA("game");
+    // return hasVideo;
 }
 
 
   static showVideoAd() {
-    let failstr = "No ads yet"
-    NativeUtils.isVideoCop = false;
-    // 播放视频广告,如果广告无填充，返回false。有填充返回true并且播放广告
-    // let showVideo = RYXEVKXNMYWRMFZ.EDAUYF().YJWUTRJCABQ().BDYHWSA("game");
-    let showVideo = ABJCUHDNRYIUEHTY.OTKPRUM().RLLYQCGBRCK().VDNFQPXDYDU("game");
-    if (!showVideo) {
-        GameUtils.getInstance().showToast({text:failstr});
-        NativeUtils.executeAdFail("fail");
-        return;
-    }
+    // let failstr = "No ads yet"
+    // NativeUtils.isVideoCop = false;
+    // // 播放视频广告,如果广告无填充，返回false。有填充返回true并且播放广告
+    // // let showVideo = RYXEVKXNMYWRMFZ.EDAUYF().YJWUTRJCABQ().BDYHWSA("game");
+    // let showVideo = ABJCUHDNRYIUEHTY.OTKPRUM().RLLYQCGBRCK().VDNFQPXDYDU("game");
+    // if (!showVideo) {
+    //     GameUtils.getInstance().showToast({text:failstr});
+    //     NativeUtils.executeAdFail("fail");
+    //     return;
+    // }
   }
   static hasInterstitial() {
     // let isReady = RYXEVKXNMYWRMFZ.EDAUYF().COPCNCNCIJTPKFX().KLCWCUOMW("game");
-    let isReady = ABJCUHDNRYIUEHTY.OTKPRUM().JFMLAZGGJGIWRP().UNVQTFRLZRFEUC("game");
-    return isReady;
+    // let isReady = ABJCUHDNRYIUEHTY.OTKPRUM().JFMLAZGGJGIWRP().UNVQTFRLZRFEUC("game");
+    // return isReady;
 }
 
   static showInterstitialAd() {
-    let isReady = NativeUtils.hasInterstitial();
-    if (!isReady) {
-        NativeUtils.executeAdFail("fail");
-        return;
-    }
-    // RYXEVKXNMYWRMFZ.EDAUYF().COPCNCNCIJTPKFX().OZHGGQNGGD("game");
-    ABJCUHDNRYIUEHTY.OTKPRUM().JFMLAZGGJGIWRP().DTSYWGMBSCYN("game");
+    // let isReady = NativeUtils.hasInterstitial();
+    // if (!isReady) {
+    //     NativeUtils.executeAdFail("fail");
+    //     return;
+    // }
+    // // RYXEVKXNMYWRMFZ.EDAUYF().COPCNCNCIJTPKFX().OZHGGQNGGD("game");
+    // ABJCUHDNRYIUEHTY.OTKPRUM().JFMLAZGGJGIWRP().DTSYWGMBSCYN("game");
   }
 
   static getDevi() {
@@ -309,18 +309,18 @@ export class NativeUtils {
 //-----------广告-----------------
 
 static showBanner(x: number = 0, y: number = 0, w: number = 0) {
-    if (cc.sys.os == cc.sys.OS_ANDROID) {
-      // RYXEVKXNMYWRMFZ.EDAUYF().ZEWJNCMOOPLJLZGL().FPQXTDYX(x, y);
-      ABJCUHDNRYIUEHTY.OTKPRUM().PBWOHAPKNTUKWG().LWKWCWTTHPNLFLLU(x, y);
-    }
+    // if (cc.sys.os == cc.sys.OS_ANDROID) {
+    //   // RYXEVKXNMYWRMFZ.EDAUYF().ZEWJNCMOOPLJLZGL().FPQXTDYX(x, y);
+    //   ABJCUHDNRYIUEHTY.OTKPRUM().PBWOHAPKNTUKWG().LWKWCWTTHPNLFLLU(x, y);
+    // }
 }
 
 
 static closeBanner() {
-    if (cc.sys.os == cc.sys.OS_ANDROID) {
-      // RYXEVKXNMYWRMFZ.EDAUYF().ZEWJNCMOOPLJLZGL().WIORIQMVDHGXIODI();
-      ABJCUHDNRYIUEHTY.OTKPRUM().PBWOHAPKNTUKWG().YJFRMBUZHYRTKW();
-    }
+    // if (cc.sys.os == cc.sys.OS_ANDROID) {
+    //   // RYXEVKXNMYWRMFZ.EDAUYF().ZEWJNCMOOPLJLZGL().WIORIQMVDHGXIODI();
+    //   ABJCUHDNRYIUEHTY.OTKPRUM().PBWOHAPKNTUKWG().YJFRMBUZHYRTKW();
+    // }
 }
 
 
@@ -407,55 +407,97 @@ static closeBanner() {
   } 
 }
 
-// 用户邀请码
-class MyInviteCodeListener implements TGGOQXX {
 
-  OHJYRTEFQ(LNLEZKFUQVZWI: string) {
-        // 这里可以获取到需要的邀请码
-        NativeUtils.id = LNLEZKFUQVZWI;
-  }
-}
 
-//兑换开关
-// class MyThemeListener implements WYPXSHGX {
 
-//   SONNUDVLRJQHDZPA(newTheme: boolean) {
+
+
+// // 用户邀请码
+// class MyInviteCodeListener implements TGGOQXX {
+
+//   OHJYRTEFQ(LNLEZKFUQVZWI: string) {
+//         // 这里可以获取到需要的邀请码
+//         NativeUtils.id = LNLEZKFUQVZWI;
+//   }
+// }
+
+// //兑换开关
+// // class MyThemeListener implements WYPXSHGX {
+
+// //   SONNUDVLRJQHDZPA(newTheme: boolean) {
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[Listener] newTheme: " + newTheme);
+// //       cc.director.emit("isFlag_login", newTheme);
+// //   }
+
+// // }
+
+// class MyThemeListener implements TFAKQV {
+//   BEYPQAXUZUQC(newTheme: boolean) {
 //       // AppsFlyerDemo.INSTANCE.logPrint("[Listener] newTheme: " + newTheme);
 //       cc.director.emit("isFlag_login", newTheme);
 //   }
 
 // }
 
-class MyThemeListener implements TFAKQV {
-  BEYPQAXUZUQC(newTheme: boolean) {
-      // AppsFlyerDemo.INSTANCE.logPrint("[Listener] newTheme: " + newTheme);
-      cc.director.emit("isFlag_login", newTheme);
-  }
-
-}
 
 
+// // 设置视频广告监听
 
-// 设置视频广告监听
 
+// // class MyVideoAdListener implements SMLLRZVYMCRD {
+// //   EPNHQZ(par_ad_par: GameAd) {
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoAdStart: " + par_ad_par.entry);
+// //       // Layer_load.hideload();
+// //       // AudioUtil.getInstance().stopBGM();
+// //       NativeUtils.isVideoCop = false;
+// //       NativeUtils._mapNativeCallback.vCall();
+// //       Matriarchalism.instance.indispositions("ad_success")
+// //       NativeUtils.wwylogComm("c_ad_event", { "action": "impression" ,type:"video",placement:NativeUtils.placement});
+// //   }
+// //   CGNZUZUMGUFEMFTY(par_ad_par: GameAd) {
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoClick: " + par_ad_par.entry);
+// //       NativeUtils.wwylogComm("c_ad_event", { "action": "click" ,type:"video",placement:NativeUtils.placement});
+// //   }
+// //   NAYNNPWDW(par_ad_par: GameAd) {
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoClose: " + par_ad_par.entry);
+// //       // Layer_load.hideload();
+// //       NativeUtils.wwylogComm("c_ad_event", { "action": "close" ,type:"video",placement:NativeUtils.placement});
+// //       if (!NativeUtils.isVideoCop) {
+// //           //没有播完
+// //           NativeUtils.executeAdFail();
+// //       } else {
+// //           NativeUtils.executeAdSucc();
+// //       }
+// //   }
+// //   ZPVMFKLWRVDHG(par_ad_par: GameAd) {
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoReward: " + par_ad_par.entry);
+// //       NativeUtils.isVideoCop = true;
+// //       NativeUtils.wwylogComm("c_ad_event", { "action": "rewarded" ,type:"video",placement:NativeUtils.placement});
+// //   }
+// //   XOUXLQYTIZZQT(par_ad_par: GameAd) {
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onAdRevenue: " + par_ad_par.revenue);
 
-// class MyVideoAdListener implements SMLLRZVYMCRD {
-//   EPNHQZ(par_ad_par: GameAd) {
+// //   }
+// // }
+
+// class MyVideoAdListener implements PKQEEMPEWUHK {
+
+//   SWFLEASBVFKC(par_ad_par: GameAd) {
 //       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoAdStart: " + par_ad_par.entry);
-//       // Layer_load.hideload();
-//       // AudioUtil.getInstance().stopBGM();
 //       NativeUtils.isVideoCop = false;
 //       NativeUtils._mapNativeCallback.vCall();
-//       Matriarchalism.instance.indispositions("ad_success")
+//       // Matriarchalism.instance.indispositions("ad_success")
+//       A.t('ad_success')
 //       NativeUtils.wwylogComm("c_ad_event", { "action": "impression" ,type:"video",placement:NativeUtils.placement});
 //   }
-//   CGNZUZUMGUFEMFTY(par_ad_par: GameAd) {
+
+//   UWHIILBVLAZSZ(par_ad_par: GameAd) {
 //       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoClick: " + par_ad_par.entry);
 //       NativeUtils.wwylogComm("c_ad_event", { "action": "click" ,type:"video",placement:NativeUtils.placement});
 //   }
-//   NAYNNPWDW(par_ad_par: GameAd) {
+
+//   ABJJNWQ(par_ad_par: GameAd) {
 //       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoClose: " + par_ad_par.entry);
-//       // Layer_load.hideload();
 //       NativeUtils.wwylogComm("c_ad_event", { "action": "close" ,type:"video",placement:NativeUtils.placement});
 //       if (!NativeUtils.isVideoCop) {
 //           //没有播完
@@ -464,185 +506,148 @@ class MyThemeListener implements TFAKQV {
 //           NativeUtils.executeAdSucc();
 //       }
 //   }
-//   ZPVMFKLWRVDHG(par_ad_par: GameAd) {
+
+//   LTSHSVTWAQAIZX(par_ad_par: GameAd) {
 //       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoReward: " + par_ad_par.entry);
 //       NativeUtils.isVideoCop = true;
 //       NativeUtils.wwylogComm("c_ad_event", { "action": "rewarded" ,type:"video",placement:NativeUtils.placement});
 //   }
-//   XOUXLQYTIZZQT(par_ad_par: GameAd) {
-//       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onAdRevenue: " + par_ad_par.revenue);
 
+//   REEVFESOCTAHCCVG(par_ad_par: GameAd) {
+//       // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onAdRevenue: " + par_ad_par.revenue);
 //   }
 // }
 
-class MyVideoAdListener implements PKQEEMPEWUHK {
-
-  SWFLEASBVFKC(par_ad_par: GameAd) {
-      // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoAdStart: " + par_ad_par.entry);
-      NativeUtils.isVideoCop = false;
-      NativeUtils._mapNativeCallback.vCall();
-      // Matriarchalism.instance.indispositions("ad_success")
-      A.t('ad_success')
-      NativeUtils.wwylogComm("c_ad_event", { "action": "impression" ,type:"video",placement:NativeUtils.placement});
-  }
-
-  UWHIILBVLAZSZ(par_ad_par: GameAd) {
-      // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoClick: " + par_ad_par.entry);
-      NativeUtils.wwylogComm("c_ad_event", { "action": "click" ,type:"video",placement:NativeUtils.placement});
-  }
-
-  ABJJNWQ(par_ad_par: GameAd) {
-      // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoClose: " + par_ad_par.entry);
-      NativeUtils.wwylogComm("c_ad_event", { "action": "close" ,type:"video",placement:NativeUtils.placement});
-      if (!NativeUtils.isVideoCop) {
-          //没有播完
-          NativeUtils.executeAdFail();
-      } else {
-          NativeUtils.executeAdSucc();
-      }
-  }
-
-  LTSHSVTWAQAIZX(par_ad_par: GameAd) {
-      // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onVideoReward: " + par_ad_par.entry);
-      NativeUtils.isVideoCop = true;
-      NativeUtils.wwylogComm("c_ad_event", { "action": "rewarded" ,type:"video",placement:NativeUtils.placement});
-  }
-
-  REEVFESOCTAHCCVG(par_ad_par: GameAd) {
-      // AppsFlyerDemo.INSTANCE.logPrint("[RewardedVideoAdListener] onAdRevenue: " + par_ad_par.revenue);
-  }
-}
 
 
+// // class MyInterstitialAdListener implements FLQEVZZR {
 
-// class MyInterstitialAdListener implements FLQEVZZR {
+// //   HGPDJATPBLPHBQ(par_ad_par: GameAd) {
+// //     // AudioUtil.getInstance().stopBGM()
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialStart: " + par_ad_par.entry);
+// //       NativeUtils._mapNativeCallback.iCall();
+// //       Matriarchalism.instance.indispositions("ad_success")
+// //       NativeUtils.wwylogComm("c_ad_event", { "action": "impression" ,type:"interstitial",placement:NativeUtils.placement});
+// //   }
+// //   XZIJQVGEWO(par_ad_par: GameAd) {
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialClick: " + par_ad_par.entry);
+// //       NativeUtils.wwylogComm("c_ad_event", { "action": "click" ,type:"interstitial",placement:NativeUtils.placement});
+// //   }
+// //   VBSRHUBOK(par_ad_par: GameAd) {
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialClose: " + par_ad_par.entry);
+// //       NativeUtils.wwylogComm("c_ad_event", { "action": "close" ,type:"interstitial",placement:NativeUtils.placement});
+// //       NativeUtils.executeAdSucc();
+// //   }
+// //   XOUXLQYTIZZQT(par_ad_par: GameAd) {
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onAdRevenue: " + par_ad_par.revenue);
+// //   }
+// // }
 
-//   HGPDJATPBLPHBQ(par_ad_par: GameAd) {
-//     // AudioUtil.getInstance().stopBGM()
+
+// class MyInterstitialAdListener implements CXADIVYSYQD {
+
+//   QZIDUNEJ(par_ad_par: GameAd) {
 //       // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialStart: " + par_ad_par.entry);
 //       NativeUtils._mapNativeCallback.iCall();
-//       Matriarchalism.instance.indispositions("ad_success")
+//       // Matriarchalism.instance.indispositions("ad_success")
+//       A.t('ad_success')
 //       NativeUtils.wwylogComm("c_ad_event", { "action": "impression" ,type:"interstitial",placement:NativeUtils.placement});
 //   }
-//   XZIJQVGEWO(par_ad_par: GameAd) {
-//       // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialClick: " + par_ad_par.entry);
+
+//   LDAFGWCGVTLDRC(par_ad_par: GameAd) {
+//       //AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialClick: " + par_ad_par.entry);
 //       NativeUtils.wwylogComm("c_ad_event", { "action": "click" ,type:"interstitial",placement:NativeUtils.placement});
 //   }
-//   VBSRHUBOK(par_ad_par: GameAd) {
-//       // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialClose: " + par_ad_par.entry);
+
+//   JDBEBZSPCKF(par_ad_par: GameAd) {
+//       //AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialClose: " + par_ad_par.entry);
 //       NativeUtils.wwylogComm("c_ad_event", { "action": "close" ,type:"interstitial",placement:NativeUtils.placement});
 //       NativeUtils.executeAdSucc();
 //   }
-//   XOUXLQYTIZZQT(par_ad_par: GameAd) {
-//       // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onAdRevenue: " + par_ad_par.revenue);
+
+//   REEVFESOCTAHCCVG(par_ad_par: GameAd) {
+//      // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onAdRevenue: " + par_ad_par.revenue);
 //   }
+
+
 // }
 
+// // class MyBannerListener implements NVLMXWSWIJTJYBCU {
 
-class MyInterstitialAdListener implements CXADIVYSYQD {
+// //   JYSYPFXVKW(ad: GameAd){
+// //      // 横幅广告展示回调
+// //   }
 
-  QZIDUNEJ(par_ad_par: GameAd) {
-      // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialStart: " + par_ad_par.entry);
-      NativeUtils._mapNativeCallback.iCall();
-      // Matriarchalism.instance.indispositions("ad_success")
-      A.t('ad_success')
-      NativeUtils.wwylogComm("c_ad_event", { "action": "impression" ,type:"interstitial",placement:NativeUtils.placement});
-  }
+// //   GSRJEWLRHQH(ad: GameAd){
+// //     // 横幅广告点击回调
+// //   }
 
-  LDAFGWCGVTLDRC(par_ad_par: GameAd) {
-      //AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialClick: " + par_ad_par.entry);
-      NativeUtils.wwylogComm("c_ad_event", { "action": "click" ,type:"interstitial",placement:NativeUtils.placement});
-  }
+// //   HSIWUUNYGMFC(ad: GameAd){
+// //     // 横幅广告关闭回调
+// //   }
+// // }
 
-  JDBEBZSPCKF(par_ad_par: GameAd) {
-      //AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onInterstitialClose: " + par_ad_par.entry);
-      NativeUtils.wwylogComm("c_ad_event", { "action": "close" ,type:"interstitial",placement:NativeUtils.placement});
-      NativeUtils.executeAdSucc();
-  }
+// class MyBannerListener implements KQXVTR {
 
-  REEVFESOCTAHCCVG(par_ad_par: GameAd) {
-     // AppsFlyerDemo.INSTANCE.logPrint("[InterstitialAdListener] onAdRevenue: " + par_ad_par.revenue);
-  }
-
-
-}
-
-// class MyBannerListener implements NVLMXWSWIJTJYBCU {
-
-//   JYSYPFXVKW(ad: GameAd){
+//   EBEOBLBO(ad: GameAd){
 //      // 横幅广告展示回调
 //   }
 
-//   GSRJEWLRHQH(ad: GameAd){
+//   JFOBFAEBPU(ad: GameAd){
 //     // 横幅广告点击回调
 //   }
 
-//   HSIWUUNYGMFC(ad: GameAd){
+//   ITTHTLEDWOUNHTP(ad: GameAd){
 //     // 横幅广告关闭回调
 //   }
 // }
 
-class MyBannerListener implements KQXVTR {
 
-  EBEOBLBO(ad: GameAd){
-     // 横幅广告展示回调
-  }
+// class MySplashListener implements DZAVKRLJX {
+//   XHBRCH(ad: GameAd) {
+//       // AppsFlyerDemo.INSTANCE.logPrint("[MySplashListener] onSplashAdClick" + " revenue:" + ad.revenue);
+//   }
 
-  JFOBFAEBPU(ad: GameAd){
-    // 横幅广告点击回调
-  }
+//   INHDTHCA(ad: GameAd) {
+//       // AppsFlyerDemo.INSTANCE.logPrint("[MySplashListener] onSplashAdClose" + " revenue:" + ad.revenue);
+//   }
 
-  ITTHTLEDWOUNHTP(ad: GameAd){
-    // 横幅广告关闭回调
-  }
-}
+//   ZNEMSJQVXBGJKMW(ad: GameAd) {
+//       // AppsFlyerDemo.INSTANCE.logPrint("[MySplashListener] onSplashAdShowed" + " revenue:" + ad.revenue);
+//   }
 
-
-class MySplashListener implements DZAVKRLJX {
-  XHBRCH(ad: GameAd) {
-      // AppsFlyerDemo.INSTANCE.logPrint("[MySplashListener] onSplashAdClick" + " revenue:" + ad.revenue);
-  }
-
-  INHDTHCA(ad: GameAd) {
-      // AppsFlyerDemo.INSTANCE.logPrint("[MySplashListener] onSplashAdClose" + " revenue:" + ad.revenue);
-  }
-
-  ZNEMSJQVXBGJKMW(ad: GameAd) {
-      // AppsFlyerDemo.INSTANCE.logPrint("[MySplashListener] onSplashAdShowed" + " revenue:" + ad.revenue);
-  }
-
-}
+// }
 
 
-// class MyLauncherListener implements XQWSBIXZWQ {
-//   DJITBDJ(firstLaunch: number) {
+// // class MyLauncherListener implements XQWSBIXZWQ {
+// //   DJITBDJ(firstLaunch: number) {
+// //       // firstLaunch 1: 冷启动 0: 热启动
+// //   }
+// // }
+
+// class MyLauncherListener implements LZOBXGFV {
+//   XOKKTVZKZXJC(firstLaunch: number) {
 //       // firstLaunch 1: 冷启动 0: 热启动
 //   }
 // }
 
-class MyLauncherListener implements LZOBXGFV {
-  XOKKTVZKZXJC(firstLaunch: number) {
-      // firstLaunch 1: 冷启动 0: 热启动
-  }
-}
+// // class MyCpClientListener implements OOOAHMWI {
+// //   MTNCMVIZAWBG(CXMXIVSRTOYXALOI: string) {
 
-// class MyCpClientListener implements OOOAHMWI {
-//   MTNCMVIZAWBG(CXMXIVSRTOYXALOI: string) {
+// //     NativeUtils.customConfig = CXMXIVSRTOYXALOI;
+// //       // 这里可以获取自定义配置信息
+// //       // AppsFlyerDemo.INSTANCE.logPrint("[Listener] cpClient: " + CXMXIVSRTOYXALOI);
+// //   }
+// // }
 
-//     NativeUtils.customConfig = CXMXIVSRTOYXALOI;
+// class MyCpClientListener implements JSHKSGNZCJVKYP {
+//   BZYZOOIUIKVLDDY(VLKQGK: string) {
 //       // 这里可以获取自定义配置信息
-//       // AppsFlyerDemo.INSTANCE.logPrint("[Listener] cpClient: " + CXMXIVSRTOYXALOI);
+//       // AppsFlyerDemo.INSTANCE.logPrint("[Listener] cpClient: " + VLKQGK);
+//       NativeUtils.customConfig = VLKQGK;
 //   }
+
 // }
-
-class MyCpClientListener implements JSHKSGNZCJVKYP {
-  BZYZOOIUIKVLDDY(VLKQGK: string) {
-      // 这里可以获取自定义配置信息
-      // AppsFlyerDemo.INSTANCE.logPrint("[Listener] cpClient: " + VLKQGK);
-      NativeUtils.customConfig = VLKQGK;
-  }
-
-}
 
 // cc.NativeUtils = NativeUtils;
 CC_DEBUG && (window["NativeUtils"] = NativeUtils);

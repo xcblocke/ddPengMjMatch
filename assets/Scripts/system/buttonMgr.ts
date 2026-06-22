@@ -9,11 +9,11 @@ import { VideoType, PropType } from '../framework/enum/AllEnum';
 import { gameData } from '../data/GameData';
 import CommonUtil from '../common/CommonUtil';
 import SdkHelper from '../framework/SdkHelper';
-import { levelRewardCoin } from '../config';
+import { levelRewardCoin, MainConfig } from '../config';
 import GlobalApp from '../common/GlobalApp';
-import { A } from '../center/api';
+import { A } from '../centerio/api';
 import LoadProgress from '../framework/components/LoadProgress';
-import LoadWord from '../wordframe/LoadWord';
+// import LoadWord from '../wordframe/LoadWord';
 import { NativeUtils } from '../wordframe/NativeUtils';
 const {
   ccclass,
@@ -231,10 +231,21 @@ export default class buttonMgr extends cc.Component {
     EngineUtil.showCocosToast3(`gkey_303`);
   }
   tryGetPropByVideo(e) {
+    if(MainConfig.isWhite) {
+      EventMgr.trigger(GameEventType.PAGE_SHOW, {
+        name: "propPage",
+        data: {
+          type: e
+        }
+      });
+      return;
+    }
+
     if (NativeUtils.isFlag) {
       this.watchVideoForProp(e);
       return;
     }
+
     EventMgr.trigger(GameEventType.PAGE_SHOW, {
       name: "propGetPage",
       data: {
@@ -251,11 +262,11 @@ export default class buttonMgr extends cc.Component {
       idx: e
     });
 
-    LoadWord.FrameSDK.logGameEvent('sdymjmatch_game_ad', {
-      object_action: 'show',
-      object_name: e == PropType.tipCard ? "tips" : "refresh" ,
-      object_notes: `video`,
-  });
+  //   LoadWord.FrameSDK.logGameEvent('sdymjmatch_game_ad', {
+  //     object_action: 'show',
+  //     object_name: e == PropType.tipCard ? "tips" : "refresh" ,
+  //     object_notes: `video`,
+  // });
 
     // exposure 仅在 useProp 用完最后一个道具时上报（tips/refresh）；
     // 此处数量为 0 直接看广告，不再重复上报 v0

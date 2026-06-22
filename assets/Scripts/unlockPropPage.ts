@@ -4,8 +4,8 @@ import { PropType } from './framework/enum/AllEnum';
 import EventMgr from './framework/Event/EventMgr';
 import GameEventType from './framework/Event/GameEventType';
 import GlobalApp from './common/GlobalApp';
-import { gameData } from './data/GameData';
 import BasePage from './view/BasePage';
+import { GameLevelPropConfig, markWhitePropClaimed } from './config';
 const {
   ccclass,
   property
@@ -35,6 +35,7 @@ export default class unlockPropPage extends BasePage {
   isFlying = false;
 
   type = PropType.tipCard;
+  grantCount = 1;
   _onHide() {
     super._onHide.call(this);
   }
@@ -46,14 +47,18 @@ export default class unlockPropPage extends BasePage {
     this.btnNode.opacity = 0;
     this.playLightAnim();
     this.type = e.info.type;
+    if (this.type == PropType.tipCard) {
+      this.grantCount = Math.max(1, Math.floor(Number(e.info.grantCount) || Number(GameLevelPropConfig.unlockTipCount) || 3));
+    } else if (this.type == PropType.reshuffleCard) {
+      this.grantCount = Math.max(1, Math.floor(Number(e.info.grantCount) || Number(GameLevelPropConfig.unlockReshuffleCount) || 1));
+    } else {
+      this.grantCount = Math.max(1, Math.floor(Number(e.info.grantCount) || 1));
+    }
     this.cliamBtn.interactable = true;
     this.isFlying = false;
     cc.tween(this.btnNode).delay(0.5).to(1, {
       opacity: 255
     }).start();
-    var t = JSON.parse(cc.sys.localStorage.getItem("unLockPropGuide")) || [];
-    t.push(gameData.gameLevel.toString());
-    cc.sys.localStorage.setItem("unLockPropGuide", JSON.stringify(t));
     this.propSp.spriteFrame = this.propSpList[this.type - 1];
     this.tipsLb.string = m[this.type];
   }
@@ -86,18 +91,19 @@ export default class unlockPropPage extends BasePage {
     t.scale = 0.6;
     AudioManager.instance.playMusic("xiu");
     AudioManager.instance.playMusic("dztx");
-    if (this.type == PropType.tipCard) {
-      PlayerDataSys.tipCardCount = 3;
-    } else {
-      if (this.type == PropType.reshuffleCard) {
-        PlayerDataSys.reshuffleCardCount = 1;
-      } else {
-        this.type == PropType.freezeCard && (PlayerDataSys.freezeCardCount = 1);
-      }
-    }
     cc.tween(t)
     .to(0.7, {position: a,scale: 0}, {easing: "backIn"})
     .call(function () {
+      if (e.type == PropType.tipCard) {
+        PlayerDataSys.tipCardCount = e.grantCount;
+      } else {
+        if (e.type == PropType.reshuffleCard) {
+          PlayerDataSys.reshuffleCardCount = e.grantCount;
+        } else {
+          e.type == PropType.freezeCard && (PlayerDataSys.freezeCardCount = e.grantCount);
+        }
+      }
+      markWhitePropClaimed(e.type);
      
         cc.tween(o)
         .to(0.1, { scale: 1.1})

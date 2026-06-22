@@ -6,7 +6,7 @@ import SdkHelper from './framework/SdkHelper';
 import { gameConfig } from './data/GameConfig';
 import GameSystem from './system/GameSystem';
 import BasePage, { AnimType } from './view/BasePage';
-import { propCostDollar } from './config';
+import { propCostDollar, markWhitePropClaimed } from './config';
 import EngineUtil from './framework/EngineUtil';
 import { gameData } from './data/GameData';
 import AudioManager from './framework/controller/AudioManager';
@@ -111,11 +111,11 @@ export default class propPage extends BasePage {
     const cost = Number(this._totalCostDollar) || 0;
     const addNum = Math.max(1, Math.floor(Number(this._buyCount) || 1));
     if (cost <= 0) {
-      EngineUtil.showCocosToast3("兑换失败");
+      EngineUtil.showCocosToast3("Exchange failed.");
       return;
     }
     if (Number(gameData.dollarBalance || 0) < cost) {
-      EngineUtil.showCocosToast3("金币不足，兑换失败");
+      EngineUtil.showCocosToast3("Insufficient coins, exchange failed.");
       return;
     }
 
@@ -132,7 +132,7 @@ export default class propPage extends BasePage {
       PlayerDataSys.reshuffleCardCount = Number(PlayerDataSys.reshuffleCardCount || 0) + addNum;
       this.playPropFlyAnim();
     } else {
-      EngineUtil.showCocosToast3("兑换失败");
+      EngineUtil.showCocosToast3("Exchange failed.");
       return;
     }
     // EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT, null);
@@ -220,6 +220,7 @@ export default class propPage extends BasePage {
     }, {
       easing: "backIn"
     }).call(function () {
+      markWhitePropClaimed(e._type);
       cc.tween(o).to(0.1, {
         scale: 1.1
       }).to(0.1, {

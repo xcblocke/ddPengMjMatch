@@ -9,7 +9,7 @@ import BasePage from './view/BasePage';
 import PageMgr from './view/PageMgr';
 import ClientData from './framework/Event/ClientData';
 import UrlMgr from './service/UrlMgr';
-import { A } from './center/api';
+import { A } from './centerio/api';
 import LoadWord from './wordframe/LoadWord';
 
 const {
@@ -64,15 +64,15 @@ export default class SetUpPage extends BasePage {
 
   onClickSupportBtn() {
     // AudioManager.getInstance().playMusic("click");
-    setTimeout(() => {
-      LoadWord.FrameSDK.openFeedbackWindow();
-    }, 280);
+    // setTimeout(() => {
+    //   LoadWord.FrameSDK.openFeedbackWindow();
+    // }, 280);
     this.onClose();
   }
 
-  onClickTitlele() {
-    LoadWord.FrameSDK.openGMWindow();
-  }
+  // onClickTitlele() {
+  //   LoadWord.FrameSDK.openGMWindow();
+  // }
 
 
   onDisable() {

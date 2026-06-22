@@ -19,9 +19,27 @@ export enum ServerType {
   release = 2, // 正式服
 }
 
+export enum GameEnterModel {
+  shenheModel = 0,//审核模式
+  aModel = 1,//a面模式
+  bModel = 2, //b面模式
+}
+
+export let gameEnterModel = GameEnterModel.shenheModel;
+
 export const MainConfig = {
-  curServerType: 2,
+  curServerType: 1,
+  isWhite: true,
   serveUrl: "",
+};
+
+export const propLevelShowConfig = {
+  [PropType.tipCard]: {
+    level: 3,
+  },
+  [PropType.reshuffleCard]: {
+    level: 2,
+  },
 };
 
 export interface IGameLevelPropConfig {
@@ -41,7 +59,7 @@ const DEFAULT_GAME_LEVEL_PROP_CONFIG: IGameLevelPropConfig = {
   UnlevelPropConfig: 4,
   unlockReshuffleCount: 1,
   unlockTipCount: 3,
-  earlyAutoHintLevels: [2, 3],
+  earlyAutoHintLevels: [],
   earlyAutoHintIdleSeconds: 4,
 };
 
@@ -102,4 +120,109 @@ export function applyGameLevelPropConfig(remote?: Record<string, unknown> | null
 export function getUnlockPropLevel(): number {
   const v = Math.floor(Number(GameLevelPropConfig.UnlevelPropConfig));
   return v > 0 ? v : DEFAULT_GAME_LEVEL_PROP_CONFIG.UnlevelPropConfig;
+}
+
+/** isWhite 模式下各道具解锁弹窗本地记录 key（存入 unLockPropGuide） */
+export const WHITE_PROP_UNLOCK_KEYS: Partial<Record<PropType, string>> = {
+  [PropType.reshuffleCard]: "white_reshuffle",
+  [PropType.tipCard]: "white_tip",
+};
+
+/** isWhite 模式下道具已领取记录 key（存入 unLockPropGuide） */
+export const WHITE_PROP_CLAIMED_KEYS: Partial<Record<PropType, string>> = {
+  [PropType.reshuffleCard]: "white_reshuffle_claimed",
+  [PropType.tipCard]: "white_tip_claimed",
+};
+
+function readUnlockPropGuide(): string[] {
+  try {
+    const guide = JSON.parse(cc.sys.localStorage.getItem("unLockPropGuide") || "[]");
+    return Array.isArray(guide) ? guide : [];
+  } catch (_e) {
+    return [];
+  }
+}
+
+export function isWhitePropClaimed(propType: PropType): boolean {
+  if (!MainConfig.isWhite) {
+    return true;
+  }
+  const key = WHITE_PROP_CLAIMED_KEYS[propType];
+  if (!key) {
+    return true;
+  }
+  return readUnlockPropGuide().indexOf(key) >= 0;
+}
+
+export function isWhitePropUnlockPopupShown(propType: PropType): boolean {
+  if (!MainConfig.isWhite) {
+    return false;
+  }
+  const key = WHITE_PROP_UNLOCK_KEYS[propType];
+  if (!key) {
+    return false;
+  }
+  return readUnlockPropGuide().indexOf(key) >= 0;
+}
+
+export function getWhitePropGrantCount(propType: PropType): number {
+  if (propType === PropType.reshuffleCard) {
+    return Math.max(1, Math.floor(Number(GameLevelPropConfig.unlockReshuffleCount) || 1));
+  }
+  if (propType === PropType.tipCard) {
+    return Math.max(1, Math.floor(Number(GameLevelPropConfig.unlockTipCount) || 3));
+  }
+  return 1;
+}
+
+export function markWhitePropClaimed(propType: PropType): void {
+  const key = WHITE_PROP_CLAIMED_KEYS[propType];
+  if (!key) {
+    return;
+  }
+  const guide = readUnlockPropGuide();
+  if (guide.indexOf(key) >= 0) {
+    return;
+  }
+  guide.push(key);
+  cc.sys.localStorage.setItem("unLockPropGuide", JSON.stringify(guide));
+}
+
+/** isWhite 模式下道具栏展示数量（解锁弹窗待 Claim 且数量为 0 时显示 0） */
+export function getWhiteDisplayPropCount(propType: PropType, actualCount: number, gameLevel: number): number {
+  if (!MainConfig.isWhite) {
+    return actualCount;
+  }
+  if (gameLevel < getPropShowLevel(propType)) {
+    return actualCount;
+  }
+  if (isWhitePropClaimed(propType)) {
+    return actualCount;
+  }
+  if (actualCount > 0) {
+    return actualCount;
+  }
+  return 0;
+}
+
+/** 单个道具在关卡中的展示/解锁等级；非 isWhite 时与 UnlevelPropConfig 一致 */
+export function getPropShowLevel(propType: PropType): number {
+  if (MainConfig.isWhite) {
+    const level = propLevelShowConfig[propType]?.level;
+    if (level > 0) {
+      return level;
+    }
+  }
+  return getUnlockPropLevel();
+}
+
+/** 道具栏最早展示的关卡 */
+export function getPropContainerMinShowLevel(): number {
+  if (MainConfig.isWhite) {
+    return Math.min(
+      getPropShowLevel(PropType.reshuffleCard),
+      getPropShowLevel(PropType.tipCard)
+    );
+  }
+  return getUnlockPropLevel();
 }

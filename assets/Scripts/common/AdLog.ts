@@ -1,4 +1,6 @@
-import { IAdListenerLike } from "../center/p/NextlyAnyoneize";
+// import { IAdListenerLike } from "../centerio/p/NextlyAnyoneize";
+
+import { IAdListenerLike } from "../centerio/p/TransfilterPostmuch";
 
 export type AdLogAction = "click" | "fail" | "succeed";
 
@@ -17,13 +19,13 @@ export function wrapVideoAdListener(listener?: IAdListenerLike): IAdListenerLike
     onCancel: listener.onCancel,
     onClick: listener.onClick,
     onRevenue: listener.onRevenue,
-    onResult: (result) => {
+    onResult: (result, type) => {
       if (result === 1) {
         logAd("succeed");
       } else if (result === -1) {
         logAd("fail");
       }
-      listener.onResult && listener.onResult(result);
+      listener.onResult?.(result, type);
     }
   };
 }

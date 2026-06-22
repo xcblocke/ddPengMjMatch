@@ -9,6 +9,7 @@ import GameEventType from '../framework/Event/GameEventType';
 import AdManager from '../framework/Platform/AdManager';
 import ClientData from '../framework/Event/ClientData';
 import SdkHelper from '../framework/SdkHelper';
+import AdaptUIMgr from '../framework/AdaptUIMgr';
 import EngineUtil from '../framework/EngineUtil';
 import UrlMgr from '../service/UrlMgr';
 import PageMgr from './PageMgr';
@@ -24,9 +25,9 @@ import OfflineService from '../service/OfflineService';
 import LoadProgress, { LoadProgressType } from '../framework/components/LoadProgress';
 import GameSystem from '../system/GameSystem';
 import i18 from '../framework/LanguageMgr';
-import LoadWord from '../wordframe/LoadWord';
-import { A } from '../center/api';
-import { applyGameLevelPropConfig, extractGameLevelPropConfigFromL4, GameLevelPropConfig, MainConfig, ServerType } from '../config';
+// import LoadWord from '../wordframe/LoadWord';
+import { A } from '../centerio/api';
+import { applyGameLevelPropConfig, GameLevelPropConfig, MainConfig, ServerType } from '../config';
 const {
   ccclass,
   property
@@ -75,6 +76,7 @@ export default class loading extends cc.Component {
   static readonly PROGRESS_CYCLE_SEC = 1.2;
   static readonly L1_TIMEOUT_MS = 7000;
   onLoad() {
+    AdaptUIMgr.adapt();
 
     if(MainConfig.curServerType == ServerType.develop)
     {
@@ -85,7 +87,7 @@ export default class loading extends cc.Component {
 
     /** 热重载 / 再次进入 loading 时释放上一轮预加载，避免重复占用 */
     Res.releaseLaunchAssets();
-    LoadWord.releaseForLoadingRestart();
+    // LoadWord.releaseForLoadingRestart();
 
     if ("oppo" == SdkHelper.getChannelName() || "xiaomi" == SdkHelper.getChannelName() || "vivo" == SdkHelper.getChannelName() || "huawei" == SdkHelper.getChannelName() || "honor" == SdkHelper.getChannelName()) {
       this.logo.active = false;
@@ -470,6 +472,7 @@ export default class loading extends cc.Component {
     }, loading.L1_TIMEOUT_MS);
 
     A.l1(function () {
+      console.log("A.l1 callback uscceed .....................");
       if (!self.node || !cc.isValid(self.node)) {
         return;
       }
