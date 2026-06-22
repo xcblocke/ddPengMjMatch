@@ -118,6 +118,7 @@ export default class card extends cc.Component {
     this.cardSp.spriteFrame = Res.getMahjongSpriteFrame(this.getCardUrl());
   }
   initUI() {
+    console.log("initUI.............", this.cardData);
     if (this.cardSp && this.cardData) {
       if (Constants.isSpecialCard(this.cardData.type)) {
         this.huaBgNode.active = true;

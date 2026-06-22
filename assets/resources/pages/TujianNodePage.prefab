@@ -175,7 +175,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8be05eb1-1fa5-4d94-a081-d21d3bcef5fa"
+      "__uuid__": "3108e84a-4c94-421b-84df-f05455c09581"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -1268,6 +1268,9 @@
     },
     "itemPrefab": {
       "__uuid__": "847419d8-03e6-4db9-831e-27293a699987"
+    },
+    "cardTujianPrefab": {
+      "__uuid__": "7d6f4d8e-d205-4a7a-8d86-76df340cd7f1"
     },
     "node3": null,
     "_id": ""

@@ -37,20 +37,17 @@ export const MainConfig = {
 export const TujianUnlockConfig = [
   {
     unlockLevel: 1,
-    unLockIDs: [1,2],
-    status: 0,
+    unLockIDs: [102],
     unlockDesc: "",
   },
   {
-    unlockLevel: 2,
-    unLockIDs: [4,5,6],
-    status: 1,
+    unlockLevel: 10,
+    unLockIDs: [103],
     unlockDesc: "",
   },
   {
-    unlockLevel: 3,
-    unLockIDs: [7,8,9],
-    status: 2,
+    unlockLevel: 20,
+    unLockIDs: [104],
     unlockDesc: "",
   },
 ];
