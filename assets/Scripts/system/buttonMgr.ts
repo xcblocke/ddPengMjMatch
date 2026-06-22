@@ -331,6 +331,12 @@ export default class buttonMgr extends cc.Component {
       });
     }
   }
+
+  openHelpCenterPage() {
+    AudioManager.getInstance().playMusic("btntouch");
+    LoadWord.FrameSDK.openFeedbackWindow();
+  }
+
   openSetUp() {
     AudioManager.getInstance().playMusic("btntouch");
     EventMgr.trigger(GameEventType.PAGE_SHOW, {

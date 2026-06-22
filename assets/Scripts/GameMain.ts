@@ -162,6 +162,8 @@ export default class GameMain extends cc.Component {
   /** 本关累计消除对数，过关或弹产出后清零 */
   rewardAbMergeCount = 0;
   _rewardAbPopupPending = false;
+  /** 产出弹窗期间若有 startGame 请求，延后到弹窗 closeCB */
+  _deferredStartGameArgs: { restart: boolean; skipAfterLevel: boolean } | null = null;
   get gridRows() {
     return this._gridRows;
   }
@@ -422,17 +424,22 @@ export default class GameMain extends cc.Component {
   async startGame(e = false, t = false) {
     var o = this;
     console.log("startGame", e, t);
+    if (this._rewardAbPopupPending && !e) {
+      this._deferredStartGameArgs = { restart: !!e, skipAfterLevel: !!t };
+      return;
+    }
     if (!t) {
       await this.packagingProcess.excuteAfterLevel();
     }
 
-    this.resetRewardAbMergeCount();
     this._stime = new Date().getTime();
     GameSystem.startGame(e ? 1 : 0).then(async function (t) {
       
       const __async_this = o;
       var o_local,
         n = __async_this;
+      // startGame 接口返回后 gameLevel 才更新，此处再重置 AB 产出消除间隔
+      n.resetRewardAbMergeCount();
       await __async_this.packagingProcess.excuteBeforeLevel(t.data);
       GameUtils.logLevelProgress("startGame_data_ready", { is_restart: !!e });
       EventMgr.trigger(GameEventType.UPDATE_LEVEL_INFO);
@@ -789,12 +796,25 @@ export default class GameMain extends cc.Component {
     // this._rewardAbPopupPending = false;
     // this.unschedule(this._onRewardAbMergePopup);
 
+
     // let conf =  LoadWord.instance.getWbConfigData();
     // const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";  //"basicConfig" : "shadow";
     // let timeConf = conf?.[cfgKey]?.["FRAME_CONF"]?.rewaedAbTotalTime || [6, 8];
     // // let timeConf = this.getFrameConf()?.rewaedAbTotalTime || [5, 8];
     // this.rewaedAbMergeThreshold = RandomUtil.rangeInt(timeConf[0], timeConf[1]);
     // CC_DEBUG && console.log("[rewardAB] merge count reset");
+
+    // const currentLevel = GameUtils.getEnteringLevelId();
+    // const conf = LoadWord.instance.getWbConfigData();
+    // const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";
+    // const frameConf = conf?.[cfgKey]?.["FRAME_CONF"];
+    // let intervalRange: [number, number] = LoadWord.FrameSDK.getRewardAbMergeIntervalRange(currentLevel, frameConf);
+    // console.log("[rewardAB] mframeConf.......", frameConf,intervalRange);
+    // if(!intervalRange || intervalRange.length <=0) {
+    //   intervalRange = frameConf?.rewaedAbTotalTime ?? [6, 8];
+    // }
+    // this.rewaedAbMergeThreshold = RandomUtil.rangeInt(intervalRange[0], intervalRange[1]);
+    // CC_DEBUG && console.log("[rewardAB] merge count reset, level:", currentLevel, "threshold:", this.rewaedAbMergeThreshold);
   }
 
   /** 与 FrameSDK.openABAward 一致：当前关卡 >= AbPop 才弹产出（Panel_Award_3） */
@@ -851,13 +871,22 @@ export default class GameMain extends cc.Component {
       return;
     }
     gameData.globalCanClick = false;
-    GameUtils.rewardAB(() => {
-      this._rewardAbPopupPending = false;
-      this.resetRewardAbMergeCount();
-      if (gameData.gameState === GameState.gameing) {
-        gameData.globalCanClick = true;
-      }
-    });
+    GameUtils.rewardAB(() => this.onRewardAbPopupClosed());
+  }
+
+  /** 产出弹窗关闭：恢复局内操作，并执行弹窗期间延后的 startGame */
+  onRewardAbPopupClosed() {
+    this._rewardAbPopupPending = false;
+    this.resetRewardAbMergeCount();
+    if (gameData.gameState === GameState.gameing) {
+      gameData.globalCanClick = true;
+    }
+    const deferred = this._deferredStartGameArgs;
+    if (!deferred) {
+      return;
+    }
+    this._deferredStartGameArgs = null;
+    this.startGame(deferred.restart, deferred.skipAfterLevel);
   }
 
   /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
