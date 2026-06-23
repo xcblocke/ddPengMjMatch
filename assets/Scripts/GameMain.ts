@@ -1397,6 +1397,18 @@ export default class GameMain extends cc.Component {
     this.teachGuideNode.active = false;
   }
 
+  resumeLevel1TeachingHand() {
+    if (Math.floor(Number(gameData.gameLevel) || 1) !== 1) {
+      return;
+    }
+    if (this._teachingStep <= 0) {
+      this.showNextTeachingStep();
+      return;
+    }
+    this._teachingStep--;
+    this.showNextTeachingStep();
+  }
+
   private isRdmLevelPanelOpen(): boolean {
     // const sdk = LoadWord.FrameSDK;
     // const panel = sdk?.Panel;

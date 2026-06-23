@@ -4,6 +4,7 @@ import BasePage, { AnimType } from './view/BasePage';
 import AudioManager from './framework/controller/AudioManager';
 import GameEventType from './framework/Event/GameEventType';
 import EventMgr from './framework/Event/EventMgr';
+import GlobalApp from './common/GlobalApp';
 import { playHengFNodeBanner, preloadHengFNodePrefab, shouldPlayHengFOnLevelButton } from './HengFNodeUtil';
 const {
   ccclass,
@@ -221,6 +222,9 @@ export default class MainNodePage extends BasePage {
     this._hide();
     if (shouldPlayBanner) {
       await playHengFNodeBanner();
+    }
+    if (Math.floor(Number(gameData.gameLevel) || 1) === 1 && GlobalApp.GameMain) {
+      GlobalApp.GameMain.resumeLevel1TeachingHand();
     }
   }
 

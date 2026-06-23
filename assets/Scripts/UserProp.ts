@@ -8,6 +8,7 @@ import card from './prefab/card';
 import GameSystem from './system/GameSystem';
 import GameMain from './GameMain';
 import PlayerDataSys from './framework/controller/PlayerDataSys';
+import PageMgr from './view/PageMgr';
 const {
   ccclass,
   property
@@ -148,6 +149,9 @@ export default class UserProp extends cc.Component {
     }
   }
   stopOperateTipLoop() {
+    if (PageMgr.isHasShowPage()) {
+      return;
+    }
     var e, t, o;
     if (this._operateTipRunning) {
       this._operateTipRunning = false;
