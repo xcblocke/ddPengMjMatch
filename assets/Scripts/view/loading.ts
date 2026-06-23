@@ -98,6 +98,10 @@ export default class loading extends cc.Component {
     }
     AudioManager.getInstance().init();
     LocalData.getInstance().initData();
+
+    // g1 → SDY 400：游戏开始的加载进度页
+    A.t('g1');
+
     this.addEvent();
     PageMgr.init();
     GlobalDataSys.init();
@@ -514,10 +518,8 @@ export default class loading extends cc.Component {
     }
     console.log("[loading] l4.................: 111111111", JSON.stringify(GameLevelPropConfig));
 
-    
-
-    A.t('g1');
     cc.director.loadScene(sceneName, function () {
+      // g2 → SDY 401：加载完成进入主页
       A.t('g2');
     });
   }
