@@ -42,6 +42,7 @@ import {
 } from './config';
 import { applyFreePropRewardIfAny } from './freePropPage';
 import GameUtils from './wordframe/GameUtils';
+import { playHengFNodeBannerOnMahjongSpawnEnd } from './HengFNodeUtil';
 // import LoadWord from './wordframe/LoadWord';
 import { NativeUtils } from './wordframe/NativeUtils';
 import { A } from './centerio/api';
@@ -664,9 +665,6 @@ export default class GameMain extends cc.Component {
     this.mahjongContainer.removeAllChildren();
     this._cardGrid = [];
     gameData.globalCanClick = false;
-    this.scheduleOnce(function () {
-      gameData.globalCanClick = true;
-    }, 0.075 * this._gridRows);
     var e = gameData.getGridData();
     if (e) {
       var t = e.length,
@@ -715,6 +713,10 @@ export default class GameMain extends cc.Component {
         y.init(e[p][d]);
         this._cardGrid[p][d] = y;
       }
+      this.scheduleOnce(function () {
+        gameData.globalCanClick = true;
+        playHengFNodeBannerOnMahjongSpawnEnd();
+      }, 0.075 * this._gridRows);
     }
   }
   initMahjongGridLine() {

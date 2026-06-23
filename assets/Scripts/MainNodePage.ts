@@ -4,6 +4,7 @@ import BasePage, { AnimType } from './view/BasePage';
 import AudioManager from './framework/controller/AudioManager';
 import GameEventType from './framework/Event/GameEventType';
 import EventMgr from './framework/Event/EventMgr';
+import { playHengFNodeBanner, preloadHengFNodePrefab, shouldPlayHengFOnLevelButton } from './HengFNodeUtil';
 const {
   ccclass,
   property
@@ -25,6 +26,7 @@ export default class MainNodePage extends BasePage {
   tujianBtn: cc.Button = null;
 
   _waitLevelClick = false;
+  _clickingLevel = false;
 
   onLoad() {
     this._animInit({
@@ -38,8 +40,15 @@ export default class MainNodePage extends BasePage {
 
   _init(e?: { waitLevelClick?: boolean }) {
     this._waitLevelClick = !!(e && e.waitLevelClick);
+    this._clickingLevel = false;
+    if (this.btnLevel) {
+      this.btnLevel.interactable = true;
+    }
     this.initCoin();
     this.refreshLevelText();
+    if (shouldPlayHengFOnLevelButton(this._waitLevelClick)) {
+      preloadHengFNodePrefab();
+    }
   }
 
   initCoin() {
@@ -57,9 +66,21 @@ export default class MainNodePage extends BasePage {
     levelLabel.string = this._waitLevelClick ? `Level ${currentLevel + 1}` : `Level ${currentLevel}`;
   }
 
-  onClickLevelBtn() {
+  async onClickLevelBtn() {
+    if (this._clickingLevel) {
+      return;
+    }
+    this._clickingLevel = true;
+    if (this.btnLevel) {
+      this.btnLevel.interactable = false;
+    }
     AudioManager.getInstance().playMusic("click");
+
+    const shouldPlayBanner = shouldPlayHengFOnLevelButton(this._waitLevelClick);
     this._hide();
+    if (shouldPlayBanner) {
+      await playHengFNodeBanner();
+    }
   }
 
   onClickSet() {

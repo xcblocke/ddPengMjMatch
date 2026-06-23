@@ -41,12 +41,12 @@ export const TujianUnlockConfig = [
     unlockDesc: "",
   },
   {
-    unlockLevel: 10,
+    unlockLevel: 4,
     unLockIDs: [103],
     unlockDesc: "",
   },
   {
-    unlockLevel: 20,
+    unlockLevel: 6,
     unLockIDs: [104],
     unlockDesc: "",
   },
