@@ -135,19 +135,25 @@ class _PageMgr {
     if (r && this.map_loadingPages.has(t)) {
       await this.map_loadingPages.get(t);
     }
-    if (r && (p = this.map_pages.get(t)) && (d = p.node)) {
+    this._clearInvalidPageCache(t);
+    if (r && (p = this.map_pages.get(t)) && (d = p.node) && cc.isValid(d)) {
       h = new Promise(function (e) {
         f = e;
       });
       this.destroyDuplicatePageNodes(t, d);
-      d.getComponent(t).resolve = f;
-      this.fullNode.active = true;
-      await d.getComponent(t)._init(o);
-      this.fullNode.active = false;
-      d.zIndex = u;
-      d.active = true;
-      this.set_onShowPages.add(d);
-      return h;
+      const pageComp = this._getPageComponent(d, t);
+      if (!pageComp) {
+        this.map_pages.delete(t);
+      } else {
+        pageComp.resolve = f;
+        this.fullNode.active = true;
+        await pageComp._init(o);
+        this.fullNode.active = false;
+        d.zIndex = u;
+        d.active = true;
+        this.set_onShowPages.add(d);
+        return h;
+      }
     }
     _ = new Promise(function (e) {
       g = e;
@@ -165,17 +171,22 @@ class _PageMgr {
           resolve(true);
           return;
         }
-        if (i.reuse && (p = __async_this.map_pages.get(t)) && (d = p.node)) {
+        if (i.reuse && (p = __async_this.map_pages.get(t)) && (d = p.node) && cc.isValid(d)) {
           __async_this.destroyDuplicatePageNodes(t, d);
-          d.getComponent(t).resolve = g;
-          __async_this.fullNode.active = true;
-          await d.getComponent(t)._init(o);
-          __async_this.fullNode.active = false;
-          d.zIndex = u;
-          d.active = true;
-          __async_this.set_onShowPages.add(d);
-          resolve(true);
-          return;
+          const pageComp = __async_this._getPageComponent(d, t);
+          if (!pageComp) {
+            __async_this.map_pages.delete(t);
+          } else {
+            pageComp.resolve = g;
+            __async_this.fullNode.active = true;
+            await pageComp._init(o);
+            __async_this.fullNode.active = false;
+            d.zIndex = u;
+            d.active = true;
+            __async_this.set_onShowPages.add(d);
+            resolve(true);
+            return;
+          }
         }
         (n = cc.instantiate(prefab as any)).zIndex = u;
         __async_this.fullNode.active = true;
@@ -185,8 +196,14 @@ class _PageMgr {
           prefab: prefab,
           option: i
         });
-        n.getComponent(t).resolve = g;
-        await n.getComponent(t)._init(o);
+        const newPageComp = __async_this._getPageComponent(n, t);
+        if (!newPageComp) {
+          console.error("class:pageMgr.fun:showPage页面组件不存在", t);
+          resolve(false);
+          return;
+        }
+        newPageComp.resolve = g;
+        await newPageComp._init(o);
         __async_this.pages.addChild(n);
         __async_this.destroyDuplicatePageNodes(t, n);
         __async_this.fullNode.active = false;
@@ -202,7 +219,7 @@ class _PageMgr {
   }
   hasShowPage(e) {
     var t = this.map_pages.get(e);
-    return !!t && !!t.node && !!t.node.active;
+    return !!t && !!t.node && cc.isValid(t.node) && !!t.node.active;
   }
   isHasShowPage() {
     var e = false;
@@ -239,6 +256,20 @@ class _PageMgr {
       o >= e && (e = o + 1);
     });
     return e;
+  }
+  _getPageComponent(node: cc.Node, pageName: string) {
+    if (!node || !cc.isValid(node)) {
+      return null;
+    }
+    return node.getComponent(pageName);
+  }
+  _clearInvalidPageCache(pageName: string) {
+    const cached = this.map_pages.get(pageName);
+    if (!cached || !cached.node || cc.isValid(cached.node)) {
+      return;
+    }
+    this.set_onShowPages.delete(cached.node);
+    this.map_pages.delete(pageName);
   }
   hasPage(e) {
     return !!this.map_pages.get(e);

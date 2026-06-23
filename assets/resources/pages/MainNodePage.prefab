@@ -1899,7 +1899,9 @@
     "coinTextLabel": {
       "__id__": 46
     },
-    "levelTextLabel": null,
+    "levelTextLabel": {
+      "__id__": 24
+    },
     "btnLevel": {
       "__id__": 27
     },

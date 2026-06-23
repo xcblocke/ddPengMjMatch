@@ -24,6 +24,8 @@ export default class MainNodePage extends BasePage {
   @property(cc.Button)
   tujianBtn: cc.Button = null;
 
+  _waitLevelClick = false;
+
   onLoad() {
     this._animInit({
       animType: AnimType.NONE
@@ -34,8 +36,10 @@ export default class MainNodePage extends BasePage {
     super.onLoad();
   }
 
-  _init() {
+  _init(e?: { waitLevelClick?: boolean }) {
+    this._waitLevelClick = !!(e && e.waitLevelClick);
     this.initCoin();
+    this.refreshLevelText();
   }
 
   initCoin() {
@@ -44,9 +48,18 @@ export default class MainNodePage extends BasePage {
     }
   }
 
+  refreshLevelText() {
+    const levelLabel = this.levelTextLabel || cc.find("textLevel", this.node)?.getComponent(cc.Label);
+    if (!levelLabel) {
+      return;
+    }
+    const currentLevel = Math.floor(Number(gameData.gameLevel) || 1);
+    levelLabel.string = this._waitLevelClick ? `Level ${currentLevel + 1}` : `Level ${currentLevel}`;
+  }
+
   onClickLevelBtn() {
     AudioManager.getInstance().playMusic("click");
-    this.node.destroy();
+    this._hide();
   }
 
   onClickSet() {

@@ -11,7 +11,8 @@ import { VideoType } from './framework/enum/AllEnum';
 import GlobalApp from './common/GlobalApp';
 import { gameConfig } from './data/GameConfig';
 import EngineUtil from './framework/EngineUtil';
-import { levelRewardCoin } from './config';
+import { gameEnterModel, GameEnterModel, hasTujianUnlockForLevel, levelRewardCoin } from './config';
+import PageMgr from './view/PageMgr';
 import SetNode2Top from './common/SetNode2Top';
 import GameUtils from './wordframe/GameUtils';
 const {
@@ -141,7 +142,7 @@ export default class settleMentPage extends BasePage {
         SdkHelper.reportData("big_reward_all");
         SetNode2Top.restoreNode(GlobalApp.GameMain.dollarNode);
         e._coinFlyOnClaim = false;
-        e.close();
+        e._finishSettlementOrTujian();
       }
     });
   }
@@ -152,10 +153,36 @@ export default class settleMentPage extends BasePage {
   }
   close(e = null) {
     this._hide();
+    this._continueNextLevel();
+  }
+  _continueNextLevel() {
     const cb = this._cb;
     GameUtils.checkPopUp(true, () => {
       cb && cb();
     });
+  }
+  _finishSettlementOrTujian() {
+    if (gameEnterModel === GameEnterModel.shenheModel && hasTujianUnlockForLevel(gameData.gameLevel)) {
+      this._runTujianUnlockFlow();
+      return;
+    }
+    this.close();
+  }
+  async _runTujianUnlockFlow() {
+    this._hide();
+    await PageMgr.showPage({
+      name: "TujianUnlockPage"
+    });
+    await PageMgr.showPage({
+      name: "TujianNodePage"
+    });
+    await PageMgr.showPage({
+      name: "MainNodePage",
+      data: {
+        waitLevelClick: true
+      }
+    });
+    this._continueNextLevel();
   }
   allBtnClick() {
     
@@ -310,7 +337,7 @@ export default class settleMentPage extends BasePage {
       if (!coinTextNode) console.warn("settleMentPage: coinText node not found");
       if (startNodes.length === 0) console.warn("settleMentPage: coin0/coin1 nodes not found");
       EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance);
-      this.close();
+      this._finishSettlementOrTujian();
       return;
     }
 
@@ -335,7 +362,7 @@ export default class settleMentPage extends BasePage {
           remain--;
           if (remain <= 0) {
             EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance);
-            this.close();
+            this._finishSettlementOrTujian();
           }
         })
         .start();

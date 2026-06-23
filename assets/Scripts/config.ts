@@ -52,6 +52,15 @@ export const TujianUnlockConfig = [
   },
 ];
 
+export function getTujianUnlockForLevel(level: number) {
+  const normalizedLevel = Math.floor(Number(level));
+  return TujianUnlockConfig.find((item) => item.unlockLevel === normalizedLevel) || null;
+}
+
+export function hasTujianUnlockForLevel(level: number): boolean {
+  return getTujianUnlockForLevel(level) !== null;
+}
+
 
 export const propLevelShowConfig = {
   [PropType.tipCard]: {

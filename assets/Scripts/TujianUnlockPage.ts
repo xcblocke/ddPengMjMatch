@@ -47,6 +47,10 @@ export default class TujianUnlockPage extends BasePage {
       return;
      }
 
+    if (this.contentNode) {
+      this.contentNode.removeAllChildren();
+    }
+
     curUnlockData.forEach((id, index) => {
       const cardNode = cc.instantiate(this.cardTujianPrefab);
       cardNode.parent = this.contentNode;
@@ -58,12 +62,13 @@ export default class TujianUnlockPage extends BasePage {
   
 
 
+  onClick() {
+    AudioManager.getInstance().playMusic("click");
+    this._hide();
+  }
+
   onClickCloseBtn() {
     AudioManager.getInstance().playMusic("click");
-    // SdkHelper.reportData("b_leave_page", {
-    //   act_page: "setting_page",
-    //   // duration: new Date().getTime() - this.comeinTime
-    // });
     this._hide();
   }
 
