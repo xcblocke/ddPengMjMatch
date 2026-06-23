@@ -498,7 +498,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 486,
+      "width": 453.24,
       "height": 90.4
     },
     "_anchorPoint": {
@@ -556,7 +556,7 @@
     "_lineHeight": 40,
     "_enableWrapText": true,
     "_N$file": {
-      "__uuid__": "0f7a0b5d-3f8f-4a3a-a6df-21bf4dcb6d9c"
+      "__uuid__": "22ff1722-3505-4f44-9909-b41947c25104"
     },
     "_isSystemFontUsed": false,
     "_spacingX": 0,

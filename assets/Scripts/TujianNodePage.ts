@@ -58,7 +58,7 @@ export default class TujianNodePage extends BasePage {
       itemNode.getChildByName("nowNode").active = currentLevel == item.unlockLevel;
       itemNode.getChildByName("lockNode").active = currentLevel < item.unlockLevel;
 
-      let stirnTips = "The mark illustration has disappeared; weneed to complete mahjong matching tasks toretrieve it.Let's try to complete the matchingtasks now!"
+      let stirnTips = "The mark illustration has disappeared; we need to complete mahjong matching tasks toretrieve it. Let's try to complete the matching tasks now!"
 
       itemNode.getChildByName("lockNode").getChildByName("Layout").getChildByName("level").getComponent(cc.Label).string = "level " + item.unlockLevel;
       itemNode.getChildByName("nowNode").getChildByName("tipsWord").getComponent(cc.Label).string = stirnTips;

@@ -1,40 +1,40 @@
 
 chanchu.png
-size: 1950,2031
+size: 1950,2037
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 dollar2
   rotate: false
-  xy: 1586, 1893
-  size: 170, 136
-  orig: 172, 138
-  offset: 1, 1
+  xy: 2, 1973
+  size: 148, 62
+  orig: 148, 62
+  offset: 0, 0
   index: -1
 dollar3
-  rotate: false
-  xy: 822, 1924
-  size: 180, 105
-  orig: 180, 106
+  rotate: true
+  xy: 1554, 1893
+  size: 142, 146
+  orig: 142, 146
   offset: 0, 0
   index: -1
 henfu3
   rotate: false
-  xy: 365, 1652
+  xy: 365, 1658
   size: 701, 247
   orig: 706, 251
   offset: 2, 3
   index: -1
 hengfu1
   rotate: true
-  xy: 313, 1937
+  xy: 463, 1943
   size: 92, 309
   orig: 98, 313
   offset: 3, 3
   index: -1
 hengfu2
   rotate: true
-  xy: 2, 1942
+  xy: 152, 1948
   size: 87, 309
   orig: 93, 313
   offset: 3, 3
@@ -69,35 +69,35 @@ pen2
   index: -1
 pen3
   rotate: false
-  xy: 2, 1249
+  xy: 2, 1255
   size: 559, 401
   orig: 564, 406
   offset: 3, 2
   index: -1
 saoguang
   rotate: true
-  xy: 2, 1726
+  xy: 2, 1737
   size: 209, 361
   orig: 235, 361
   offset: 12, 0
   index: -1
 shan
   rotate: false
-  xy: 624, 1932
+  xy: 774, 1938
   size: 97, 97
   orig: 103, 102
   offset: 2, 3
   index: -1
 shan2
   rotate: false
-  xy: 723, 1932
+  xy: 873, 1938
   size: 97, 97
   orig: 101, 100
   offset: 1, 2
   index: -1
 title
   rotate: false
-  xy: 1004, 1901
+  xy: 972, 1907
   size: 580, 128
   orig: 582, 130
   offset: 1, 1
