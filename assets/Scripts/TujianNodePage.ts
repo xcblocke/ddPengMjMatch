@@ -9,6 +9,8 @@ import { GameLevelPropConfig, markWhitePropClaimed, TujianUnlockConfig } from '.
 import { gameData } from './data/GameData';
 import SdkHelper from './framework/SdkHelper';
 import cardTujian from './prefab/cardTujian';
+import PageMgr from './view/PageMgr';
+import MainNodePage, { markMainNodePageGuideCompleted } from './MainNodePage';
 const {
   ccclass,
   property
@@ -25,9 +27,10 @@ export default class TujianNodePage extends BasePage {
   @property(cc.Prefab)
   cardTujianPrefab: cc.Prefab = null;
   @property(cc.Node)
-  node3: cc.Node = null;
+  guideNode: cc.Node = null;
+
+  _fromFirstMainNodeGuide = false;
  
-  
   _onHide() {
     super._onHide.call(this);
   }
@@ -37,6 +40,7 @@ export default class TujianNodePage extends BasePage {
 
 
   _init(e) {
+    this._fromFirstMainNodeGuide = !!(e && e.fromFirstMainNodeGuide);
     this.scrollView.content.removeAllChildren();
     TujianUnlockConfig.forEach((item, index) => {
       const itemNode = cc.instantiate(this.itemPrefab);
@@ -68,16 +72,49 @@ export default class TujianNodePage extends BasePage {
         });
       });
     }); 
+
+    if(this.guideNode) {
+      this.guideNode.active = true;
+      this.scheduleOnce(() => {
+        this.initGuide();
+      }, 0.2);
+    }
+  }
+
+  initGuide() {
+    if(this.guideNode) {
+      let handNode = this.guideNode.getChildByName("hand");
+      handNode.active = true;
+      if(handNode) { 
+        cc.Tween.stopAllByTarget(handNode);
+        cc.tween(handNode).by(0.5, {x: 30, y: -30}).by(0.5, {
+          x: -30,
+          y: 30
+      }).union().repeatForever().start();
+      }
+    }
   }
   
 
 
   onClickCloseBtn() {
+    if (this.guideNode) {
+      const handNode = this.guideNode.getChildByName("hand");
+      if (handNode) {
+        cc.Tween.stopAllByTarget(handNode);
+        handNode.active = false;
+      }
+    }
     AudioManager.getInstance().playMusic("click");
-    // SdkHelper.reportData("b_leave_page", {
-    //   act_page: "setting_page",
-    //   // duration: new Date().getTime() - this.comeinTime
-    // });
+    if (this._fromFirstMainNodeGuide) {
+      markMainNodePageGuideCompleted();
+      const mainPageCache = PageMgr.getPage("MainNodePage");
+      const mainPageNode = mainPageCache && mainPageCache.node;
+      if (mainPageNode && mainPageNode.active) {
+        const mainPage = mainPageNode.getComponent(MainNodePage);
+        mainPage && mainPage.refreshGuideToLevelBtn();
+      }
+    }
     this._hide();
   }
 
