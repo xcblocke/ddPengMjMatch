@@ -8,7 +8,7 @@ export enum EAppThemeType {
 }
 export var appTheme = EAppThemeType.Theme2;
 
-export let levelRewardCoin = 200;
+export let levelRewardCoin = 100;
 export let propCostDollar = {
   [PropType.tipCard]: 100,
   [PropType.reshuffleCard]: 100,

@@ -39,6 +39,17 @@ export default class TujianNodePage extends BasePage {
   }
 
 
+  hasPassedTujianUnlockLevel(unlockLevel: number, currentLevel: number): boolean {
+    if (currentLevel > unlockLevel) {
+      return true;
+    }
+    if (currentLevel < unlockLevel) {
+      return false;
+    }
+    const appliedLevel = Math.floor(Number(gameData.dollarRewardAppliedLevel) || 0);
+    return appliedLevel >= unlockLevel;
+  }
+
   _init(e) {
     this._fromFirstMainNodeGuide = !!(e && e.fromFirstMainNodeGuide);
     this.scrollView.content.removeAllChildren();
@@ -46,22 +57,29 @@ export default class TujianNodePage extends BasePage {
       const itemNode = cc.instantiate(this.itemPrefab);
       itemNode.parent = this.scrollView.content;
 
-      const currentLevel = gameData.gameLevel;
+      const currentLevel = Math.floor(Number(gameData.gameLevel) || 1);
+      const unlockLevel = item.unlockLevel;
+      const hasPassedUnlockLevel = this.hasPassedTujianUnlockLevel(unlockLevel, currentLevel);
+      const isCurrentUnlockLevel = currentLevel === unlockLevel && !hasPassedUnlockLevel;
+      const isLockedUnlockLevel = currentLevel < unlockLevel;
 
-      
-      // console.log("currentLevel.....................", currentLevel, item.unlockLevel);
+      itemNode.getChildByName("diPass").active = hasPassedUnlockLevel;
+      itemNode.getChildByName("diNow").active = isCurrentUnlockLevel;
+      itemNode.getChildByName("diLock").active = isLockedUnlockLevel;
 
-      itemNode.getChildByName("diPass").active = currentLevel > item.unlockLevel;
-      itemNode.getChildByName("diNow").active = currentLevel == item.unlockLevel;
-      itemNode.getChildByName("diLock").active = currentLevel < item.unlockLevel;
-
-      itemNode.getChildByName("nowNode").active = currentLevel == item.unlockLevel;
-      itemNode.getChildByName("lockNode").active = currentLevel < item.unlockLevel;
+      itemNode.getChildByName("nowNode").active = isCurrentUnlockLevel;
+      itemNode.getChildByName("lockNode").active = isLockedUnlockLevel;
 
       let stirnTips = "The mark illustration has disappeared; we need to complete mahjong matching tasks toretrieve it. Let's try to complete the matching tasks now!"
 
-      itemNode.getChildByName("lockNode").getChildByName("Layout").getChildByName("level").getComponent(cc.Label).string = "level " + item.unlockLevel;
-      itemNode.getChildByName("nowNode").getChildByName("tipsWord").getComponent(cc.Label).string = stirnTips;
+      const lockNode = itemNode.getChildByName("lockNode");
+      if (lockNode && isLockedUnlockLevel) {
+        lockNode.getChildByName("Layout").getChildByName("level").getComponent(cc.Label).string = "level " + unlockLevel;
+      }
+      const nowNode = itemNode.getChildByName("nowNode");
+      if (nowNode && isCurrentUnlockLevel) {
+        nowNode.getChildByName("tipsWord").getComponent(cc.Label).string = stirnTips;
+      }
 
       let cardPare = itemNode.getChildByName("cardParent");
       item.unLockIDs.forEach((id, index) => {
