@@ -1,6 +1,6 @@
 {
   "ver": "2.3.7",
-  "uuid": "3731e8cf-7a6c-4aa2-9424-e700a09a47cf",
+  "uuid": "f6ff2f98-beaa-4f1a-9ff4-e49e1f3a5819",
   "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
@@ -12,11 +12,11 @@
   "height": 107,
   "platformSettings": {},
   "subMetas": {
-    "hua_6_101": {
+    "hua_1_112": {
       "ver": "1.0.6",
-      "uuid": "0830fbcb-b66d-4cb9-afdc-119d77375735",
+      "uuid": "3e0026f4-7459-448e-92df-a387f6be0f62",
       "importer": "sprite-frame",
-      "rawTextureUuid": "3731e8cf-7a6c-4aa2-9424-e700a09a47cf",
+      "rawTextureUuid": "f6ff2f98-beaa-4f1a-9ff4-e49e1f3a5819",
       "trimType": "none",
       "trimThreshold": 1,
       "rotated": false,

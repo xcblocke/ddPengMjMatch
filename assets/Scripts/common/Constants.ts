@@ -1,6 +1,7 @@
 export var Constants = {
   isSpecialCard: function (e) {
-    return e >= 101 && e <= 104;
+    // return e >= 101 && e <= 104;
+    return e >= 101 && e <= 125;
   },
   Clamp01: function (e) {
     return Math.max(0, Math.min(1, e));
