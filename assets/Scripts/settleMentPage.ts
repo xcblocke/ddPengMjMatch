@@ -174,7 +174,10 @@ export default class settleMentPage extends BasePage {
       name: "TujianUnlockPage"
     });
     await PageMgr.showPage({
-      name: "TujianNodePage"
+      name: "TujianNodePage",
+      data: {
+        highlightUnlockLevel: Math.floor(Number(gameData.gameLevel) || 1)
+      }
     });
     await PageMgr.showPage({
       name: "MainNodePage",
