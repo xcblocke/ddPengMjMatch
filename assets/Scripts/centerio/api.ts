@@ -22,11 +22,12 @@
  * | n5 | *️⃣按需 | 刷新所有多语言 UI （cc.Label/cc.RichText） |
  * | n6 | *️⃣按需 | 加密字符串（可用于简单加密或混淆源字符串） |
  * | n7 | *️⃣按需 | 解密字符串 |
- * | l1 | ✅必接 | 登录（成功才回调，可在此后调用 l2、l3 和 l4） |
+ * | l1 | ✅必接 | 登录（成功才回调，可在此后调用 l2、l3、l4 和 l5） |
  * | l2 | ✅必接 | 获取当前是否 B 面（白包始终为 false，小游戏平台始终为 true） |
  * | l3 | *️⃣按需 | 获取后台配置 launchInfoConfig（A/B 面都有效，登录成功后才可能有值，白包不接入登录文件为空） |
  * | l4 | *️⃣按需 | 获取后台所有配置（仅 B 面有效，登录成功后才可能有值，白包不接入登录文件为空） |
- * | c0 | *️⃣按需 | 获取邀请码 |
+ * | l5 | ✅必接 | 获取当前登录 IP 对应的国家码（登录成功后才有效，小游戏平台暂不支持） |
+ * | c0 | *️⃣按需 | 获取邀请码（一般作为用户 ID） |
  * | t1 | *️⃣按需 | 添加兑换开关监听 |
  * | t2 | *️⃣按需 | 移除兑换开关监听 |
  * | d1 | *️⃣按需 | 获取是否跳过广告（可用于 GM 工具） |
@@ -56,8 +57,9 @@
  * | n  | *️⃣按需 | 获取 vpn 或代理类型（0: 未开启 VPN 或代理 / 1: 已开启 VPN / 2: 已开启代理） |
  * | p  | ✅必接 | 隐私协议 URL |
  * | g0 | ✅必接 | 是否有更多游戏 |
- * | g1 | ✅必接 | 获取一个更多游戏 URL |
+ * | g1 | ✅必接 | 随机获取一个更多游戏 URL (不存在时返回空字符串) |
  * | t  | ✅必接 | 上报事件（埋点） |
+ * | e  | *️⃣按需 | 获取事件定义（可通过 cc.director.on 注册监听） |
  *
  *
  * 🌏多语言
@@ -130,7 +132,7 @@
  */
 
 import { TEventOverrideData } from "./a/MiddleablePostbar";
-import { IAdListenerLike, IPlatformExternalHandlersLike, TransfilterPostmuch } from "./p/TransfilterPostmuch";
+import { IAdListenerLike, IPlatformEventLike, IPlatformExternalHandlersLike, TransfilterPostmuch } from "./p/TransfilterPostmuch";
 import { lanData, ICountryConfigLike } from "./i/RenationPieceify";
 
 interface IAPILike {
@@ -225,6 +227,11 @@ interface IAPILike {
      * 获取后台所有配置（仅 B 面有效，登录成功后才可能有值，白包不接入登录文件为空）
      */
     readonly l4: Readonly<object> | undefined,
+
+    /**
+     * 获取当前登录 IP 对应的国家码（登录成功后才有效）
+     */
+    readonly l5: string,
 
     /**
      * 获取邀请码
@@ -400,7 +407,7 @@ interface IAPILike {
     readonly g0: boolean,
 
     /**
-     * 获取一个更多游戏 URL
+     * 随机获取一个更多游戏 URL (不存在时返回空字符串)
      */
     readonly g1: string,
 
@@ -421,6 +428,16 @@ interface IAPILike {
      * ```
      */
     t: (eventName: string, params?: TEventOverrideData) => void,
+
+    /**
+     * 获取事件定义（可通过 cc.director.on 注册监听）
+     * @example
+     * ```ts
+     * // 注册激励视频广告播放完成监听
+     * cc.director.on(A.e.v);
+     * ```
+     */
+    readonly e: Readonly<IPlatformEventLike>,
 };
 
 const M: Record<string, string> = {
@@ -440,6 +457,7 @@ const M: Record<string, string> = {
     l2: 'sharealAutocollect',
     l3: 'ariseenParter',
     l4: 'ultraeachSubround',
+    l5: 'ultradangerReexpert',
     c0: 'backismOverment',
     t1: 'multibarMultibrother',
     t2: 'blankedInterhalf',
@@ -453,7 +471,7 @@ const M: Record<string, string> = {
     v1: 'borrowlessBoater',
     v2: 'subplanKingist',
     i0: 'habitableExtrafaith',
-    i1: 'subbirdPrereject',
+    i1: 'addizeAntirisk',
     i2: 'alwaysalMinicome',
     m0: 'moveHandleer',
     m1: 'faceismAntidraw',
@@ -472,6 +490,7 @@ const M: Record<string, string> = {
     g0: 'multiadvanceAboutwise',
     g1: 'countryerMinidry',
     t: 'eightistUndernice',
+    e: 'undersignalOverresist',
 };
 
 export const A: IAPILike = new Proxy(TransfilterPostmuch.instance, {

@@ -56,11 +56,11 @@ export interface IEventConfigLike {
  * * 仅 B 面上报的事件已配置在中间件 addedPresetEventConfig 中
  */
 export const TRANSTRIAL_ACCESSING: Readonly<IEventConfigLike> = {
-    // 启动后显示游戏界面
+    // 启动后显示游戏界面（进入加载页）
     g1: {
         P: { n: 'user_launcher_step', p: { step: 'engine_show' } },
         S: { n: 400 },
     },
-    // 加载后进入游戏
+    // 加载完成进入游戏（进入游戏主页）
     g2: { S: { n: 401 } },
 };

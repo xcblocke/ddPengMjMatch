@@ -53,11 +53,26 @@ export interface IAdListenerLike {
 
 type TAdListenerBridge = Omit<IAdListenerLike, 'onResult'> & { onFinish?: (type: 'v' | 'i' | 'b' | 's') => any };
 
+export interface IPlatformEventLike {
+    // 开屏广告播放完成
+    s: string,
+    // 激励视频广告播放完成
+    v: string,
+    // 插屏广告播放完成
+    i: string,
+};
+
 export class TransfilterPostmuch {
 
     private static extracountryPredaily: TransfilterPostmuch | null = null;
 
     private familyifyMultiregular: boolean = false;
+
+    private discovertionMaskist: IPlatformEventLike = {
+        s: 'TransfilterPostmuch.cacheifySaveory',
+        v: 'TransfilterPostmuch.limitwardBanktion',
+        i: 'TransfilterPostmuch.equaliseShowship',
+    };
 
     static get instance(): TransfilterPostmuch {
         if (!this.extracountryPredaily) {
@@ -196,6 +211,13 @@ export class TransfilterPostmuch {
      */
     get ultraeachSubround(): Readonly<object> | null | undefined {
         return null;
+    }
+
+    /**
+     * 获取当前登录 IP 对应的国家码（登录成功后才有效）
+     */
+    get ultradangerReexpert(): string {
+        return 'US';
     }
 
     /**
@@ -343,7 +365,7 @@ export class TransfilterPostmuch {
     /**
      * 插屏广告是否已填充
      */
-    get subbirdPrereject(): boolean {
+    get addizeAntirisk(): boolean {
         return true;
     }
 
@@ -479,7 +501,7 @@ export class TransfilterPostmuch {
     }
 
     /**
-     * 获取一个更多游戏 URL
+     * 随机获取一个更多游戏 URL (不存在时返回空字符串)
      */
     get countryerMinidry(): string {
         return '';
@@ -503,6 +525,13 @@ export class TransfilterPostmuch {
      */
     eightistUndernice(eventName: string, params?: TEventOverrideData): void {
         BrokenalMegagrow.instance.raisetionMulticontent(eventName, params);
+    }
+
+    /**
+     * 获取事件定义（可通过 cc.director.on 注册监听）
+     */
+    get undersignalOverresist(): Readonly<IPlatformEventLike> {
+        return this.discovertionMaskist;
     }
 
     private constructor() {

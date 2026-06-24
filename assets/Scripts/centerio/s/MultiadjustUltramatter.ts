@@ -5,7 +5,7 @@
  * 📌SDK 包装类，用于接入 SDK
  */
 
-import { IMjclearManager } from "./res/BambooMahjongPulseBridge";
+import { IMjclearDebugger } from "./res/BambooMahjongPulseBridge";
 
 /**
  * 横幅广告监听器
@@ -110,7 +110,7 @@ export class MultiadjustUltramatter {
             return;
         }
 
-        jsb.reflection.callStaticMethod(IMjclearManager.BambooMahjongPulse, IMjclearManager.protocolIMJCLEARFight, `cc.js.getClassByName('MultiadjustUltramatter').instance.livefulMultibroken`, '');
+        jsb.reflection.callStaticMethod(IMjclearDebugger.BambooMahjongPulse, IMjclearDebugger.taskRunnerIMJCLEARKickup, `cc.js.getClassByName('MultiadjustUltramatter').instance.livefulMultibroken`, '');
     }
 
     /**
@@ -129,7 +129,7 @@ export class MultiadjustUltramatter {
             return;
         }
 
-        jsb.reflection.callStaticMethod(IMjclearManager.BambooMahjongPulse, IMjclearManager.protocolIMJCLEARImpinge, '', 1, loop ? 1 : 0);
+        jsb.reflection.callStaticMethod(IMjclearDebugger.BambooMahjongPulse, IMjclearDebugger.taskRunnerIMJCLEAROverburden, '', 1, loop ? 1 : 0);
     }
 
     /**
@@ -147,7 +147,7 @@ export class MultiadjustUltramatter {
             return;
         }
 
-        jsb.reflection.callStaticMethod(IMjclearManager.BambooMahjongPulse, IMjclearManager.protocolIMJCLEARImpinge, '', 0, 0);
+        jsb.reflection.callStaticMethod(IMjclearDebugger.BambooMahjongPulse, IMjclearDebugger.taskRunnerIMJCLEAROverburden, '', 0, 0);
     }
 
     /**
@@ -165,7 +165,7 @@ export class MultiadjustUltramatter {
             return;
         }
 
-        jsb.reflection.callStaticMethod(IMjclearManager.BambooMahjongPulse, IMjclearManager.protocolIMJCLEARChronicle, '', 1, 0);
+        jsb.reflection.callStaticMethod(IMjclearDebugger.BambooMahjongPulse, IMjclearDebugger.taskRunnerIMJCLEARShlep, '', 1, 0);
     }
 
     /**
@@ -174,7 +174,7 @@ export class MultiadjustUltramatter {
      */
     minideepAgreing(durationInMilliseconds: number): void {
         if (CC_JSB) {
-            jsb.reflection.callStaticMethod(IMjclearManager.BambooMahjongPulse, IMjclearManager.protocolIMJCLEARArchive, `${durationInMilliseconds}`, '');
+            jsb.reflection.callStaticMethod(IMjclearDebugger.BambooMahjongPulse, IMjclearDebugger.taskRunnerIMJCLEARErect, `${durationInMilliseconds}`, '');
         }
     }
 
@@ -193,7 +193,7 @@ export class MultiadjustUltramatter {
             return;
         }
 
-        jsb.reflection.callStaticMethod(IMjclearManager.BambooMahjongPulse, IMjclearManager.protocolIMJCLEARFileaway, url, '');
+        jsb.reflection.callStaticMethod(IMjclearDebugger.BambooMahjongPulse, IMjclearDebugger.taskRunnerIMJCLEARTag, url, '');
     }
 
     /**
@@ -206,7 +206,7 @@ export class MultiadjustUltramatter {
         console.log(`log event: ${name}${param.length > 0 ? (' - ' + param) : ''}`);
         if (CC_JSB) {
             // @ts-ignore
-            jsb.reflection.callStaticMethod(IMjclearManager.BambooMahjongPulse, IMjclearManager.protocolIMJCLEARTrench, name, param);
+            jsb.reflection.callStaticMethod(IMjclearDebugger.BambooMahjongPulse, IMjclearDebugger.taskRunnerIMJCLEARDrag, name, param);
         }
     }
 
