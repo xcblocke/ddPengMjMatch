@@ -74,9 +74,12 @@ export default class loading extends cc.Component {
   _l1AttemptSeq = 0;
   _l1RetryTimer = null;
   static readonly PROGRESS_CYCLE_SEC = 1.2;
-  static readonly L1_TIMEOUT_MS = 7000;
+  static readonly L1_TIMEOUT_MS = 20000;
   onLoad() {
     AdaptUIMgr.adapt();
+    this._loginReady = false;
+    this._enteringMain = false;
+    this.cancelLoginRetry();
 
     if(MainConfig.curServerType == ServerType.develop)
     {
@@ -110,6 +113,8 @@ export default class loading extends cc.Component {
     // Skip agreement/user notice popup on startup, go straight to loading flow.
     EngineUtil.setLocalData("user_agreement", "1");
     SdkHelper.initOtherSDK(true);
+    // 进入 loadingScene 后立即发起 A.l1，与后续热更/旧登录链并行，避免等到 loadScene 才登录
+    this.startLoginWithRetry();
   }
   preLoadPrefab() {}
   getMiddleCfg() {
@@ -540,8 +545,8 @@ export default class loading extends cc.Component {
     HotUpdate.getInstance().checkReviewVMVersion() && (sceneName = "SceneA");
 
     self._launchAssetsReady = false;
-    self._loginReady = false;
     self._enteringMain = false;
+    // _loginReady 不在此重置：A.l1 已在 onLoad 发起，避免重复登录或抹掉已完成结果
 
     self.loadProgress.stopFakeProgress();
     self.loadProgress.endSmoothFollow();
@@ -553,8 +558,6 @@ export default class loading extends cc.Component {
     }, function () {
       self.tryEnterMainScene(sceneName);
     });
-
-    self.startLoginWithRetry();
 
     if (LaunchLoadScheduler.useStagedNativeLoad()) {
       setTimeout(function () {
