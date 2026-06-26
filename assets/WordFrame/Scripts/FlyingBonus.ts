@@ -33,12 +33,55 @@ export default class FlyingBonus extends cc.Component {
         this._startFly();
     }
 
+    private _runFlyTween(playEnterSound = false, resetPosition = false): void {
+        const interval: number = 20;
+
+        this._cachedPosition1.x = 0;
+        this._cachedPosition1.y = 0;
+        this._cachedPosition1.z = 0;
+        this.node.parent.convertToNodeSpaceAR(this._cachedPosition1, this._cachedPosition1);
+
+        this._cachedPosition2.x = cc.winSize.width;
+        this._cachedPosition2.y = cc.winSize.height;
+        this._cachedPosition2.z = 0;
+        this.node.parent.convertToNodeSpaceAR(this._cachedPosition2, this._cachedPosition2);
+
+        const startX = this._cachedPosition1.x + this.node.width * this.node.anchorX;
+        const startY = this._cachedPosition2.y + this.node.height * this.node.anchorY;
+        const endX = this._cachedPosition2.x - this.node.width * (1 - this.node.anchorX);
+        const endY = this._cachedPosition1.y - this.node.height * (1 - this.node.anchorY);
+        const verticalDistance = (endY - startY) / 3;
+        const subInterval = interval / 3;
+
+        cc.Tween.stopAllByTarget(this.node);
+        const tween = cc.tween(this.node);
+        if (playEnterSound) {
+            tween.call(() => {
+                FrameSDK.playEffect("dingdong");
+                FrameSDK.videoCompensation('exposure', 'fly_sup');
+            });
+        }
+        if (resetPosition) {
+            tween.set({ x: startX, y: startY, opacity: 255 });
+        } else {
+            tween.set({ opacity: 255 });
+        }
+        tween
+            .to(subInterval, { x: { value: endX, easing: 'sineInOut' }, y: startY + verticalDistance })
+            .to(subInterval, { x: { value: startX, easing: 'sineInOut' }, y: startY + verticalDistance * 2 })
+            .to(subInterval, { x: { value: endX, easing: 'sineInOut' }, y: endY })
+            .delay(40)
+            .union()
+            .repeatForever()
+            .start();
+    }
+
     private _startFly(): void {
         if (!FrameSDK.frameData.gameData.isFlag) {
             return;
         }
 
-        this.FlySp.setAnimation(0,FrameData.saveData.fly_free <= 0?"ad":"free",true);
+        this.FlySp.setAnimation(0, FrameData.saveData.fly_free <= 0 ? "ad" : "free", true);
         if (!FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.flyingBonusLevel)) {
             return;
         }
@@ -56,41 +99,7 @@ export default class FlyingBonus extends cc.Component {
             });
 
             this.node.on(cc.Node.EventType.TOUCH_END, this._onClick, this);
-
-
-            const interval: number = 20;
-
-            this._cachedPosition1.x = 0;
-            this._cachedPosition1.y = 0;
-            this._cachedPosition1.z = 0;
-            this.node.parent.convertToNodeSpaceAR(this._cachedPosition1, this._cachedPosition1);
-
-            this._cachedPosition2.x = cc.winSize.width;
-            this._cachedPosition2.y = cc.winSize.height;
-            this._cachedPosition2.z = 0;
-            this.node.parent.convertToNodeSpaceAR(this._cachedPosition2, this._cachedPosition2);
-
-            const startX = this._cachedPosition1.x + this.node.width * this.node.anchorX;
-            const startY = this._cachedPosition2.y + this.node.height * this.node.anchorY;
-            const endX = this._cachedPosition2.x - this.node.width * (1 - this.node.anchorX);
-            const endY = this._cachedPosition1.y - this.node.height * (1 - this.node.anchorY);
-            const verticalDistance = (endY - startY) / 3;
-            const subInterval = interval / 3;
-
-            cc.Tween.stopAllByTarget(this.node);
-            cc.tween(this.node)
-                .call(() => {
-                    FrameSDK.playEffect("dingdong");
-                    FrameSDK.videoCompensation('exposure', 'fly_sup');
-                })
-                .set({ x: startX, y: startY, opacity: 255 })
-                .to(subInterval, { x: { value: endX, easing: 'sineInOut' }, y: startY + verticalDistance })
-                .to(subInterval, { x: { value: startX, easing: 'sineInOut' }, y: startY + verticalDistance * 2 })
-                .to(subInterval, { x: { value: endX, easing: 'sineInOut' }, y: endY })
-                .delay(40)
-                .union()
-                .repeatForever()
-                .start();
+            this._runFlyTween(true, true);
         });
     }
 
@@ -98,6 +107,32 @@ export default class FlyingBonus extends cc.Component {
         this._available = false;
         this.node.opacity = 0;
         cc.Tween.stopAllByTarget(this.node);
+        this.node.off(cc.Node.EventType.TOUCH_END, this._onClick, this);
+    }
+
+    private _pauseFlyingForTips(): void {
+        this.node.off(cc.Node.EventType.TOUCH_END, this._onClick, this);
+    }
+
+    private _resumeFlyingAfterTips(): void {
+        if (!this._available) {
+            return;
+        }
+        this.node.on(cc.Node.EventType.TOUCH_END, this._onClick, this);
+    }
+
+    private _hideForAdClaim(): void {
+        this._available = false;
+        cc.Tween.stopAllByTarget(this.node);
+        this.node.opacity = 0;
+        this.node.off(cc.Node.EventType.TOUCH_END, this._onClick, this);
+        FrameData.saveData.flyingBonusIndex = FrameSDK.frameData.gameData.passLevel;
+    }
+
+    private _willShowVideoTips(): boolean {
+        return FrameData.saveData.fly_free <= 0
+            && !gameData.skipVideoTipsForRevive
+            && !VideoTipsHelper.hasConfirmed();
     }
 
     private _onClick(): void {
@@ -105,25 +140,18 @@ export default class FlyingBonus extends cc.Component {
             return;
         }
 
-        this._available = false;
-        this.node.off(cc.Node.EventType.TOUCH_END, this._onClick, this);
-
         FrameSDK.logGameEvent('sdymjmatch_game_rew', {
             object_action: 'click',
             object_name: 'fly_sup',
         });
 
-        cc.Tween.stopAllByTarget(this.node);
-        this.node.opacity = 0;
-
-        FrameData.saveData.flyingBonusIndex = FrameSDK.frameData.gameData.passLevel;
-        // FrameSDK.openABAward(()=>{
-        //     //清楚A面弹产出计时
-        //     cc.director.emit("setRewardTime")
-        // });
+        if (this._willShowVideoTips()) {
+            this._pauseFlyingForTips();
+        } else {
+            this._hideForAdClaim();
+        }
         this.click_AD();
     }
-
 
     private _restoreFlyingBonus() {
         if (!FrameSDK.frameData?.gameData?.isFlag) {
@@ -132,8 +160,10 @@ export default class FlyingBonus extends cc.Component {
         if (!FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.flyingBonusLevel)) {
             return;
         }
-        this._available = false;
-        this._startFly();
+        this._available = true;
+        this.node.opacity = 255;
+        this.node.on(cc.Node.EventType.TOUCH_END, this._onClick, this);
+        this._runFlyTween(false, true);
     }
 
     @CLICKLOCK(1)
@@ -152,6 +182,7 @@ export default class FlyingBonus extends cc.Component {
             FrameData.saveData.fly_free--;
         } else {
             const runAd = () => {
+                this._hideForAdClaim();
                 FrameSDK.openVideo(back, fail, () => {
                     FrameSDK.logGameEvent('sdymjmatch_game_ad', {
                         object_action: 'show',
@@ -160,7 +191,9 @@ export default class FlyingBonus extends cc.Component {
                     });
                 }, "fly_sup");
             };
-            VideoTipsHelper.requestWithTips(runAd, fail, gameData.skipVideoTipsForRevive);
+            VideoTipsHelper.requestWithTips(runAd, () => {
+                this._resumeFlyingAfterTips();
+            }, gameData.skipVideoTipsForRevive);
         }
     }
 
