@@ -508,6 +508,7 @@ export default class touchCtrl extends cc.Component {
     console.log("hasMore", e);
     if (!e && gameData.gameState == GameState.gameing) {
       console.log("无牌可消");
+      gameData.skipVideoTipsForRevive = true;
       this._gameMain.gameOver({
         type: FailedType.Normal
       });

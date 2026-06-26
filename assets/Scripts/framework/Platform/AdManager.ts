@@ -7,6 +7,7 @@ import EngineUtil from '../EngineUtil';
 import GlobaldataMgr from '../data/GlobaldataMgr';
 import AudioManager from '../controller/AudioManager';
 import GlobalApp from '../../common/GlobalApp';
+import VideoTipsHelper from '../../common/VideoTipsHelper';
 export default class AdManager {
   noAdTest = false;
   videoSuccessFun = null;
@@ -137,30 +138,42 @@ export default class AdManager {
   closeImgAd() {
     cc.sys.isNative && (cc.sys.os == cc.sys.OS_ANDROID ? CallAndroid.getInstance().closeImgAd() : cc.sys.os == cc.sys.OS_IOS && CalliOS.getInstance().closeImgAd());
   }
-  playVideoAd(e, t, o = false) {
+  playVideoAd(e, t, o = false, skipTips = false) {
     var a = this;
     var i = new Date().getTime() / 1000;
     i < this.lastTouchDate && (this.lastTouchDate = i);
-    if (!(this.lastTouchDate && i - this.lastTouchDate < this.interval)) {
-      this.lastTouchDate = i;
-      if (cc.sys.isBrowser || !cc.sys.isNative || this.noAdTest) e && e();else {
-        this.adBack = true;
-        this.videoSuccessFun = e;
-        this.videoFailFun = t;
-        var r = {
-          is_force: o,
-          slotId: 0
-        };
-        GlobalApp.AdSchedule.startSchedule(function () {
-          a.doVideoFail(r);
-        });
-        if (cc.sys.os == cc.sys.OS_ANDROID) {
-          CallAndroid.getInstance().showRewardVideoAd(JSON.stringify(r));
-        } else {
-          CalliOS.getInstance().showRewardVideoAd(r);
-        }
-      }
+    if (this.lastTouchDate && i - this.lastTouchDate < this.interval) {
+      return;
     }
+    const playAd = () => {
+      a.lastTouchDate = i;
+      if (cc.sys.isBrowser || !cc.sys.isNative || a.noAdTest) {
+        e && e();
+        return;
+      }
+      a.adBack = true;
+      a.videoSuccessFun = e;
+      a.videoFailFun = t;
+      var r = {
+        is_force: o,
+        slotId: 0
+      };
+      GlobalApp.AdSchedule.startSchedule(function () {
+        a.doVideoFail(r);
+      });
+      if (cc.sys.os == cc.sys.OS_ANDROID) {
+        CallAndroid.getInstance().showRewardVideoAd(JSON.stringify(r));
+      } else {
+        CalliOS.getInstance().showRewardVideoAd(r);
+      }
+    };
+    if (cc.sys.isBrowser || !cc.sys.isNative || this.noAdTest) {
+      playAd();
+      return;
+    }
+    VideoTipsHelper.requestWithTips(playAd, function () {
+      t && t();
+    }, skipTips);
   }
   onVideoFinish(e) {
     console.log("广告播放完成", e);

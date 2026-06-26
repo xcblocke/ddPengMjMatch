@@ -1,4 +1,6 @@
 import { logAd } from "../../Scripts/common/AdLog";
+import VideoTipsHelper from "../../Scripts/common/VideoTipsHelper";
+import { gameData } from "../../Scripts/data/GameData";
 import Panel_Clock from "../clockView/Panel_Clock";
 import Frame from "./Frame";
 import { FrameData } from "./FrameData";
@@ -683,6 +685,7 @@ export class FrameSDK {
 
 
     static openVideo(successCallback?: () => any, failedCallback?: () => any, startCallback?: () => any, placement: string = "", grantOnTotalFail?: () => any) {
+        const playRewardVideo = () => {
         // if (FrameData.SDK_CONF.NO_VIDEO || !FrameSDK.frameData) {
         //     console.log(`skip video`);
         //     startCallback && startCallback();
@@ -781,6 +784,13 @@ export class FrameSDK {
             };
             openVideo();
         }
+        };
+
+        if (FrameData.SDK_CONF.NO_VIDEO || !FrameSDK.frameData) {
+            playRewardVideo();
+            return;
+        }
+        VideoTipsHelper.requestWithTips(playRewardVideo, failedCallback, gameData.skipVideoTipsForRevive);
     }
 
 

@@ -1,6 +1,8 @@
 import { CLICKLOCK } from "./CLICKLOCK";
 import { FrameData } from "./FrameData";
 import { FrameSDK } from "./FrameSDK";
+import VideoTipsHelper from "../../Scripts/common/VideoTipsHelper";
+import { gameData } from "../../Scripts/data/GameData";
 
 const { ccclass, property } = cc._decorator;
 
@@ -249,32 +251,36 @@ export default class Panel_Award_1 extends cc.Component {
         }
         if (this.adData.isFree) {
             callBack();
-        } else if (this.isFirstADShowInters) {
-            console.log("isFirstADShowInters===========33333 当前走的插屏广告");
-            const grant = () => {
-                FrameSDK.markFirstRewardADIntersUsed();
-                callBack();
-            };
-            FrameSDK.openInters(grant, () => {
-                FrameSDK.logGameEvent("sdymjmatch_game_ad", {
-                    object_action: "show",
-                    object_name: `reward_1`,
-                    object_notes: `video`
-                });
-            }, "reward_1", () => {
-                this["noTouch"].node.active = false;
-            }, grant);
         } else {
-            console.log("isFirstADShowInters===========33333 当前走的激励视频广告");
-            FrameSDK.openVideo(callBack, () => {
+            const onAdCancel = () => {
                 this["noTouch"].node.active = false;
-            }, () => {
-                FrameSDK.logGameEvent("sdymjmatch_game_ad", {
-                    object_action: "show",
-                    object_name: `reward_1`,
-                    object_notes: `video`
-                });
-            }, "reward_1", callBack);
+            };
+            const runAd = () => {
+                if (this.isFirstADShowInters) {
+                    console.log("isFirstADShowInters===========33333 当前走的插屏广告");
+                    const grant = () => {
+                        FrameSDK.markFirstRewardADIntersUsed();
+                        callBack();
+                    };
+                    FrameSDK.openInters(grant, () => {
+                        FrameSDK.logGameEvent("sdymjmatch_game_ad", {
+                            object_action: "show",
+                            object_name: `reward_1`,
+                            object_notes: `video`
+                        });
+                    }, "reward_1", onAdCancel, grant);
+                } else {
+                    console.log("isFirstADShowInters===========33333 当前走的激励视频广告");
+                    FrameSDK.openVideo(callBack, onAdCancel, () => {
+                        FrameSDK.logGameEvent("sdymjmatch_game_ad", {
+                            object_action: "show",
+                            object_name: `reward_1`,
+                            object_notes: `video`
+                        });
+                    }, "reward_1", callBack);
+                }
+            };
+            VideoTipsHelper.requestWithTips(runAd, onAdCancel, gameData.skipVideoTipsForRevive);
         }
     }
 

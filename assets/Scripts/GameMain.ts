@@ -944,6 +944,7 @@ export default class GameMain extends cc.Component {
   }
   clearGameUI() {
     this.isGameing = false;
+    gameData.skipVideoTipsForRevive = false;
     this.unschedule(this._onMahjongSpawnComplete);
     gameData.globalCanClick = false;
     // this.freezeTipNode.active = false;
@@ -970,6 +971,7 @@ export default class GameMain extends cc.Component {
     this.startShowTipNode();
   }
   rebornGame(e = FailedType.Normal) {
+    gameData.skipVideoTipsForRevive = false;
     gameData.gameState = GameState.gameing;
     if (e == FailedType.TIME_OUT) {
       gameData.globalCanClick = true;

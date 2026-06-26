@@ -1,6 +1,8 @@
 import { CLICKLOCK } from "./CLICKLOCK";
 import { FrameData } from "./FrameData";
 import { FrameSDK } from "./FrameSDK";
+import VideoTipsHelper from "../../Scripts/common/VideoTipsHelper";
+import { gameData } from "../../Scripts/data/GameData";
 
 const { ccclass, property } = cc._decorator;
 
@@ -123,33 +125,42 @@ export default class FlyingBonus extends cc.Component {
     }
 
 
+    private _restoreFlyingBonus() {
+        if (!FrameSDK.frameData?.gameData?.isFlag) {
+            return;
+        }
+        if (!FrameSDK.hasPassedConfigLevel(FrameData.FRAME_CONF.flyingBonusLevel)) {
+            return;
+        }
+        this._available = false;
+        this._startFly();
+    }
+
     @CLICKLOCK(1)
     click_AD() {
-
-
-
         const fail = () => {
             console.log("video fail===========3");
+            this._restoreFlyingBonus();
         };
 
         const back = () => {
-
             FrameSDK.addCoin(FrameData.FRAME_CONF.flyingBonusCoin, FrameData.saveData.fly_free > 0 ? 0 : FrameData.getCoinOutNum('charity'), FrameData.saveData.fly_free > 0 ? 0 : 1);
-
         };
-
 
         if (FrameData.saveData.fly_free > 0) {
             back();
             FrameData.saveData.fly_free--;
         } else {
-            FrameSDK.openVideo(back, fail, () => {
-                FrameSDK.logGameEvent('sdymjmatch_game_ad', {
-                    object_action: 'show',
-                    object_name: `fly_sup`,
-                    object_notes: `video`,
-                });
-            },"fly_sup");
+            const runAd = () => {
+                FrameSDK.openVideo(back, fail, () => {
+                    FrameSDK.logGameEvent('sdymjmatch_game_ad', {
+                        object_action: 'show',
+                        object_name: `fly_sup`,
+                        object_notes: `video`,
+                    });
+                }, "fly_sup");
+            };
+            VideoTipsHelper.requestWithTips(runAd, fail, gameData.skipVideoTipsForRevive);
         }
     }
 

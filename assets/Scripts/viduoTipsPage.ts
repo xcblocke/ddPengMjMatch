@@ -1,7 +1,7 @@
 import SdkHelper from './framework/SdkHelper';
 import BasePage, { AnimType } from './view/BasePage';
 import AudioManager from './framework/controller/AudioManager';
-import buttonMgr from './system/buttonMgr';
+import VideoTipsHelper from './common/VideoTipsHelper';
 
 const { ccclass } = cc._decorator;
 
@@ -18,13 +18,13 @@ export default class viduoTipsPage extends BasePage {
   close() {
     AudioManager.getInstance().playMusic("btntouch");
     SdkHelper.reportData("video_tips_close");
-    buttonMgr.ins && buttonMgr.ins.onVideoTipsCancel();
+    VideoTipsHelper.onCancel();
     super._hide.call(this);
   }
   gotoAd() {
     AudioManager.getInstance().playMusic("btntouch");
     SdkHelper.reportData("video_tips_ok");
     super._hide.call(this);
-    buttonMgr.ins && buttonMgr.ins.onVideoTipsConfirm();
+    VideoTipsHelper.onConfirm();
   }
 }

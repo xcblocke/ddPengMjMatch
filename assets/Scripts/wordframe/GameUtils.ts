@@ -10,6 +10,8 @@
 
 import { gameData } from "../data/GameData";
 import { logAd } from "../common/AdLog";
+import VideoTipsHelper from "../common/VideoTipsHelper";
+import VideoTipsHelper from "../common/VideoTipsHelper";
 import { AutoConfig } from "./AutoConfig";
 import DataManager from "./DataManager";
 import { NativeUtils } from "./NativeUtils";
@@ -160,20 +162,11 @@ showRewardVideo(succ, fail, skip?) {
         }
     }
 
-    // if (NativeUtils.newFirst) {
+    if (cc.sys.isNative && !NativeUtils.no_video) {
+        VideoTipsHelper.requestWithTips(cb, onFail, gameData.skipVideoTipsForRevive);
+    } else {
         cb();
-    // } else {
-    //     // GameVideo.openView(cb, failFunc);
-    //     UIManager.getInstance().showUI(game_Video, {
-    //         okFunc:()=>{
-    //             cb();
-    //         },
-    //         closeCB:()=>{
-    //             fail && fail();
-    //         }
-
-    //     });
-    // }
+    }
 
     console.log("showVideo")
 

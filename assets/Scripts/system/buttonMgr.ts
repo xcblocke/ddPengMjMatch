@@ -15,6 +15,7 @@ import { A } from '../center/api';
 import LoadProgress from '../framework/components/LoadProgress';
 import LoadWord from '../wordframe/LoadWord';
 import { NativeUtils } from '../wordframe/NativeUtils';
+import VideoTipsHelper from '../common/VideoTipsHelper';
 const {
   ccclass,
   property
@@ -22,12 +23,10 @@ const {
 @ccclass
 export default class buttonMgr extends cc.Component {
   static ins: buttonMgr = null;
-  static VIDEO_TIPS_CONFIRMED_KEY = "video_tips_confirmed";
   isClicking = false;
   isReqUseProp = false;
   propBtnIsFlag = false;
   isWatchingPropVideo = false;
-  _pendingVideoConfirm: (() => void) | null = null;
   onLoad() {
     buttonMgr.ins = this;
   }
@@ -232,31 +231,8 @@ export default class buttonMgr extends cc.Component {
   showPropAdFailToast() {
     EngineUtil.showCocosToast3(`gkey_303`);
   }
-  hasConfirmedVideoTips() {
-    return !!EngineUtil.getLocalData(buttonMgr.VIDEO_TIPS_CONFIRMED_KEY);
-  }
-  markVideoTipsConfirmed() {
-    EngineUtil.setLocalData(buttonMgr.VIDEO_TIPS_CONFIRMED_KEY, "1");
-  }
-  onVideoTipsConfirm() {
-    this.markVideoTipsConfirmed();
-    var e = this._pendingVideoConfirm;
-    this._pendingVideoConfirm = null;
-    e && e();
-  }
-  onVideoTipsCancel() {
-    this._pendingVideoConfirm = null;
-  }
   requestVideoWithTips(onConfirm: () => void) {
-    if (this.hasConfirmedVideoTips()) {
-      onConfirm();
-      return;
-    }
-    this._pendingVideoConfirm = onConfirm;
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "viduoTipsPage",
-      data: {}
-    });
+    VideoTipsHelper.requestWithTips(onConfirm, undefined, gameData.skipVideoTipsForRevive);
   }
   tryWatchVideoForProp(e) {
     this.requestVideoWithTips(() => {
