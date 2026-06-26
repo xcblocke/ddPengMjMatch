@@ -22,10 +22,12 @@ const {
 @ccclass
 export default class buttonMgr extends cc.Component {
   static ins: buttonMgr = null;
+  static VIDEO_TIPS_CONFIRMED_KEY = "video_tips_confirmed";
   isClicking = false;
   isReqUseProp = false;
   propBtnIsFlag = false;
   isWatchingPropVideo = false;
+  _pendingVideoConfirm: (() => void) | null = null;
   onLoad() {
     buttonMgr.ins = this;
   }
@@ -230,9 +232,40 @@ export default class buttonMgr extends cc.Component {
   showPropAdFailToast() {
     EngineUtil.showCocosToast3(`gkey_303`);
   }
+  hasConfirmedVideoTips() {
+    return !!EngineUtil.getLocalData(buttonMgr.VIDEO_TIPS_CONFIRMED_KEY);
+  }
+  markVideoTipsConfirmed() {
+    EngineUtil.setLocalData(buttonMgr.VIDEO_TIPS_CONFIRMED_KEY, "1");
+  }
+  onVideoTipsConfirm() {
+    this.markVideoTipsConfirmed();
+    var e = this._pendingVideoConfirm;
+    this._pendingVideoConfirm = null;
+    e && e();
+  }
+  onVideoTipsCancel() {
+    this._pendingVideoConfirm = null;
+  }
+  requestVideoWithTips(onConfirm: () => void) {
+    if (this.hasConfirmedVideoTips()) {
+      onConfirm();
+      return;
+    }
+    this._pendingVideoConfirm = onConfirm;
+    EventMgr.trigger(GameEventType.PAGE_SHOW, {
+      name: "viduoTipsPage",
+      data: {}
+    });
+  }
+  tryWatchVideoForProp(e) {
+    this.requestVideoWithTips(() => {
+      this.watchVideoForProp(e);
+    });
+  }
   tryGetPropByVideo(e) {
     if (NativeUtils.isFlag) {
-      this.watchVideoForProp(e);
+      this.tryWatchVideoForProp(e);
       return;
     }
     EventMgr.trigger(GameEventType.PAGE_SHOW, {
@@ -299,7 +332,7 @@ export default class buttonMgr extends cc.Component {
   }
   addPropCount(e) {
     console.log("addPropCount", e);
-    this.watchVideoForProp(e);
+    this.tryWatchVideoForProp(e);
   }
   userNoticeBtnClick() {
     EventMgr.trigger(GameEventType.PAGE_SHOW, {
