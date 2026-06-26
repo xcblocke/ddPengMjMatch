@@ -828,7 +828,7 @@ export default class GameMain extends cc.Component {
 
   /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
   dealMergeReward(levelCleared = false) {
-    console.log("dealMergeReward。。。。。。。。。。。。。。。。。。。", levelCleared);
+    console.log("dealMergeReward。。。。。。。。。。。。。。。。。。。", this.rewardAbMergeCount , this.rewaedAbMergeThreshold);
     if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
       return;
     }
