@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "0412f3b7-78d4-40f1-9149-423fc4b98eee",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 188,
+  "height": 88,
+  "platformSettings": {},
+  "subMetas": {
+    "chuanyf_cash_icon_nubankmex_109": {
+      "ver": "1.0.6",
+      "uuid": "27360ee8-040f-4374-858c-9ca8d3a6944f",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "0412f3b7-78d4-40f1-9149-423fc4b98eee",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 184,
+      "height": 84,
+      "rawWidth": 188,
+      "rawHeight": 88,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

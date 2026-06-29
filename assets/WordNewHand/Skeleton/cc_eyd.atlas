@@ -1,0 +1,111 @@
+
+cc_eyd.png
+size: 730,446
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+baoxiang
+  rotate: true
+  xy: 172, 92
+  size: 185, 144
+  orig: 185, 144
+  offset: 0, 0
+  index: -1
+qian_yida_1
+  rotate: false
+  xy: 2, 2
+  size: 119, 88
+  orig: 119, 88
+  offset: 0, 0
+  index: -1
+qian_yida_2
+  rotate: false
+  xy: 123, 24
+  size: 120, 66
+  orig: 120, 66
+  offset: 0, 0
+  index: -1
+qian_yida_3
+  rotate: true
+  xy: 619, 43
+  size: 122, 109
+  orig: 122, 109
+  offset: 0, 0
+  index: -1
+shengti
+  rotate: true
+  xy: 2, 92
+  size: 185, 168
+  orig: 185, 172
+  offset: 0, 0
+  index: -1
+shou
+  rotate: false
+  xy: 318, 98
+  size: 53, 54
+  orig: 53, 54
+  offset: 0, 0
+  index: -1
+tit_welcome_guide
+  rotate: false
+  xy: 2, 279
+  size: 706, 165
+  orig: 706, 165
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 373, 7
+  size: 139, 158
+  orig: 139, 158
+  offset: 0, 0
+  index: -1
+txt_welcome_guide_tit_1
+  rotate: false
+  xy: 371, 167
+  size: 351, 110
+  orig: 351, 110
+  offset: 0, 0
+  index: -1
+yanj
+  rotate: false
+  xy: 245, 26
+  size: 124, 64
+  orig: 124, 64
+  offset: 0, 0
+  index: -1
+yanyou
+  rotate: false
+  xy: 318, 234
+  size: 43, 43
+  orig: 43, 43
+  offset: 0, 0
+  index: -1
+yanyou2
+  rotate: true
+  xy: 318, 190
+  size: 42, 43
+  orig: 43, 43
+  offset: 1, 0
+  index: -1
+yanzuo
+  rotate: true
+  xy: 619, 10
+  size: 31, 43
+  orig: 32, 43
+  offset: 1, 0
+  index: -1
+yanzuo2
+  rotate: true
+  xy: 318, 154
+  size: 34, 43
+  orig: 34, 43
+  offset: 0, 0
+  index: -1
+youshou
+  rotate: true
+  xy: 514, 15
+  size: 150, 103
+  orig: 150, 103
+  offset: 0, 0
+  index: -1

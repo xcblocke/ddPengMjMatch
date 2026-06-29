@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "27fb3876-bf57-4e5c-8ca8-4979c5b9bec7",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 118,
+  "height": 118,
+  "platformSettings": {},
+  "subMetas": {
+    "icon_mercadopago_113": {
+      "ver": "1.0.6",
+      "uuid": "4cd22e96-4440-4b90-9c57-832fe1f304bf",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "27fb3876-bf57-4e5c-8ca8-4979c5b9bec7",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 114,
+      "height": 114,
+      "rawWidth": 118,
+      "rawHeight": 118,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

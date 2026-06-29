@@ -1600,8 +1600,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        309.713,
-        672.122,
+        315.587,
+        684.172,
         0,
         0,
         0,
@@ -1834,7 +1834,7 @@
         "__id__": 46
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 52
@@ -2601,7 +2601,7 @@
         "__id__": 58
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [],
     "_prefab": null,
     "_opacity": 255,
@@ -2944,7 +2944,7 @@
       "__id__": 30
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 61
@@ -10001,6 +10001,9 @@
     "_enabled": true,
     "dollarNode": {
       "__id__": 53
+    },
+    "levelTopNode": {
+      "__id__": 37
     },
     "map_root": {
       "__id__": 10

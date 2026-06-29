@@ -44,7 +44,7 @@ import {
 import { applyFreePropRewardIfAny } from './freePropPage';
 import GameUtils from './wordframe/GameUtils';
 import { playHengFNodeBannerOnMahjongSpawnEnd } from './HengFNodeUtil';
-// import LoadWord from './wordframe/LoadWord';
+import LoadWord from './wordframe/LoadWord';
 import { NativeUtils } from './wordframe/NativeUtils';
 import { A } from './centerio/api';
 import RandomUtil from './framework/Utils/RandomUtil';
@@ -57,6 +57,9 @@ export default class GameMain extends cc.Component {
 
   @property(cc.Node)
   dollarNode: cc.Node = null;
+
+  @property(cc.Node)
+  levelTopNode: cc.Node = null;
 
 
   @property(cc.Node)
@@ -205,7 +208,9 @@ export default class GameMain extends cc.Component {
   start() {
     if(this.pageNode) {
       this.pageNode.active = gameEnterModel === GameEnterModel.shenheModel;
-      this.backMainNode.active = gameEnterModel == GameEnterModel.shenheModel;
+      this.backMainNode.active = false;//gameEnterModel == GameEnterModel.shenheModel;
+      this.dollarNode.active = false;//gameEnterModel == GameEnterModel.shenheModel;
+      this.levelTopNode.active = false;//gameEnterModel == GameEnterModel.shenheModel;
     }
     this.playRuchangAni();
     GlobaldataMgr.auth_type && SdkHelper.ysdkLogin();
@@ -228,12 +233,12 @@ export default class GameMain extends cc.Component {
     this.ruchangAni.setAnimation(0, "guan", false);
     this.ruchangAni.setCompleteListener((event) => {
       if (event.animation.name === "guan") { 
-        // this.scheduleOnce(() => {
-        //   LoadWord.instance.init();
-        // }, 0.5);
+        this.scheduleOnce(() => {
+          LoadWord.instance.init();
+        }, 0.5);
         this.scheduleOnce(() => {
           this.ruchangAni.setAnimation(0, "jingzhi", false);
-        }, 0.3);
+        }, 0.85);
       } else if (event.animation.name === "jingzhi") {
         this.ruchangAni.setAnimation(0, "kai", false);
         // this.ruchangAni.node.active = false;
@@ -483,13 +488,13 @@ export default class GameMain extends cc.Component {
           n.initGameData(e);
         };
         const showLevelBannerThenStart = () => {
-          // const sdk = LoadWord.FrameSDK;
-          // if (sdk && sdk.Panel && typeof sdk.showLevelStartBanner === "function") {
-          //   sdk.showLevelStartBanner(onLevelFlowDone, enteringLevel);
-          // } else {
-          //   // n.levelStart.active = true;
-          //   // n.levelStart.getComponent(LevelStart).init({ cb: onLevelFlowDone });
-          // }
+          const sdk = LoadWord.FrameSDK;
+          if (sdk && sdk.Panel && typeof sdk.showLevelStartBanner === "function") {
+            sdk.showLevelStartBanner(onLevelFlowDone, enteringLevel);
+          } else {
+            // n.levelStart.active = true;
+            // n.levelStart.getComponent(LevelStart).init({ cb: onLevelFlowDone });
+          }
         };
         const beginLevelFlow = (needLevelBanner = false) => {
           if (levelFlowStarted) return;
@@ -520,24 +525,24 @@ export default class GameMain extends cc.Component {
           beginLevelFlow(true);
           return;
         }
-        // const loadWord = LoadWord.instance;
-        // if (loadWord && loadWord.shouldDeferPreLevelPopupsForNewHand()) {
-        //   GameUtils.logLevelProgress("defer_beforeGameLevelStart_newHand", { enteringLevel });
-        //   const deferredRunner = () => {
-        //     const t0 = Date.now();
-        //     const lv = GameUtils.getEnteringLevelId();
-        //     GameUtils.beforeGameLevelStart(lv, roundForUi, null, () => {
-        //       GameUtils.logLevelProgress("beforeGameLevelStart_done_after_newHand", {
-        //         enteringLevel: lv,
-        //         waitMs: Date.now() - t0
-        //       });
-        //       beginLevelFlow(false);
-        //     });
-        //   };
-        //   n._deferredNewHandPreLevelRunner = deferredRunner;
-        //   loadWord.setDeferredPreLevelBanners(deferredRunner);
-        //   return;
-        // }
+        const loadWord = LoadWord.instance;
+        if (loadWord && loadWord.shouldDeferPreLevelPopupsForNewHand()) {
+          GameUtils.logLevelProgress("defer_beforeGameLevelStart_newHand", { enteringLevel });
+          const deferredRunner = () => {
+            const t0 = Date.now();
+            const lv = GameUtils.getEnteringLevelId();
+            GameUtils.beforeGameLevelStart(lv, roundForUi, null, () => {
+              GameUtils.logLevelProgress("beforeGameLevelStart_done_after_newHand", {
+                enteringLevel: lv,
+                waitMs: Date.now() - t0
+              });
+              beginLevelFlow(false);
+            });
+          };
+          n._deferredNewHandPreLevelRunner = deferredRunner;
+          loadWord.setDeferredPreLevelBanners(deferredRunner);
+          return;
+        }
         const t0 = Date.now();
         GameUtils.beforeGameLevelStart(enteringLevel, roundForUi, null, () => {
           GameUtils.logLevelProgress("beforeGameLevelStart_done", {
@@ -865,9 +870,9 @@ export default class GameMain extends cc.Component {
   //   return abPop > 0 ? Math.floor(abPop) : 3;
   // }
   resetRewardAbMergeCount() {
-    // this.rewardAbMergeCount = 0;
-    // this._rewardAbPopupPending = false;
-    // this.unschedule(this._onRewardAbMergePopup);
+    this.rewardAbMergeCount = 0;
+    this._rewardAbPopupPending = false;
+    this.unschedule(this._onRewardAbMergePopup);
 
 
     // let conf =  LoadWord.instance.getWbConfigData();
@@ -877,37 +882,37 @@ export default class GameMain extends cc.Component {
     // this.rewaedAbMergeThreshold = RandomUtil.rangeInt(timeConf[0], timeConf[1]);
     // CC_DEBUG && console.log("[rewardAB] merge count reset");
 
-    // const currentLevel = GameUtils.getEnteringLevelId();
-    // const conf = LoadWord.instance.getWbConfigData();
-    // const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";
-    // const frameConf = conf?.[cfgKey]?.["FRAME_CONF"];
-    // let intervalRange: [number, number] = LoadWord.FrameSDK.getRewardAbMergeIntervalRange(currentLevel, frameConf);
-    // console.log("[rewardAB] mframeConf.......", frameConf,intervalRange);
-    // if(!intervalRange || intervalRange.length <=0) {
-    //   intervalRange = frameConf?.rewaedAbTotalTime ?? [6, 8];
-    // }
-    // this.rewaedAbMergeThreshold = RandomUtil.rangeInt(intervalRange[0], intervalRange[1]);
-    // CC_DEBUG && console.log("[rewardAB] merge count reset, level:", currentLevel, "threshold:", this.rewaedAbMergeThreshold);
+    const currentLevel = GameUtils.getEnteringLevelId();
+    const conf = LoadWord.instance.getWbConfigData();
+    const cfgKey = NativeUtils.isFlag ? "basicConfig" : "partyplay";
+    const frameConf = conf?.[cfgKey]?.["FRAME_CONF"];
+    let intervalRange: [number, number] = LoadWord.FrameSDK.getRewardAbMergeIntervalRange(currentLevel, frameConf);
+    console.log("[rewardAB] mframeConf.......", frameConf,intervalRange);
+    if(!intervalRange || intervalRange.length <=0) {
+      intervalRange = frameConf?.rewaedAbTotalTime ?? [6, 8];
+    }
+    this.rewaedAbMergeThreshold = RandomUtil.rangeInt(intervalRange[0], intervalRange[1]);
+    CC_DEBUG && console.log("[rewardAB] merge count reset, level:", currentLevel, "threshold:", this.rewaedAbMergeThreshold);
   }
 
   /** 与 FrameSDK.openABAward 一致：当前关卡 >= AbPop 才弹产出（Panel_Award_3） */
   isRewardAbPopupUnlocked() {
-    // const passLevel = GameUtils.getPassLevel();
-    // let abPop = 3;
-    // const conf = LoadWord.instance.getWbConfigData() as any;
-    // if (conf) {
-    //   const v = conf.AbPop ?? conf.basicConfig?.FRAME_CONF?.AbPop ?? conf.partyplay?.FRAME_CONF?.AbPop;
-    //   if (v != null) {
-    //     abPop = Math.floor(Number(v)) || abPop;
-    //   }
-    // }
-    // try {
-    //   const FrameDataCls = cc.js.getClassByName("FrameData") as any;
-    //   if (FrameDataCls?.FRAME_CONF?.AbPop != null) {
-    //     abPop = Math.floor(Number(FrameDataCls.FRAME_CONF.AbPop)) || abPop;
-    //   }
-    // } catch (_) {}
-    // return passLevel + 1 >= Math.max(1, abPop);
+    const passLevel = GameUtils.getPassLevel();
+    let abPop = 3;
+    const conf = LoadWord.instance.getWbConfigData() as any;
+    if (conf) {
+      const v = conf.AbPop ?? conf.basicConfig?.FRAME_CONF?.AbPop ?? conf.partyplay?.FRAME_CONF?.AbPop;
+      if (v != null) {
+        abPop = Math.floor(Number(v)) || abPop;
+      }
+    }
+    try {
+      const FrameDataCls = cc.js.getClassByName("FrameData") as any;
+      if (FrameDataCls?.FRAME_CONF?.AbPop != null) {
+        abPop = Math.floor(Number(FrameDataCls.FRAME_CONF.AbPop)) || abPop;
+      }
+    } catch (_) {}
+    return passLevel + 1 >= Math.max(1, abPop);
   }
 
   /**
@@ -965,7 +970,7 @@ export default class GameMain extends cc.Component {
   /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
   dealMergeReward(levelCleared = false) {
     console.log("dealMergeReward。。。。。。。。。。。。。。。。。。。", levelCleared);
-    return;
+    // return;
     if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
       return;
     }
@@ -1458,10 +1463,10 @@ export default class GameMain extends cc.Component {
     }
     if (n) {
       this.teachGuideNode.active = true;
-      // LoadWord.FrameSDK.logGameEvent('sdymjmatch_game_new', {
-      //   object_action: 'show',
-      //   object_name: 'new_7',
-      // }, true);
+      LoadWord.FrameSDK.logGameEvent('sdymjmatch_game_new', {
+        object_action: 'show',
+        object_name: 'new_7',
+      }, true);
       this.teachGuideNode.getChildByPath("gborder/tip").getComponent(cc.RichText).string = r;
       EventMgr.trigger(GameEventType.TEACHING_OPERATE_TIP, n);
     }
@@ -1483,17 +1488,17 @@ export default class GameMain extends cc.Component {
   }
 
   private isRdmLevelPanelOpen(): boolean {
-    // const sdk = LoadWord.FrameSDK;
-    // const panel = sdk?.Panel;
-    // if (!panel || !cc.isValid(panel)) {
-    //   return false;
-    // }
-    // for (let i = 0; i < panel.childrenCount; i++) {
-    //   const child = panel.children[i];
-    //   if (child && cc.isValid(child) && child.activeInHierarchy && child.getComponent("RDM_Level")) {
-    //     return true;
-    //   }
-    // }
+    const sdk = LoadWord.FrameSDK;
+    const panel = sdk?.Panel;
+    if (!panel || !cc.isValid(panel)) {
+      return false;
+    }
+    for (let i = 0; i < panel.childrenCount; i++) {
+      const child = panel.children[i];
+      if (child && cc.isValid(child) && child.activeInHierarchy && child.getComponent("RDM_Level")) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -1502,49 +1507,49 @@ export default class GameMain extends cc.Component {
    * 与 shouldDefer 解耦，避免 newHand 停留过久导致 startGame 未挂上 defer 后流程卡死。
    */
   beginNewHandTutorialBeforeBanners() {
-    // const loadWord = LoadWord.instance;
-    // const FrameDataCls: any = cc.js.getClassByName("FrameData");
-    // const getSaveGuideInedx = () => FrameDataCls?.saveData?.guideInedx ?? 0;
+    const loadWord = LoadWord.instance;
+    const FrameDataCls: any = cc.js.getClassByName("FrameData");
+    const getSaveGuideInedx = () => FrameDataCls?.saveData?.guideInedx ?? 0;
 
-    // if (!loadWord) {
-    //   return;
-    // }
+    if (!loadWord) {
+      return;
+    }
 
-    // if (getSaveGuideInedx() >= 3 && !this.isRdmLevelPanelOpen()) {
-    //   loadWord.completeNewHandRewardFlow(true);
-    //   return;
-    // }
+    if (getSaveGuideInedx() >= 3 && !this.isRdmLevelPanelOpen()) {
+      loadWord.completeNewHandRewardFlow(true);
+      return;
+    }
 
-    // loadWord.markAwaitNewHandRewardFlow();
-    // this._newHandTutorialFinishHandled = false;
-    // this._awaitNewHandTutorialComplete = true;
-    // GameUtils.logLevelProgress("beginNewHandTutorialBeforeBanners");
+    loadWord.markAwaitNewHandRewardFlow();
+    this._newHandTutorialFinishHandled = false;
+    this._awaitNewHandTutorialComplete = true;
+    GameUtils.logLevelProgress("beginNewHandTutorialBeforeBanners");
 
-    // const waitRdmTutorialDone = () => {
-    //   cc.director.once("NEW_HAND_RDM_TUTORIAL_DONE", () => {
-    //     this.finishNewHandTutorialBeforeBanners();
-    //   }, this);
-    // };
+    const waitRdmTutorialDone = () => {
+      cc.director.once("NEW_HAND_RDM_TUTORIAL_DONE", () => {
+        this.finishNewHandTutorialBeforeBanners();
+      }, this);
+    };
 
-    // if (this.isRdmLevelPanelOpen()) {
-    //   waitRdmTutorialDone();
-    //   return;
-    // }
+    if (this.isRdmLevelPanelOpen()) {
+      waitRdmTutorialDone();
+      return;
+    }
 
-    // const FrameCls: any = cc.js.getClassByName("Frame");
-    // const frameIns = FrameCls?.ins;
+    const FrameCls: any = cc.js.getClassByName("Frame");
+    const frameIns = FrameCls?.ins;
 
-    // if (getSaveGuideInedx() > 0) {
-    //   waitRdmTutorialDone();
-    //   return;
-    // }
+    if (getSaveGuideInedx() > 0) {
+      waitRdmTutorialDone();
+      return;
+    }
 
-    // if (frameIns?.guide?.active) {
-    //   cc.director.once("NEW_HAND_YELLOW_GUIDE_DONE", waitRdmTutorialDone, this);
-    //   return;
-    // }
+    if (frameIns?.guide?.active) {
+      cc.director.once("NEW_HAND_YELLOW_GUIDE_DONE", waitRdmTutorialDone, this);
+      return;
+    }
 
-    // waitRdmTutorialDone();
+    waitRdmTutorialDone();
   }
 
   /** 教程结束后恢复 defer 进关链；defer 未挂上时（竞态）用缓存 runner 或重走进关兜底 */
@@ -1586,9 +1591,9 @@ export default class GameMain extends cc.Component {
     if (this._mahjongSpawnAllowed) {
       return;
     }
-    // const loadWord = LoadWord.instance;
-    // loadWord?.markAwaitNewHandRewardFlow();
-    // loadWord?.completeNewHandRewardFlow(true);
+    const loadWord = LoadWord.instance;
+    loadWord?.markAwaitNewHandRewardFlow();
+    loadWord?.completeNewHandRewardFlow(true);
   }
   showFreezeTip() {
     var e = this;
@@ -1640,32 +1645,32 @@ export default class GameMain extends cc.Component {
     // this.scheduleOnce(function () {
     //   t.removeFromParent(true);
     // }, 2);
-    await EngineUtil.sleep(200);
+    await EngineUtil.sleep(500);
 
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "settleMentPage",
-      data: e,
-      option: {
-        inQueue: true
-      }
-    });
-
-    // this.prepareMahjongPassSettlement();
-    // const sdk = LoadWord.FrameSDK;
-    // if (sdk && typeof sdk.setPostLevelSettlementActive === "function") {
-    //   sdk.setPostLevelSettlementActive(true);
-    // }
-    // sdk.openWindow("Panel_Award_6", {
-    //   closeCB: () => {
-    //     if (sdk && typeof sdk.setPostLevelSettlementActive === "function") {
-    //       sdk.setPostLevelSettlementActive(false);
-    //     }
-    //     GameUtils.checkPopUp(true, () => {
-    //       e.cb && e.cb();
-    //     });
-    //   },
-    //   mahjongSettlement: true
+    // EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //   name: "settleMentPage",
+    //   data: e,
+    //   option: {
+    //     inQueue: true
+    //   }
     // });
+
+    this.prepareMahjongPassSettlement();
+    const sdk = LoadWord.FrameSDK;
+    if (sdk && typeof sdk.setPostLevelSettlementActive === "function") {
+      sdk.setPostLevelSettlementActive(true);
+    }
+    sdk.openWindow("Panel_Award_6", {
+      closeCB: () => {
+        if (sdk && typeof sdk.setPostLevelSettlementActive === "function") {
+          sdk.setPostLevelSettlementActive(false);
+        }
+        GameUtils.checkPopUp(true, () => {
+          e.cb && e.cb();
+        });
+      },
+      mahjongSettlement: true
+    });
     return;
   }
   updateComboCount() {

@@ -23,7 +23,7 @@ import OfflineService from '../service/OfflineService';
 import LoadProgress, { LoadProgressType } from '../framework/components/LoadProgress';
 import GameSystem from '../system/GameSystem';
 import i18 from '../framework/LanguageMgr';
-// import LoadWord from '../wordframe/LoadWord';
+import LoadWord from '../wordframe/LoadWord';
 import { A } from '../centerio/api';
 import { applyGameLevelPropConfig, GameLevelPropConfig, MainConfig, ServerType } from '../config';
 const {
@@ -120,7 +120,7 @@ export default class loading extends cc.Component {
 
     /** 热重载 / 再次进入 loading 时释放上一轮预加载，避免重复占用 */
     Res.releaseLaunchAssets();
-    // LoadWord.releaseForLoadingRestart();
+    LoadWord.releaseForLoadingRestart();
 
     if ("oppo" == SdkHelper.getChannelName() || "xiaomi" == SdkHelper.getChannelName() || "vivo" == SdkHelper.getChannelName() || "huawei" == SdkHelper.getChannelName() || "honor" == SdkHelper.getChannelName()) {
       this.logo.active = false;

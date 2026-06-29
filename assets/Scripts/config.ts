@@ -28,8 +28,8 @@ export enum GameEnterModel {
 export let gameEnterModel = GameEnterModel.shenheModel;
 
 export const MainConfig = {
-  curServerType: 2,
-  isWhite: true,
+  curServerType: 1,
+  isWhite: false,
   serveUrl: "",
 };
 

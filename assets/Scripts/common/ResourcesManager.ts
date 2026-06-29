@@ -1,6 +1,6 @@
 import EngineUtil from '../framework/EngineUtil';
 import LaunchLoadScheduler from './LaunchLoadScheduler';
-// import LoadWord from '../wordframe/LoadWord';
+import LoadWord from '../wordframe/LoadWord';
 const {
   ccclass,
   property
@@ -189,9 +189,9 @@ export default class ResourcesManager {
       await this.appendPrefabsFromDir("preload/prefabs");
       await LaunchLoadScheduler.yieldFrames(useNative ? 1 : 0);
 
-      // if (preloadNewHand) {
-      //   await LoadWord.preloadNewHand();
-      // }
+      if (preloadNewHand) {
+        await LoadWord.preloadNewHand();
+      }
       await LaunchLoadScheduler.yieldFrames(useNative ? 1 : 0);
 
       await this.loadSpriteDir("preload/bg");

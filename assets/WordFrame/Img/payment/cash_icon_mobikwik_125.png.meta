@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "03938557-fd10-452e-a1a1-dd99dd8316ab",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 188,
+  "height": 88,
+  "platformSettings": {},
+  "subMetas": {
+    "cash_icon_mobikwik_125": {
+      "ver": "1.0.6",
+      "uuid": "5f7ba200-3774-48b0-b1ec-5f46d7b9f51b",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "03938557-fd10-452e-a1a1-dd99dd8316ab",
+      "trimType": "custom",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 188,
+      "height": 88,
+      "rawWidth": 188,
+      "rawHeight": 88,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

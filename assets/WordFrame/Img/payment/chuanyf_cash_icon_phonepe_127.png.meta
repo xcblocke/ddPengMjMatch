@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "ab020f5f-5197-433d-a5f2-66c5cc01c723",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 188,
+  "height": 88,
+  "platformSettings": {},
+  "subMetas": {
+    "chuanyf_cash_icon_phonepe_127": {
+      "ver": "1.0.6",
+      "uuid": "8bab3415-a30b-4417-a1f2-7405dc748d43",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "ab020f5f-5197-433d-a5f2-66c5cc01c723",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 184,
+      "height": 84,
+      "rawWidth": 188,
+      "rawHeight": 88,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

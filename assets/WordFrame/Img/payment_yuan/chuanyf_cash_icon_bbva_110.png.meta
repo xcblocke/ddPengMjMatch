@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "7b49be1b-4f68-4322-98cb-3dd3a53aa630",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 118,
+  "height": 118,
+  "platformSettings": {},
+  "subMetas": {
+    "chuanyf_cash_icon_bbva_110": {
+      "ver": "1.0.6",
+      "uuid": "41e6e64b-c49f-4dd0-b9f1-ddee630b059b",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "7b49be1b-4f68-4322-98cb-3dd3a53aa630",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 114,
+      "height": 114,
+      "rawWidth": 118,
+      "rawHeight": 118,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

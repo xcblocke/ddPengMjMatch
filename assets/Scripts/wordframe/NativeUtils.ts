@@ -53,7 +53,7 @@ export class NativeUtils {
 
   /**自己用的标记 */
   static get isFlag() {
-    // console.log("isFlag 11。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。", A.l2);
+    console.log("isFlag 11。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。", A.l2);
     // return true;
     // return false;
     return A.l2;

@@ -65,16 +65,16 @@ export default class SetUpPage extends BasePage {
 
 
   onClickSupportBtn() {
-    // AudioManager.getInstance().playMusic("click");
-    // setTimeout(() => {
-    //   LoadWord.FrameSDK.openFeedbackWindow();
-    // }, 280);
+    AudioManager.getInstance().playMusic("click");
+    setTimeout(() => {
+      LoadWord.FrameSDK.openFeedbackWindow();
+    }, 280);
     this.onClose();
   }
 
-  // onClickTitlele() {
-  //   LoadWord.FrameSDK.openGMWindow();
-  // }
+  onClickTitlele() {
+    LoadWord.FrameSDK.openGMWindow();
+  }
 
 
   onDisable() {
