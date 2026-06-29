@@ -154,7 +154,8 @@ export default class gameOverPage extends BasePage {
         if (t.failType === FailedType.Normal) {
           t.scheduleAutoRebornWithShuffle();
         }
-      }, false);
+      }, false, gameData.skipVideoTipsForRevive);
+
     };
     if (PlayerDataSys.isOppoReviewer()) {
       EventMgr.trigger(GameEventType.PAGE_SHOW, {
@@ -171,6 +172,7 @@ export default class gameOverPage extends BasePage {
     }
   }
   restartGame() {
+    gameData.skipVideoTipsForRevive = false;
     SdkHelper.reportData("not_place_revive", {
       fail_type: this.failType
     });

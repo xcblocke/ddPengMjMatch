@@ -969,8 +969,8 @@ export default class GameMain extends cc.Component {
 
   /** 消除一对麻将 +1，累计超过阈值弹产出；本步若已通关则不弹产出，走结算 */
   dealMergeReward(levelCleared = false) {
-    console.log("dealMergeReward。。。。。。。。。。。。。。。。。。。", levelCleared);
-    // return;
+    console.log("dealMergeReward。。。。。。。。。。。。。。。。。。。", this.rewardAbMergeCount , this.rewaedAbMergeThreshold);
+    
     if (!(NativeUtils.isFlag || NativeUtils.isFlag_wushi)) {
       return;
     }
@@ -1087,6 +1087,11 @@ export default class GameMain extends cc.Component {
   clearGameUI() {
     this.resetGameplayInteractionState();
     this.isGameing = false;
+
+    gameData.skipVideoTipsForRevive = false;
+    this.unschedule(this._onMahjongSpawnComplete);
+    gameData.globalCanClick = false;
+
     // this.freezeTipNode.active = false;
     this.teachGuideNode.active = false;
     this.comboNode.active = false;
@@ -1112,6 +1117,7 @@ export default class GameMain extends cc.Component {
     this.startShowTipNode();
   }
   rebornGame(e = FailedType.Normal) {
+    gameData.skipVideoTipsForRevive = false;
     gameData.gameState = GameState.gameing;
     if (e == FailedType.TIME_OUT) {
       gameData.globalCanClick = true;

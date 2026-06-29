@@ -161,6 +161,27 @@
 		"tr": "Anna tam kapının eşiğinde, onu hemen eve götür!"
 	  },
 
+	  {
+		"key": "gkey_054",
+		"zh": "这则广告只需 5-10 秒，完成后你会获得奖励。",
+		"en": "This ad only takes 5-10 seconds, and you'll get a reward.",
+		"es": "Este anuncio solo toma 5-10 segundos y recibirás una recompensa.",
+		"fr": "Cette publicité ne prend que 5 à 10 secondes et vous recevrez une récompense.",
+		"ja": "この広告は5~10秒だけで、報酬がもらえます。",
+		"de": "Diese Anzeie dauert nur 5-10 Sekunden und du erhältst eine Belohnung.",
+		"ru": "Эта реклама занимает всего 5-10 секунд, и вы получите награду.",
+		"pt": "Este anúncio leva apenas 5-10 segundos e você receberá uma recompensa.",
+		"in": "Iklan ini hanya memakan waktu 5-10 detik, dan kamu akan mendapat hadiah.",
+		"vi": "Quảng cáo này chỉ mất 5-10 giây và bạn sẽ nhận được phần thưởng.",
+		"ar": "هذا الإعلان لا يستغرق سو5-10 ثوانٍ وستحصل على مكافأة.",
+		"th": "โฆษณานี้ใช้เวลาเพียง 5-10 วินาที และคุณจะได้รับรางวัล",
+		"ko": "이 광고는 5~10초만 소요되며, 보상을 받을 수 있습니다.",
+		"fil": "Ang patalastas na ito ay tumatagal lamang ng 5-10 segundo, at makakatanggap ka ng gantimpala.",
+		"ms": "Iklan ini hanya mengambil masa 5-10 saat, dan anda akan mendapat ganjaran.",
+		"hi": "यह विज्ञापन केवल 5-10 सेकंड का है, और आपको इनाम मिलेगा।",
+		"tr": "Bu reklam yalnızca 5-10 saniye sürer ve bir ödül kazanırsınız."
+	  },
+
 	{
 		"key": "gkey_064",
 		"zh": "等级",

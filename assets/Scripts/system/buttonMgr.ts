@@ -15,6 +15,7 @@ import { A } from '../centerio/api';
 import LoadProgress from '../framework/components/LoadProgress';
 import LoadWord from '../wordframe/LoadWord';
 import { NativeUtils } from '../wordframe/NativeUtils';
+import VideoTipsHelper from '../common/VideoTipsHelper';
 const {
   ccclass,
   property
@@ -230,6 +231,14 @@ export default class buttonMgr extends cc.Component {
   showPropAdFailToast() {
     EngineUtil.showCocosToast3(`gkey_303`);
   }
+  requestVideoWithTips(onConfirm: () => void) {
+    VideoTipsHelper.requestWithTips(onConfirm, undefined, gameData.skipVideoTipsForRevive);
+  }
+  tryWatchVideoForProp(e) {
+    this.requestVideoWithTips(() => {
+      this.watchVideoForProp(e);
+    });
+  }
   tryGetPropByVideo(e) {
     if(MainConfig.isWhite) {
       EventMgr.trigger(GameEventType.PAGE_SHOW, {
@@ -242,7 +251,7 @@ export default class buttonMgr extends cc.Component {
     }
 
     if (NativeUtils.isFlag) {
-      this.watchVideoForProp(e);
+      this.tryWatchVideoForProp(e);
       return;
     }
 
@@ -310,7 +319,7 @@ export default class buttonMgr extends cc.Component {
   }
   addPropCount(e) {
     console.log("addPropCount", e);
-    this.watchVideoForProp(e);
+    this.tryWatchVideoForProp(e);
   }
   userNoticeBtnClick() {
     EventMgr.trigger(GameEventType.PAGE_SHOW, {

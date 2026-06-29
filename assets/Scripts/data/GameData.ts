@@ -98,6 +98,8 @@ export default class GameData {
   extractStatus = 0;
   needLevel = 0;
   isUseFreeze = false;
+  /** 死局复活看视频时跳过首次二级确认弹窗 */
+  skipVideoTipsForRevive = false;
   skinCfg = [];
   coinOutTipsArr = [];
   gold_extract_desc = "";

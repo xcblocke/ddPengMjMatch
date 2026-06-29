@@ -41,6 +41,6 @@ export default class propGetPage extends BasePage {
     var e = this._propType;
     super._hide.call(this);
     var t = buttonMgr.ins;
-    t ? t.watchVideoForProp(e) : console.error("propGetPage: buttonMgr not found");
+    t ? t.tryWatchVideoForProp(e) : console.error("propGetPage: buttonMgr not found");
   }
 }
