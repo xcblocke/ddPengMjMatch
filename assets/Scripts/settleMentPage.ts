@@ -15,6 +15,7 @@ import { gameEnterModel, GameEnterModel, hasTujianUnlockForLevel, levelRewardCoi
 import PageMgr from './view/PageMgr';
 import SetNode2Top from './common/SetNode2Top';
 import GameUtils from './wordframe/GameUtils';
+import { trackCreatorEvent } from './common/GameTrackUtil';
 const {
   ccclass,
   property
@@ -67,6 +68,7 @@ export default class settleMentPage extends BasePage {
     this._coinFlyOnClaim = false;
   }
   _init(e) {
+    trackCreatorEvent(476);
     var t = this;
     this._fadeIn();
    

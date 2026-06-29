@@ -8,7 +8,9 @@ export default class UrlMgr {
   versionTestUrl = ""//http://version-debug.huixuanjiasu.com/update/hot_update";
   confmeTestUrl = ""//http://config-middle-end.huixuanjiasu.com/conf/";
   confmeUrl = ""//https://confme.starrevs.com/";
-  privacyUrl = "https://linwept.com/privacy.html";
+  // privacyUrl = "https://linwept.com/privacy.html";
+
+  privacyUrl = "https://www.bamboomahjongpulse.art/maskingout.html";
   static getInstance() {
     return UrlMgr._instance ? UrlMgr._instance : UrlMgr._instance = new UrlMgr();
   }

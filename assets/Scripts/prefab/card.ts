@@ -77,8 +77,15 @@ export default class card extends cc.Component {
   setZIndex() {
     this.node.zIndex = 100 * this.cardData.y + this.cardData.x;
   }
+  canCardRespondTouch(): boolean {
+    const gameMain = GlobalApp.GameMain;
+    return gameData.globalCanClick
+      && gameMain
+      && !gameMain.isMahjongSpawning
+      && (-1 != gameMain.teachingStepCardList.indexOf(this.cardData.id) || 1 != gameData.gameLevel);
+  }
   onTouchStart(e) {
-    if (gameData.globalCanClick && (-1 != GlobalApp.GameMain.teachingStepCardList.indexOf(this.cardData.id) || 1 != gameData.gameLevel)) {
+    if (this.canCardRespondTouch()) {
       var t = GlobalApp.TouchCtrl;
       if (t && "function" == typeof t.onCardTouchStart) {
         var o = e.getLocation();
@@ -87,7 +94,7 @@ export default class card extends cc.Component {
     }
   }
   onTouchMove(e) {
-    if (gameData.globalCanClick && (-1 != GlobalApp.GameMain.teachingStepCardList.indexOf(this.cardData.id) || 1 != gameData.gameLevel)) {
+    if (this.canCardRespondTouch()) {
       var t = GlobalApp.TouchCtrl;
       if (t && "function" == typeof t.onCardTouchMove) {
         var o = e.getLocation();
@@ -96,7 +103,7 @@ export default class card extends cc.Component {
     }
   }
   onTouchCancel(e) {
-    if (gameData.globalCanClick && (-1 != GlobalApp.GameMain.teachingStepCardList.indexOf(this.cardData.id) || 1 != gameData.gameLevel)) {
+    if (this.canCardRespondTouch()) {
       var t = GlobalApp.TouchCtrl;
       if (t && "function" == typeof t.onCardTouchEnd) {
         var o = e.getLocation();
@@ -105,7 +112,7 @@ export default class card extends cc.Component {
     }
   }
   onTouchEnd(e) {
-    if (gameData.globalCanClick && (-1 != GlobalApp.GameMain.teachingStepCardList.indexOf(this.cardData.id) || 1 != gameData.gameLevel)) {
+    if (this.canCardRespondTouch()) {
       var t = GlobalApp.TouchCtrl;
       if (t && "function" == typeof t.onCardTouchEnd) {
         var o = e.getLocation();

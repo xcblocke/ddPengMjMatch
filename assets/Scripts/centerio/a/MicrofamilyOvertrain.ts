@@ -33,4 +33,17 @@ import { IEventConfigLike } from "./MiddleablePostbar";
  * * 事件名建议使用简短的字母+数字组合，避免多项目关联
  */
 export const PLANIST_MACROCOMBINE: Readonly<IEventConfigLike> = {
+    '470': { S: { n: 470 } },
+    '471': { S: { n: 471 } },
+    '472': { S: { n: 472 } },
+    '473': { S: { n: 473 } },
+    '474': { S: { n: 474 } },
+    '475': { S: { n: 475 } },
+    '476': { S: { n: 476 } },
+    '477': { S: { n: 477 } },
+    '478': { S: { n: 478 } },
+    '479': { S: { n: 479 } },
+    '480': { S: { n: 480 } },
+    '481': { S: { n: 481 } },
+    '482': { S: { n: 482 } },
 };

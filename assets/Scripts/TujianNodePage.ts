@@ -10,7 +10,13 @@ import { gameData } from './data/GameData';
 import SdkHelper from './framework/SdkHelper';
 import cardTujian from './prefab/cardTujian';
 import PageMgr from './view/PageMgr';
-import MainNodePage, { markMainNodePageGuideCompleted } from './MainNodePage';
+import MainNodePage, {
+  isTujianNodePageGuideDone,
+  markMainNodePageTujianStepDone,
+  markTujianNodePageGuideDone,
+} from './MainNodePage';
+import AdaptUIMgr from './framework/AdaptUIMgr';
+import { trackCreatorEvent } from './common/GameTrackUtil';
 const {
   ccclass,
   property
@@ -37,6 +43,9 @@ export default class TujianNodePage extends BasePage {
   @property(cc.Node)
   handNode: cc.Node = null;
 
+  @property(cc.Node)
+  handContainerNode: cc.Node = null;
+
 
   @property(cc.Label)
   tipsLabel: cc.Label = null;
@@ -45,6 +54,7 @@ export default class TujianNodePage extends BasePage {
   _activeUnlockPassed = false;
   _activeUnlockIDs: number[] = [];
   _highlightItemNode: cc.Node = null;
+  _highlightAlignNode: cc.Node = null;
 
   private tipsString = "The mark illustration has disappeared; we need to complete mahjong matching tasks toretrieve it. Let's try to complete the matching tasks now!";
 
@@ -57,6 +67,10 @@ export default class TujianNodePage extends BasePage {
       const tipsWord = this.tipsNode.getChildByName("tipsWord");
       this.tipsLabel = tipsWord ? tipsWord.getComponent(cc.Label) : null;
     }
+    if (!this.handContainerNode) {
+      this.handContainerNode = cc.find("New Node", this.node);
+    }
+    this.ensureGuideLayerOrder();
     this.hideTipsOverlay();
   }
 
@@ -69,6 +83,94 @@ export default class TujianNodePage extends BasePage {
     if (this.tipsLabel) {
       this.tipsLabel.string = this.tipsString;
     }
+    this.scheduleOnce(() => {
+      this.adaptPageLayout();
+      if (isTujianNodePageGuideDone() || this._activeUnlockLevel == null) {
+        this.hideGuideVisuals();
+        return;
+      }
+      this.refreshDi1Overlay();
+      this.initGuide();
+    }, 0);
+  }
+
+  hideGuideVisuals() {
+    this.hideTipsOverlay();
+    const handNode = this.getHandNode();
+    const handContainer = this.getHandContainerNode();
+    if (handNode) {
+      handNode.active = false;
+    }
+    if (handContainer) {
+      handContainer.active = false;
+    }
+    if (this.guideNode) {
+      this.guideNode.active = false;
+    }
+  }
+
+  getViewportSize(): cc.Size {
+    return cc.size(cc.winSize.width, cc.winSize.height);
+  }
+
+  updatePageWidgets(root: cc.Node = this.node) {
+    const widgets = root.getComponentsInChildren(cc.Widget);
+    widgets.forEach((widget) => widget.updateAlignment());
+  }
+
+  adaptPageLayout() {
+    const viewport = this.getViewportSize();
+    const content = (this as any)._content as cc.Node;
+    if (content) {
+      content.setContentSize(viewport);
+    }
+    this.updatePageWidgets();
+  }
+
+  clampTipsToViewport(localPos: cc.Vec2): cc.Vec2 {
+    if (!this.tipsNode) {
+      return localPos;
+    }
+    const halfW = this.tipsNode.width * 0.5;
+    const maxX = cc.winSize.width / 2 - halfW;
+    const minX = -cc.winSize.width / 2 + halfW;
+    localPos.x = cc.misc.clampf(localPos.x, minX, maxX);
+    return localPos;
+  }
+
+  getHighlightAlignNode(itemNode: cc.Node): cc.Node {
+    if (!itemNode) {
+      return null;
+    }
+    const diNow = itemNode.getChildByName("diNow");
+    if (diNow && diNow.active) {
+      return diNow;
+    }
+    const diPass = itemNode.getChildByName("diPass");
+    if (diPass && diPass.active) {
+      return diPass;
+    }
+    const diLock = itemNode.getChildByName("diLock");
+    if (diLock && diLock.active) {
+      return diLock;
+    }
+    return itemNode;
+  }
+
+  updateDi1Position() {
+    if (!this._highlightItemNode || !cc.isValid(this._highlightItemNode) || !this.tipsNode) {
+      return;
+    }
+    const alignNode = (this._highlightAlignNode && cc.isValid(this._highlightAlignNode))
+      ? this._highlightAlignNode
+      : this.getHighlightAlignNode(this._highlightItemNode);
+    if (!alignNode) {
+      return;
+    }
+    const worldPos = alignNode.convertToWorldSpaceAR(cc.v2(0, 0));
+    const tipsParent = this.tipsNode.parent || this.node;
+    const localPos = tipsParent.convertToNodeSpaceAR(worldPos);
+    this.tipsNode.setPosition(this.clampTipsToViewport(localPos));
   }
 
   hasPassedTujianUnlockLevel(unlockLevel: number, currentLevel: number): boolean {
@@ -107,12 +209,15 @@ export default class TujianNodePage extends BasePage {
   }
 
   _init(e) {
+    trackCreatorEvent(472);
+    this.adaptPageLayout();
     this._fromFirstMainNodeGuide = !!(e && e.fromFirstMainNodeGuide);
-    const activeEntry = this.resolveActiveUnlockEntry(e);
+    const activeEntry = isTujianNodePageGuideDone() ? null : this.resolveActiveUnlockEntry(e);
     this._activeUnlockLevel = activeEntry ? activeEntry.unlockLevel : null;
     this._activeUnlockPassed = !!(activeEntry && activeEntry.hasPassed);
     this._activeUnlockIDs = activeEntry ? activeEntry.unLockIDs.slice() : [];
     this._highlightItemNode = null;
+    this._highlightAlignNode = null;
     this.hideTipsOverlay();
 
     this.scrollView.content.removeAllChildren();
@@ -151,6 +256,10 @@ export default class TujianNodePage extends BasePage {
 
       if (isActiveUnlockItem) {
         this._highlightItemNode = itemNode;
+        this._highlightAlignNode = this.getHighlightAlignNode(itemNode);
+        if (this._highlightAlignNode) {
+          this._highlightAlignNode.active = false;
+        }
       }
 
       const cardPare = itemNode.getChildByName("cardParent");
@@ -167,25 +276,29 @@ export default class TujianNodePage extends BasePage {
     layout && layout.updateLayout();
 
     if (this.guideNode) {
-      this.guideNode.active = this._activeUnlockLevel != null;
+      this.guideNode.active = !isTujianNodePageGuideDone() && this._activeUnlockLevel != null;
     }
     this.scheduleOnce(() => {
-      if (this._activeUnlockLevel != null) {
-        this.refreshDi1Overlay();
-        this.initGuide();
-      } else {
-        this.hideTipsOverlay();
-        const handNode = this.getHandNode();
-        if (handNode) {
-          handNode.active = false;
-        }
+      this.adaptPageLayout();
+      if (isTujianNodePageGuideDone() || this._activeUnlockLevel == null) {
+        this.hideGuideVisuals();
+        return;
       }
-    }, 0.2);
+      this.refreshDi1Overlay();
+      this.initGuide();
+    }, AdaptUIMgr.isTablet() ? 0.35 : 0.2);
   }
 
   getHandNode(): cc.Node {
     if (this.handNode) {
       return this.handNode;
+    }
+    const handContainer = this.getHandContainerNode();
+    if (handContainer) {
+      const handInContainer = handContainer.getChildByName("hand");
+      if (handInContainer) {
+        return handInContainer;
+      }
     }
     const guideRoot = this.guideNode || cc.find("GuideNode", this.node);
     if (guideRoot) {
@@ -195,6 +308,32 @@ export default class TujianNodePage extends BasePage {
       }
     }
     return cc.find("hand", this.node);
+  }
+
+  getHandContainerNode(): cc.Node {
+    if (this.handContainerNode) {
+      return this.handContainerNode;
+    }
+    const handNode = this.handNode || cc.find("hand", this.node);
+    if (handNode && handNode.parent) {
+      const parent = handNode.parent;
+      const content = (this as any)._content as cc.Node;
+      if (parent !== this.node && parent !== content) {
+        return parent;
+      }
+    }
+    return cc.find("New Node", this.node);
+  }
+
+  getOverlayParent(): cc.Node {
+    const content = (this as any)._content as cc.Node;
+    if (this.guideNode && this.guideNode.parent) {
+      return this.guideNode.parent;
+    }
+    if (this.tipsNode && this.tipsNode.parent) {
+      return this.tipsNode.parent;
+    }
+    return content || this.node;
   }
 
   getBackBtnNode(): cc.Node {
@@ -235,12 +374,13 @@ export default class TujianNodePage extends BasePage {
 
     const overlay = maskNode.children[0];
     if (overlay) {
+      const viewport = this.getViewportSize();
       const widget = overlay.getComponent(cc.Widget);
       if (widget) {
         widget.enabled = false;
       }
       overlay.setPosition(-localPos.x, -localPos.y);
-      overlay.setContentSize(guideRoot.width || cc.winSize.width, guideRoot.height || cc.winSize.height);
+      overlay.setContentSize(viewport.width, viewport.height);
     }
   }
 
@@ -264,20 +404,31 @@ export default class TujianNodePage extends BasePage {
   }
 
   ensureGuideLayerOrder() {
-    const handNode = this.getHandNode();
-    const overlayParent = (handNode && handNode.parent) || (this.tipsNode && this.tipsNode.parent) || (this.guideNode && this.guideNode.parent);
+    const overlayParent = this.getOverlayParent();
     if (!overlayParent) {
       return;
     }
+    const handNode = this.getHandNode();
+    const handContainer = this.getHandContainerNode();
+    const overlayLayers: cc.Node[] = [];
+
     if (this.guideNode && this.guideNode.parent === overlayParent) {
-      this.guideNode.setSiblingIndex(Math.max(0, overlayParent.childrenCount - 3));
+      overlayLayers.push(this.guideNode);
     }
-    if (this.tipsNode && this.tipsNode.active && this.tipsNode.parent === overlayParent) {
-      this.tipsNode.setSiblingIndex(Math.max(0, overlayParent.childrenCount - 2));
+    if (this.tipsNode && this.tipsNode.parent === overlayParent) {
+      overlayLayers.push(this.tipsNode);
+    }
+    if (handContainer && handContainer.parent === overlayParent) {
+      overlayLayers.push(handContainer);
     }
     if (handNode && handNode.parent === overlayParent) {
-      handNode.setSiblingIndex(overlayParent.childrenCount - 1);
+      overlayLayers.push(handNode);
     }
+
+    const baseIndex = overlayParent.childrenCount - overlayLayers.length;
+    overlayLayers.forEach((node, index) => {
+      node.setSiblingIndex(Math.max(0, baseIndex + index));
+    });
   }
 
   playGuideAnim(handNode: cc.Node) {
@@ -297,10 +448,10 @@ export default class TujianNodePage extends BasePage {
     if (tipsWord) {
       tipsWord.active = false;
     }
-    if (unLockNode) {
-      unLockNode.removeAllChildren();
-      unLockNode.active = false;
-    }
+    // if (unLockNode) {
+    //   unLockNode.removeAllChildren();
+    //   unLockNode.active = false;
+    // }
     this.tipsNode.active = false;
   }
 
@@ -310,29 +461,31 @@ export default class TujianNodePage extends BasePage {
     }
     const tipsWord = this.tipsNode.getChildByName("tipsWord");
     const unLockNode = this.tipsNode.getChildByName("unLockNode");
+
+    if (unLockNode) {
+      unLockNode.active = true;
+      unLockNode.removeAllChildren();
+      this._activeUnlockIDs.forEach((id) => {
+        const cardNode = cc.instantiate(this.cardTujianPrefab);
+        cardNode.parent = unLockNode;
+        cardNode.getComponent(cardTujian).init({
+          type: id,
+        });
+      });
+      const layout = unLockNode.getComponent(cc.Layout);
+      layout && layout.updateLayout();
+    }
+
     if (this._activeUnlockPassed) {
       if (tipsWord) {
         tipsWord.active = false;
       }
-      if (unLockNode) {
-        unLockNode.active = true;
-        unLockNode.removeAllChildren();
-        this._activeUnlockIDs.forEach((id) => {
-          const cardNode = cc.instantiate(this.cardTujianPrefab);
-          cardNode.parent = unLockNode;
-          cardNode.getComponent(cardTujian).init({
-            type: id,
-          });
-        });
-        const layout = unLockNode.getComponent(cc.Layout);
-        layout && layout.updateLayout();
-      }
       return;
     }
-    if (unLockNode) {
-      unLockNode.removeAllChildren();
-      unLockNode.active = false;
-    }
+    // if (unLockNode) {
+    //   unLockNode.removeAllChildren();
+    //   unLockNode.active = false;
+    // }
     if (tipsWord) {
       tipsWord.active = true;
       const label = tipsWord.getComponent(cc.Label);
@@ -345,7 +498,7 @@ export default class TujianNodePage extends BasePage {
     }
   }
 
-  scrollToHighlightItem() {
+  scrollToHighlightItem(instant = true) {
     if (!this._highlightItemNode || !this.scrollView) {
       return;
     }
@@ -355,11 +508,25 @@ export default class TujianNodePage extends BasePage {
 
     const index = content.children.indexOf(this._highlightItemNode);
     const total = content.children.length;
-    if (index < 0 || total <= 1) {
+    if (index < 0) {
+      return;
+    }
+    if (total <= 1) {
       return;
     }
     const percent = 1 - index / (total - 1);
-    this.scrollView.scrollToPercentVertical(percent, 0.2);
+    this.scrollView.scrollToPercentVertical(percent, instant ? 0 : 0.2);
+  }
+
+  scheduleDi1PositionUpdate() {
+    this.unschedule(this.updateDi1Position);
+    this.scheduleOnce(() => {
+      this.updateDi1Position();
+    }, 0);
+    this.scheduleOnce(() => {
+      this.updateDi1Position();
+      this.ensureGuideLayerOrder();
+    }, 0.15);
   }
 
   refreshDi1Overlay() {
@@ -367,21 +534,15 @@ export default class TujianNodePage extends BasePage {
       this.hideTipsOverlay();
       return;
     }
-    this.scrollToHighlightItem();
+    this.scrollToHighlightItem(true);
     this.refreshDi1Content();
-    const worldPos = this._highlightItemNode.convertToWorldSpaceAR(cc.v2(0, 0));
-    const tipsParent = this.tipsNode.parent || this.node;
-    this.tipsNode.setPosition(tipsParent.convertToNodeSpaceAR(worldPos));
     this.tipsNode.active = true;
-    const overlayParent = this.tipsNode.parent;
-    if (overlayParent) {
-      this.tipsNode.setSiblingIndex(overlayParent.childrenCount - 1);
-    }
+    this.scheduleDi1PositionUpdate();
     this.ensureGuideLayerOrder();
   }
 
   initGuide() {
-    if (this._activeUnlockLevel == null) {
+    if (isTujianNodePageGuideDone() || this._activeUnlockLevel == null) {
       return;
     }
     const backNode = this.getBackBtnNode();
@@ -393,6 +554,10 @@ export default class TujianNodePage extends BasePage {
       this.alignGuideHand(backNode);
     }
     const handNode = this.getHandNode();
+    const handContainer = this.getHandContainerNode();
+    if (handContainer) {
+      handContainer.active = true;
+    }
     if (handNode) {
       handNode.active = true;
       this.playGuideAnim(handNode);
@@ -401,18 +566,26 @@ export default class TujianNodePage extends BasePage {
   }
 
   onClickCloseBtn() {
+    const hadTutorial = !isTujianNodePageGuideDone() && this._activeUnlockLevel != null;
     const handNode = this.getHandNode();
+    const handContainer = this.getHandContainerNode();
     if (handNode) {
       cc.Tween.stopAllByTarget(handNode);
       handNode.active = false;
     }
+    if (handContainer) {
+      handContainer.active = false;
+    }
     if (this.guideNode) {
       this.guideNode.active = false;
     }
-    this.hideTipsOverlay();
+    // this.hideTipsOverlay();
     AudioManager.getInstance().playMusic("click");
+    if (hadTutorial) {
+      markTujianNodePageGuideDone();
+    }
     if (this._fromFirstMainNodeGuide) {
-      markMainNodePageGuideCompleted();
+      markMainNodePageTujianStepDone();
       const mainPageCache = PageMgr.getPage("MainNodePage");
       const mainPageNode = mainPageCache && mainPageCache.node;
       if (mainPageNode && mainPageNode.active) {

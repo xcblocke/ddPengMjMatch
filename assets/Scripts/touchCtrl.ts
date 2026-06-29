@@ -8,6 +8,7 @@ import GlobalApp from './common/GlobalApp';
 import { GuideEnum } from './framework/enum/GuideConfig';
 import SdkHelper from './framework/SdkHelper';
 import { FailedType } from './framework/enum/AllEnum';
+import { trackCreatorEvent } from './common/GameTrackUtil';
 const {
   ccclass
 } = cc._decorator;
@@ -25,7 +26,7 @@ export default class touchCtrl extends cc.Component {
     this._gameMain = e;
   }
   onCardTouchStart(e, t) {
-    if (this._gameMain && gameData.globalCanClick) {
+    if (this._gameMain && gameData.globalCanClick && !this._gameMain.isMahjongSpawning) {
       this._touchCard = e;
       this._isDragging = false;
       this._dragStartPos = t ? t.clone() : null;
@@ -37,7 +38,7 @@ export default class touchCtrl extends cc.Component {
   }
   onCardTouchMove(e, t) {
     var o = this;
-    if (this._gameMain && this._touchCard && this._touchCard === e && this._dragStartPos) {
+    if (this._gameMain && this._touchCard && this._touchCard === e && this._dragStartPos && !this._gameMain.isMahjongSpawning) {
       var n = t.sub(this._dragStartPos);
       if (!(!this._isDragging && Math.abs(n.x) < 15 && Math.abs(n.y) < 15)) {
         this._isDragging || (this._isDragging = true);
@@ -307,10 +308,17 @@ export default class touchCtrl extends cc.Component {
       v._shouldTriggerExtraEliminate(e, t) || v._onAfterEliminateCheck();
     }, 0.1);
     if (1 == gameData.gameLevel) {
+      const completedStep = GlobalApp.GameMain._teachingStep;
+      if (completedStep > 0) {
+        trackCreatorEvent(474, completedStep);
+      }
       GlobalApp.GameMain.hideTeachingGuide();
       this.scheduleOnce(function () {
         GlobalApp.GameMain.showNextTeachingStep();
       }, 0.5);
+    }
+    if (o) {
+      trackCreatorEvent(475, `${e.cardData.type},${t.cardData.type}`);
     }
     SdkHelper.reportData("xc_card");
     console.log("card", this._gameMain.cardGrid);
@@ -504,9 +512,12 @@ export default class touchCtrl extends cc.Component {
     return null;
   }
   _onAfterEliminateCheck() {
+    if (gameData.gameState !== GameState.gameing) {
+      return;
+    }
     var e = this.hasAnyEliminablePair();
     console.log("hasMore", e);
-    if (!e && gameData.gameState == GameState.gameing) {
+    if (!e) {
       console.log("无牌可消");
       this._gameMain.gameOver({
         type: FailedType.Normal
@@ -716,6 +727,12 @@ export default class touchCtrl extends cc.Component {
     this._isDragging = false;
     this._lockedDragAxis = null;
     this._dragGroup = [];
+  }
+  resetInteractionState() {
+    this._resetTouchState();
+    this._pendingEliminateChoice = [];
+    this._pendingEliminateChoiceCard = null;
+    this.clearOperationAxisRects();
   }
   findEliminablePairsAtVirtual(e, t, o) {
     for (var n = this, a = e.cardData.type, i = e.cardData.y, r = e.cardData.x, c = [], s = [], l = r, u = r, p = r - 1; p >= 0 && (_ = this.getCardAt(i, p)); p--) l = p;

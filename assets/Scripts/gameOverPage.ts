@@ -25,7 +25,10 @@ export default class gameOverPage extends BasePage {
   failType = FailedType.Normal;
   curIndex = 0;
   nowIndex = 0;
+  _autoRebornScheduled = false;
   _onHide() {
+    this._autoRebornScheduled = false;
+    this.unscheduleAllCallbacks();
     super._onHide.call(this);
   }
   _onShow() {
@@ -74,10 +77,31 @@ export default class gameOverPage extends BasePage {
     //   console.log("count", n, t);
     // }
     this.scheduleOnce(() => {
-      this.openVideo();
+      if (!cc.isValid(this.node)) {
+        return;
+      }
+      if (this.failType === FailedType.TIME_OUT) {
+        this.openVideo();
+        return;
+      }
+      // 无牌可消：展示约 1.5s 后自动洗牌
+      this.scheduleAutoRebornWithShuffle(0);
     }, 1.5);
     // this.showNextPage();
     return;
+  }
+
+  scheduleAutoRebornWithShuffle(delay = 0) {
+    if (this._autoRebornScheduled) {
+      return;
+    }
+    this._autoRebornScheduled = true;
+    this.scheduleOnce(() => {
+      if (!cc.isValid(this.node)) {
+        return;
+      }
+      this.close();
+    }, delay);
   }
   showNextPage() {
     var e = this;
@@ -127,6 +151,9 @@ export default class gameOverPage extends BasePage {
           force_type: 0,
           is_over: false
         }).then(function () {});
+        if (t.failType === FailedType.Normal) {
+          t.scheduleAutoRebornWithShuffle();
+        }
       }, false);
     };
     if (PlayerDataSys.isOppoReviewer()) {

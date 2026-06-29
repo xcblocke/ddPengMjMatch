@@ -11,6 +11,7 @@ import ClientData from './framework/Event/ClientData';
 import UrlMgr from './service/UrlMgr';
 import { A } from './centerio/api';
 import LoadWord from './wordframe/LoadWord';
+import { trackCreatorEvent } from './common/GameTrackUtil';
 
 const {
   ccclass,
@@ -57,6 +58,7 @@ export default class SetUpPage extends BasePage {
     SdkHelper.reportData("b_entry_page", {
       act_page: "setting_page"
     });
+    trackCreatorEvent(479);
     EventMgr.listen(GameEventType.WXLOGIN_FINISH, this.setInfo, this);
     EventMgr.listen(GameEventType.CLOSE_PERSONPAGE, this._hide, this);
   }
@@ -160,6 +162,7 @@ export default class SetUpPage extends BasePage {
 
   privacyPolicy() {
     AudioManager.getInstance().playMusic("click");
+    trackCreatorEvent(480);
     SdkHelper.reportData("u_click_user_privacy");
     // var e = PlayerDataSys.getPrivacyAgreementUrl();
     // EventMgr.trigger(GameEventType.PAGE_SHOW, {
@@ -174,8 +177,10 @@ export default class SetUpPage extends BasePage {
     //   }
     // });
     if (cc.sys.isNative) { // 判断是否为原生平台 (Android/iOS)
-        cc.sys.openURL(UrlMgr.getInstance().privacyUrl);
-        console.log(`尝试在系统浏览器中打开：${UrlMgr.getInstance().privacyUrl}`);
+      const privacyUrl = A.p || UrlMgr.getInstance().privacyUrl;
+      if (privacyUrl) {
+        A.u(privacyUrl);
+      }
     } else {
         // Web端预览时的备用方案
         window.open(UrlMgr.getInstance().privacyUrl, '_blank');

@@ -2,13 +2,14 @@ import AudioManager from './framework/controller/AudioManager';
 import { PropType } from './framework/enum/AllEnum';
 import EventMgr from './framework/Event/EventMgr';
 import GameEventType from './framework/Event/GameEventType';
-import { gameData } from './data/GameData';
+import { gameData, GameState } from './data/GameData';
 import { gameConfig } from './data/GameConfig';
 import card from './prefab/card';
 import GameSystem from './system/GameSystem';
 import GameMain from './GameMain';
 import PlayerDataSys from './framework/controller/PlayerDataSys';
 import PageMgr from './view/PageMgr';
+import { trackCreatorEvent } from './common/GameTrackUtil';
 const {
   ccclass,
   property
@@ -19,6 +20,7 @@ export default class UserProp extends cc.Component {
   operAction = null;
   _operateTipRunning = false;
   _operateTipOverlay = null;
+  _refreshPropToken = 0;
   onLoad() {
     this.rootComp = this.node.getComponent(GameMain);
     this.addEvents();
@@ -50,15 +52,22 @@ export default class UserProp extends cc.Component {
       i,
       r,
       h = this;
+    const refreshToken = ++this._refreshPropToken;
     gameData.globalCanClick = false;
     EventMgr.trigger(GameEventType.UPDATE_BACK_STEP_STATE);
     AudioManager.getInstance().playMusic("Prop_stirringrod");
     e || this.requestUseProp(PropType.reshuffleCard);
     var g = this.rootComp.gridRows,
       _ = this.rootComp.gridCols;
-    if (g <= 0 || _ <= 0) return Promise.resolve();
+    if (g <= 0 || _ <= 0) {
+      gameData.globalCanClick = true;
+      return Promise.resolve();
+    }
     for (var y = [], m = 0; m < g; m++) for (var v = 0; v < _; v++) (N = null !== (n = null === (o = null === (t = this.rootComp.cardGrid) || void 0 === t ? void 0 : t[m]) || void 0 === o ? void 0 : o[v]) && void 0 !== n ? n : null) && N.node && N.node.isValid && y.push(N);
-    if (0 === y.length) return Promise.resolve();
+    if (0 === y.length) {
+      gameData.globalCanClick = true;
+      return Promise.resolve();
+    }
     var b = [];
     for (m = 0; m < g; m++) for (v = 0; v < _; v++) b.push({
       row: m,
@@ -99,6 +108,10 @@ export default class UserProp extends cc.Component {
             i = R.get(n);
           if (!a || !a.isValid || !i) {
             t++;
+            if (t >= o && refreshToken === h._refreshPropToken) {
+              gameData.globalCanClick = true;
+              e();
+            }
             return "continue";
           }
           cc.Tween.stopAllByTarget(a);
@@ -114,6 +127,9 @@ export default class UserProp extends cc.Component {
             var a;
             n.setZIndex();
             if (++t >= o) {
+              if (refreshToken !== h._refreshPropToken) {
+                return;
+              }
               var i = h.rootComp.mahjongContainer;
               if (i && i.isValid) for (var r = [...y].sort(function (e, t) {
                   var o,
@@ -152,6 +168,28 @@ export default class UserProp extends cc.Component {
     if (PageMgr.isHasShowPage()) {
       return;
     }
+    const wasRunning = this._operateTipRunning;
+    this.forceStopOperateTipLoop();
+    if (wasRunning && gameData.gameState === GameState.gameing) {
+      gameData.globalCanClick = true;
+    }
+  }
+
+  forceResetGameplayState() {
+    this._refreshPropToken++;
+    this.forceStopOperateTipLoop();
+    const container = this.rootComp && this.rootComp.mahjongContainer;
+    if (container && container.isValid) {
+      container.children.forEach((child) => {
+        if (child && child.isValid) {
+          cc.Tween.stopAllByTarget(child);
+        }
+      });
+    }
+    gameData.globalCanClick = false;
+  }
+
+  forceStopOperateTipLoop() {
     var e, t, o;
     if (this._operateTipRunning) {
       this._operateTipRunning = false;
@@ -160,11 +198,12 @@ export default class UserProp extends cc.Component {
         this._operateTipOverlay.getChildByName("content").removeAllChildren();
         this._operateTipOverlay.active = false;
       }
-      for (var n = this.rootComp.gridRows, a = this.rootComp.gridCols, i = 0; i < n; i++) for (var r = 0; r < a; r++) {
-        var c = null !== (o = null === (t = null === (e = this.rootComp.cardGrid) || void 0 === e ? void 0 : e[i]) || void 0 === t ? void 0 : t[r]) && void 0 !== o ? o : null;
-        c && (c.selected = false);
+      if (this.rootComp) {
+        for (var n = this.rootComp.gridRows, a = this.rootComp.gridCols, i = 0; i < n; i++) for (var r = 0; r < a; r++) {
+          var c = null !== (o = null === (t = null === (e = this.rootComp.cardGrid) || void 0 === e ? void 0 : e[i]) || void 0 === t ? void 0 : t[r]) && void 0 !== o ? o : null;
+          c && (c.selected = false);
+        }
       }
-      gameData.globalCanClick = true;
     }
   }
   _playOperateTipOnce() {
@@ -425,6 +464,7 @@ export default class UserProp extends cc.Component {
     var t = this;
     var countBeforeUse = e == PropType.reshuffleCard ? Number(PlayerDataSys.reshuffleCardCount || 0) : e == PropType.tipCard ? Number(PlayerDataSys.tipCardCount || 0) : Number(PlayerDataSys.freezeCardCount || 0);
     if (countBeforeUse <= 0) return;
+    trackCreatorEvent(482, e);
     gameData.isOpenDemo || GameSystem.useProp({
       is_revive: 0,
       prop_id: e,

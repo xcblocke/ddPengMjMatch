@@ -18,6 +18,7 @@ import PageMgr from './view/PageMgr';
 import AdSchedule from './common/AdSchedule';
 import card from './prefab/card';
 import touchCtrl from './touchCtrl';
+import { trackCreatorEvent } from './common/GameTrackUtil';
 import combo from './prefab/combo';
 // import countDown from './countDown';
 import { Constants } from './common/Constants';
@@ -119,6 +120,9 @@ export default class GameMain extends cc.Component {
 
   @property(cc.Node)
   pageNode: cc.Node = null;
+
+  @property(cc.Node)
+  backMainNode: cc.Node = null;
   // @property(cc.Prefab)
   // passLevelEffectPrefab: cc.Prefab = null;
   // @property(mainBtnGroupCtrl)
@@ -165,6 +169,12 @@ export default class GameMain extends cc.Component {
   _rewardAbPopupPending = false;
   /** 产出弹窗期间若有 startGame 请求，延后到弹窗 closeCB */
   _deferredStartGameArgs: { restart: boolean; skipAfterLevel: boolean } | null = null;
+  /** 重开/进关递增，丢弃过期的 async init 与 scheduleOnce */
+  _gameSessionId = 0;
+  /** createMahjong 延迟解锁点击的世代号 */
+  _mahjongClickEnableToken = 0;
+  /** 麻将生成/入场期间禁止操作 */
+  _isMahjongSpawning = false;
   get gridRows() {
     return this._gridRows;
   }
@@ -189,14 +199,21 @@ export default class GameMain extends cc.Component {
   get cardScale() {
     return this._cardScale;
   }
+  get isMahjongSpawning() {
+    return this._isMahjongSpawning;
+  }
   start() {
     if(this.pageNode) {
       this.pageNode.active = gameEnterModel === GameEnterModel.shenheModel;
+      this.backMainNode.active = gameEnterModel == GameEnterModel.shenheModel;
     }
     this.playRuchangAni();
     GlobaldataMgr.auth_type && SdkHelper.ysdkLogin();
 
     AudioManager.getInstance().playMusic("bgm", true, true);
+    A.w2(()=>{
+      // AudioManager.getInstance().playMusic("bgm", true, true);
+    });
     GlobalApp.GameMain = this;
     if (MainConfig.curServerType !== ServerType.release) {
       var e = ResourcesManager.getInstance().getPrefab("DebugNode"),
@@ -433,12 +450,17 @@ export default class GameMain extends cc.Component {
       await this.packagingProcess.excuteAfterLevel();
     }
 
+    const levelBeforeStart = Math.floor(Number(gameData.gameLevel) || 1);
     this._stime = new Date().getTime();
     GameSystem.startGame(e ? 1 : 0).then(async function (t) {
       
       const __async_this = o;
       var o_local,
         n = __async_this;
+      const levelAfterStart = Math.floor(Number(gameData.gameLevel) || 1);
+      if (!e && levelAfterStart > levelBeforeStart) {
+        trackCreatorEvent(478, levelAfterStart);
+      }
       // startGame 接口返回后 gameLevel 才更新，此处再重置 AB 产出消除间隔
       n.resetRewardAbMergeCount();
       await __async_this.packagingProcess.excuteBeforeLevel(t.data);
@@ -609,9 +631,26 @@ export default class GameMain extends cc.Component {
   reStartGame() {
     AudioManager.getInstance().playMusic("btntouch");
     SdkHelper.reportData("re_start_game");
+    this._gameSessionId++;
+    this._teachingStep = 0;
+    this.teachingStepCardList = [];
     this.closeGameEvent();
     this.clearGameUI();
     this.startGame(true, true);
+  }
+
+  resetGameplayInteractionState() {
+    this._mahjongClickEnableToken++;
+    this.unscheduleAllCallbacks();
+    this._rewardAbPopupPending = false;
+    this._deferredStartGameArgs = null;
+    const userProp = this.node.getComponent(UserProp);
+    userProp && userProp.forceResetGameplayState();
+    if (this._touchCtrl) {
+      this._touchCtrl.resetInteractionState();
+    }
+    this._isMahjongSpawning = false;
+    gameData.globalCanClick = false;
   }
   showCountTimeNode(e) {
     // this.countTimeNode.getComponent(countDown).showCountTimeNode(e);
@@ -635,11 +674,13 @@ export default class GameMain extends cc.Component {
     // }, 1.5);
   }
   async initGameData(e = false) {
+    const sessionId = this._gameSessionId;
     if (!this._mahjongSpawnAllowed) {
       GameUtils.logLevelProgress("initGameData_blocked_wait_level_banner");
       return;
     }
     GameUtils.logLevelProgress("initGameData", { is_restart: !!e });
+    trackCreatorEvent(473);
     this.bg.zIndex = -1;
     this.map_root.active = true;
     this.isGameing = false;
@@ -649,21 +690,30 @@ export default class GameMain extends cc.Component {
     EventMgr.trigger(GameEventType.UPDATE_WHEEL_BUBBLE);
     EventMgr.trigger(GameEventType.SHOW_BUBBLE);
     EventMgr.trigger(GameEventType.FRESH_GAME_LEVELINFO);
-    1 != gameData.gameLevel && (gameData.globalCanClick = true);
+    gameData.globalCanClick = false;
     this.createMahjong();
     this.initMahjongGridLine();
     this.syncWhiteUnclaimedPropCounts();
     this.updatePorpCount();
     this.updateBackStepBtnState();
     await this.gameInitGuide();
+    if (sessionId !== this._gameSessionId) {
+      return;
+    }
     this.startEarlyAutoHintTimer();
     cc.director.emit("resfLv");
     return;
   }
   createMahjong() {
-    AudioManager.getInstance().playMusic("Mahjong_Start");
+
+   let manhuaNode = this.node.getChildByName("PanelPageView");
+   if(manhuaNode && !manhuaNode.active) {
+      AudioManager.getInstance().playMusic("Mahjong_Start");
+   }
+    
     this.mahjongContainer.removeAllChildren();
     this._cardGrid = [];
+    this._isMahjongSpawning = true;
     gameData.globalCanClick = false;
     var e = gameData.getGridData();
     if (e) {
@@ -713,10 +763,26 @@ export default class GameMain extends cc.Component {
         y.init(e[p][d]);
         this._cardGrid[p][d] = y;
       }
-      this.scheduleOnce(function () {
-        gameData.globalCanClick = true;
-        playHengFNodeBannerOnMahjongSpawnEnd();
-      }, 0.075 * this._gridRows);
+      const clickToken = ++this._mahjongClickEnableToken;
+      const sessionId = this._gameSessionId;
+      const spawnDelay = 0.075 * this._gridRows;
+      this.scheduleOnce(() => {
+        if (clickToken !== this._mahjongClickEnableToken || sessionId !== this._gameSessionId) {
+          return;
+        }
+        playHengFNodeBannerOnMahjongSpawnEnd().then(() => {
+          if (clickToken !== this._mahjongClickEnableToken || sessionId !== this._gameSessionId) {
+            return;
+          }
+          this._isMahjongSpawning = false;
+          if (gameData.gameState === GameState.gameing) {
+            gameData.globalCanClick = true;
+          }
+        });
+      }, spawnDelay);
+    } else {
+      this._isMahjongSpawning = false;
+      gameData.globalCanClick = true;
     }
   }
   initMahjongGridLine() {
@@ -774,7 +840,12 @@ export default class GameMain extends cc.Component {
   }) {
     console.log("gameOver", e.type);
     if (gameData.gameState == GameState.gameing) {
+      if (PageMgr.hasShowPage("gameOverPage")) {
+        return;
+      }
       console.log("gameOver", gameData.gameState);
+      gameData.globalCanClick = false;
+      this._isMahjongSpawning = false;
       gameData.gameState = GameState.gameover;
       this.stopUpdateGameTime();
       EventMgr.trigger(GameEventType.PAGE_SHOW, {
@@ -1009,6 +1080,7 @@ export default class GameMain extends cc.Component {
     }
   }
   clearGameUI() {
+    this.resetGameplayInteractionState();
     this.isGameing = false;
     // this.freezeTipNode.active = false;
     this.teachGuideNode.active = false;
@@ -1019,6 +1091,7 @@ export default class GameMain extends cc.Component {
     this.unschedule(this.showTipNode);
     this.stopEarlyAutoHintTimer();
     this.mahjongContainer.removeAllChildren();
+    gameData.gameState = GameState.gameing;
   }
   checkoutGameOver() {}
   startShowTipNode() {
@@ -1040,7 +1113,7 @@ export default class GameMain extends cc.Component {
       // this.countTimeNode.getComponent(countDown).showCountTimeNode(60);
       EventMgr.trigger(GameEventType.START_COUNT_DOWN);
     } else {
-      gameData.globalCanClick = true;
+      gameData.globalCanClick = false;
       EventMgr.trigger(GameEventType.USER_RESHUFFLE_CARD, true);
     }
     SdkHelper.reportData("reborn", {

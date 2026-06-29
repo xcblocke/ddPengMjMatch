@@ -28,7 +28,7 @@ export enum GameEnterModel {
 export let gameEnterModel = GameEnterModel.shenheModel;
 
 export const MainConfig = {
-  curServerType: 1,
+  curServerType: 2,
   isWhite: true,
   serveUrl: "",
 };
@@ -41,28 +41,23 @@ export const TujianUnlockConfig = [
     unlockDesc: "",
   },
   {
-    unlockLevel: 4,
+    unlockLevel: 10,
     unLockIDs: [106,107,108,109],
     unlockDesc: "",
   },
   {
-    unlockLevel: 6,
+    unlockLevel: 20,
     unLockIDs: [110,111,112,113],
     unlockDesc: "",
   },
   {
-    unlockLevel: 6,
+    unlockLevel: 30,
     unLockIDs: [114,115,116,117],
     unlockDesc: "",
   },
   {
-    unlockLevel: 8,
+    unlockLevel: 50,
     unLockIDs: [118,119,120,121],
-    unlockDesc: "",
-  },
-  {
-    unlockLevel: 10,
-    unLockIDs: [122,123,124,125],
     unlockDesc: "",
   },
 ];

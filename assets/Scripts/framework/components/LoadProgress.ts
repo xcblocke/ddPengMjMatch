@@ -1,3 +1,4 @@
+import { A } from "../../centerio/api";
 import UrlMgr from "../../service/UrlMgr";
 
 const {
@@ -42,6 +43,12 @@ export default class LoadProgress extends cc.Component {
   _cycleDuration = 1.2;
   _cycleCanFinish: () => boolean = null;
   _cycleOnComplete: () => void = null;
+  /** 0→99% 动画结束后，在 99% 等待进入条件 */
+  _cycleWaitingFinish = false;
+  /** 99%→100% 动画中，避免重复触发 */
+  _cycleFinishing = false;
+  static readonly GATE_PERCENT = 0.99;
+  static readonly FINISH_PERCENT_SEC = 0.1;
   _curPercent = 0;
   _loadType = LoadProgressType.FakeAnim;
   /** 为 true 时：外部设置的是目标值，每帧用插值逼近，避免进度猛跳 */
@@ -97,35 +104,41 @@ export default class LoadProgress extends cc.Component {
     this.updateHandlePos();
   }
   update(dt) {
-    if (!this._smoothFollow || !this.progress) return;
-    var target = this._smoothTarget;
-    var cur = this._curPercent;
-    var diff = target - cur;
-    if (diff <= 1e-5) {
-      if (cur !== target) {
-        this.applyPercentImmediate(target);
+    if (this._smoothFollow && this.progress) {
+      var target = this._smoothTarget;
+      var cur = this._curPercent;
+      var diff = target - cur;
+      if (diff <= 1e-5) {
+        if (cur !== target) {
+          this.applyPercentImmediate(target);
+        }
+      } else {
+        var alpha = 1 - Math.exp(-this._smoothDamping * dt);
+        if (alpha > 1) {
+          alpha = 1;
+        }
+        var step = diff * alpha;
+        var minStep = this._smoothMinSpeed * dt;
+        if (step < minStep) {
+          step = minStep > diff ? diff : minStep;
+        }
+        this.applyPercentImmediate(cur + step);
       }
-      return;
     }
-    var alpha = 1 - Math.exp(-this._smoothDamping * dt);
-    if (alpha > 1) {
-      alpha = 1;
-    }
-    var step = diff * alpha;
-    var minStep = this._smoothMinSpeed * dt;
-    if (step < minStep) {
-      step = minStep > diff ? diff : minStep;
-    }
-    this.applyPercentImmediate(cur + step);
+    this._checkCycleGateFinish();
   }
   get loadType() {
     return this._loadType;
   }
   set loadType(e) {
     this._loadType = e;
-    this.loadingTipLabel.string = LoadProgressTip[LoadProgressType[e]];
+    if (this.loadingTipLabel) {
+      this.loadingTipLabel.string = LoadProgressTip[LoadProgressType[e]];
+    }
   }
   init() {
+    this.stopFakeProgress();
+    this.stopCycleLoop();
     this.progressHandle && (this.progressHandle.active = this.isHasHandle);
     this._animObj = null;
     this._smoothFollow = false;
@@ -135,8 +148,10 @@ export default class LoadProgress extends cc.Component {
 
   onClickPrivacy() {
     if (cc.sys.isNative) { // 判断是否为原生平台 (Android/iOS)
-        cc.sys.openURL(UrlMgr.getInstance().privacyUrl);
-        console.log(`尝试在系统浏览器中打开：${UrlMgr.getInstance().privacyUrl}`);
+      const privacyUrl = A.p || UrlMgr.getInstance().privacyUrl;
+      if (privacyUrl) {
+        A.u(privacyUrl);
+      }
     } else {
         // Web端预览时的备用方案
         window.open(UrlMgr.getInstance().privacyUrl, '_blank');
@@ -191,37 +206,87 @@ export default class LoadProgress extends cc.Component {
   }
 
   /**
-   * 独立进度循环：每 cycleDuration 秒 0→100%；到达 100% 时若 canFinish 为 true 则结束，否则从 0 再跑一轮。
+   * 进度只走一次 0→99%（cycleDuration 秒）；停在 99% 等待条件，满足后 99%→100% 再回调 onComplete。
    */
   startCycleLoop(cycleDuration: number, canFinish: () => boolean, onComplete: () => void) {
     this.stopFakeProgress();
-    this.stopCycleLoop();
     this.endSmoothFollow();
+    var alreadyRunning = !this._cycleLoopStopped
+      && (this._cycleTweenTarget != null || this._cycleWaitingFinish || this._cycleFinishing);
+    if (alreadyRunning) {
+      this._cycleCanFinish = canFinish;
+      this._cycleOnComplete = onComplete;
+      return;
+    }
+    if (this._cycleWaitingFinish || this._cycleFinishing) {
+      this._cycleCanFinish = canFinish;
+      this._cycleOnComplete = onComplete;
+      return;
+    }
+    this.stopCycleLoop();
     this._cycleDuration = cycleDuration > 0 ? cycleDuration : 1.5;
+    this._cycleLoopStopped = false;
     this._cycleCanFinish = canFinish;
     this._cycleOnComplete = onComplete;
-    this._cycleLoopStopped = false;
+    if (this._curPercent >= LoadProgress.GATE_PERCENT) {
+      this.applyPercentImmediate(LoadProgress.GATE_PERCENT);
+      this._cycleWaitingFinish = true;
+      this._checkCycleGateFinish();
+      return;
+    }
     this._runOneProgressCycle();
   }
 
   stopCycleLoop() {
     this._cycleLoopStopped = true;
+    this._cycleWaitingFinish = false;
+    this._cycleFinishing = false;
     this._cycleCanFinish = null;
     this._cycleOnComplete = null;
     if (this._cycleTweenTarget) {
       cc.Tween.stopAllByTarget(this._cycleTweenTarget);
       this._cycleTweenTarget = null;
     }
+    if (this._animObj) {
+      cc.Tween.stopAllByTarget(this._animObj);
+      this._animObj = null;
+    }
   }
 
-  private _runOneProgressCycle() {
+  private _isComponentAlive() {
+    return this.node && cc.isValid(this.node);
+  }
+
+  private _checkCycleGateFinish() {
+    if (!this._isComponentAlive() || this._cycleLoopStopped || this._cycleFinishing || !this._cycleWaitingFinish) {
+      return;
+    }
+    if (!this._cycleCanFinish || !this._cycleCanFinish()) {
+      return;
+    }
+    this._cycleWaitingFinish = false;
+    this._runFinishProgressCycle();
+  }
+
+  /** 外部在登录/资源状态变更后主动触发进门检查 */
+  notifyGateCheck() {
+    this._checkCycleGateFinish();
+  }
+
+  private _runFinishProgressCycle() {
     var self = this;
-    if (self._cycleLoopStopped) return;
+    if (!self._isComponentAlive() || self._cycleLoopStopped) {
+      return;
+    }
+    self._cycleFinishing = true;
+    if (self._cycleTweenTarget) {
+      cc.Tween.stopAllByTarget(self._cycleTweenTarget);
+    }
+    var startPercent = self._curPercent;
     self._cycleTweenTarget = {
-      value: 0
+      value: startPercent
     };
-    self.applyPercentImmediate(0);
-    cc.tween(self._cycleTweenTarget).to(self._cycleDuration, {
+    cc.tween(self._cycleTweenTarget).to(LoadProgress.FINISH_PERCENT_SEC, {
       value: 1
     }, {
       progress: function (start, end, _current, ratio) {
@@ -229,13 +294,48 @@ export default class LoadProgress extends cc.Component {
         self.applyPercentImmediate(start + (end - start) * ratio);
       }
     }).call(function () {
-      if (self._cycleLoopStopped) return;
+      if (self._cycleLoopStopped || !self._isComponentAlive()) return;
       self.applyPercentImmediate(1);
-      if (self._cycleCanFinish && self._cycleCanFinish()) {
-        self._cycleOnComplete && self._cycleOnComplete();
-        return;
+      self._cycleFinishing = false;
+      var onComplete = self._cycleOnComplete;
+      self._cycleOnComplete = null;
+      self._cycleCanFinish = null;
+      self._cycleLoopStopped = true;
+      self._cycleTweenTarget = null;
+      onComplete && onComplete();
+    }).start();
+  }
+
+  private _runOneProgressCycle() {
+    var self = this;
+    if (!self._isComponentAlive() || self._cycleLoopStopped) return;
+    var startPercent = self._curPercent;
+    if (startPercent >= LoadProgress.GATE_PERCENT) {
+      self.applyPercentImmediate(LoadProgress.GATE_PERCENT);
+      self._cycleWaitingFinish = true;
+      self._checkCycleGateFinish();
+      return;
+    }
+    self._cycleTweenTarget = {
+      value: startPercent
+    };
+    var remainRatio = LoadProgress.GATE_PERCENT - startPercent;
+    var duration = self._cycleDuration * (remainRatio / LoadProgress.GATE_PERCENT);
+    if (duration < 0.05) {
+      duration = 0.05;
+    }
+    cc.tween(self._cycleTweenTarget).to(duration, {
+      value: LoadProgress.GATE_PERCENT
+    }, {
+      progress: function (start, end, _current, ratio) {
+        if (self._cycleLoopStopped) return;
+        self.applyPercentImmediate(start + (end - start) * ratio);
       }
-      self._runOneProgressCycle();
+    }).call(function () {
+      if (self._cycleLoopStopped || !self._isComponentAlive()) return;
+      self.applyPercentImmediate(LoadProgress.GATE_PERCENT);
+      self._cycleWaitingFinish = true;
+      self._checkCycleGateFinish();
     }).start();
   }
 }

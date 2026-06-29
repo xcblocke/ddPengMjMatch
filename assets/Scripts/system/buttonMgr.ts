@@ -343,6 +343,14 @@ export default class buttonMgr extends cc.Component {
       name: "SetUpPage"
     });
   }
+
+  onClickBackMain() {
+    AudioManager.getInstance().playMusic("btntouch");
+    EventMgr.trigger(GameEventType.PAGE_SHOW, {
+      name: "MainNodePage"
+    });
+  }
+
   openSignInPage() {
     // GameSystem.signInfo().then(function (e) {
     //   e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {

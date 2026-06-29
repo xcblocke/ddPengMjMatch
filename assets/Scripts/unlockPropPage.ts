@@ -6,6 +6,7 @@ import GameEventType from './framework/Event/GameEventType';
 import GlobalApp from './common/GlobalApp';
 import BasePage from './view/BasePage';
 import { GameLevelPropConfig, markWhitePropClaimed } from './config';
+import { trackCreatorEvent } from './common/GameTrackUtil';
 const {
   ccclass,
   property
@@ -43,6 +44,7 @@ export default class unlockPropPage extends BasePage {
     super._onShow.call(this);
   }
   _init(e) {
+    trackCreatorEvent(481);
     AudioManager.instance.playMusic("get");
     this.btnNode.opacity = 0;
     this.playLightAnim();

@@ -1,11 +1,12 @@
-import { gameData } from './data/GameData';
+import { gameData, GameState } from './data/GameData';
 import PageMgr from './view/PageMgr';
 import BasePage, { AnimType } from './view/BasePage';
 import AudioManager from './framework/controller/AudioManager';
 import GameEventType from './framework/Event/GameEventType';
 import EventMgr from './framework/Event/EventMgr';
 import GlobalApp from './common/GlobalApp';
-import { playHengFNodeBanner, preloadHengFNodePrefab, shouldPlayHengFOnLevelButton } from './HengFNodeUtil';
+import { preloadHengFNodePrefab, shouldPlayHengFOnLevelButton } from './HengFNodeUtil';
+import { trackCreatorEvent } from './common/GameTrackUtil';
 const {
   ccclass,
   property
@@ -13,15 +14,55 @@ const {
 
 const GUIDE_HAND_OFFSET = cc.v2(102.607, -70.44);
 
-/** 当前 App 启动周期内是否已完成 MainNodePage 首次教程（杀进程重启后重置） */
-let sessionMainNodePageEntered = false;
+const MAIN_NODE_GUIDE_DONE_KEY = "main_node_page_guide_done";
+const TUJIAN_NODE_GUIDE_DONE_KEY = "tujian_node_page_guide_done";
+
+/** 本次启动内是否已完成 Main 图鉴引导步（返回后引导点关卡） */
+let sessionMainNodeTujianStepDone = false;
+
+export function isMainNodePageGuideDone(): boolean {
+  try {
+    return cc.sys.localStorage.getItem(MAIN_NODE_GUIDE_DONE_KEY) === "1";
+  } catch (_e) {
+    return false;
+  }
+}
+
+export function markMainNodePageGuideDone(): void {
+  sessionMainNodeTujianStepDone = true;
+  try {
+    cc.sys.localStorage.setItem(MAIN_NODE_GUIDE_DONE_KEY, "1");
+  } catch (_e) {}
+}
+
+export function isMainNodePageTujianStepDone(): boolean {
+  return sessionMainNodeTujianStepDone || isMainNodePageGuideDone();
+}
+
+export function markMainNodePageTujianStepDone(): void {
+  sessionMainNodeTujianStepDone = true;
+}
+
+export function isTujianNodePageGuideDone(): boolean {
+  try {
+    return cc.sys.localStorage.getItem(TUJIAN_NODE_GUIDE_DONE_KEY) === "1";
+  } catch (_e) {
+    return false;
+  }
+}
+
+export function markTujianNodePageGuideDone(): void {
+  try {
+    cc.sys.localStorage.setItem(TUJIAN_NODE_GUIDE_DONE_KEY, "1");
+  } catch (_e) {}
+}
 
 export function isFirstMainNodePageEnterThisSession(): boolean {
-  return !sessionMainNodePageEntered;
+  return !isMainNodePageTujianStepDone();
 }
 
 export function markMainNodePageGuideCompleted(): void {
-  sessionMainNodePageEntered = true;
+  markMainNodePageTujianStepDone();
 }
 
 @ccclass
@@ -42,6 +83,13 @@ export default class MainNodePage extends BasePage {
   @property(cc.Node)
   guideNode: cc.Node = null;
 
+  @property(cc.Node)
+  wordTipsNode1: cc.Node = null; 
+  @property(cc.Node)
+  wordTipsNode2: cc.Node = null; 
+  @property(cc.Label)
+  wordTextLabel: cc.Label = null;
+
   _waitLevelClick = false;
   _clickingLevel = false;
   _guideTarget: "tujian" | "level" = "level";
@@ -57,12 +105,17 @@ export default class MainNodePage extends BasePage {
   }
 
   _init(e?: { waitLevelClick?: boolean }) {
+    trackCreatorEvent(471);
     this._waitLevelClick = !!(e && e.waitLevelClick);
     this._clickingLevel = false;
     this.initCoin();
     this.refreshLevelText();
     if (shouldPlayHengFOnLevelButton(this._waitLevelClick)) {
       preloadHengFNodePrefab();
+    }
+    if (isMainNodePageGuideDone()) {
+      this.applyGuideButtonsAllEnabled();
+      return;
     }
     this.scheduleOnce(() => {
       if (!cc.isValid(this.node)) {
@@ -77,11 +130,15 @@ export default class MainNodePage extends BasePage {
       return;
     }
     this._clickingLevel = false;
+    if (isMainNodePageGuideDone()) {
+      this.applyGuideButtonsAllEnabled();
+      return;
+    }
     this.initGuide();
   }
 
   shouldGuideTujianBtn(): boolean {
-    return !this._waitLevelClick && isFirstMainNodePageEnterThisSession();
+    return !this._waitLevelClick && !isMainNodePageTujianStepDone();
   }
 
   getGuideTargetNode(): cc.Node {
@@ -99,6 +156,25 @@ export default class MainNodePage extends BasePage {
     if (this.btnLevel) {
       this.btnLevel.interactable = this._guideTarget === "level";
     }
+    this.wordTipsNode1.active = this._guideTarget === "tujian";
+    this.wordTipsNode2.active = this._guideTarget === "level";
+  }
+
+  applyGuideButtonsAllEnabled() {
+    this._guideTarget = "level";
+    if (this.tujianBtn) {
+      this.tujianBtn.interactable = true;
+    }
+    if (this.btnLevel) {
+      this.btnLevel.interactable = true;
+    }
+    if (this.wordTipsNode1) {
+      this.wordTipsNode1.active = false;
+    }
+    if (this.wordTipsNode2) {
+      this.wordTipsNode2.active = false;
+    }
+    this.hideGuide();
   }
 
   alignGuideNodes(targetNode: cc.Node) {
@@ -148,6 +224,10 @@ export default class MainNodePage extends BasePage {
   }
 
   initGuide() {
+    if (isMainNodePageGuideDone()) {
+      this.applyGuideButtonsAllEnabled();
+      return;
+    }
     const guideRoot = this.guideNode || cc.find("GuideNode", this.node);
     if (!guideRoot) {
       this.applyGuideButtons();
@@ -205,26 +285,48 @@ export default class MainNodePage extends BasePage {
     }
     const currentLevel = Math.floor(Number(gameData.gameLevel) || 1);
     levelLabel.string = this._waitLevelClick ? `Level ${currentLevel + 1}` : `Level ${currentLevel}`;
+
+    if(currentLevel > 1) {
+      this.wordTextLabel.string = "gkey_809";
+    }else{
+      if(this._waitLevelClick) {
+        this.wordTextLabel.string = "gkey_809";
+      }
+    }
   }
 
-  async onClickLevelBtn() {
-    if (this._clickingLevel || this._guideTarget !== "level") {
+  onClickLevelBtn() {
+    if (this._clickingLevel || (!isMainNodePageGuideDone() && this._guideTarget !== "level")) {
       return;
     }
     this._clickingLevel = true;
+    const softEnterFirstLevel = !this._waitLevelClick
+      && Math.floor(Number(gameData.gameLevel) || 1) === 1
+      && !isMainNodePageGuideDone();
+    markMainNodePageGuideDone();
     if (this.btnLevel) {
       this.btnLevel.interactable = false;
     }
     AudioManager.getInstance().playMusic("click");
     this.hideGuide();
-
-    const shouldPlayBanner = shouldPlayHengFOnLevelButton(this._waitLevelClick);
     this._hide();
-    if (shouldPlayBanner) {
-      await playHengFNodeBanner();
+
+    const gameMain = GlobalApp.GameMain;
+    // 审核模式首进第 1 关：开场动画已 startGame，只需关主页并恢复教程，不能 RESTART
+    if (this._waitLevelClick || softEnterFirstLevel) {
+      if (softEnterFirstLevel && gameMain) {
+        gameMain.resumeLevel1TeachingHand();
+      }
+      this.ensureGameplayClickable(gameMain);
+      return;
     }
-    if (Math.floor(Number(gameData.gameLevel) || 1) === 1 && GlobalApp.GameMain) {
-      GlobalApp.GameMain.resumeLevel1TeachingHand();
+
+    EventMgr.trigger(GameEventType.RESTART_GAME);
+  }
+
+  ensureGameplayClickable(gameMain) {
+    if (gameMain && !gameMain.isMahjongSpawning && gameData.gameState === GameState.gameing) {
+      gameData.globalCanClick = true;
     }
   }
 
@@ -241,7 +343,7 @@ export default class MainNodePage extends BasePage {
   }
 
   onClickTujian() {
-    if (this._guideTarget !== "tujian") {
+    if (!isMainNodePageGuideDone() && this._guideTarget !== "tujian") {
       return;
     }
     AudioManager.getInstance().playMusic("click");
@@ -249,7 +351,7 @@ export default class MainNodePage extends BasePage {
     PageMgr.showPage({
       name: "TujianNodePage",
       data: {
-        fromFirstMainNodeGuide: true
+        fromFirstMainNodeGuide: this._guideTarget === "tujian"
       }
     });
   }

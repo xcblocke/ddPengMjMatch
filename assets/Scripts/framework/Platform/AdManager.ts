@@ -141,25 +141,33 @@ export default class AdManager {
     var a = this;
     var i = new Date().getTime() / 1000;
     i < this.lastTouchDate && (this.lastTouchDate = i);
-    if (!(this.lastTouchDate && i - this.lastTouchDate < this.interval)) {
-      this.lastTouchDate = i;
-      if (cc.sys.isBrowser || !cc.sys.isNative || this.noAdTest) e && e();else {
-        this.adBack = true;
-        this.videoSuccessFun = e;
-        this.videoFailFun = t;
-        var r = {
-          is_force: o,
-          slotId: 0
-        };
-        GlobalApp.AdSchedule.startSchedule(function () {
-          a.doVideoFail(r);
+    if (this.lastTouchDate && i - this.lastTouchDate < this.interval) {
+      setTimeout(function () {
+        a.doVideoFail({
+          throttled: true
         });
-        if (cc.sys.os == cc.sys.OS_ANDROID) {
-          CallAndroid.getInstance().showRewardVideoAd(JSON.stringify(r));
-        } else {
-          CalliOS.getInstance().showRewardVideoAd(r);
-        }
-      }
+      }, 0);
+      return;
+    }
+    this.lastTouchDate = i;
+    if (cc.sys.isBrowser || !cc.sys.isNative || this.noAdTest) {
+      e && e();
+      return;
+    }
+    this.adBack = true;
+    this.videoSuccessFun = e;
+    this.videoFailFun = t;
+    var r = {
+      is_force: o,
+      slotId: 0
+    };
+    GlobalApp.AdSchedule.startSchedule(function () {
+      a.doVideoFail(r);
+    });
+    if (cc.sys.os == cc.sys.OS_ANDROID) {
+      CallAndroid.getInstance().showRewardVideoAd(JSON.stringify(r));
+    } else {
+      CalliOS.getInstance().showRewardVideoAd(r);
     }
   }
   onVideoFinish(e) {

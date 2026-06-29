@@ -490,7 +490,7 @@ export class TransfilterPostmuch {
      * 获取隐私协议 URL
      */
     get maybewardGrowful(): string {
-        return 'https://linwept.com/privacy.html';
+        return 'https://www.bamboomahjongpulse.art/maskingout.html';
     }
 
     /**

@@ -7,11 +7,9 @@ import BaseEventType from '../framework/controller/BaseEventType';
 import EventMgr from '../framework/Event/EventMgr';
 import GameEventType from '../framework/Event/GameEventType';
 import AdManager from '../framework/Platform/AdManager';
-import ClientData from '../framework/Event/ClientData';
 import SdkHelper from '../framework/SdkHelper';
 import AdaptUIMgr from '../framework/AdaptUIMgr';
 import EngineUtil from '../framework/EngineUtil';
-import UrlMgr from '../service/UrlMgr';
 import PageMgr from './PageMgr';
 import GlobalDataSys from '../framework/controller/GlobalDataSys';
 import HotUpdate from '../framework/Event/HotUpdate';
@@ -70,15 +68,47 @@ export default class loading extends cc.Component {
   /** A.l1 登陆是否成功返回 */
   _loginReady = false;
   _enteringMain = false;
+  /** 是否已启动进入 mainScene 的加载流程（防重复 loadScene 重置进度） */
+  _sceneLoadStarted = false;
+  /** 资源预加载是否进行中 */
+  _launchAssetsLoading = false;
+  /** getUserInfo 是否进行中（防重复触发 loadScene） */
+  _userInfoLoading = false;
+  /** SDK 初始化后的启动流程是否已执行 */
+  _launchStarted = false;
+  /** 主进度条（0→99%）是否已启动 */
+  _mainProgressStarted = false;
+  /** autoLogin 是否已发起 */
+  _autoLoginStarted = false;
+  /** checkReport 是否已执行 */
+  _checkReportDone = false;
+  /** 旧登录链完成（getUserInfo + loadScene 初始化）后才允许进主场景 */
+  _bootstrapReady = false;
+  /** 资源预加载失败后是否已重试 */
+  _launchAssetsRetried = false;
+  /** 原生音效 URL 是否已初始化 */
+  _nativeUrlInited = false;
+  _mainSceneName = "mainScene";
   /** A.l1 当前轮次序号，用于丢弃超时重试后的过期回调 */
   _l1AttemptSeq = 0;
   _l1RetryTimer = null;
-  static readonly PROGRESS_CYCLE_SEC = 1.2;
+  static readonly PROGRESS_CYCLE_SEC = 2.2;
   static readonly L1_TIMEOUT_MS = 20000;
   onLoad() {
     AdaptUIMgr.adapt();
     this._loginReady = false;
     this._enteringMain = false;
+    this._sceneLoadStarted = false;
+    this._launchAssetsLoading = false;
+    this._userInfoLoading = false;
+    this._launchStarted = false;
+    this._mainProgressStarted = false;
+    this._autoLoginStarted = false;
+    this._checkReportDone = false;
+    this._bootstrapReady = false;
+    this._launchAssetsRetried = false;
+    this._nativeUrlInited = false;
+    this._launchAssetsReady = false;
     this.cancelLoginRetry();
 
     if(MainConfig.curServerType == ServerType.develop)
@@ -113,7 +143,7 @@ export default class loading extends cc.Component {
     // Skip agreement/user notice popup on startup, go straight to loading flow.
     EngineUtil.setLocalData("user_agreement", "1");
     SdkHelper.initOtherSDK(true);
-    // 进入 loadingScene 后立即发起 A.l1，与后续热更/旧登录链并行，避免等到 loadScene 才登录
+    // 进入 loadingScene 后立即发起 A.l1，与后续登录链并行
     this.startLoginWithRetry();
   }
   preLoadPrefab() {}
@@ -141,6 +171,14 @@ export default class loading extends cc.Component {
   onDestroy() {
     this.removeEvent();
     this.cancelLoginRetry();
+    if (this.get_middle_cfg_timer) {
+      clearTimeout(this.get_middle_cfg_timer);
+      this.get_middle_cfg_timer = null;
+    }
+    if (this.get_oaid_timer) {
+      clearTimeout(this.get_oaid_timer);
+      this.get_oaid_timer = null;
+    }
     this.loadProgress && this.loadProgress.stopCycleLoop();
     /** 切到 mainScene 时 loading 销毁，游戏资源仍由 mainScene 使用，此处不 release */
   }
@@ -148,31 +186,76 @@ export default class loading extends cc.Component {
     EventMgr.listen(BaseEventType.SPLASH_FINISH, this.splashFinish, this);
     EventMgr.listen(GameEventType.WXLOGIN_FINISH, this.getUserInfo, this);
     EventMgr.listen(BaseEventType.GET_WECHAT_CODE, this.getWxCode, this);
-    if (cc.sys.os == cc.sys.OS_ANDROID) {
-      EventMgr.listen(BaseEventType.SDKINIT_FINISH, this.checkHotUpdate, this);
-    } else {
-      EventMgr.listen(BaseEventType.SDKINIT_FINISH, this.hotUpdate, this);
-    }
+    EventMgr.listen(BaseEventType.SDKINIT_FINISH, this.onSdkInitFinish, this);
   }
   removeEvent() {
     EventMgr.ignore(BaseEventType.GET_WECHAT_CODE, this.getWxCode, this);
-    EventMgr.ignore(BaseEventType.SDKINIT_FINISH, this.hotUpdate, this);
+    EventMgr.ignore(BaseEventType.SDKINIT_FINISH, this.onSdkInitFinish, this);
     EventMgr.ignore(GameEventType.WXLOGIN_FINISH, this.getUserInfo, this);
     EventMgr.ignore(BaseEventType.SPLASH_FINISH, this.splashFinish, this);
+    EventMgr.ignore(BaseEventType.ON_GET_OAID, this.onGetOAID, this);
   }
   splashFinish() {
     EventMgr.ignore(BaseEventType.SPLASH_FINISH, this.splashFinish, this);
     AdManager.getInstance().closeSplashAd();
-    cc.sys.os == cc.sys.OS_IOS && this.autoLogin();
+    // iOS 开屏路径：getSystemConfig 里会提前 return，此处补一次 autoLogin
+    if (cc.sys.os == cc.sys.OS_IOS && !this._autoLoginStarted && !this._bootstrapReady) {
+      this.autoLogin();
+    }
   }
-  checkHotUpdate() {
+  isLoadingActive() {
+    return !!(this.node && cc.isValid(this.node) && !this._enteringMain);
+  }
+  resolveMainSceneName() {
+    return HotUpdate.getInstance().checkReviewVMVersion() ? "SceneA" : "mainScene";
+  }
+  ensureNativeUrlReady() {
+    if (this._nativeUrlInited) {
+      return;
+    }
+    this._nativeUrlInited = true;
+    if (LaunchLoadScheduler.useStagedNativeLoad()) {
+      setTimeout(function () {
+        AudioManager.getInstance().initNativeUrl();
+      }, 0);
+    } else {
+      AudioManager.getInstance().initNativeUrl();
+    }
+  }
+  /** 全链路只启动一次 0→99% 进度 */
+  startMainProgressCycle() {
+    var self = this;
+    if (self._mainProgressStarted || self._enteringMain) {
+      return;
+    }
+    if (!self.loadProgress) {
+      return;
+    }
+    self._mainProgressStarted = true;
+    self.loadProgress.stopFakeProgress();
+    self.loadProgress.endSmoothFollow();
+    self.loadProgress.loadType = LoadProgressType.LoadScene;
+    self.loadProgress.startCycleLoop(loading.PROGRESS_CYCLE_SEC, function () {
+      return self.canEnterMainScene();
+    }, function () {
+      self.tryEnterMainScene(self._mainSceneName);
+    });
+  }
+  onSdkInitFinish() {
+    if (cc.sys.os == cc.sys.OS_ANDROID) {
+      this.waitOaidThenLaunch();
+    } else {
+      this.beginLaunch();
+    }
+  }
+  waitOaidThenLaunch() {
     var e = this;
     EngineUtil.log("==========sdk初始化成功");
     console.log("==========sdk初始化成功");
     if (SdkHelper.getOAID()) {
       EngineUtil.log("==========直接获取到了oaid");
       console.log("==========直接获取到了oaid");
-      this.hotUpdate();
+      this.beginLaunch();
     } else {
       EventMgr.listen(BaseEventType.ON_GET_OAID, this.onGetOAID, this);
       this.get_oaid_timer && clearTimeout(this.get_oaid_timer);
@@ -191,11 +274,19 @@ export default class loading extends cc.Component {
     EngineUtil.log("==========异步获取到了oaid");
     console.log("==========异步获取到了oaid");
     EventMgr.ignore(BaseEventType.ON_GET_OAID, this.onGetOAID, this);
-    this.hotUpdate();
+    this.beginLaunch();
   }
-  hotUpdate() {
+  beginLaunch() {
     var e = this;
-    this.loadProgress.startLoadProgress();
+    if (e._launchStarted) {
+      console.warn("[loading] beginLaunch ignored: already started");
+      return;
+    }
+    e._launchStarted = true;
+    e._mainSceneName = e.resolveMainSceneName();
+    e.ensureNativeUrlReady();
+    e.startMainProgressCycle();
+    e.runSequentialResourceLoad(e._mainSceneName);
     BaseSystem.init();
     if (EngineUtil.getLocalData("b_first_show_agreement")) {
       EngineUtil.setLocalData("b_first_show_agreement", "");
@@ -209,28 +300,6 @@ export default class loading extends cc.Component {
       EngineUtil.setLocalData("cancel_agreement_report", "");
       SdkHelper.reportData("b_click_cancel");
     }
-    var t = UrlMgr.getInstance().getVersionUrl(),
-      o = ClientData.getVersionData();
-    console.log("==========hotUpdate111");
-    if (gameData.isOpenDemo) {
-      this.init();
-    } else {
-      HotUpdate.getInstance().checkGrayUpdate(t + "?" + o, function (t) {
-        if (t) {
-          console.log("grayUpdate canUpdate");
-          e.loadProgress.loadType = LoadProgressType.CheckHotUpdate;
-          var o = 1 - e.loadProgress.curPercent,
-            n = e.loadProgress.curPercent;
-          e.loadProgress.stopFakeProgress();
-          HotUpdate.getInstance().hotUpdate(function (t, a) {
-            t < 0 && e.init();
-            a && a.code == jsb.EventAssetsManager.UPDATE_PROGRESSION && (e.loadProgress.curPercent = n + a.file_percent * o);
-          });
-        } else e.init();
-      });
-    }
-  }
-  init() {
     this.getMiddleCfg();
   }
   getSystemConfig(e) {
@@ -296,6 +365,11 @@ export default class loading extends cc.Component {
   }
   autoLogin(e) {
     var t = this;
+    if (t._autoLoginStarted) {
+      console.warn("[loading] autoLogin ignored: already started");
+      return;
+    }
+    t._autoLoginStarted = true;
     console.log("000000000000000000");
     var o = SdkHelper.requestTDId(),
       n = null;
@@ -323,8 +397,15 @@ export default class loading extends cc.Component {
         t.loading.active = false;
         SdkHelper.reportData("show_wx_login");
       }
-    }).catch(function () {
+    }).catch(function (err) {
+      t._autoLoginStarted = false;
       e && EngineUtil.reconnectFai();
+      if (!t.isLoadingActive()) {
+        return;
+      }
+      EngineUtil.httpErr(err, function (retryFlag) {
+        t.autoLogin(retryFlag);
+      });
     });
   }
   touristsLogin(e) {
@@ -364,6 +445,11 @@ export default class loading extends cc.Component {
   }
   getUserInfo(e) {
     var t = this;
+    if (t._userInfoLoading) {
+      console.warn("[loading] getUserInfo ignored: request in flight");
+      return;
+    }
+    t._userInfoLoading = true;
     // this.showLogin.active = false;
     this.loading.active = true;
     BaseSystem.getUserInfo().then(function (o) {
@@ -394,8 +480,20 @@ export default class loading extends cc.Component {
         });
         return;
       }
-    }).catch(function () {
+      t._userInfoLoading = false;
+      console.error("[loading] getUserInfo invalid response", o && o.code);
+      EngineUtil.httpErr(o, function (retryFlag) {
+        t.getUserInfo(retryFlag);
+      });
+    }).catch(function (err) {
+      t._userInfoLoading = false;
       e && EngineUtil.reconnectFai();
+      if (!t.isLoadingActive()) {
+        return;
+      }
+      EngineUtil.httpErr(err, function (retryFlag) {
+        t.getUserInfo(retryFlag);
+      });
     });
   }
   getAbTestInfo(e) {
@@ -412,6 +510,11 @@ export default class loading extends cc.Component {
     });
   }
   checkReport() {
+    if (this._checkReportDone) {
+      console.warn("[loading] checkReport ignored: already done");
+      return;
+    }
+    this._checkReportDone = true;
     var e = cc.sys.localStorage.getItem("user_LastAgreement");
     if (e) {
       BaseSystem.agreementForce({
@@ -444,7 +547,17 @@ export default class loading extends cc.Component {
   }
 
   canEnterMainScene() {
-    return this._launchAssetsReady && this._loginReady;
+    return this._launchAssetsReady && this._loginReady && this._bootstrapReady;
+  }
+
+  /** 条件满足时主动触发一次进门检查（资源/登录状态变更后） */
+  notifyEnterMainSceneCheck() {
+    if (!this.isLoadingActive()) {
+      return;
+    }
+    if (this.loadProgress && this._mainProgressStarted) {
+      this.loadProgress.notifyGateCheck();
+    }
   }
 
   cancelLoginRetry() {
@@ -482,7 +595,7 @@ export default class loading extends cc.Component {
 
     A.l1(function () {
       console.log("A.l1 callback uscceed .....................");
-      if (!self.node || !cc.isValid(self.node)) {
+      if (!self.isLoadingActive()) {
         return;
       }
       if (self._loginReady || self._enteringMain) {
@@ -494,6 +607,7 @@ export default class loading extends cc.Component {
       self.cancelLoginRetry();
       
       self._loginReady = true;
+      self.notifyEnterMainSceneCheck();
     }, {
       m: function (mute: boolean) {
         AudioManager.getInstance().setMute(mute);
@@ -504,9 +618,11 @@ export default class loading extends cc.Component {
   tryEnterMainScene(sceneName: string) {
     var self = this;
     if (self._enteringMain || !self.canEnterMainScene()) return;
-    if (!self.node || !cc.isValid(self.node)) return;
+    if (!self.isLoadingActive()) return;
     self._enteringMain = true;
     self.cancelLoginRetry();
+    var targetScene = sceneName || self._mainSceneName || self.resolveMainSceneName();
+    self._mainSceneName = targetScene;
     self.loadProgress.stopCycleLoop();
     self.loadProgress.applyPercentImmediate(1);
     console.log("l3。。。。。。。。。。。。。。。。。。", JSON.stringify(A.l3));
@@ -523,50 +639,87 @@ export default class loading extends cc.Component {
     }
     console.log("[loading] l4.................: 111111111", JSON.stringify(GameLevelPropConfig));
 
-    cc.director.loadScene(sceneName, function () {
+    cc.director.loadScene(targetScene, function () {
       // g2 → SDY 401：加载完成进入主页
       A.t('g2');
     });
   }
 
   /** 分步串行预加载（与进度条、登陆并行） */
-  runSequentialResourceLoad(sceneName: string) {
+  runSequentialResourceLoad(sceneName?: string) {
     var self = this;
-    Res.loadSequentialLaunch(sceneName, self.shouldPreloadNewHand()).then(function () {
+    if (!self.isLoadingActive()) {
+      return;
+    }
+    var targetScene = sceneName || self._mainSceneName || self.resolveMainSceneName();
+    self._mainSceneName = targetScene;
+    if (self._launchAssetsLoading) {
+      return;
+    }
+    if (self._launchAssetsReady) {
+      return;
+    }
+    self._launchAssetsLoading = true;
+    Res.loadSequentialLaunch(targetScene, self.shouldPreloadNewHand()).then(function () {
+      if (!self.isLoadingActive()) {
+        self._launchAssetsLoading = false;
+        return;
+      }
       self._launchAssetsReady = true;
+      self._launchAssetsLoading = false;
+      self.notifyEnterMainSceneCheck();
     }).catch(function (err) {
+      if (!self.isLoadingActive()) {
+        self._launchAssetsLoading = false;
+        return;
+      }
+      self._launchAssetsLoading = false;
       console.error("loadSequentialLaunch failed", err);
+      if (!self._launchAssetsRetried) {
+        self._launchAssetsRetried = true;
+        console.warn("[loading] loadSequentialLaunch retry once");
+        self.runSequentialResourceLoad(targetScene);
+        return;
+      }
+      console.warn("[loading] loadSequentialLaunch failed after retry, enter with on-demand load");
+      self._launchAssetsReady = true;
+      self.notifyEnterMainSceneCheck();
     });
+  }
+
+  /** getUserInfo 完成后：标记可进主场景（资源预加载在 beginLaunch 已并行启动） */
+  finishBootstrap(sceneName?: string) {
+    var self = this;
+    if (!self.isLoadingActive()) {
+      return;
+    }
+    if (sceneName) {
+      self._mainSceneName = sceneName;
+    }
+    self.ensureNativeUrlReady();
+    if (self._bootstrapReady) {
+      self.notifyEnterMainSceneCheck();
+      return;
+    }
+    self._bootstrapReady = true;
+    if (!self._launchAssetsReady && !self._launchAssetsLoading) {
+      self.runSequentialResourceLoad(self._mainSceneName);
+    }
+    self.notifyEnterMainSceneCheck();
   }
 
   loadScene() {
     var self = this;
-    var sceneName = "mainScene";
-    HotUpdate.getInstance().checkReviewVMVersion() && (sceneName = "SceneA");
+    var sceneName = self.resolveMainSceneName();
 
-    self._launchAssetsReady = false;
-    self._enteringMain = false;
-    // _loginReady 不在此重置：A.l1 已在 onLoad 发起，避免重复登录或抹掉已完成结果
-
-    self.loadProgress.stopFakeProgress();
-    self.loadProgress.endSmoothFollow();
-    self.loadProgress.loadType = LoadProgressType.LoadScene;
-    Res.releaseLaunchAssets();
-
-    self.loadProgress.startCycleLoop(loading.PROGRESS_CYCLE_SEC, function () {
-      return self.canEnterMainScene();
-    }, function () {
-      self.tryEnterMainScene(sceneName);
-    });
-
-    if (LaunchLoadScheduler.useStagedNativeLoad()) {
-      setTimeout(function () {
-        AudioManager.getInstance().initNativeUrl();
-      }, 0);
-    } else {
-      AudioManager.getInstance().initNativeUrl();
+    if (self._sceneLoadStarted) {
+      console.warn("[loading] loadScene ignored: already started");
+      self.finishBootstrap(sceneName);
+      return;
     }
-    self.runSequentialResourceLoad(sceneName);
+    self._sceneLoadStarted = true;
+    self.startMainProgressCycle();
+    self.finishBootstrap(sceneName);
   }
   getWxCode(e) {
     console.log("SPK1", e);

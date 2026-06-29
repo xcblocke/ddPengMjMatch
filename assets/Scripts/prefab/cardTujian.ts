@@ -43,7 +43,7 @@ export default class cardTujian extends cc.Component {
   
  
   initUI() {
-    console.log("initUI.............", this.cardData);
+    // console.log("initUI.............", this.cardData);
     if (this.cardSp && this.cardData) {
       this.cardSp.spriteFrame = Res.getMahjongSpriteFrame(this.getCardUrl());
     }

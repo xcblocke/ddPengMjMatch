@@ -9,6 +9,7 @@ import { GameLevelPropConfig, markWhitePropClaimed, TujianUnlockConfig } from '.
 import { gameData } from './data/GameData';
 import SdkHelper from './framework/SdkHelper';
 import cardTujian from './prefab/cardTujian';
+import { trackCreatorEvent } from './common/GameTrackUtil';
 const {
   ccclass,
   property
@@ -23,8 +24,8 @@ export default class TujianUnlockPage extends BasePage {
   @property(cc.Prefab)
   cardTujianPrefab: cc.Prefab = null;
 
- 
-  
+  _unlockMahjongIds: number[] = [];
+
   _onHide() {
     super._onHide.call(this);
   }
@@ -44,12 +45,16 @@ export default class TujianUnlockPage extends BasePage {
      }
 
      if(!curUnlockData) {
+      this._unlockMahjongIds = [];
       return;
      }
 
+    this._unlockMahjongIds = curUnlockData.slice();
     if (this.contentNode) {
       this.contentNode.removeAllChildren();
     }
+
+    console.log("curUnlockData。。。。。。。。。。。。。。",curUnlockData);
 
     curUnlockData.forEach((id, index) => {
       const cardNode = cc.instantiate(this.cardTujianPrefab);
@@ -64,6 +69,9 @@ export default class TujianUnlockPage extends BasePage {
 
   onClick() {
     AudioManager.getInstance().playMusic("click");
+    if (this._unlockMahjongIds.length > 0) {
+      trackCreatorEvent(477, this._unlockMahjongIds.join(","));
+    }
     this._hide();
   }
 
