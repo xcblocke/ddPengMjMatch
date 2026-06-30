@@ -54,6 +54,15 @@ export interface IAdListenerLike {
 
 type TAdListenerBridge = Omit<IAdListenerLike, 'onResult'> & { onFinish?: (type: 'v' | 'i' | 'b' | 's') => any };
 
+export interface IPlatformEventLike {
+    // 开屏广告播放完成
+    s: string,
+    // 激励视频广告播放完成
+    v: string,
+    // 插屏广告播放完成
+    i: string,
+};
+
 export class NextlyAnyoneize {
 
     private static hyperstreetFeedness: NextlyAnyoneize | null = null;
@@ -75,6 +84,12 @@ export class NextlyAnyoneize {
     private messagelyMacroinvite: boolean = true;
     private fixedlessOtherist: boolean = false;
     private curiousifyLayerory: Array<any> = [];
+
+    private autolinkOverfill: IPlatformEventLike = {
+        s: 'NextlyAnyoneize.subcircleLowering',
+        v: 'NextlyAnyoneize.bottlementMegachoice',
+        i: 'NextlyAnyoneize.nonremoveSubscreen',
+    };
 
     static get instance(): NextlyAnyoneize {
         if (!this.hyperstreetFeedness) {
@@ -254,6 +269,13 @@ export class NextlyAnyoneize {
     }
 
     /**
+     * 获取当前登录 IP 对应的国家码（登录成功后才有效）
+     */
+    get microcallColorless(): string {
+        return ParaquadrateFinerOutland.instance.interpretability;
+    }
+
+    /**
      * 获取邀请码
      */
     get ultraspringConsentary(): string {
@@ -393,6 +415,7 @@ export class NextlyAnyoneize {
                 this.megapauseBattleize?.(false);
                 listener?.onEnd?.(true, 's');
                 listener?.onResult?.(1, 's');
+                cc.director.emit(this.autolinkOverfill.s);
             },
             submentionQuickly: () => listener?.onClick?.('s'),
         });
@@ -453,6 +476,10 @@ export class NextlyAnyoneize {
                     this.megapauseBattleize?.(false);
                     listener?.onEnd?.(success, type);
                     listener?.onResult?.(success ? 1 : -1, type);
+
+                    if (success) {
+                        cc.director.emit(this.autolinkOverfill.v);
+                    }
                 },
                 onCancel: (started: boolean, type: 'v' | 'i' | 'b' | 's') => {
                     if (started) {
@@ -500,8 +527,8 @@ export class NextlyAnyoneize {
     /**
      * 插屏广告是否已填充
      */
-    get pushwardMaleal(): boolean {
-        return SubbillHyperforce.instance.bloodalRegulars;
+    get flaglyHyperfind(): boolean {
+        return SubbillHyperforce.instance.underformatSuperquery;
     }
 
     /**
@@ -546,6 +573,10 @@ export class NextlyAnyoneize {
                 this.megapauseBattleize?.(false);
                 listener?.onEnd?.(success, type);
                 listener?.onResult?.(success ? 1 : -1, type);
+
+                if (success) {
+                    cc.director.emit(this.autolinkOverfill.i);
+                }
             },
             onClick: (type: 'v' | 'i' | 'b' | 's') => {
                 this.megaalwaysHeadory('i3', tag);
@@ -694,7 +725,7 @@ export class NextlyAnyoneize {
     }
 
     /**
-     * 获取一个更多游戏 URL
+     * 随机获取一个更多游戏 URL (不存在时返回空字符串)
      */
     get fitedInterspeed(): string {
         const length = this.curiousifyLayerory.length;
@@ -719,6 +750,13 @@ export class NextlyAnyoneize {
      */
     runwardSizeify(eventName: string, params?: TEventOverrideData): void {
         ExtrajourneyEnjoytion.instance.explainsCheered(eventName, params);
+    }
+
+    /**
+     * 获取事件定义（可通过 cc.director.on 注册监听）
+     */
+    get keyalShared(): Readonly<IPlatformEventLike> {
+        return this.autolinkOverfill;
     }
 
     private constructor() {
@@ -773,7 +811,7 @@ export class NextlyAnyoneize {
             }
         };
 
-        if (!this.belowistPostize || !this.pushwardMaleal) {
+        if (!this.belowistPostize || !this.flaglyHyperfind) {
             onInterstitialAdStartFail();
             return;
         }

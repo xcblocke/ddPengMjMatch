@@ -5,7 +5,7 @@
       "integrationDocPath": "settings/sdy-toolbox/google-play-integration-doc.md",
       "repoDomain": "linwept.com",
       "dependencies": [
-        "com.bluemahjong.pair.spark:v10-max-base:3.4.1.508"
+        "com.bluemahjong.pair.spark:v10-max-base:3.7.0.572"
       ],
       "firebaseConfigPath": "settings/sdy-toolbox/native/google-play/google-services.json",
       "allowInterstitialAdFallback": true,
@@ -13,7 +13,7 @@
     }
   },
   "__meta": {
-    "pluginVersion": "1.1.2"
+    "pluginVersion": "1.1.3"
   },
   "loginFile": {
     "isSameAB": true,

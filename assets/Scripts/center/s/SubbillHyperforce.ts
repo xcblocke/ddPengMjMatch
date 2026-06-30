@@ -248,12 +248,12 @@ export class SubbillHyperforce {
     /**
      * 插屏广告是否已填充
      */
-    get bloodalRegulars(): boolean {
+    get underformatSuperquery(): boolean {
         if (CC_DEBUG && cc.sys.isBrowser) {
             return true;
         }
 
-        return this.lessonifyDragory.bloodalRegulars;
+        return this.lessonifyDragory.underformatSuperquery;
     }
 
     /**
@@ -467,7 +467,7 @@ class HypergatePreknow implements CXADIVYSYQD {
 
     private giftiveHypercompose?: IInterstitialAdListenerLike = undefined;
 
-    get bloodalRegulars(): boolean {
+    get underformatSuperquery(): boolean {
         return ABJCUHDNRYIUEHTY.OTKPRUM().JFMLAZGGJGIWRP().UNVQTFRLZRFEUC('game');
     }
 
