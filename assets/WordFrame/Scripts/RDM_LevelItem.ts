@@ -32,7 +32,7 @@ export default class RDM_LevelItem extends cc.Component {
         let state = this.node.getChildByName("state" + data.status);
         if (data.status == 1 || data.status == 2) {
             const passLevel = FrameSDK.frameData.gameData.passLevel;
-            if(passLevel <= 0){
+            if(passLevel <= 0 && data.status == 1){
                 data.total = 20
             }
             cc.find("label_1", state).getComponent(cc.Label).string = data.status == 1 ? `LV.${data.now} / LV.${data.total}` : FrameSDK.convertCoinToStr(data.total, true);

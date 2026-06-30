@@ -552,9 +552,14 @@ export class FrameData {
         // const rate = this.FRAME_CONF.RedeemRateConfig[0] * 100;
 
         // return Math.ceil((num + coinInBank) / rate) * 2 * rate;
-        let cccc = num * 2 + FrameData.FRAME_CONF.RedeemAddCoin;
+       if(num * 2 < this.FRAME_CONF.CoinConf[0].rdm_2[1]){
+            num = this.FRAME_CONF.CoinConf[0].rdm_2[1];
+        }
+        console.log(".................  getTargetCoint ",num)
+        let cccc = num + FrameData.FRAME_CONF.RedeemAddCoin;
         //对cccc向上取整  保留10W位
         cccc = Math.ceil(cccc / 10000) * 10000;
+         console.log(".................  getTargetCoint  11",cccc)
         return cccc;
     }
 }
