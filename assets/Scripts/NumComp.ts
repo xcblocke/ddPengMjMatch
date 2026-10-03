@@ -35,21 +35,21 @@ export default class NumComp extends cc.Component {
             var i = e + (o - e) * a;
             i = i.toFixed(2);
             if (t.action == GameEventType.UPDATE_BALANCE) {
-              t.node.getComponent(cc.Label).string = PlayerDataSys.getCashBalanceWithUnit(i, "");
+              t.node.getComponent(cc.Label).string = PlayerDataSys.getCoinBalanceWithUnit(i, "");
             } else {
               t.action == GameEventType.UPDATE_GOLDBALANCE && (t.node.getComponent(cc.Label).string = PlayerDataSys.getGoldBalanceWithUnit(i, ""));
             }
           }
         }).call(function () {
           if (t.action == GameEventType.UPDATE_BALANCE) {
-            t.node.getComponent(cc.Label).string = PlayerDataSys.getCashBalance();
+            t.node.getComponent(cc.Label).string = PlayerDataSys.getCoinBalance();
           } else {
             t.action == GameEventType.UPDATE_GOLDBALANCE && (t.node.getComponent(cc.Label).string = PlayerDataSys.getGoldBalance());
           }
           t.node.scale = 1;
         }).start();
       }
-    } else this.node.getComponent(cc.Label).string = this.action == GameEventType.UPDATE_GOLDBALANCE ? PlayerDataSys.getGoldBalance() : PlayerDataSys.getCashBalance();
+    } else this.node.getComponent(cc.Label).string = this.action == GameEventType.UPDATE_GOLDBALANCE ? PlayerDataSys.getGoldBalance() : PlayerDataSys.getCoinBalance();
   }
   onDestroy() {
     EventMgr.ignore(this.action, this.fresh, this);

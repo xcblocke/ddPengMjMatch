@@ -260,7 +260,7 @@ export default class BasePage extends cc.Component {
       cc.resources.load("pages/res/back", cc.SpriteFrame, function (o, n) {
         if (o) console.error("class:basePage", o);else {
           t.spriteFrame = n;
-          e.setContentSize(cc.winSize);
+          e.setContentSize(cc.size(cc.winSize.width, cc.winSize.height + 800));
         }
       });
       this.node.addChild(e);

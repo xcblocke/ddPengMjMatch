@@ -1,0 +1,117 @@
+
+chanchu.png
+size: 1950,2031
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+dollar2
+  rotate: false
+  xy: 1586, 1893
+  size: 170, 136
+  orig: 172, 138
+  offset: 1, 1
+  index: -1
+dollar3
+  rotate: false
+  xy: 822, 1924
+  size: 180, 105
+  orig: 180, 106
+  offset: 0, 0
+  index: -1
+henfu3
+  rotate: false
+  xy: 365, 1652
+  size: 701, 247
+  orig: 706, 251
+  offset: 2, 3
+  index: -1
+hengfu1
+  rotate: true
+  xy: 313, 1937
+  size: 92, 309
+  orig: 98, 313
+  offset: 3, 3
+  index: -1
+hengfu2
+  rotate: true
+  xy: 2, 1942
+  size: 87, 309
+  orig: 93, 313
+  offset: 3, 3
+  index: -1
+light1
+  rotate: false
+  xy: 563, 839
+  size: 765, 731
+  orig: 774, 747
+  offset: 2, 15
+  index: -1
+light2
+  rotate: true
+  xy: 2, 2
+  size: 835, 884
+  orig: 886, 886
+  offset: 29, 1
+  index: -1
+pen
+  rotate: true
+  xy: 1587, 1372
+  size: 519, 361
+  orig: 521, 363
+  offset: 1, 1
+  index: -1
+pen2
+  rotate: false
+  xy: 1068, 1572
+  size: 517, 319
+  orig: 519, 321
+  offset: 1, 1
+  index: -1
+pen3
+  rotate: false
+  xy: 2, 1249
+  size: 559, 401
+  orig: 564, 406
+  offset: 3, 2
+  index: -1
+saoguang
+  rotate: true
+  xy: 2, 1726
+  size: 209, 361
+  orig: 235, 361
+  offset: 12, 0
+  index: -1
+shan
+  rotate: false
+  xy: 624, 1932
+  size: 97, 97
+  orig: 103, 102
+  offset: 2, 3
+  index: -1
+shan2
+  rotate: false
+  xy: 723, 1932
+  size: 97, 97
+  orig: 101, 100
+  offset: 1, 2
+  index: -1
+title
+  rotate: false
+  xy: 1004, 1901
+  size: 580, 128
+  orig: 582, 130
+  offset: 1, 1
+  index: -1
+
+chanchu2.png
+size: 1300,1300
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+light3
+  rotate: false
+  xy: 2, 2
+  size: 1296, 1296
+  orig: 1410, 1410
+  offset: 57, 57
+  index: -1

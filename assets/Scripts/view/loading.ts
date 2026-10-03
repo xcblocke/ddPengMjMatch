@@ -19,6 +19,7 @@ import LocalData from '../cyll/LocalData';
 import GameConfig from '../data/GameConfig';
 import LoadProgress, { LoadProgressType } from '../framework/components/LoadProgress';
 import GameSystem from '../system/GameSystem';
+import i18 from '../framework/LanguageMgr';
 const {
   ccclass,
   property
@@ -27,13 +28,17 @@ const {
 export default class loading extends cc.Component {
   @property(cc.Sprite)
   progress: cc.Sprite = null;
+
+  @property(cc.JsonAsset)
+  languageJsonData: cc.JsonAsset = null;
+
   @property(cc.Node)
   line: cc.Node = null;
   hasAgree = false;
-  @property(cc.Node)
-  gou: cc.Node = null;
-  @property(cc.Node)
-  showLogin: cc.Node = null;
+  // @property(cc.Node)
+  // gou: cc.Node = null;
+  // @property(cc.Node)
+  // showLogin: cc.Node = null;
   @property(cc.Node)
   back: cc.Node = null;
   @property(cc.Node)
@@ -53,6 +58,11 @@ export default class loading extends cc.Component {
   @property([cc.Node])
   fcmNodeList: Array<cc.Node> = [];
   onLoad() {
+    
+
+    i18.init(this.languageJsonData.json,cc.sys.languageCode)
+
+
     if ("oppo" == SdkHelper.getChannelName() || "xiaomi" == SdkHelper.getChannelName() || "vivo" == SdkHelper.getChannelName() || "huawei" == SdkHelper.getChannelName() || "honor" == SdkHelper.getChannelName()) {
       this.logo.active = false;
       this.line.active = false;
@@ -67,13 +77,9 @@ export default class loading extends cc.Component {
     GlobalDataSys.init();
     this.preLoadPrefab();
     this.loadProgress.init();
-    if (EngineUtil.getLocalData("user_agreement")) {
-      SdkHelper.initOtherSDK(true);
-    } else {
-      EventMgr.trigger(GameEventType.PAGE_SHOW, {
-        name: "agreementPage"
-      });
-    }
+    // Skip agreement/user notice popup on startup, go straight to loading flow.
+    EngineUtil.setLocalData("user_agreement", "1");
+    SdkHelper.initOtherSDK(true);
   }
   preLoadPrefab() {}
   getMiddleCfg() {
@@ -191,9 +197,9 @@ export default class loading extends cc.Component {
   }
   getSystemConfig(e) {
     var t = this;
-    BaseSystem.getSystemConfig().then(function (o) {
-      e && EngineUtil.reconnectSuc();
-      var n = o.data;
+    // 本地调试开关：true 时跳过服务端 system config 请求
+    var useLocalSystemConfig = true;
+    var applyConfig = function (n) {
       if ("mcda" != t.fad) {
         n.is_reviewer = 1;
         SdkHelper.reportData("reviewerPost");
@@ -208,7 +214,7 @@ export default class loading extends cc.Component {
           if (3 == t && PlayerDataSys.isOppoReviewer()) {
             e.active = false;
           } else {
-            e.active = true;
+            e.active = false;
           }
         });
       }
@@ -223,6 +229,26 @@ export default class loading extends cc.Component {
         if (cc.sys.os == cc.sys.OS_IOS) return;
       }
       t.autoLogin();
+    };
+    if (useLocalSystemConfig) {
+      var localConfigData = {
+        activate: 1,
+        config_data: {
+          new_user: 1
+        },
+        element_conf: {},
+        is_encrypt: false,
+        is_reviewer: 0,
+        map_conf: {},
+        tongdun_info: '{"action":"activate"}'
+      };
+      e && EngineUtil.reconnectSuc();
+      applyConfig(localConfigData);
+      return;
+    }
+    BaseSystem.getSystemConfig().then(function (o) {
+      e && EngineUtil.reconnectSuc();
+      applyConfig(o.data);
     }).catch(function (o) {
       e && EngineUtil.reconnectFai();
       EngineUtil.httpErr(o, function (e) {
@@ -255,7 +281,7 @@ export default class loading extends cc.Component {
         PlayerDataSys.initUserId(o.data);
         t.getUserInfo();
       } else if (gameData.isOpenDemo) t.touristsLogin();else if (cc.sys.isBrowser || !cc.sys.isNative || HotUpdate.getInstance().checkReviewVMVersion()) t.touristsLogin();else {
-        t.showLogin.active = true;
+        // t.showLogin.active = true;
         t.loading.active = false;
         SdkHelper.reportData("show_wx_login");
       }
@@ -284,12 +310,12 @@ export default class loading extends cc.Component {
         t.getUserInfo();
       } else {
         if (-8888 == o.code) {
-          t.showLogin.active = true;
+          // t.showLogin.active = true;
           t.loading.active = false;
           return;
         }
         if (cc.sys.isNative && !HotUpdate.getInstance().checkReviewVMVersion()) {
-          t.showLogin.active = true;
+          // t.showLogin.active = true;
           t.loading.active = false;
         } else {
           PlayerDataSys.initUserId(o.data);
@@ -300,7 +326,7 @@ export default class loading extends cc.Component {
   }
   getUserInfo(e) {
     var t = this;
-    this.showLogin.active = false;
+    // this.showLogin.active = false;
     this.loading.active = true;
     BaseSystem.getUserInfo().then(function (o) {
       console.log("user info--------------", o);
@@ -312,14 +338,14 @@ export default class loading extends cc.Component {
         PlayerDataSys.offTime = a || 0;
         PlayerDataSys.setUserInfo(o.data);
         GameSystem.initGameConfig(o.data.conf_info);
-        GameSystem.initCashGoldInfo(o.data.level_desc_info);
+        GameSystem.initCoinGoldInfo(o.data.level_desc_info);
         gameData.info = o.data;
         GameConfig.getInstance().paramConfig = o.data.conf_info.parameter_conf;
         GameConfig.getInstance().comboConfig = o.data.conf_info.combo_conf;
         GameConfig.getInstance().atlasConfig = o.data.conf_info.atlas_conf;
         GameConfig.getInstance().levelConfig = o.data.conf_info.level_conf;
         GameConfig.getInstance().cardGroupConfig = o.data.conf_info.card_conf;
-        gameData.cashBubbleTip = o.data.bubble_cash_balance;
+        gameData.coinBubbleTip = o.data.bubble_coin_balance;
         gameData.goldBubbleTip = o.data.bubble_gold_balance;
         t.checkReport();
       }
@@ -376,15 +402,39 @@ export default class loading extends cc.Component {
     (function () {
       e.loadProgress.stopFakeProgress();
       e.loadProgress.loadType = LoadProgressType.LoadScene;
+      e.loadProgress.beginSmoothFollow();
       var o = 1 - e.loadProgress.curPercent,
-        n = e.loadProgress.curPercent;
-      cc.director.preloadScene(t, function (t, a) {
-        e.loadProgress.curPercent = n + t / a * o;
-      }, async function () {
-        const __async_this = e;
-        await Res.loadGameRes();
+        n = e.loadProgress.curPercent,
+        preloadShare = 0.5,
+        preload01 = 0,
+        res01 = 0,
+        merge = function () {
+          var m = preloadShare * preload01 + (1 - preloadShare) * res01;
+          e.loadProgress.curPercent = n + o * m;
+        };
+      var preloadPromise = new Promise(function (resolve) {
+        cc.director.preloadScene(t, function (c, total) {
+          if (!total || total <= 0) return;
+          preload01 = c / total;
+          merge();
+        }, function (err) {
+          preload01 = 1;
+          merge();
+          resolve(null);
+        });
+      });
+      var resPromise = Res.loadGameRes(function (p) {
+        res01 = p;
+        merge();
+      });
+      Promise.all([preloadPromise, resPromise]).then(function () {
+        if (!e.node || !cc.isValid(e.node)) return;
+        e.loadProgress.curPercent = 1;
+        e.loadProgress.snapSmoothToTarget();
+        e.loadProgress.endSmoothFollow();
         cc.director.loadScene(t);
-        return;
+      }).catch(function (err) {
+        console.error("loadScene pipeline", err);
       });
     })();
   }
@@ -426,7 +476,7 @@ export default class loading extends cc.Component {
   }
   agree() {
     this.hasAgree = !this.hasAgree;
-    this.gou.active = this.hasAgree;
+    // this.gou.active = this.hasAgree;
   }
   doWxLogin() {
     var e = this;

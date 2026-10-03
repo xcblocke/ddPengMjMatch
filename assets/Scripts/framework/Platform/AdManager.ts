@@ -189,7 +189,7 @@ export default class AdManager {
     });
     GlobalApp.AdSchedule.stopSchedule();
     this.doVideoFail(e);
-    SdkHelper.showToast("拉取广告出错，领取失败");
+    SdkHelper.showToast(`gkey_303`);
   }
   doVideoFail(e) {
     var t = this;

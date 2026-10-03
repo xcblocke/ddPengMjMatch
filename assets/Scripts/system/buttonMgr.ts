@@ -9,6 +9,7 @@ import { VideoType, PropType } from '../framework/enum/AllEnum';
 import { gameData } from '../data/GameData';
 import CommonUtil from '../common/CommonUtil';
 import SdkHelper from '../framework/SdkHelper';
+import { levelRewardCoin } from '../config';
 const {
   ccclass,
   property
@@ -37,8 +38,17 @@ export default class buttonMgr extends cc.Component {
       EngineUtil.reconnectSuc();
       var t = e.levelup_force_flag;
       gameData.tg_reward = e.tg_reward;
-      gameData.canCashExtract = e.is_extract;
+      gameData.canCoinExtract = e.is_extract;
       gameData.extractStatus = e.extract_status;
+      // On level pass: update localStorage + GameData immediately, but do not refresh top UI yet.
+      if (gameData.dollarRewardAppliedLevel !== gameData.gameLevel) {
+        var add = Number(levelRewardCoin) || 0;
+        gameData.dollarBalance = Number(gameData.dollarBalance || 0) + add;
+        gameData.dollarLastAdd = add;
+        gameData.dollarRewardAppliedLevel = gameData.gameLevel;
+        EngineUtil.setLocalData("user_dollar_balance", String(gameData.dollarBalance));
+        EngineUtil.setLocalData("user_dollar_reward_applied_level", String(gameData.dollarRewardAppliedLevel));
+      }
       var o = {
         type: VideoType.Pass,
         is_force: t,
@@ -72,54 +82,54 @@ export default class buttonMgr extends cc.Component {
     });
   }
   wx_wdBtn_click(e = false) {
-    var t = this;
-    if (gameData.globalCanClick) {
-      EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
-      AudioManager.getInstance().playMusic("btntouch");
-      if (!CommonUtil.onAwait("wx_wdBtn_click", 100)) {
-        e = true === e;
-        GameSystem.getExtractInfo().then(function (e) {
-          EngineUtil.reconnectSuc();
-          if (e && 1 == e.code) {
-            var t = Object.assign(Object.assign({}, e.data), {
-              auto_wd: false,
-              gameSucc: false
-            });
-            EventMgr.trigger(GameEventType.PAGE_SHOW, {
-              name: "wdPage",
-              data: t
-            });
-          }
-        }).catch(function (e) {
-          EngineUtil.reconnectFai();
-          EngineUtil.httpErr(e, function () {
-            t.wx_wdBtn_click();
-          });
-        });
-      }
-    }
+    // var t = this;
+    // if (gameData.globalCanClick) {
+    //   EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
+    //   AudioManager.getInstance().playMusic("btntouch");
+    //   if (!CommonUtil.onAwait("wx_wdBtn_click", 100)) {
+    //     e = true === e;
+    //     GameSystem.getExtractInfo().then(function (e) {
+    //       EngineUtil.reconnectSuc();
+    //       if (e && 1 == e.code) {
+    //         var t = Object.assign(Object.assign({}, e.data), {
+    //           auto_wd: false,
+    //           gameSucc: false
+    //         });
+    //         EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //           name: "wdPage",
+    //           data: t
+    //         });
+    //       }
+    //     }).catch(function (e) {
+    //       EngineUtil.reconnectFai();
+    //       EngineUtil.httpErr(e, function () {
+    //         t.wx_wdBtn_click();
+    //       });
+    //     });
+    //   }
+    // }
   }
   red_wdBtn_click() {
-    var e = this;
-    EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
-    AudioManager.getInstance().playMusic("btntouch");
-    if (gameData.isOpenDemo) {
-      this.demoWdTBtnClick();
-    } else {
-      GameSystem.getGoldExtractInfo().then(function (e) {
-        EngineUtil.reconnectSuc();
-        console.log("gold extract info-------", e);
-        e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-          name: "redWdPage",
-          data: e.data
-        });
-      }).catch(function (t) {
-        EngineUtil.reconnectFai();
-        EngineUtil.httpErr(t, function () {
-          e.red_wdBtn_click();
-        });
-      });
-    }
+    // var e = this;
+    // EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
+    // AudioManager.getInstance().playMusic("btntouch");
+    // if (gameData.isOpenDemo) {
+    //   this.demoWdTBtnClick();
+    // } else {
+    //   GameSystem.getGoldExtractInfo().then(function (e) {
+    //     EngineUtil.reconnectSuc();
+    //     console.log("gold extract info-------", e);
+    //     e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //       name: "redWdPage",
+    //       data: e.data
+    //     });
+    //   }).catch(function (t) {
+    //     EngineUtil.reconnectFai();
+    //     EngineUtil.httpErr(t, function () {
+    //       e.red_wdBtn_click();
+    //     });
+    //   });
+    // }
   }
   againGameBtnClick() {}
   tipCardBtnClick() {
@@ -133,7 +143,7 @@ export default class buttonMgr extends cc.Component {
       round_id: gameData.roundId,
       set_id: gameData.setId
     });
-    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3("手速过快，稍后再试");else if (PlayerDataSys.tipCardCount <= 0) this.addPropCount(PropType.tipCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_OPERATE_TIP);else {
+    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.tipCardCount <= 0) this.addPropCount(PropType.tipCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_OPERATE_TIP);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
@@ -153,7 +163,7 @@ export default class buttonMgr extends cc.Component {
       set_id: gameData.setId
     });
     AudioManager.getInstance().playMusic("btntouch");
-    if (gameData.globalCanClick) if (PlayerDataSys.reshuffleCardCount <= 0) this.addPropCount(PropType.reshuffleCard);else if (this.propBtnIsFlag) EngineUtil.showCocosToast3("手速过快，稍后再试");else {
+    if (gameData.globalCanClick) if (PlayerDataSys.reshuffleCardCount <= 0) this.addPropCount(PropType.reshuffleCard);else if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else {
       this.propBtnIsFlag = true;
       setTimeout(function () {
         e.propBtnIsFlag = false;
@@ -165,24 +175,24 @@ export default class buttonMgr extends cc.Component {
     }
   }
   freezeCardBtnClick() {
-    var e = this;
-    SdkHelper.reportData("click_prop", {
-      prop_type: PropType.freezeCard,
-      game_level: gameData.gameLevel,
-      lun_level: gameData.lun_level,
-      turn_id: gameData.turnId,
-      round_id: gameData.roundId,
-      set_id: gameData.setId
-    });
-    AudioManager.getInstance().playMusic("btntouch");
-    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3("手速过快，稍后再试");else if (PlayerDataSys.freezeCardCount <= 0) this.addPropCount(PropType.freezeCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_FREEZE);else {
-      this.propBtnIsFlag = true;
-      setTimeout(function () {
-        e.propBtnIsFlag = false;
-      }, 3000);
-      EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
-      EventMgr.trigger(GameEventType.USER_FREEZE);
-    }
+    // var e = this;
+    // SdkHelper.reportData("click_prop", {
+    //   prop_type: PropType.freezeCard,
+    //   game_level: gameData.gameLevel,
+    //   lun_level: gameData.lun_level,
+    //   turn_id: gameData.turnId,
+    //   round_id: gameData.roundId,
+    //   set_id: gameData.setId
+    // });
+    // AudioManager.getInstance().playMusic("btntouch");
+    // if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.freezeCardCount <= 0) this.addPropCount(PropType.freezeCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_FREEZE);else {
+    //   this.propBtnIsFlag = true;
+    //   setTimeout(function () {
+    //     e.propBtnIsFlag = false;
+    //   }, 3000);
+    //   EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
+    //   EventMgr.trigger(GameEventType.USER_FREEZE);
+    // }
   }
   addPropCount(e) {
     console.log("addPropCount", e);
@@ -203,8 +213,10 @@ export default class buttonMgr extends cc.Component {
   }
   demoWdTBtnClick() {
     var e = PlayerDataSys.goldBalance;
-    if (e < 0.01) EngineUtil.showCocosToast3("小于0.01元无法提现");else {
-      PlayerDataSys.withDrawal(e);
+    if (e < 0.01) {
+
+    }else {
+      PlayerDataSys.exchange(e);
       EventMgr.trigger(GameEventType.PAGE_SHOW, {
         name: "wdSuccPage",
         data: {
@@ -220,45 +232,45 @@ export default class buttonMgr extends cc.Component {
     });
   }
   openSignInPage() {
-    GameSystem.signInfo().then(function (e) {
-      e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-        name: "signPage",
-        data: e.data
-      });
-    });
+    // GameSystem.signInfo().then(function (e) {
+    //   e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //     name: "signPage",
+    //     data: e.data
+    //   });
+    // });
   }
   openTaskPage() {
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "taskPage"
-    });
+    // EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //   name: "taskPage"
+    // });
   }
   openBoxPage() {
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "boxPage",
-      data: {
-        cb: function () {}
-      }
-    });
+    // EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //   name: "boxPage",
+    //   data: {
+    //     cb: function () {}
+    //   }
+    // });
   }
   openLuckyFlopPage() {
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "luckyFlopPage"
-    });
+    // EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //   name: "luckyFlopPage"
+    // });
   }
   openLuckyDrawPage() {
-    EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "turntablePage",
-      option: {
-        inQueue: true
-      }
-    });
+    // EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //   name: "turntablePage",
+    //   option: {
+    //     inQueue: true
+    //   }
+    // });
   }
   openTujianPage() {
-    GameSystem.getTujianInfo().then(function (e) {
-      e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-        name: "tujianPage",
-        data: e.data
-      });
-    });
+    // GameSystem.getTujianInfo().then(function (e) {
+    //   e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
+    //     name: "tujianPage",
+    //     data: e.data
+    //   });
+    // });
   }
 }

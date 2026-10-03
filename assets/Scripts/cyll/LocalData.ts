@@ -42,11 +42,11 @@ export default class LocalData {
   setGameLevel2Guide(e) {
     cc.sys.localStorage.setItem("showGudeLevel2_" + PlayerDataSys.userid, e);
   }
-  getUserCashData() {
-    return JSON.parse(cc.sys.localStorage.getItem("userCashData"));
+  getUserCoinData() {
+    return JSON.parse(cc.sys.localStorage.getItem("userCoinData"));
   }
-  setUserCashData(e) {
-    cc.sys.localStorage.setItem("userCashData", e);
+  setUserCoinData(e) {
+    cc.sys.localStorage.setItem("userCoinData", e);
   }
   getDebugData() {
     return JSON.parse(cc.sys.localStorage.getItem("debugData"));

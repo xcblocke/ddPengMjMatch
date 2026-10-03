@@ -7,7 +7,7 @@ const {
   property
 } = cc._decorator;
 enum r {
-  Cash = 0,
+  Coin = 0,
   Gold = 1,
 }
 @ccclass
@@ -20,17 +20,19 @@ export default class TopBar extends cc.Component {
   label2: cc.RichText = null;
   @property(cc.Node)
   goldNode: cc.Node = null;
+
   @property(cc.Node)
-  cashBubbleNode: cc.Node = null;
+  coinBubbleNode: cc.Node = null;
+
   @property(cc.Node)
   goldBubbleNode: cc.Node = null;
-  _cashBubbleTip = "";
+  _coinBubbleTip = "";
   _goldBubbleTip = "";
-  _curShowBubbleType = r.Cash;
+  _curShowBubbleType = r.Coin;
   _goldBubbleTipFlag = false;
   onLoad() {
     EventMgr.listen(GameEventType.FRESH_RED_BUBBLE, this.freshBubble, this);
-    EventMgr.listen(GameEventType.UPDATE_BALANCE, this.freshCashBubble, this);
+    EventMgr.listen(GameEventType.UPDATE_BALANCE, this.freshCoinBubble, this);
     EventMgr.listen(GameEventType.HIDE_BUBBLE, this.hideBubble, this);
     EventMgr.listen(GameEventType.SHOW_BUBBLE, this.showBubble, this);
   }
@@ -38,9 +40,9 @@ export default class TopBar extends cc.Component {
     EventMgr.ignoreAllByCaller(this);
   }
   start() {
-    this.label0.string = PlayerDataSys.getCashBalance();
+    this.label0.string = PlayerDataSys.getCoinBalance();
     this.label1.string = PlayerDataSys.getGoldBalance();
-    this.cashBubbleNode.active = false;
+    this.coinBubbleNode.active = false;
     this.goldBubbleNode.active = false;
     if (gameData.isOpenDemo) this.goldNode.x = -173.033;else {
       this.goldNode.x = 173.033;
@@ -48,28 +50,28 @@ export default class TopBar extends cc.Component {
     }
   }
   freshBubble() {
-    if (gameData.canCashExtract) {
+    if (gameData.canCoinExtract) {
       this.hideBubble();
     } else {
       this.showBubble();
     }
     this.loopShow();
   }
-  freshCashBubble() {
+  freshCoinBubble() {
     this.loopShow();
   }
   hideBubble() {
-    this.cashBubbleNode.opacity = 0;
+    this.coinBubbleNode.opacity = 0;
     this.goldBubbleNode.opacity = 0;
   }
   showBubble() {
-    this.cashBubbleNode.opacity = 255;
+    this.coinBubbleNode.opacity = 255;
     this.goldBubbleNode.opacity = 255;
   }
   loopGoldBubble() {}
   loopShow() {
     if (!gameData.isOpenDemo) {
-      this.cashBubbleNode.active = true;
+      this.coinBubbleNode.active = true;
       this.goldBubbleNode.active = true;
       if (gameData.goldBubbleTip && -1 != gameData.goldBubbleTip.indexOf("|")) {
         this._goldBubbleTipFlag = !this._goldBubbleTipFlag;
@@ -79,7 +81,7 @@ export default class TopBar extends cc.Component {
           this.goldBubbleNode.getChildByName("label").getComponent(cc.RichText).string = gameData.goldBubbleTip.split("|")[1];
         }
       } else gameData.goldBubbleTip && (this.goldBubbleNode.getChildByName("label").getComponent(cc.RichText).string = gameData.goldBubbleTip);
-      gameData.cashBubbleTip && (this.cashBubbleNode.getChildByName("label").getComponent(cc.RichText).string = gameData.cashBubbleTip);
+      gameData.coinBubbleTip && (this.coinBubbleNode.getChildByName("label").getComponent(cc.RichText).string = gameData.coinBubbleTip);
       "" == gameData.goldBubbleTip && (this.goldBubbleNode.getChildByName("label").getComponent(cc.RichText).string = "");
     }
   }

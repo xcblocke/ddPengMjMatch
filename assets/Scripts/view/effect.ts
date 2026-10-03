@@ -9,9 +9,10 @@ const {
   property
 } = cc._decorator;
 export enum EffectType {
-  Cash = 0,
+  Coin = 0,
   Red = 1,
   Diamond = 2,
+  Dollar = 3,
 }
 @ccclass
 export default class effect extends cc.Component {
@@ -22,6 +23,8 @@ export default class effect extends cc.Component {
   balanceUi: cc.Node = null;
   @property(cc.Node)
   redUi: cc.Node = null;
+  @property(cc.Node)
+  dollarUi: cc.Node = null;
   @property(cc.Prefab)
   balanceEffect: cc.Prefab = null;
   @property(cc.Node)
@@ -56,8 +59,10 @@ export default class effect extends cc.Component {
       f = n.isworldPos;
     console.log("addEffects", a, p, s);
     s || (s = 0);
-    if (s == EffectType.Cash) {
+    if (s == EffectType.Coin) {
       this.endNode = this.balanceUi;
+    } else if (s == EffectType.Dollar) {
+      this.endNode = this.dollarUi;
     } else {
       s == EffectType.Red && (this.endNode = this.redUi);
     }
@@ -77,7 +82,7 @@ export default class effect extends cc.Component {
     c.getComponent(cc.Sprite).spriteFrame = this.typeIcon[o];
     var s = cc.find("num", c);
     if (n) {
-      s.getComponent(cc.Label).string = 0 == o ? "+" + PlayerDataSys.getCashBalance(n) : "+" + PlayerDataSys.getGoldBalance(n);
+      s.getComponent(cc.Label).string = 0 == o ? "+" + PlayerDataSys.getCoinBalance(n) : "+" + PlayerDataSys.getGoldBalance(n);
     } else {
       s.active = false;
     }
@@ -97,7 +102,7 @@ export default class effect extends cc.Component {
     c.getComponent(cc.Sprite).spriteFrame = this.typeIcon[o];
     var s = cc.find("num", c);
     if (n) {
-      s.getComponent(cc.Label).string = 0 == o ? "+" + PlayerDataSys.getCashBalance(n) : "+" + PlayerDataSys.getGoldBalance(n);
+      s.getComponent(cc.Label).string = 0 == o ? "+" + PlayerDataSys.getCoinBalance(n) : "+" + PlayerDataSys.getGoldBalance(n);
     } else {
       s.active = false;
     }
@@ -135,7 +140,7 @@ export default class effect extends cc.Component {
         r.string = "+" + PlayerDataSys.getGoldBalanceWithUnit(t);
         a.getChildByName("effect_jb").active = true;
       } else {
-        r.string = "+" + PlayerDataSys.getCashBalanceWithUnit(t);
+        r.string = "+" + PlayerDataSys.getCoinBalanceWithUnit(t);
         a.getChildByName("effect_hb").active = true;
       }
       a.parent = this.effectNode;

@@ -3,6 +3,7 @@ import GameEventType from '../framework/Event/GameEventType';
 import { gameData } from '../data/GameData';
 class _PageMgr {
   map_pages = new Map();
+  map_loadingPages = new Map();
   arr_pageQueue = [];
   onShowNum = 0;
   set_onShowPages = new Set();
@@ -75,6 +76,15 @@ class _PageMgr {
   setEffectNode2(e) {
     e.parent = this.pages;
   }
+  destroyDuplicatePageNodes(e, t = null) {
+    if (!this.pages || !this.pages.children) return;
+    for (var o = this.pages.children.length - 1; o >= 0; o--) {
+      var n = this.pages.children[o];
+      if (n && n.name === e && n !== t) {
+        n.destroy();
+      }
+    }
+  }
   async showPage(e) {
     var t,
       o,
@@ -120,10 +130,16 @@ class _PageMgr {
       }
       this.onShowNum++;
     } else u = this.getPageIndex();
+    // Prevent duplicate instances when the same page is requested repeatedly
+    // before its first async cc.resources.load finishes.
+    if (r && this.map_loadingPages.has(t)) {
+      await this.map_loadingPages.get(t);
+    }
     if (r && (p = this.map_pages.get(t)) && (d = p.node)) {
       h = new Promise(function (e) {
         f = e;
       });
+      this.destroyDuplicatePageNodes(t, d);
       d.getComponent(t).resolve = f;
       this.fullNode.active = true;
       await d.getComponent(t)._init(o);
@@ -136,30 +152,51 @@ class _PageMgr {
     _ = new Promise(function (e) {
       g = e;
     });
-    cc.resources.load("pages/" + t, cc.Prefab, async function (e, r) {
-      const __async_this = y;
-      var n;
-      if (e) {
-        console.error("class:pageMgr.fun:showPage加载页面错误", e);
+    const loadPromise = new Promise(function (resolve) {
+      cc.resources.load("pages/" + t, cc.Prefab, async function (e, prefab) {
+        const __async_this = y;
+        var n;
+        if (e) {
+          console.error("class:pageMgr.fun:showPage加载页面错误", e);
+          resolve(false);
+          return;
+        }
+        if (i.only && __async_this.hasShowPage(t)) {
+          resolve(true);
+          return;
+        }
+        if (i.reuse && (p = __async_this.map_pages.get(t)) && (d = p.node)) {
+          __async_this.destroyDuplicatePageNodes(t, d);
+          d.getComponent(t).resolve = g;
+          __async_this.fullNode.active = true;
+          await d.getComponent(t)._init(o);
+          __async_this.fullNode.active = false;
+          d.zIndex = u;
+          d.active = true;
+          __async_this.set_onShowPages.add(d);
+          resolve(true);
+          return;
+        }
+        (n = cc.instantiate(prefab as any)).zIndex = u;
+        __async_this.fullNode.active = true;
+        __async_this.set_onShowPages.add(n);
+        __async_this.map_pages.set(t, {
+          node: n,
+          prefab: prefab,
+          option: i
+        });
+        n.getComponent(t).resolve = g;
+        await n.getComponent(t)._init(o);
+        __async_this.pages.addChild(n);
+        __async_this.destroyDuplicatePageNodes(t, n);
+        __async_this.fullNode.active = false;
+        resolve(true);
         return;
-      }
-      if (i.only && __async_this.hasShowPage(t)) {
-        return;
-      }
-      (n = cc.instantiate(r)).zIndex = u;
-      __async_this.fullNode.active = true;
-      __async_this.set_onShowPages.add(n);
-      __async_this.map_pages.set(t, {
-        node: n,
-        prefab: r,
-        option: i
       });
-      n.getComponent(t).resolve = g;
-      await n.getComponent(t)._init(o);
-      __async_this.pages.addChild(n);
-      __async_this.fullNode.active = false;
-      return;
     });
+    this.map_loadingPages.set(t, loadPromise);
+    await loadPromise;
+    this.map_loadingPages.delete(t);
     this.lastPageData = e;
     return _;
   }
@@ -215,6 +252,7 @@ class _PageMgr {
       o && o.destroy();
     });
     this.map_pages.clear();
+    this.map_loadingPages.clear();
     this.set_onShowPages.clear();
     this.onShowNum = 0;
     this.arr_pageQueue = [];

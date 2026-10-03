@@ -1,3 +1,4 @@
+import { MainConfig, ServerType } from '../config';
 import HotUpdate from '../framework/Event/HotUpdate';
 import GlobalApp from './GlobalApp';
 const {
@@ -30,7 +31,19 @@ if (!cc.Node.prototype.getChildByPath) {
 @ccclass
 export default class init extends cc.Component {
   onLoad() {
+    this.initLog();
     HotUpdate.getInstance().getBaseVersion();
     cc.director.loadScene("loadingScene");
+  }
+
+  initLog() {
+    if (MainConfig.curServerType === ServerType.release) {
+        console.log = function () { };
+        console.warn = function () { };
+        console.error = function () { };
+        cc.log = function () { };
+        cc.warn = function () { };
+        cc.error = function () { };
+    }
   }
 }

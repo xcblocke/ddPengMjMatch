@@ -24,6 +24,8 @@ import { gameConfig } from './data/GameConfig';
 import LevelStart from './LevelStart';
 import mainBtnGroupCtrl from './mainBtnGroupCtrl';
 import { GuideEnum } from './framework/enum/GuideConfig';
+import { levelRewardCoin, MainConfig, ServerType } from './config';
+import { applyFreePropRewardIfAny } from './freePropPage';
 const {
   ccclass,
   property
@@ -34,10 +36,13 @@ export default class GameMain extends cc.Component {
   wxNode: cc.Node = null;
   @property(cc.Node)
   goldNode: cc.Node = null;
+
+  @property(cc.Node)
+  dollarNode: cc.Node = null;
+
   @property(cc.Node)
   map_root: cc.Node = null;
-  @property(cc.Node)
-  mapBgBottom: cc.Node = null;
+  
   @property(cc.Button)
   backStepBtn: cc.Button = null;
   @property(cc.Prefab)
@@ -49,11 +54,7 @@ export default class GameMain extends cc.Component {
     displayName: "游戏提示"
   })
   gameTips: cc.Node = [];
-  @property({
-    type: cc.Node,
-    displayName: "素材ui"
-  })
-  demoNode: cc.Node = null;
+
   @property({
     type: cc.Node,
     displayName: "背景"
@@ -103,6 +104,13 @@ export default class GameMain extends cc.Component {
   mainBtnGroupCtrl: mainBtnGroupCtrl = null;
   @property(cc.Node)
   teachGuideNode: cc.Node = null;
+
+  @property(sp.Skeleton)
+  ruchangAni: sp.Skeleton = null;
+
+  // Main scene coin UI (top-left in screenshot 1).
+  _coinTextNode: cc.Node = null;
+  _coinTextLabel: cc.Label = null;
   _gridRows = 0;
   _gridCols = 0;
   _cardGrid = [];
@@ -146,17 +154,33 @@ export default class GameMain extends cc.Component {
     return this._cardScale;
   }
   start() {
+    this.playRuchangAni();
     GlobaldataMgr.auth_type && SdkHelper.ysdkLogin();
-    this.demoNode.active = gameData.isOpenDemo;
+
     AudioManager.getInstance().playMusic("bgm", true, true);
     GlobalApp.GameMain = this;
-    if (!EngineUtil.isOnlineRelease() && !gameData.isOpenDemo) {
+    if (MainConfig.curServerType !== ServerType.release) {
       var e = ResourcesManager.getInstance().getPrefab("DebugNode"),
         t = cc.instantiate(e);
       t.getComponent(DebugNode).init();
       cc.game.addPersistRootNode(t);
     }
   }
+
+  playRuchangAni() {
+    this.ruchangAni.setAnimation(0, "guan", false);
+    this.ruchangAni.setCompleteListener((event) => {
+      if (event.animation.name === "guan") { 
+        this.scheduleOnce(() => {
+          this.ruchangAni.setAnimation(0, "jingzhi", false);
+        }, 0.4);
+      } else if (event.animation.name === "jingzhi") {
+        this.ruchangAni.setAnimation(0, "kai", false);
+        this.startGame(false, true);
+      } 
+    });
+  }
+
   onLoad() {
     cc.internal && cc.internal.inputManager && (cc.internal.inputManager._maxTouches = 1);
     gameData.gameUIRoot = this.node;
@@ -173,8 +197,9 @@ export default class GameMain extends cc.Component {
     GlobalApp.TouchCtrl = this._touchCtrl;
     this.updateGameSkin();
     this.clearGameUI();
+    this.initCoinBalance();
     this.addEvent();
-    this.startGame(false, true);
+    
   }
   getCellW() {
     return this._scaledCardWidth + this._gapX;
@@ -186,7 +211,7 @@ export default class GameMain extends cc.Component {
     return this.mahjongContainer;
   }
   showYSDKToast() {
-    PlayerDataSys.isYSDKLoginSuccess && EngineUtil.showCocosToast3("已在防沉迷系统实名认证，可直接进入游戏");
+    PlayerDataSys.isYSDKLoginSuccess && EngineUtil.showCocosToast3(`gkey_308`);
   }
   addEvent() {
     EventMgr.listen(GameEventType.REBORN, this.rebornGame, this);
@@ -206,6 +231,7 @@ export default class GameMain extends cc.Component {
     EventMgr.listen(GameEventType.RESTART_GAME, this.reStartGame, this);
     EventMgr.listen(GameEventType.PASS_LEVEL_EFFECT, this.playPassLevelEffect, this);
     EventMgr.listen(GameEventType.UPDATE_COMBO_COUNT, this.updateComboCount, this);
+    EventMgr.listen(GameEventType.UPDATE_DOLLARBALANCE, this.updateCoinTextUI, this);
     EventMgr.listen(GameEventType.FULL_SCREEN_CLICK, this.closePropTip, this);
     EventMgr.listen(GameEventType.FULL_SCREEN_MOVE, this.closePropTip, this);
   }
@@ -225,6 +251,7 @@ export default class GameMain extends cc.Component {
     EventMgr.ignore(GameEventType.RESTART_GAME, this.reStartGame, this);
     EventMgr.ignore(GameEventType.PASS_LEVEL_EFFECT, this.playPassLevelEffect, this);
     EventMgr.ignore(GameEventType.UPDATE_BACK_STEP_STATE, this.updateBackStepBtnState, this);
+    EventMgr.ignore(GameEventType.UPDATE_DOLLARBALANCE, this.updateCoinTextUI, this);
     EventMgr.ignore(GameEventType.FULL_SCREEN_CLICK, this.closePropTip, this);
     EventMgr.ignore(GameEventType.FULL_SCREEN_MOVE, this.closePropTip, this);
   }
@@ -256,7 +283,7 @@ export default class GameMain extends cc.Component {
       };
       if (gameData.hasGradeChange() && !gameData.isOpenDemo) {
         EventMgr.trigger(GameEventType.PAGE_SHOW, {
-          name: "gradeCashPage",
+          name: "gradeBalancePage",
           data: {
             cb: o_local,
             gradeDis: gameData.gradeDis
@@ -271,6 +298,66 @@ export default class GameMain extends cc.Component {
       return;
     }).catch(function () {});
     return;
+  }
+
+  _findNodeByName(root: any, name: string) {
+    if (!root) return null;
+    if (root.name === name) return root;
+    if (!root.children) return null;
+    for (let i = 0; i < root.children.length; i++) {
+      const child = root.children[i];
+      const res = this._findNodeByName(child, name);
+      if (res) return res;
+    }
+    return null;
+  }
+
+  initCoinBalance() {
+    // Local-only coin system.
+    const COIN_KEY = "user_dollar_balance";
+    const COIN_REWARD_LEVEL_KEY = "user_dollar_reward_applied_level";
+    const raw = EngineUtil.getLocalData(COIN_KEY);
+    let coin = Number(raw);
+    if (raw === "" || Number.isNaN(coin)) {
+      coin = 100;
+      EngineUtil.setLocalData(COIN_KEY, String(coin));
+    }
+    gameData.dollarBalance = coin < 0 ? 0 : Math.floor(coin);
+    gameData.dollarLastAdd = 0;
+    const appliedRaw = EngineUtil.getLocalData(COIN_REWARD_LEVEL_KEY);
+    const appliedLevel = Number(appliedRaw);
+    gameData.dollarRewardAppliedLevel = Number.isNaN(appliedLevel) ? 0 : Math.floor(appliedLevel);
+    // Cache coin label node (may not exist in editor tests).
+    this.updateCoinTextUI(gameData.dollarBalance);
+  }
+
+  updateCoinTextUI(v: any = null) {
+    if (null != v && v !== "") {
+      if (typeof v === "object" && v.end !== undefined) {
+        gameData.dollarBalance = Math.floor(Number(v.end) || 0);
+      } else {
+        gameData.dollarBalance = Math.floor(Number(v) || 0);
+      }
+    }
+    if (!this._coinTextNode) {
+      this._coinTextNode = this._findNodeByName(this.node, "coinText");
+      if (!this._coinTextNode) this._coinTextNode = this._findNodeByName(cc.director.getScene(), "coinText");
+      this._coinTextLabel = this._coinTextNode ? this._coinTextNode.getComponent(cc.Label) : null;
+    }
+    if (this._coinTextLabel) {
+      this._coinTextLabel.string = String(gameData.dollarBalance || 0);
+    }
+  }
+
+  addCoinRewardForLevelPass() {
+    const curLevel = gameData.gameLevel;
+    if (gameData.dollarRewardAppliedLevel === curLevel) return;
+    const add = Number(levelRewardCoin) || 0;
+    gameData.dollarBalance = Number(gameData.dollarBalance || 0) + add;
+    gameData.dollarLastAdd = add;
+    gameData.dollarRewardAppliedLevel = curLevel;
+    EngineUtil.setLocalData("user_dollar_balance", String(gameData.dollarBalance));
+    EngineUtil.setLocalData("user_dollar_reward_applied_level", String(gameData.dollarRewardAppliedLevel));
   }
   reStartGame() {
     AudioManager.getInstance().playMusic("btntouch");
@@ -337,19 +424,15 @@ export default class GameMain extends cc.Component {
       if (6 == this.gridCols && 8 == this.gridRows) {
         this.gridBgNode.height = 980;
         this.map_root.y = 0;
-        this.mapBgBottom.y = -493;
       } else if (8 == this.gridCols && 10 == this.gridRows) {
         this.gridBgNode.height = 920;
         this.map_root.y = -30;
-        this.mapBgBottom.y = -430;
       } else if (10 == this.gridCols && 12 == this.gridRows) {
         this.gridBgNode.height = 885;
         this.map_root.y = -50;
-        this.mapBgBottom.y = -400;
       } else {
         this.gridBgNode.height = 750;
         this.map_root.y = -100;
-        this.mapBgBottom.y = -260;
       }
       var n = 686.38 / (116.48 * o + -2.5 * (o - 1)),
         a = 942 / (130 * t + -14 * (t - 1)),
@@ -480,12 +563,15 @@ export default class GameMain extends cc.Component {
           l.x = g;
         }
         c.position = l;
-        var y = c.getComponent(sp.Skeleton),
-          m = Math.floor(3 * Math.random()) + 1;
-        y.setSkin("0" + m);
-        y.setCompleteListener(function () {
+        // var y = c.getComponent(sp.Skeleton),
+        //   m = Math.floor(3 * Math.random()) + 1;
+        // y.setSkin("0" + m);
+        // y.setCompleteListener(function () {
+        //   c.destroy();
+        // });
+        this.scheduleOnce(() => {
           c.destroy();
-        });
+        }, 1);
       }
       if (n) {
         gameData.gameState = GameState.gameResult;
@@ -558,12 +644,6 @@ export default class GameMain extends cc.Component {
   updateGameSkin() {
     this.bg.getComponent(cc.Sprite).spriteFrame = Res.getBgSpriteFrame("bg" + gameData.gameSkinData.bgSkin.toString());
     this.gridBgNode.getComponent(cc.Sprite).spriteFrame = Res.getBgSpriteFrame("gridBg" + gameData.gameSkinData.bgSkin.toString());
-    this.mapBgBottom.getComponent(cc.Sprite).spriteFrame = Res.getBgSpriteFrame("bottom" + gameData.gameSkinData.bgSkin.toString());
-    if (gameData.gameSkinData.bgSkin == BgSkinType.BgSkin2) {
-      this.gridBgNode.getChildByName("snow").active = true;
-    } else {
-      this.gridBgNode.getChildByName("snow").active = false;
-    }
   }
   updatePorpCount() {
     var e = this;
@@ -596,7 +676,7 @@ export default class GameMain extends cc.Component {
               a.getComponent(cc.Sprite).spriteFrame = e.propNumIcons[0];
             }
           } else if ("freeze" == t.name) {
-            t.active = gameData.gameLevel >= 4;
+            t.active = false;
             o.getComponent(cc.Label).string = 0 == PlayerDataSys.freezeCardCount ? "+" : "" + PlayerDataSys.freezeCardCount;
             n.active = 0 == PlayerDataSys.freezeCardCount;
             o.active = 0 != PlayerDataSys.freezeCardCount;
@@ -676,13 +756,16 @@ export default class GameMain extends cc.Component {
       });
       SdkHelper.reportData("pass_game_level_balance", {
         duration: gameData.gameTime,
-        cashNum: PlayerDataSys.cashBalance,
+        cionNum: PlayerDataSys.coinBalance,
         goldNum: PlayerDataSys.goldBalance
       });
       var o = t.force_flag;
       gameData.tg_reward = t.tg_reward;
-      gameData.canCashExtract = t.is_extract;
+      gameData.canCoinExtract = t.is_extract;
       gameData.extractStatus = t.extract_status;
+      // Local-only coin reward is applied after settlement "claim".
+      // Store pending add amount now, so settleMentPage can animate + update coin UI.
+      gameData.dollarLastAdd = Number(levelRewardCoin) || 0;
       var n = {
         type: VideoType.Pass,
         is_force: o,
@@ -704,7 +787,7 @@ export default class GameMain extends cc.Component {
     });
   }
   async gameInitGuide(e = false) {
-    var e, t, o, n, a, i, r, l, d;
+    var e, t, o, n, a, i, r, l;
     if (!(1 != gameData.gameLevel)) {
       await EngineUtil.sleep(1000);
       this.showNextTeachingStep();
@@ -735,6 +818,12 @@ export default class GameMain extends cc.Component {
       }
       EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
       await EngineUtil.sleep(500);
+      if (e.type == PropType.freezeCard) {
+        // Freeze prop: do not show unlock UI; also mark as unlocked so it won't retry.
+        t.push(gameData.gameLevel.toString());
+        cc.sys.localStorage.setItem("unLockPropGuide", JSON.stringify(t));
+        return;
+      }
       await PageMgr.showPageByEnum(PageEnum.unlockPropPage, {
         info: e
       });
@@ -745,58 +834,8 @@ export default class GameMain extends cc.Component {
           nodes: [o]
         });
         EventMgr.trigger(GameEventType.USER_OPERATE_TIP);
-        n = JSON.parse(cc.sys.localStorage.getItem("unLockHuaCardGuide")) || [];
-        a = gameConfig.getTujianConfig();
-        i = null;
-        for (r in a) a[r].level_count_limit == gameData.lun_level - 1 && 1 != gameData.lun_level && (i = {
-          type: a[r].type,
-          id: Number(r),
-          name: a[r].name
-        });
-        if (i && -1 == n.indexOf(gameData.lun_level.toString())) {
-          await PageMgr.showPageByEnum(PageEnum.unlockHuaCardPage, {
-            type: i.type,
-            id: i.id,
-            name: i.name
-          });
-          if (!(6 != gameData.lun_level)) {
-            await EngineUtil.sleep(500);
-            this.mainBtnGroupCtrl.showTujianBtn();
-            await EngineUtil.sleep(500);
-            await GlobalApp.PackagingProcessGuide.showGuideNode({
-              guideType: GuideEnum.tujianGuide,
-              nodes: [this.mainBtnGroupCtrl.tujianBtn]
-            });
-            GameSystem.getTujianInfo().then(function (e) {
-              e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-                name: "tujianPage",
-                data: e.data
-              });
-            });
-          }
-        }
-        if (gameData.completeAtlas && Object.keys(gameData.completeAtlas).length > 0) {
-          await PageMgr.showPageByEnum(PageEnum.tujianWdPage, {
-            amount: gameData.completeAtlas.amount,
-            type: gameData.completeAtlas.type
-          });
-          l = EngineUtil.getPromiseResolve("tujianAutoWdPage");
-          await PageMgr.showPageByEnum(PageEnum.tujianAutoWdPage, {
-            cb: function () {
-              EngineUtil.triggerPromise("tujianAutoWdPage");
-            }
-          });
-          await l;
-        }
-        if ((d = PlayerDataSys.checkSignReward()) && gameData.lun_level > 4) {
-          console.log("打开签到", d);
-          await PageMgr.showPageByEnum(PageEnum.signPage, {
-            info: PlayerDataSys.sign_in_info
-          });
-        }
-        if (Object.keys(gameData.free_prop).length > 0) {
-          await PageMgr.showPageByEnum(PageEnum.freePropPage);
-        }
+        // Do not auto-open atlas exchange related popups (tujianWdPage / tujianAutoWdPage).
+        applyFreePropRewardIfAny();
         EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
         return;
       }
@@ -807,58 +846,8 @@ export default class GameMain extends cc.Component {
           nodes: [o]
         });
         EventMgr.trigger(GameEventType.USER_RESHUFFLE_CARD);
-        n = JSON.parse(cc.sys.localStorage.getItem("unLockHuaCardGuide")) || [];
-        a = gameConfig.getTujianConfig();
-        i = null;
-        for (r in a) a[r].level_count_limit == gameData.lun_level - 1 && 1 != gameData.lun_level && (i = {
-          type: a[r].type,
-          id: Number(r),
-          name: a[r].name
-        });
-        if (i && -1 == n.indexOf(gameData.lun_level.toString())) {
-          await PageMgr.showPageByEnum(PageEnum.unlockHuaCardPage, {
-            type: i.type,
-            id: i.id,
-            name: i.name
-          });
-          if (!(6 != gameData.lun_level)) {
-            await EngineUtil.sleep(500);
-            this.mainBtnGroupCtrl.showTujianBtn();
-            await EngineUtil.sleep(500);
-            await GlobalApp.PackagingProcessGuide.showGuideNode({
-              guideType: GuideEnum.tujianGuide,
-              nodes: [this.mainBtnGroupCtrl.tujianBtn]
-            });
-            GameSystem.getTujianInfo().then(function (e) {
-              e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-                name: "tujianPage",
-                data: e.data
-              });
-            });
-          }
-        }
-        if (gameData.completeAtlas && Object.keys(gameData.completeAtlas).length > 0) {
-          await PageMgr.showPageByEnum(PageEnum.tujianWdPage, {
-            amount: gameData.completeAtlas.amount,
-            type: gameData.completeAtlas.type
-          });
-          l = EngineUtil.getPromiseResolve("tujianAutoWdPage");
-          await PageMgr.showPageByEnum(PageEnum.tujianAutoWdPage, {
-            cb: function () {
-              EngineUtil.triggerPromise("tujianAutoWdPage");
-            }
-          });
-          await l;
-        }
-        if ((d = PlayerDataSys.checkSignReward()) && gameData.lun_level > 4) {
-          console.log("打开签到", d);
-          await PageMgr.showPageByEnum(PageEnum.signPage, {
-            info: PlayerDataSys.sign_in_info
-          });
-        }
-        if (Object.keys(gameData.free_prop).length > 0) {
-          await PageMgr.showPageByEnum(PageEnum.freePropPage);
-        }
+        // Do not auto-open atlas exchange related popups (tujianWdPage / tujianAutoWdPage).
+        applyFreePropRewardIfAny();
         EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
         return;
       }
@@ -871,63 +860,13 @@ export default class GameMain extends cc.Component {
         EventMgr.trigger(GameEventType.USER_FREEZE);
       }
     }
-    n = JSON.parse(cc.sys.localStorage.getItem("unLockHuaCardGuide")) || [];
-    a = gameConfig.getTujianConfig();
-    i = null;
-    for (r in a) a[r].level_count_limit == gameData.lun_level - 1 && 1 != gameData.lun_level && (i = {
-      type: a[r].type,
-      id: Number(r),
-      name: a[r].name
-    });
-    if (i && -1 == n.indexOf(gameData.lun_level.toString())) {
-      await PageMgr.showPageByEnum(PageEnum.unlockHuaCardPage, {
-        type: i.type,
-        id: i.id,
-        name: i.name
-      });
-      if (!(6 != gameData.lun_level)) {
-        await EngineUtil.sleep(500);
-        this.mainBtnGroupCtrl.showTujianBtn();
-        await EngineUtil.sleep(500);
-        await GlobalApp.PackagingProcessGuide.showGuideNode({
-          guideType: GuideEnum.tujianGuide,
-          nodes: [this.mainBtnGroupCtrl.tujianBtn]
-        });
-        GameSystem.getTujianInfo().then(function (e) {
-          e && 1 == e.code && EventMgr.trigger(GameEventType.PAGE_SHOW, {
-            name: "tujianPage",
-            data: e.data
-          });
-        });
-      }
-    }
-    if (gameData.completeAtlas && Object.keys(gameData.completeAtlas).length > 0) {
-      await PageMgr.showPageByEnum(PageEnum.tujianWdPage, {
-        amount: gameData.completeAtlas.amount,
-        type: gameData.completeAtlas.type
-      });
-      l = EngineUtil.getPromiseResolve("tujianAutoWdPage");
-      await PageMgr.showPageByEnum(PageEnum.tujianAutoWdPage, {
-        cb: function () {
-          EngineUtil.triggerPromise("tujianAutoWdPage");
-        }
-      });
-      await l;
-    }
-    if ((d = PlayerDataSys.checkSignReward()) && gameData.lun_level > 4) {
-      console.log("打开签到", d);
-      await PageMgr.showPageByEnum(PageEnum.signPage, {
-        info: PlayerDataSys.sign_in_info
-      });
-    }
-    if (Object.keys(gameData.free_prop).length > 0) {
-      await PageMgr.showPageByEnum(PageEnum.freePropPage);
-    }
+    // Do not auto-open atlas exchange related popups (tujianWdPage / tujianAutoWdPage).
+    applyFreePropRewardIfAny();
     EventMgr.trigger(GameEventType.UPDATE_MAIN_BTN_STATE);
     return;
   }
   showNextTeachingStep() {
-    for (var e = ["guide/teachGuide_1", "guide/teachGuide_2", "guide/teachGuide_3", "guide/teachGuide_4", "guide/teachGuide_5"], t = 0; t < e.length; t++) AudioManager.getInstance().stopMusic(e[t]);
+    for (var e = ["guide/teachGuide_1", "guide/teachGuide_2", "guide/teachGuide_3", "guide/teachGuide_4", "guide/teachGuide_5"], t = 0; t < e.length; t++);
     this._teachingStep++;
     SdkHelper.reportData("guide_" + this._teachingStep);
     var o = null,
@@ -935,7 +874,7 @@ export default class GameMain extends cc.Component {
       a = null,
       i = null,
       r = "";
-    e[this._teachingStep - 1] && AudioManager.getInstance().playMusic(e[this._teachingStep - 1]);
+    e[this._teachingStep - 1];
     switch (this._teachingStep) {
       case 1:
         n = {
@@ -947,7 +886,7 @@ export default class GameMain extends cc.Component {
         this.teachingStepCardList = o.map(function (e) {
           return e.cardData.id;
         });
-        r = "试试点击<color=#F8F500>相邻</c>的麻将";
+        r = `gkey_309`;
         break;
       case 2:
         n = {
@@ -959,7 +898,7 @@ export default class GameMain extends cc.Component {
         this.teachingStepCardList = o.map(function (e) {
           return e.cardData.id;
         });
-        r = "试试点击远距离<color=#F8F500>同行/列</c>的麻将";
+        r = `gkey_313`;
         break;
       case 3:
         n = {
@@ -974,7 +913,7 @@ export default class GameMain extends cc.Component {
           startCard: a
         };
         this.teachingStepCardList = [a.cardData.id, i.cardData.id];
-        r = "试试<color=#F8F500>水平</c>挪动麻将";
+        r = `gkey_310`;
         break;
       case 4:
         a = this.getCardByPos(4, 3);
@@ -992,7 +931,7 @@ export default class GameMain extends cc.Component {
           startCard: a
         };
         this.teachingStepCardList = [a.cardData.id, i.cardData.id, c.cardData.id];
-        r = "试试<color=#F8F500>竖直</c>挪动麻将";
+        r = `gkey_311`;
         break;
       case 5:
         n = {
@@ -1007,7 +946,7 @@ export default class GameMain extends cc.Component {
           startCard: a
         };
         this.teachingStepCardList = [a.cardData.id, i.cardData.id];
-        r = "消除<color=#F8F500>花牌</c>\n可随机带走一对麻将";
+        r = `gkey_312`;
     }
     if (n) {
       this.teachGuideNode.active = true;

@@ -17,7 +17,6 @@ export default class levelClearPayoutsPage extends BasePage {
     super._onShow.call(this);
   }
   _init() {
-    AudioManager.instance.playCash("first");
     this.playAnim();
   }
   onLoad() {
@@ -43,7 +42,6 @@ export default class levelClearPayoutsPage extends BasePage {
     });
   }
   async close() {
-    AudioManager.instance.stopCash("first");
     this._hide();
     return;
   }

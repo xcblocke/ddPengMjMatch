@@ -1,0 +1,350 @@
+[
+	{
+		"key": "gkey_000",
+		"en": "Level"
+	},
+	{
+		"key": "gkey_002",
+		"en": "Yuan"
+	},
+	{
+		"key": "gkey_003",
+		"en": "Auto Collect"
+	},
+	{
+		"key": "gkey_010",
+		"en": "Restart"
+	},
+	{
+		"key": "gkey_051",
+		"en": "Claim Now"
+	},
+	{
+		"key": "gkey_052",
+		"en": "Clear grid tiles to off-screen"
+	},
+	{
+		"key": "gkey_064",
+		"en": "Level"
+	},
+	{
+		"key": "gkey_152",
+		"en": "Shuffle all tiles"
+	},
+	{
+		"key": "gkey_192",
+		"en": "Not enough"
+	},
+	{
+		"key": "gkey_198",
+		"en": "Thanks for watching"
+	},
+	{
+		"key": "gkey_200",
+		"en": "Day"
+	},
+	{
+		"key": "gkey_210",
+		"en": "Start xxx_1"
+	},
+	{
+		"key": "gkey_211",
+		"en": "Trigger"
+	},
+	{
+		"key": "gkey_212",
+		"en": "More clears = higher payout!"
+	},
+	{
+		"key": "gkey_213",
+		"en": "Loading..."
+	},
+	{
+		"key": "gkey_217",
+		"en": "Claim Bonus"
+	},
+	{
+		"key": "gkey_218",
+		"en": "Draw Available"
+	},
+	{
+		"key": "gkey_220",
+		"en": "Combo"
+	},
+	{
+		"key": "gkey_225",
+		"en": "Remove 3 tiles"
+	},
+	{
+		"key": "gkey_226",
+		"en": "Use Item"
+	},
+	{
+		"key": "gkey_227",
+		"en": "Undo"
+	},
+	{
+		"key": "gkey_228",
+		"en": "Clear 1 set"
+	},
+	{
+		"key": "gkey_230",
+		"en": "Level xxx_1"
+	},
+	{
+		"key": "gkey_238",
+		"en": "Tap tile pair"
+	},
+	{
+		"key": "gkey_257",
+		"en": "Privacy Policy"
+	},
+	{
+		"key": "gkey_262",
+		"en": "Add unified UI sound"
+	},
+	{
+		"key": "gkey_269",
+		"en": "Secret"
+	},
+	{
+		"key": "gkey_270",
+		"en": "Error: xxx_1"
+	},
+	{
+		"key": "gkey_271",
+		"en": "Tapping too fast, try later"
+	},
+	{
+		"key": "gkey_273",
+		"en": "Hot updating..."
+	},
+	{
+		"key": "gkey_274",
+		"en": "Preloading..."
+	},
+	{
+		"key": "gkey_276",
+		"en": "Guest xxx_1"
+	},
+	{
+		"key": "gkey_277",
+		"en": "Delete User"
+	},
+	{
+		"key": "gkey_278",
+		"en": "Confirm Delete"
+	},
+	{
+		"key": "gkey_279",
+		"en": "Basic Test"
+	},
+	{
+		"key": "gkey_280",
+		"en": "Ad Switch"
+	},
+	{
+		"key": "gkey_281",
+		"en": "Ads Off"
+	},
+	{
+		"key": "gkey_282",
+		"en": "Ads On"
+	},
+	{
+		"key": "gkey_283",
+		"en": "Match Time"
+	},
+	{
+		"key": "gkey_284",
+		"en": "Restart Game"
+	},
+	{
+		"key": "gkey_285",
+		"en": "Jump to Level Text"
+	},
+	{
+		"key": "gkey_286",
+		"en": "Jump to Level"
+	},
+	{
+		"key": "gkey_287",
+		"en": "Page Display"
+	},
+	{
+		"key": "gkey_289",
+		"en": "Year"
+	},
+	{
+		"key": "gkey_290",
+		"en": "Month"
+	},
+	{
+		"key": "gkey_292",
+		"en": "[Chinese characters]+"
+	},
+	{
+		"key": "gkey_293",
+		"en": "xxx_1-xxx_2-xxx_3 xxx_4:xxx_5:xxx_6"
+	},
+	{
+		"key": "gkey_294",
+		"en": "Expired"
+	},
+	{
+		"key": "gkey_295",
+		"en": "xxx_1 Y"
+	},
+	{
+		"key": "gkey_296",
+		"en": "xxx_1 M"
+	},
+	{
+		"key": "gkey_297",
+		"en": "xxx_1 D"
+	},
+	{
+		"key": "gkey_298",
+		"en": "Tap to Draw"
+	},
+	{
+		"key": "gkey_299",
+		"en": "Congratulations"
+	},
+	{
+		"key": "gkey_300",
+		"en": "Click Here"
+	},
+	{
+		"key": "gkey_301",
+		"en": "Enough Coins"
+	},
+	{
+		"key": "gkey_303",
+		"en": "Ad error, claim failed"
+	},
+	{
+		"key": "gkey_304",
+		"en": "xxx_1-xxx_2-xxx_3 xxx_4"
+	},
+	{
+		"key": "gkey_305",
+		"en": "xxx_1s"
+	},
+	{
+		"key": "gkey_306",
+		"en": "xxx_1m"
+	},
+	{
+		"key": "gkey_307",
+		"en": "xxx_1h"
+	},
+	{
+		"key": "gkey_308",
+		"en": "Verified, enter game"
+	},
+	{
+		"key": "gkey_309",
+		"en": "Tap <color=#F8F500>adjacent</c> tiles"
+	},
+	{
+		"key": "gkey_310",
+		"en": "Move tiles <color=#F8F500>horizontally</c>"
+	},
+	{
+		"key": "gkey_311",
+		"en": "Move tiles <color=#F8F500>vertically</c>"
+	},
+	{
+		"key": "gkey_312",
+		"en": "Clear <color=#F8F500>flower tile</c> to remove a random pair"
+	},
+	{
+		"key": "gkey_313",
+		"en": "Move tiles <color=#F8F500>in the same row/column</c>"
+	},
+	{
+		"key": "gkey_314",
+		"en": "Ad skipped<br><fontcolor='#F74708'>Claim failed</font>"
+	},
+	{
+		"key": "gkey_324",
+		"en": "xxx_1/xxx_2 xxx_3"
+	},
+	{
+		"key": "gkey_325",
+		"en": "xxx_1/xxx_2 Rounds"
+	},
+	{
+		"key": "gkey_332",
+		"en": "Connecting..."
+	},
+	{
+		"key": "gkey_468",
+		"en": "Game xxx_1/xxx_2 Round xxx_3/xxx_4"
+	},
+	{
+		"key": "gkey_469",
+		"en": "Game xxx_1/xxx_2 Round xxx_3/xxx_4 Match xxx_5/xxx_6"
+	},
+	{
+		"key": "gkey_470",
+		"en": "Game xxx_1/xxx_2"
+	},
+	{
+		"key": "gkey_471",
+		"en": "All Coins"
+	},
+	{
+		"key": "gkey_484",
+		"en": "Congratulations"
+	},
+	{
+		"key": "gkey_486",
+		"en": "Hint one clearable set"
+	},
+	{
+		"key": "gkey_487",
+		"en": "Freeze xxx_1s"
+	},
+	{
+		"key": "gkey_521",
+		"en": "Ad skipped<br><fontcolor='#F74708'>Claimed partial reward</font>"
+	},
+	{
+		"key": "gkey_527",
+		"en": "Tapping too fast, try later"
+	},
+	{
+		"key": "gkey_530",
+		"en": "Pass level xxx_1 to claim"
+	},
+	{
+		"key": "gkey_550",
+		"en": "Hint one clearable set"
+	},
+	{
+		"key": "gkey_584",
+		"en": "Claim"
+	},
+	{
+		"key": "gkey_585",
+		"en": "Unlock new item"
+	},
+	{
+		"key": "gkey_586",
+		"en": "Hint"
+	},
+	{
+		"key": "gkey_587",
+		"en": "Settings"
+	},
+	{
+		"key": "gkey_589",
+		"en": "No matching tiles"
+	},
+	{
+		"key": "gkey_590",
+		"en": "Board will auto-refresh"
+	}
+]

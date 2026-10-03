@@ -33,28 +33,17 @@ export default class mainBtnGroupCtrl extends cc.Component {
     EventMgr.ignore(GameEventType.UPDATE_MAIN_BTN_STATE, this.updateBtnState, this);
   }
   updateBtnState() {
-    this.signInBtn.active = gameData.lun_level >= 5;
-    this.lotteryBtn.active = gameData.lun_level >= 4;
-    this.tujianBtn.active = gameData.lun_level >= 6;
+    this.signInBtn.active = false;
+    // Hide these three icons for whole gameplay.
+    this.lotteryBtn.active = false;
+    this.tujianBtn.active = false;
     this.updateWheelBubble();
   }
   showTujianBtn() {
-    this.tujianBtn.scale = 0;
-    this.tujianBtn.active = true;
-    cc.tween(this.tujianBtn).to(0.2, {
-      scale: 1
-    }, {
-      easing: "backOut"
-    }).start();
+    this.tujianBtn.active = false;
   }
   showLotteryBtn() {
-    this.lotteryBtn.scale = 0;
-    this.lotteryBtn.active = true;
-    cc.tween(this.lotteryBtn).to(0.2, {
-      scale: 1
-    }, {
-      easing: "backOut"
-    }).start();
+    this.lotteryBtn.active = false;
   }
   showSignBtn() {
     this.signInBtn.active = true;

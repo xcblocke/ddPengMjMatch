@@ -279,11 +279,11 @@ export default class card extends cc.Component {
     }
   }
   playClearAudio() {
-    if (Constants.isSpecialCard(this.cardData.type)) {
-      AudioManager.getInstance().playMusic("card/huaCard");
-    } else {
-      AudioManager.getInstance().playMusic("card/" + this.cardData.type);
-    }
+    // if (Constants.isSpecialCard(this.cardData.type)) {
+    //   AudioManager.getInstance().playMusic("card/huaCard");
+    // } else {
+    //   AudioManager.getInstance().playMusic("card/" + this.cardData.type);
+    // }
   }
   playClearEffect() {
     if (this.clearEffect) {

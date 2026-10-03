@@ -33,7 +33,7 @@ export default class DebugItem extends cc.Component {
     this.sliderNode.active = e.type === DebugType.Slider;
     this.watchLabel.node.active = e.type === DebugType.Watch;
     this.showTextNode.active = e.type === DebugType.showText;
-    this.btnLabel.string = (null === (t = e.params) || void 0 === t ? void 0 : t.btnLabel) || "触发";
+    this.btnLabel.string = (null === (t = e.params) || void 0 === t ? void 0 : t.btnLabel) || `gkey_211`;
     this.sliderNode.getComponentsInChildren(cc.Slider)[0].progress = (null === (o = e.params) || void 0 === o ? void 0 : o.progress) || 0;
     this.toggleNode.getComponentsInChildren(cc.Toggle)[0].isChecked = (null === (n = e.params) || void 0 === n ? void 0 : n.toggle) || false;
     this.inputNode.getComponentsInChildren(cc.EditBox)[0].string = (null === (a = e.params) || void 0 === a ? void 0 : a.editBox) || "";
@@ -50,7 +50,7 @@ export default class DebugItem extends cc.Component {
         var e = t.watchValueFunc();
         t.watchLabel.string = "" + e;
       } catch (e) {
-        t.watchLabel.string = "错误: " + e.message;
+        t.watchLabel.string = `{"gkey_270":{"v1":"${e.message}"}}`;
       }
     }, e));
   }
