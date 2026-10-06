@@ -1,5 +1,8 @@
+import AudioManager from './framework/controller/AudioManager';
+import { FailedType } from './framework/enum/AllEnum';
 import EventMgr from './framework/Event/EventMgr';
 import GameEventType from './framework/Event/GameEventType';
+import TimeUtils from './framework/Utils/TimeUtils';
 import { gameData } from './data/GameData';
 import PageMgr from './view/PageMgr';
 const {
@@ -31,14 +34,21 @@ export default class countDown extends cc.Component {
     EventMgr.ignore(GameEventType.END_COUNT_DOWN, this.endCountDown, this);
   }
   showCountTimeNode(e) {
-    this.unschedule(this.updateCountTimeNode);
-    this.countTimeNode.active = false;
-    this.gameCountDownTime = e;
+    if (1 != gameData.gameLevel) {
+      this.countTimeNode.active = true;
+      this.gameCountDownTime = e;
+      this.countTimeNode.getChildByName("time").getComponent(cc.Label).string = TimeUtils.msToHMS(1000 * this.gameCountDownTime, ":", false).toString();
+    }
   }
+
   startCountDown() {
     this._pasuse = false;
-    this.unschedule(this.updateCountTimeNode);
-    gameData.globalCanClick = true;
+    if (!gameData.isUseFreeze) {
+      var e = this.countTimeNode.getChildByName("time");
+      e.color = cc.Color.WHITE;
+      e.getComponent(cc.Label).string = TimeUtils.msToHMS(1000 * this.gameCountDownTime, ":", false).toString();
+      this.schedule(this.updateCountTimeNode, 1);
+    }
   }
   update() {
     if (PageMgr.isHasShowPage()) {
@@ -48,15 +58,35 @@ export default class countDown extends cc.Component {
     }
   }
   updateCountTimeNode() {
+    this.gameCountDownTime--;
     gameData.xc_count_wait_time++;
+    var e = this.countTimeNode.getChildByName("time");
+    e.getComponent(cc.Label).string = TimeUtils.msToHMS(1000 * this.gameCountDownTime, ":", false).toString();
+    if (10 == this.gameCountDownTime) {
+      e.color = cc.Color.RED;
+      AudioManager.getInstance().playAudioQueue(["clock", "TimeOut"]);
+    }
+    this.gameCountDownTime <= 1 && (gameData.globalCanClick = false);
+    if (this.gameCountDownTime <= 0) {
+      this.unschedule(this.updateCountTimeNode);
+      this.countTimeNode.active = false;
+      EventMgr.trigger(GameEventType.GAME_OVER, {
+        type: FailedType.TIME_OUT
+      });
+    }
   }
   pauseCountDown() {
     this._pasuse = true;
     this.unschedule(this.updateCountTimeNode);
   }
   resumeCountDown() {
-    this._pasuse = false;
-    gameData.globalCanClick = true;
+    if (!gameData.isUseFreeze) {
+      if (gameData.countdownTime > 0 && this._pasuse) {
+        this.unschedule(this.updateCountTimeNode);
+        this.schedule(this.updateCountTimeNode, 1);
+      }
+      this._pasuse = false;
+    }
   }
   endCountDown() {
     this.unschedule(this.updateCountTimeNode);

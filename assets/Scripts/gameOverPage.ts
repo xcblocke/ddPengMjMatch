@@ -16,12 +16,17 @@ const {
 @ccclass
 export default class gameOverPage extends BasePage {
   @property(cc.Node)
-  pages: cc.Node[] = [];
+  pages: cc.Node = [];
   @property(cc.Node)
-  normalNodeList: cc.Node[] = [];
+  normalNodeList: cc.Node = [];
   @property(cc.Node)
-  timeOutNodeList: cc.Node[] = [];
-
+  timeOutNodeList: cc.Node = [];
+  @property(cc.Label)
+  btnLb: cc.Label = null;
+  @property(cc.Label)
+  btn2Lb: cc.Label = null;
+  @property(cc.Label)
+  pro: cc.Label = null;
   failType = FailedType.Normal;
   curIndex = 0;
   nowIndex = 0;
@@ -31,52 +36,41 @@ export default class gameOverPage extends BasePage {
   _onShow() {
     super._onShow.call(this);
   }
-
-  onLoad(): void {
-    this._saveContent();
-    this._createPeneLock();
-    // this._createBlack();
-    this._createContent();
-    this._createTouchLock();
-    this.registerBtnEvent(this.node);
-  }
-
   async _init(e) {
     var t, o, n, a, i;
-    this.curIndex = 0;
-    this.pages[this.curIndex].active = true;
-    this.pages[this.curIndex].scale = 1;
+    this.pages[this.curIndex].active = false;
+    this.pages[this.curIndex].scale = 0;
     SdkHelper.reportData("game_fail_page", {
       fail_type: e.type
     });
     AudioManager.getInstance().playMusic("gameOver");
     this.failType = e.type;
-    // if (e.type == FailedType.TIME_OUT) {
-    //   this.normalNodeList.forEach(function (e) {
-    //     e.active = false;
-    //   });
-    //   this.timeOutNodeList.forEach(function (e) {
-    //     e.active = true;
-    //   });
-     
-    // } else {
-    //   this.normalNodeList.forEach(function (e) {
-    //     e.active = true;
-    //   });
-    //   this.timeOutNodeList.forEach(function (e) {
-    //     e.active = false;
-    //   });
-      
-    //   t = gameData.getMjListLength();
-    //   o = GlobalApp.GameMain.cardGrid;
-    //   n = 0;
-    //   for (a = 0; a < o.length; a++) for (i = 0; i < o[a].length; i++) o[a][i] && n++;
-    //   console.log("count", n, t);
-    // }
-    this.scheduleOnce(() => {
-      this.openVideo();
-    }, 1.5);
-    // this.showNextPage();
+    if (e.type == FailedType.TIME_OUT) {
+      this.normalNodeList.forEach(function (e) {
+        e.active = false;
+      });
+      this.timeOutNodeList.forEach(function (e) {
+        e.active = true;
+      });
+      this.btnLb.string = "立即复活";
+      this.btn2Lb.string = "立即复活";
+    } else {
+      this.normalNodeList.forEach(function (e) {
+        e.active = true;
+      });
+      this.timeOutNodeList.forEach(function (e) {
+        e.active = false;
+      });
+      this.btnLb.string = "立即复活";
+      this.btn2Lb.string = "立即复活";
+      t = gameData.getMjListLength();
+      o = GlobalApp.GameMain.cardGrid;
+      n = 0;
+      for (a = 0; a < o.length; a++) for (i = 0; i < o[a].length; i++) o[a][i] && n++;
+      console.log("count", n, t);
+      this.pro.string = "当前进度" + Math.floor((t - n) / t * 100) + "%";
+    }
+    this.showNextPage();
     return;
   }
   showNextPage() {
@@ -98,9 +92,6 @@ export default class gameOverPage extends BasePage {
       easing: "backOut"
     }).start();
   }
-
-
-
   openVideo(e = 0) {
     var t = this;
     SdkHelper.reportData("fail_video_click", {
@@ -120,7 +111,7 @@ export default class gameOverPage extends BasePage {
           t.close();
         });
       }, function () {
-        SdkHelper.showForceToast(`gkey_314`);
+        SdkHelper.showForceToast("未看完广告<br><font color='#F74708'>奖励领取失败</font>");
         t._fadeIn();
         GameSystem.videoReward({
           video_type: VideoType.Revive,

@@ -245,7 +245,7 @@
         "lun_level": 1
     },
     {
-        "countdown": 300,
+        "countdown": 60,
         "level_data": {
             "mapData": [
                 [
@@ -490,7 +490,7 @@
         "lun_level": 2
     },
     {
-        "countdown": 300,
+        "countdown": 60,
         "level_data": {
             "mapData": [
                 [
@@ -811,7 +811,7 @@
         "lun_level": 3
     },
     {
-        "countdown": 300,
+        "countdown": 60,
         "level_data": {
             "mapData": [
                 [
@@ -1132,7 +1132,7 @@
         "lun_level": 4
     },
     {
-        "countdown": 300,
+        "countdown": 60,
         "level_data": {
             "mapData": [
                 [
@@ -1453,7 +1453,7 @@
         "lun_level": 5
     },
     {
-        "countdown": 600,
+        "countdown": 60,
         "level_data": {
             "mapData": [
                 [
@@ -1870,7 +1870,7 @@
         "lun_level": 20
     },
     {
-        "countdown": 600,
+        "countdown": 60,
         "level_data": {
             "mapData": [
                 [
