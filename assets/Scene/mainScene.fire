@@ -7225,7 +7225,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 348,
+      "width": 525,
       "height": 80
     },
     "_anchorPoint": {
@@ -7312,7 +7312,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -112,
+        -200.5,
         -5,
         0,
         0,
@@ -8369,7 +8369,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        112,
+        23.5,
         -5,
         0,
         0,
@@ -9783,7 +9783,7 @@
         "__id__": 231
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 236
@@ -9803,8 +9803,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 91,
-      "height": 113
+      "width": 77,
+      "height": 77
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -9815,7 +9815,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        131,
+        224,
         -5,
         0,
         0,
@@ -10199,7 +10199,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 174,
+      "width": 137.69,
       "height": 69
     },
     "_anchorPoint": {
@@ -10261,7 +10261,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 144,
+      "width": 107.69,
       "height": 30.24
     },
     "_anchorPoint": {
@@ -10375,7 +10375,7 @@
     "_enabled": true,
     "_layoutSize": {
       "__type__": "cc.Size",
-      "width": 174,
+      "width": 137.69,
       "height": 69
     },
     "_resize": 1,
@@ -10618,7 +10618,9 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_spriteFrame": null,
+    "_spriteFrame": {
+      "__uuid__": "f3fc5c65-d7ae-407e-b12b-4f8155f0a483"
+    },
     "_type": 0,
     "_sizeMode": 1,
     "_fillType": 0,
@@ -10725,7 +10727,7 @@
     "_enabled": true,
     "_layoutSize": {
       "__type__": "cc.Size",
-      "width": 348,
+      "width": 525,
       "height": 80
     },
     "_resize": 1,

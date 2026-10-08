@@ -676,7 +676,7 @@ export default class GameMain extends cc.Component {
               a.getComponent(cc.Sprite).spriteFrame = e.propNumIcons[0];
             }
           } else if ("freeze" == t.name) {
-            t.active = false;
+            t.active = gameData.gameLevel >= 4;
             o.getComponent(cc.Label).string = 0 == PlayerDataSys.freezeCardCount ? "+" : "" + PlayerDataSys.freezeCardCount;
             n.active = 0 == PlayerDataSys.freezeCardCount;
             o.active = 0 != PlayerDataSys.freezeCardCount;

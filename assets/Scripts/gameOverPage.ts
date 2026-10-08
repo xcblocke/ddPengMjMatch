@@ -39,7 +39,10 @@ export default class gameOverPage extends BasePage {
   }
   async _init(e) {
     var t, o, n, a, i;
-    console.log(".............  _init  .............",this.curIndex,this.pages);
+    // console.log(".............  _init  .............",this.curIndex,this.pages);
+    if(this.curIndex >= this.pages.length){
+      this.curIndex = 0;
+    }
     this.pages[this.curIndex].active = false;
     this.pages[this.curIndex].scale = 0;
     SdkHelper.reportData("game_fail_page", {

@@ -175,24 +175,24 @@ export default class buttonMgr extends cc.Component {
     }
   }
   freezeCardBtnClick() {
-    // var e = this;
-    // SdkHelper.reportData("click_prop", {
-    //   prop_type: PropType.freezeCard,
-    //   game_level: gameData.gameLevel,
-    //   lun_level: gameData.lun_level,
-    //   turn_id: gameData.turnId,
-    //   round_id: gameData.roundId,
-    //   set_id: gameData.setId
-    // });
-    // AudioManager.getInstance().playMusic("btntouch");
-    // if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.freezeCardCount <= 0) this.addPropCount(PropType.freezeCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_FREEZE);else {
-    //   this.propBtnIsFlag = true;
-    //   setTimeout(function () {
-    //     e.propBtnIsFlag = false;
-    //   }, 3000);
-    //   EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
-    //   EventMgr.trigger(GameEventType.USER_FREEZE);
-    // }
+    var e = this;
+    SdkHelper.reportData("click_prop", {
+      prop_type: PropType.freezeCard,
+      game_level: gameData.gameLevel,
+      lun_level: gameData.lun_level,
+      turn_id: gameData.turnId,
+      round_id: gameData.roundId,
+      set_id: gameData.setId
+    });
+    AudioManager.getInstance().playMusic("btntouch");
+    if (gameData.globalCanClick) if (this.propBtnIsFlag) EngineUtil.showCocosToast3(`gkey_527`);else if (PlayerDataSys.freezeCardCount <= 0) this.addPropCount(PropType.freezeCard);else if (cc.sys.isBrowser || gameData.isOpenDemo) EventMgr.trigger(GameEventType.USER_FREEZE);else {
+      this.propBtnIsFlag = true;
+      setTimeout(function () {
+        e.propBtnIsFlag = false;
+      }, 3000);
+      EventMgr.trigger(GameEventType.CLOSE_GAME_TIPS);
+      EventMgr.trigger(GameEventType.USER_FREEZE);
+    }
   }
   addPropCount(e) {
     console.log("addPropCount", e);
