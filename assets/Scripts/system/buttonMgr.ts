@@ -217,7 +217,7 @@ export default class buttonMgr extends cc.Component {
   onCliclTurn() {
     AudioManager.getInstance().playMusic("btntouch");
     EventMgr.trigger(GameEventType.PAGE_SHOW, {
-      name: "TurnPage"
+      name: "turnPage"
     });
   }
 
