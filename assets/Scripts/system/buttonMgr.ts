@@ -206,6 +206,21 @@ export default class buttonMgr extends cc.Component {
       }
     });
   }
+
+  onCliclSign() {
+    AudioManager.getInstance().playMusic("btntouch");
+    EventMgr.trigger(GameEventType.PAGE_SHOW, {
+      name: "signPage"
+    });
+  }
+
+  onCliclTurn() {
+    AudioManager.getInstance().playMusic("btntouch");
+    EventMgr.trigger(GameEventType.PAGE_SHOW, {
+      name: "TurnPage"
+    });
+  }
+
   userNoticeBtnClick() {
     EventMgr.trigger(GameEventType.PAGE_SHOW, {
       name: "userNoticePage"
