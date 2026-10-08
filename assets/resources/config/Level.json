@@ -245,7 +245,7 @@
         "lun_level": 1
     },
     {
-        "countdown": 60,
+        "countdown": 20,
         "level_data": {
             "mapData": [
                 [
@@ -490,7 +490,7 @@
         "lun_level": 2
     },
     {
-        "countdown": 60,
+        "countdown": 20,
         "level_data": {
             "mapData": [
                 [
@@ -811,7 +811,7 @@
         "lun_level": 3
     },
     {
-        "countdown": 60,
+        "countdown": 20,
         "level_data": {
             "mapData": [
                 [
@@ -1132,7 +1132,7 @@
         "lun_level": 4
     },
     {
-        "countdown": 60,
+        "countdown": 20,
         "level_data": {
             "mapData": [
                 [

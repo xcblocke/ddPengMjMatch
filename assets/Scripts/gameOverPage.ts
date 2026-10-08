@@ -34,10 +34,12 @@ export default class gameOverPage extends BasePage {
     super._onHide.call(this);
   }
   _onShow() {
+    this._fadeIn();
     super._onShow.call(this);
   }
   async _init(e) {
     var t, o, n, a, i;
+    console.log(".............  _init  .............",this.curIndex,this.pages);
     this.pages[this.curIndex].active = false;
     this.pages[this.curIndex].scale = 0;
     SdkHelper.reportData("game_fail_page", {
@@ -86,6 +88,8 @@ export default class gameOverPage extends BasePage {
     this.curIndex++;
   }
   playShowAnim(e) {
+    // e.opacity = 0;
+
     cc.tween(e).to(0.5, {
       scale: 1
     }, {

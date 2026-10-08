@@ -64,7 +64,8 @@ export default class countDown extends cc.Component {
     e.getComponent(cc.Label).string = TimeUtils.msToHMS(1000 * this.gameCountDownTime, ":", false).toString();
     if (10 == this.gameCountDownTime) {
       e.color = cc.Color.RED;
-      AudioManager.getInstance().playAudioQueue(["clock", "TimeOut"]);
+      // AudioManager.getInstance().playAudioQueue(["clock", "TimeOut"]);
+      AudioManager.getInstance().playMusic("clock");
     }
     this.gameCountDownTime <= 1 && (gameData.globalCanClick = false);
     if (this.gameCountDownTime <= 0) {
