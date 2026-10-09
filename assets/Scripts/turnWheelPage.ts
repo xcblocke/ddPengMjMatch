@@ -34,7 +34,7 @@ export interface ITurnPageData {
 }
 
 @ccclass
-export default class TurnPage extends BasePage {
+export default class turnWheelPage extends BasePage {
   @property(cc.Node)
   wheelNode: cc.Node | null = null;
 
@@ -226,7 +226,7 @@ export default class TurnPage extends BasePage {
     g.circle(0, 0, 260);
     g.fill();
 
-    const rewards = this.rewardConfig.length > 0 ? this.rewardConfig : TurnPage.defaultRewards;
+    const rewards = this.rewardConfig.length > 0 ? this.rewardConfig : turnWheelPage.defaultRewards;
     const step = 360 / rewards.length;
     const radius = 190;
 
@@ -299,7 +299,7 @@ export default class TurnPage extends BasePage {
   }
 
   private chooseReward(): IWheelRewardConfig {
-    const rewards = this.rewardConfig.length > 0 ? this.rewardConfig : TurnPage.defaultRewards;
+    const rewards = this.rewardConfig.length > 0 ? this.rewardConfig : turnWheelPage.defaultRewards;
     const totalWeight = rewards.reduce((sum, reward) => sum + (reward.weight || 1), 0);
     let random = Math.random() * totalWeight;
 
@@ -317,7 +317,7 @@ export default class TurnPage extends BasePage {
   private doSpin(reward: IWheelRewardConfig) {
     if (!this.wheelNode) return;
 
-    const rewards = this.rewardConfig.length > 0 ? this.rewardConfig : TurnPage.defaultRewards;
+    const rewards = this.rewardConfig.length > 0 ? this.rewardConfig : turnWheelPage.defaultRewards;
     const rewardIndex = rewards.findIndex((item) => item.id === reward.id);
     const targetIndex = rewardIndex >= 0 ? rewardIndex : 0;
     const step = 360 / rewards.length;
