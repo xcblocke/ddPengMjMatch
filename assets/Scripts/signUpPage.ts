@@ -43,7 +43,7 @@ const SIGN_REWARD_CONFIG: ISignRewardConfig[] = [
 const SIGN_STATE_KEY = 'seven_day_sign_state_v1';
 
 @ccclass
-export default class signPage extends BasePage {
+export default class signUpPage extends BasePage {
   private rewardCards: cc.Node[] = [];
   private rewardMap: Map<number, ISignRewardConfig> = new Map();
 
@@ -352,5 +352,9 @@ export default class signPage extends BasePage {
     const currentState = state || this.getSignState();
     const claimed = currentState.claimedDays || [];
     return claimed.length >= SIGN_REWARD_CONFIG.length;
+  }
+
+  onClose() {
+    this._hide();
   }
 }

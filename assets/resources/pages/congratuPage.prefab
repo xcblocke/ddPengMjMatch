@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "signUpPage",
+    "_name": "congratuPage",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -2611,7 +2611,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        240.15,
+        243.055,
         0,
         0,
         0,

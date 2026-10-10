@@ -620,5 +620,18 @@ class _EngineUtil {
     l.push(String(r).padStart(2, "0") + ":" + String(c).padStart(2, "0") + ":" + String(s).padStart(2, "0"));
     return l.join("");
   }
+
+  /**
+    * 获取一个 min 到 max 范围内的随机整数
+    * @param min 最小值
+    * @param max 最大值
+    */
+    public getRandomInt(min: number = 0, max: number = 1): number {
+        return Math.floor(this.random() * (max - min) + min);
+    }
+
+    random() {
+        return Math.random()
+    }
 }
 export default _EngineUtil._getInterface();
