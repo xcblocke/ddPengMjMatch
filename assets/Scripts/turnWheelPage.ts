@@ -66,6 +66,7 @@ export default class turnWheelPage extends BasePage {
   private rotateTween: any = null;
   private freeChance = 300;
   private lastReward: IWheelRewardConfig | null = null;
+  private isSpinning = false;
 
   defaultRewards: IWheelRewardConfig[] = [
     { id: 'coin_1', label: 'x5', value: 5, type: 'coin', color: new cc.Color(120, 235, 120, 255), weight: 5 },
@@ -77,13 +78,14 @@ export default class turnWheelPage extends BasePage {
   ];
 
   start() {
-    this.refreshUI();
+    // this.refreshUI();
+    this.isSpinning = false;
   }
 
   _init(data?: ITurnPageData) {
     this.rewardConfig = this.defaultRewards;
     // this.freeChance = Number(data && data.freeCount !== undefined ? data.freeCount : );
-    this.refreshUI();
+    // this.refreshUI();
   }
 
   onEnable() {
@@ -176,6 +178,7 @@ export default class turnWheelPage extends BasePage {
     if (!this.wheelNode) return;
 
     this.wheelNode.angle = 0;
+    this.isSpinning = true;
 
     const rewards = this.rewardConfig.length > 0 ? this.rewardConfig : turnWheelPage.defaultRewards;
     const rewardIndex = rewards.findIndex((item) => item.id === reward.id);
@@ -199,6 +202,7 @@ export default class turnWheelPage extends BasePage {
         .by(rotateTime, { angle: -totalAngle }, { easing: "sineInOut" })
         .call(() => {
             this.spinEnabled = true;
+            this.isSpinning = false;
             // 转完之后，才把中奖结果发放给玩家
             this.onRewardGet(reward);
         })
@@ -246,6 +250,10 @@ export default class turnWheelPage extends BasePage {
   }
 
   onClose() {
+    if(this.isSpinning) {
+      console.log("Spin in progress, cannot close the page.");
+      return;
+    }
     this._hide();
   }
 
