@@ -85,11 +85,11 @@ export default class turnWheelPage extends BasePage {
 
   defaultRewards: IWheelRewardConfig[] = [
     { id: 'coin_1', label: 'x5', value: 5, type: 'coin', color: new cc.Color(120, 235, 120, 255), weight: 5 },
-    { id: 'prop_refresh', label: '+1', value: 1, type: 'prop', propType: 'reshuffleCard', color: new cc.Color(155, 140, 255, 255), weight: 3 },
+    { id: 'prop_refresh', label: '+2', value: 2, type: 'prop', propType: 'reshuffleCard', color: new cc.Color(155, 140, 255, 255), weight: 3 },
     { id: 'coin_2', label: 'x8', value: 8, type: 'coin', color: new cc.Color(120, 198, 255, 255), weight: 5 },
-    { id: 'prop_tip', label: '+1', value: 1, type: 'prop', propType: 'tipCard', color: new cc.Color(120, 235, 120, 255), weight: 3 },
+    { id: 'prop_tip', label: '+2', value: 2, type: 'prop', propType: 'tipCard', color: new cc.Color(120, 235, 120, 255), weight: 3 },
     { id: 'coin_3', label: 'x12', value: 12, type: 'coin', color: new cc.Color(255, 196, 102, 255), weight: 6 },
-    { id: 'prop_freeze', label: '+1', value: 1, type: 'prop', propType: 'freezeCard', color: new cc.Color(255, 166, 90, 255), weight: 2 }
+    { id: 'prop_freeze', label: '+2', value: 2, type: 'prop', propType: 'freezeCard', color: new cc.Color(255, 166, 90, 255), weight: 2 }
   ];
 
   start() {
@@ -377,10 +377,11 @@ export default class turnWheelPage extends BasePage {
       type: 3,
       cb: function () {
         // Balance is already written on level-pass; claim only refreshes UI after fly.
-        EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance);
+        EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance + e.lastReward?.value);
+       
         EventMgr.trigger(GameEventType.SHOWDOLLARBALANCEEFFECT, {
           type: 3,
-          num: this.lastReward?.value || 0
+          num: e.lastReward?.value
         });
 
         e.isSpinning = false;
