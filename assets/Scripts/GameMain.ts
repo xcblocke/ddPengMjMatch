@@ -818,12 +818,6 @@ export default class GameMain extends cc.Component {
       }
       EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
       await EngineUtil.sleep(500);
-      if (e.type == PropType.freezeCard) {
-        // Freeze prop: do not show unlock UI; also mark as unlocked so it won't retry.
-        t.push(gameData.gameLevel.toString());
-        cc.sys.localStorage.setItem("unLockPropGuide", JSON.stringify(t));
-        return;
-      }
       await PageMgr.showPageByEnum(PageEnum.unlockPropPage, {
         info: e
       });

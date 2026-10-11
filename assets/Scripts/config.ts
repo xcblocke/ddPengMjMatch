@@ -12,6 +12,7 @@ export let levelRewardCoin = 200;
 export let propCostDollar = {
   [PropType.tipCard]: 100,
   [PropType.reshuffleCard]: 100,
+  [PropType.freezeCard]: 100,
 };
 
 export enum ServerType {
