@@ -1,3 +1,4 @@
+import { gameData } from './data/GameData';
 import AudioManager from './framework/controller/AudioManager';
 import PlayerDataSys from './framework/controller/PlayerDataSys';
 import EngineUtil from './framework/EngineUtil';
@@ -25,6 +26,7 @@ export interface IWheelRewardConfig {
 
 export interface ITurnPageData {
   freeCount?: number;
+  spinCost?: number;
   rewards?: IWheelRewardConfig[];
   coinRewards?: number[];
   propRewards?: {
@@ -64,7 +66,8 @@ export default class turnWheelPage extends BasePage {
   private spinEnabled = true;
   private currentRotation = 0;
   private rotateTween: any = null;
-  private freeChance = 300;
+  private freeChance = 10;
+  private spinCost = 20;
   private lastReward: IWheelRewardConfig | null = null;
   private isSpinning = false;
 
@@ -83,9 +86,9 @@ export default class turnWheelPage extends BasePage {
   }
 
   _init(data?: ITurnPageData) {
+    const pageData = data || {} as ITurnPageData;
     this.rewardConfig = this.defaultRewards;
-    // this.freeChance = Number(data && data.freeCount !== undefined ? data.freeCount : );
-    // this.refreshUI();
+    this.refreshUI();
   }
 
   onEnable() {
@@ -114,8 +117,9 @@ export default class turnWheelPage extends BasePage {
     }
     console.log(".........  refreshUI  rewardConfig", this.rewardConfig);
 
-    for (let i = 0; i < (this.itemLabel ? this.itemLabel.length : 0); i++) {
-      const label = this.itemLabel[i];
+    const labelList = this.itemLabel || [];
+    for (let i = 0; i < labelList.length; i++) {
+      const label = labelList[i];
       if (label) {
         const reward = this.rewardConfig[i];
         if (reward) {
@@ -129,22 +133,44 @@ export default class turnWheelPage extends BasePage {
   }
 
   private onStartSpin() {
-    console.log(".........  onStartSpin  onStartSpin", this.spinEnabled,this.freeChance);
-    if (!this.spinEnabled || this.freeChance <= 0) {
+    if (!this.spinEnabled) {
       if (this.resultLabel) {
-        this.resultLabel.string = this.freeChance <= 0 ? 'No spins left today' : 'Spinning...';
+        this.resultLabel.string = 'Spinning...';
       }
       return;
     }
 
+    const playerData = PlayerDataSys as any;
+    const hasFreeSpin = this.freeChance > 0;
+    const currentCoin = gameData.dollarBalance || 0;
+    console.log("Current coin balance:。。。。。。。。。。。。", currentCoin, "Spin cost:", this.spinCost);
+
+    if (!hasFreeSpin) {
+      
+      if (currentCoin < this.spinCost) {
+        if (this.resultLabel) {
+          this.resultLabel.string = `Not enough coins, need ${this.spinCost}`;
+        }
+        this.spinEnabled = true;
+        return;
+      }
+      // playerData.setUserCoinBalance && playerData.setUserCoinBalance(currentCoin - this.spinCost, true);
+      let newdollarBalance = Number(gameData.dollarBalance || 0) - this.spinCost;
+      if (newdollarBalance < 0) {
+        newdollarBalance = 0;
+      }    
+      gameData.dollarBalance = newdollarBalance;
+      EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance);
+    } else {
+      this.freeChance = Math.max(0, this.freeChance - 1);
+    }
+
     this.spinEnabled = false;
-    this.freeChance = Math.max(0, this.freeChance - 1);
 
     // 先按权重随机命中一个奖励，再根据这个奖励去转盘
     const reward = this.chooseReward();
     this.lastReward = reward;
 
-    // 立即刷新次数文案，避免动画过程中显示异常
     if (this.freeCountLabel) {
       this.freeCountLabel.string = `Remaining ${this.freeChance} times`;
     }
@@ -180,8 +206,8 @@ export default class turnWheelPage extends BasePage {
     this.wheelNode.angle = 0;
     this.isSpinning = true;
 
-    const rewards = this.rewardConfig.length > 0 ? this.rewardConfig : turnWheelPage.defaultRewards;
-    const rewardIndex = rewards.findIndex((item) => item.id === reward.id);
+    const rewards = this.rewardConfig.length > 0 ? this.rewardConfig : this.defaultRewards;
+    const rewardIndex = rewards.findIndex((item: IWheelRewardConfig) => item.id === reward.id);
     this.targetIdx = rewardIndex >= 0 ? rewardIndex : 0;
 
     console.log("===== targetIdx", this.targetIdx);
@@ -210,14 +236,16 @@ export default class turnWheelPage extends BasePage {
   }
 
   private onRewardGet(reward: IWheelRewardConfig) {
-
-    if (this.freeCountLabel) {
-      this.freeCountLabel.string = `Remaining ${this.freeChance} times`;
-    }
-
     const playerData = PlayerDataSys as any;
+
     if (reward.type === 'coin') {
-      playerData.addUserCoinBalance && playerData.addUserCoinBalance(reward.value);
+      // const newCoinValue = Number(playerData.coinBalance || 0) + Number(reward.value || 0);
+      // playerData.setUserCoinBalance && playerData.setUserCoinBalance(newCoinValue, true);
+      let newdollarBalance = Number(gameData.dollarBalance || 0) + reward.value;
+      gameData.dollarBalance = newdollarBalance;
+      EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance);
+
+
     } else if (reward.type === 'prop' && reward.propType) {
       const current = {
         prop1_num: Number(playerData.reshuffleCardCount || 0),
@@ -239,8 +267,26 @@ export default class turnWheelPage extends BasePage {
       playerData.setUserPropCount && playerData.setUserPropCount(current, false);
     }
 
+    if (this.resultLabel) {
+      this.resultLabel.string = reward.type === 'coin'
+        ? `Received ${reward.value} coins`
+        : reward.type === 'prop' && reward.propType === 'reshuffleCard'
+          ? `Received refresh item x${reward.value}`
+          : reward.type === 'prop' && reward.propType === 'tipCard'
+            ? `Received hint item x${reward.value}`
+            : reward.type === 'prop' && reward.propType === 'freezeCard'
+              ? `Received freeze item x${reward.value}`
+              : 'Received reward';
+    }
+
+    if (this.freeCountLabel) {
+      this.freeCountLabel.string = `Remaining ${this.freeChance} times`;
+    }
+
     AudioManager.getInstance().playMusic('btntouch');
     EventMgr.trigger(GameEventType.UPDATE_WHEEL_BUBBLE, null);
+    EventMgr.trigger(GameEventType.UPDATE_BALANCE, null);
+    // EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance);
     SdkHelper.reportData('click_lucky_wheel', {
       rewardId: reward.id,
       rewardType: reward.type,
