@@ -5,7 +5,11 @@ import EngineUtil from './framework/EngineUtil';
 import EventMgr from './framework/Event/EventMgr';
 import GameEventType from './framework/Event/GameEventType';
 import SdkHelper from './framework/SdkHelper';
+import AdManager from './framework/Platform/AdManager';
 import BasePage from './view/BasePage';
+import SetNode2Top from './common/SetNode2Top';
+import GlobalApp from './common/GlobalApp';
+import { PropType } from './framework/enum/AllEnum';
 
 const {
   ccclass,
@@ -61,15 +65,23 @@ export default class turnWheelPage extends BasePage {
   @property([cc.Label])
   itemLabel: cc.Label[] | null = [];
 
+  @property([cc.Node])
+  targetNodes: cc.Node[] | null = [];
+
+  @property(cc.SpriteFrame)
+  icons: cc.SpriteFrame[] = [];
+
 
   private rewardConfig: IWheelRewardConfig[] = [];
-  private spinEnabled = true;
-  private currentRotation = 0;
+ 
   private rotateTween: any = null;
   private freeChance = 10;
   private spinCost = 20;
   private lastReward: IWheelRewardConfig | null = null;
   private isSpinning = false;
+
+  _type = 0;
+
 
   defaultRewards: IWheelRewardConfig[] = [
     { id: 'coin_1', label: 'x5', value: 5, type: 'coin', color: new cc.Color(120, 235, 120, 255), weight: 5 },
@@ -93,6 +105,7 @@ export default class turnWheelPage extends BasePage {
 
   onEnable() {
     super.onEnable.call(this);
+    this.wheelNode.angle = 0;
     this.refreshUI();
   }
 
@@ -133,39 +146,34 @@ export default class turnWheelPage extends BasePage {
   }
 
   private onStartSpin() {
-    if (!this.spinEnabled) {
-      if (this.resultLabel) {
-        this.resultLabel.string = 'Spinning...';
-      }
+    if(this.isSpinning)    
+    {
       return;
     }
-
-    const playerData = PlayerDataSys as any;
+    const gameDataRef = gameData as any;
     const hasFreeSpin = this.freeChance > 0;
-    const currentCoin = gameData.dollarBalance || 0;
+    const currentCoin = Number(gameDataRef?.dollarBalance || 0);
     console.log("Current coin balance:。。。。。。。。。。。。", currentCoin, "Spin cost:", this.spinCost);
 
     if (!hasFreeSpin) {
-      
       if (currentCoin < this.spinCost) {
         if (this.resultLabel) {
           this.resultLabel.string = `Not enough coins, need ${this.spinCost}`;
         }
-        this.spinEnabled = true;
+       
         return;
       }
-      // playerData.setUserCoinBalance && playerData.setUserCoinBalance(currentCoin - this.spinCost, true);
-      let newdollarBalance = Number(gameData.dollarBalance || 0) - this.spinCost;
+      let newdollarBalance = currentCoin - this.spinCost;
       if (newdollarBalance < 0) {
         newdollarBalance = 0;
-      }    
-      gameData.dollarBalance = newdollarBalance;
-      EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance);
+      }
+      if (gameDataRef) {
+        gameDataRef.dollarBalance = newdollarBalance;
+      }
+      EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, newdollarBalance);
     } else {
       this.freeChance = Math.max(0, this.freeChance - 1);
     }
-
-    this.spinEnabled = false;
 
     // 先按权重随机命中一个奖励，再根据这个奖励去转盘
     const reward = this.chooseReward();
@@ -222,13 +230,11 @@ export default class turnWheelPage extends BasePage {
         
     }
 
-    this.spinEnabled = false;
     // this.turnSkeleton.setAnimation(0, "zhuandong", true);
     cc.tween(this.wheelNode)
         .by(rotateTime, { angle: -totalAngle }, { easing: "sineInOut" })
         .call(() => {
-            this.spinEnabled = true;
-            this.isSpinning = false;
+
             // 转完之后，才把中奖结果发放给玩家
             this.onRewardGet(reward);
         })
@@ -237,15 +243,15 @@ export default class turnWheelPage extends BasePage {
 
   private onRewardGet(reward: IWheelRewardConfig) {
     const playerData = PlayerDataSys as any;
+    const gameDataRef = gameData as any;
 
     if (reward.type === 'coin') {
-      // const newCoinValue = Number(playerData.coinBalance || 0) + Number(reward.value || 0);
-      // playerData.setUserCoinBalance && playerData.setUserCoinBalance(newCoinValue, true);
-      let newdollarBalance = Number(gameData.dollarBalance || 0) + reward.value;
-      gameData.dollarBalance = newdollarBalance;
-      EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance);
-
-
+      // let newdollarBalance = Number(gameDataRef?.dollarBalance || 0) + reward.value;
+      // if (gameDataRef) {
+      //   gameDataRef.dollarBalance = newdollarBalance;
+      // }
+      // EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, newdollarBalance);
+      this.flyCoins();
     } else if (reward.type === 'prop' && reward.propType) {
       const current = {
         prop1_num: Number(playerData.reshuffleCardCount || 0),
@@ -255,16 +261,20 @@ export default class turnWheelPage extends BasePage {
 
       if (reward.propType === 'reshuffleCard') {
         current.prop1_num += Number(reward.value || 0);
+        this._type = PropType.reshuffleCard;
       } else if (reward.propType === 'tipCard') {
         current.prop2_num += Number(reward.value || 0);
+        this._type = PropType.tipCard;
       } else if (reward.propType === 'freezeCard') {
         current.prop3_num += Number(reward.value || 0);
+        this._type = PropType.freezeCard;
       }
 
       playerData.reshuffleCardCount = current.prop1_num;
       playerData.tipCardCount = current.prop2_num;
       playerData.freezeCardCount = current.prop3_num;
       playerData.setUserPropCount && playerData.setUserPropCount(current, false);
+      this.flyProps();
     }
 
     if (this.resultLabel) {
@@ -303,8 +313,42 @@ export default class turnWheelPage extends BasePage {
     this._hide();
   }
 
-  reStartGame() {
-    this.onStartSpin();
+  onClickGetFree() {
+    if (cc.sys.isBrowser) {
+      this.freeChance = (this.freeChance || 0) + 1;
+      this.refreshUI();
+      if (this.resultLabel) {
+        this.resultLabel.string = 'Get 1 free spin';
+      }
+      return;
+    }
+
+    if (cc.sys.isNative) {
+      const adMgr = AdManager.getInstance() as unknown as AdManager | null;
+      if (!adMgr) {
+        if (this.resultLabel) {
+          this.resultLabel.string = 'Reward ad is not available';
+        }
+        return;
+      }
+
+      adMgr.playVideoAd(() => {
+        this.freeChance = (this.freeChance || 0) + 1;
+        this.refreshUI();
+        if (this.resultLabel) {
+          this.resultLabel.string = 'Reward video complete, got 1 free spin';
+        }
+      }, () => {
+        if (this.resultLabel) {
+          this.resultLabel.string = 'Reward video failed, please try again';
+        }
+      });
+      return;
+    }
+
+    if (this.resultLabel) {
+      this.resultLabel.string = 'This platform does not support free spin reward';
+    }
   }
 
       // 获取中奖区域的随机角度 
@@ -319,4 +363,87 @@ export default class turnWheelPage extends BasePage {
   random() {
       return Math.random()
   }
+
+
+  flyCoins() {
+ 
+    var e = this;
+    
+    SetNode2Top.setTopZIndex(GlobalApp.GameMain.dollarNode);
+    AudioManager.getInstance().playMusic("addbalance");
+    EventMgr.trigger(GameEventType.SHOWEFFECT, {
+      start: this.targetNodes[this.targetIdx].parent.convertToWorldSpaceAR(this.targetNodes[this.targetIdx].position),
+      num: 4,
+      type: 3,
+      cb: function () {
+        // Balance is already written on level-pass; claim only refreshes UI after fly.
+        EventMgr.trigger(GameEventType.UPDATE_DOLLARBALANCE, gameData.dollarBalance);
+        EventMgr.trigger(GameEventType.SHOWDOLLARBALANCEEFFECT, {
+          type: 3,
+          num: this.lastReward?.value || 0
+        });
+
+        e.isSpinning = false;
+  
+        // Do not call allBtnClick -> openVideo: on browser AdManager plays success immediately; on APK it waits for reward video (3~5s). Local coin claim does not need an ad.
+        SdkHelper.reportData("big_reward_all");
+        SetNode2Top.restoreNode(GlobalApp.GameMain.dollarNode);
+        
+        // e._coinFlyOnClaim = false;
+        // e.close();
+      }
+    });
+  }
+
+  flyProps() {
+    var e = this,
+      t = cc.instantiate(this.targetNodes[this.targetIdx]);
+    t.parent = this.targetNodes[this.targetIdx].parent;
+    // this.cliamBtn.interactable = false;
+    this.targetNodes[this.targetIdx].parent.convertToWorldSpaceAR(this.targetNodes[this.targetIdx].position);
+    var o = null;
+    if (this._type == PropType.tipCard) {
+      o = GlobalApp.GameMain.propContainer.getChildByName("tipBtn");
+    } else {
+      if (this._type == PropType.reshuffleCard) {
+        o = GlobalApp.GameMain.propContainer.getChildByName("reshuffleCard");
+      } else {
+        this._type == PropType.freezeCard {
+          o = GlobalApp.GameMain.propContainer.getChildByName("freeze");
+        }
+      }
+    }
+    var n = o.parent.convertToWorldSpaceAR(o.position),
+      a = t.parent.convertToNodeSpaceAR(n);
+    t.scale = 0.6;
+    AudioManager.instance.playMusic("xiu");
+    AudioManager.instance.playMusic("dztx");
+  
+    cc.tween(t).to(0.7, {
+      position: a,
+      scale: 0
+    }, {
+      easing: "backIn"
+    }).call(function () {
+      cc.tween(o).to(0.1, {
+        scale: 1.1
+      }).to(0.1, {
+        scale: 1
+      }).to(0.1, {
+        scale: 0.9
+      }).to(0.1, {
+        scale: 1
+      }).start();
+      EventMgr.trigger(GameEventType.REFRESH_PROP_COUNT);
+      e.isSpinning = false;
+      t.destroy();
+      // e.close();
+      // e._hide();
+    }).start();
+  }
+
+  flyFreeReward() {
+    if (!this.wheelNode) return;
+    const freeCount = 1;
+  } 
 }
