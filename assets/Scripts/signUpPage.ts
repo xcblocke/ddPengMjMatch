@@ -10,6 +10,7 @@ import PageMgr from './view/PageMgr';
 import ClientData from './framework/Event/ClientData';
 import UrlMgr from './service/UrlMgr';
 import { PropType } from './framework/enum/AllEnum';
+import signUpItem from './signUpItem';
 
 const {
   ccclass,
@@ -31,21 +32,30 @@ interface ISignState {
 }
 
 const SIGN_REWARD_CONFIG: ISignRewardConfig[] = [
-  { day: 1, type: 'coin', value: 5, label: '5' },
-  { day: 2, type: 'coin', value: 8, label: '8' },
-  { day: 3, type: 'prop', value: 1, label: '1', propType: PropType.tipCard },
-  { day: 4, type: 'coin', value: 10, label: '10' },
-  { day: 5, type: 'prop', value: 1, label: '1', propType: PropType.reshuffleCard },
-  { day: 6, type: 'coin', value: 15, label: '15' },
-  { day: 7, type: 'prop', value: 1, label: '1', propType: PropType.freezeCard }
+  { day: 1, type: 'coin', value: 3, label: 'X3' },
+  { day: 2, type: 'coin', value: 5, label: 'X5' },
+  { day: 3, type: 'coin', value: 8, label: 'X8' },
+  { day: 4, type: 'coin', value: 10, label: 'X10' },
+  { day: 5, type: 'coin', value: 15, label: 'X15'},
+  { day: 6, type: 'coin', value: 20, label: 'X20' },
+  { day: 7, type: 'coin', value: 50, label: 'X50' }
 ];
 
 const SIGN_STATE_KEY = 'seven_day_sign_state_v1';
 
 @ccclass
 export default class signUpPage extends BasePage {
-  private rewardCards: cc.Node[] = [];
+  @property(cc.Node)
+  contentNode: cc.Node = null;  
+
+  @property(cc.Prefab)
+  itemnode: cc.Prefab = null;
+
+
+  private rewardCards: signUpItem[] = [];
   private rewardMap: Map<number, ISignRewardConfig> = new Map();
+
+  
 
   start() {
     this.resetSignStateIfNeeded();
@@ -172,121 +182,18 @@ export default class signUpPage extends BasePage {
   }
 
   private refreshUI() {
-    this.clearCards();
+  
 
-    const container = this.node.getChildByName('content') || this.node;
-    const cardWidth = 180;
-    const cardHeight = 220;
-    const startX = -280;
-    const startY = 80;
-    const gapX = 180;
-    const gapY = 220;
+   
 
-    for (let i = 0; i < SIGN_REWARD_CONFIG.length; i++) {
-      const reward = SIGN_REWARD_CONFIG[i];
-      const row = Math.floor(i / 3);
-      const col = i % 3;
-      const card = new cc.Node(`day_${reward.day}`);
-      const bg = card.addComponent(cc.Sprite);
-      bg.spriteFrame = null as any;
-      card.width = cardWidth;
-      card.height = cardHeight;
-      card.setPosition(startX + col * gapX, startY - row * gapY);
+    for (let i = 0; i < SIGN_REWARD_CONFIG.length - 1; i++) {
+      let itemNode = cc.instantiate(this.itemnode);
+      
+      this.contentNode.addChild(itemNode);
 
-      const title = new cc.Node('title');
-      const titleLabel = title.addComponent(cc.Label);
-      titleLabel.string = `Day ${reward.day}`;
-      titleLabel.fontSize = 24;
-      titleLabel.lineHeight = 28;
-      titleLabel.horizontalAlign = cc.Label.HorizontalAlign.CENTER;
-      titleLabel.verticalAlign = cc.Label.VerticalAlign.CENTER;
-      title.setPosition(0, 70);
-      card.addChild(title);
-
-      const rewardNode = new cc.Node('reward');
-      const rewardLabel = rewardNode.addComponent(cc.Label);
-      rewardLabel.fontSize = 30;
-      rewardLabel.lineHeight = 34;
-      rewardLabel.horizontalAlign = cc.Label.HorizontalAlign.CENTER;
-      rewardLabel.verticalAlign = cc.Label.VerticalAlign.CENTER;
-      const rewardText = reward.type === 'coin' ? `x${reward.value}` : `x${reward.value}`;
-      rewardLabel.string = rewardText;
-      rewardNode.setPosition(0, 10);
-      card.addChild(rewardNode);
-
-      const nameNode = new cc.Node('name');
-      const nameLabel = nameNode.addComponent(cc.Label);
-      nameLabel.fontSize = 22;
-      nameLabel.lineHeight = 26;
-      nameLabel.horizontalAlign = cc.Label.HorizontalAlign.CENTER;
-      nameLabel.verticalAlign = cc.Label.VerticalAlign.CENTER;
-      nameLabel.string = reward.type === 'coin' ? 'Gold' : this.getPropName(reward.propType);
-      nameNode.setPosition(0, -38);
-      card.addChild(nameNode);
-
-      const btnNode = new cc.Node('claimBtn');
-      const btn = btnNode.addComponent(cc.Button);
-      btn.transition = cc.Button.Transition.SCALE;
-      btn.zoomScale = 1.05;
-      btnNode.setContentSize(140, 54);
-      btnNode.setPosition(0, -85);
-      const btnBg = btnNode.addComponent(cc.Sprite);
-      btnBg.spriteFrame = null as any;
-      const btnLabel = new cc.Node('label');
-      const btnText = btnLabel.addComponent(cc.Label);
-      btnText.fontSize = 22;
-      btnText.lineHeight = 28;
-      btnText.horizontalAlign = cc.Label.HorizontalAlign.CENTER;
-      btnText.verticalAlign = cc.Label.VerticalAlign.CENTER;
-      btnNode.addChild(btnLabel);
-      btnLabel.setPosition(0, 0);
-
-      const status = this.getDayStatus(reward.day);
-      const isClaimed = status === 'done';
-      const isCurrent = status === 'current';
-      const canClaim = isCurrent;
-
-      if (isClaimed) {
-        btnText.string = 'Claimed';
-        btn.interactable = false;
-        btnNode.color = new cc.Color(170, 170, 170);
-      } else if (canClaim) {
-        btnText.string = 'Claim';
-        btn.interactable = true;
-        btnNode.color = new cc.Color(255, 205, 92);
-        btnNode.on(cc.Node.EventType.TOUCH_END, () => {
-          this.claimReward(reward.day);
-        }, this);
-      } else {
-        btnText.string = 'Not yet';
-        btn.interactable = false;
-        btnNode.color = new cc.Color(200, 200, 200);
-      }
-
-      card.addChild(btnNode);
-      container.addChild(card);
-      this.rewardCards.push(card);
+      
+      this.rewardCards.push(itemNode.getComponent(signUpItem));
     }
-
-    const extraNode = new cc.Node('extraReward');
-    const extraLabel = extraNode.addComponent(cc.Label);
-    extraLabel.string = 'Completed 7-day login: +50 Gold';
-    extraLabel.fontSize = 26;
-    extraLabel.lineHeight = 32;
-    extraLabel.horizontalAlign = cc.Label.HorizontalAlign.CENTER;
-    extraLabel.verticalAlign = cc.Label.VerticalAlign.CENTER;
-    extraNode.setPosition(0, -320);
-    container.addChild(extraNode);
-    this.rewardCards.push(extraNode);
-  }
-
-  private clearCards() {
-    this.rewardCards.forEach((node) => {
-      if (node && node.parent) {
-        node.destroy();
-      }
-    });
-    this.rewardCards = [];
   }
 
   private getPropName(propType?: PropType) {
